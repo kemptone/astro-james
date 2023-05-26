@@ -1,7 +1,6 @@
 {
-  "name": "astro",
-  "type": "module",
-  "version": "0.0.1",
+  "name": "kemptone-astro-demo",
+  "private": true,
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -10,6 +9,15 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^2.4.1"
+    "@astrojs/react": "^2.2.0",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "astro": "^2.5.3",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@unocss/reset": "^0.52.3",
+    "unocss": "^0.52.3"
   }
 }
