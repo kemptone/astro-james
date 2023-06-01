@@ -1,0 +1,62 @@
+body {
+  font-family: system-ui;
+  font-size: large;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height:100vh;
+}
+
+@media (max-width:390px) {
+  body {
+    height:auto;
+  }
+}
+
+@media (max-height:844px) {
+  body {
+    height:auto;
+  }
+}
+
+header {
+  text-align: center;
+}
+
+main {
+  max-width: 1020px;
+  margin:0 auto;
+  width: 100%;
+}
+
+footer {
+}
+
+fieldset {
+  padding:20px;
+  margin:10px 10px 20px;
+  border-radius: 8px;
+  border-color: rgba(0,0,0,.1);
+}
+
+fieldset legend {
+  text-align: center;
+  padding: 0 10px;
+}
+
+fieldset textarea,
+fieldset input {
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;width: 100%;
+  font-size: 20px;
+}
+
+fieldset #name,
+fieldset #pronounce {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  border:none;
+  padding:15px 10px;
+  font-size: 16px;
+}

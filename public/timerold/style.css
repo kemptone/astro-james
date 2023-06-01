@@ -1,0 +1,131 @@
+#jamestimer {
+    /* border:10px solid red; */
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin:0;
+    padding:0;
+  }
+  
+  main {
+    display:flex;
+    flex-direction: column;
+  }
+  
+  header img {
+    display:block;
+    margin:30% auto;
+  }
+  
+  footer {
+    position:fixed;
+    bottom:0;
+    width:calc(100% - 36px);
+  
+  }
+  
+  footer > div.new-timer-section {
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  footer > div.new-timer-section input {
+    padding: 10px;
+    font-size: 20px;
+  }
+  
+  footer > div.new-timer-section button {
+    padding: 20px;
+  }
+  
+  footer > div > input {
+    padding: 20px;
+  }
+  
+  footer > div {
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  footer select {
+    padding: 10px 6px;
+    flex:1;
+    border: 1px solid rgba(0,0,0,.2);
+    height: 90px;
+    font-size: 17px;
+  }
+  
+  header img {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    margin:0 0 0 -150px;
+  }
+  
+  .start header img {
+    animation:start 1.3s ease-in;
+    transition-duration: var(--offtimer);
+  }
+  
+  .end header img {
+    animation:end 2s ease-out;
+    /* animation-name: end; */
+    /* animation-duration: var(--offtimer); */
+  }
+  
+  .spin-end header img {
+    animation:spin 1s linear infinite;
+    animation-duration: var(--offtimer);
+  }
+  
+  .spin header img {
+    animation:spin .5s linear infinite;
+    animation-duration: var(--spintimer);
+  }
+  
+  .controls {
+    padding:10px;
+    /* display: flex; */
+    /* justify-content: space-between; */
+    font-size: 30px;
+    font-family: monospace;
+  }
+  
+  
+  .controls button {
+    font-size:24px;
+    background-color:greenyellow;
+    border: none;
+    border-radius: 8px;
+    padding:8px;
+  }
+  
+  @keyframes start {
+    0% {
+      transform:rotate(0deg); 
+    }
+    100% {
+      transform:rotate(360deg); 
+    }
+  }
+  
+  @keyframes spin { 
+    100% { 
+        transform:rotate(360deg); 
+    } 
+  }
+  
+  @keyframes end {
+    0% {
+      transform:rotate(0deg); 
+    }
+    100% {
+      transform:rotate(360deg); 
+    }
+  }

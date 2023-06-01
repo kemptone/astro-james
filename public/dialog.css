@@ -1,0 +1,80 @@
+dialog:not([open]) {
+  display: none;
+}
+
+
+dialog {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  max-height: 80vh;
+  max-width: 66.6667%;
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  border-radius: 0.875rem;
+  box-shadow: 0 2px 8px 1px rgba(0, 0, 0, .2);
+  /* display: flex;
+  flex-direction: column; */
+  border: 0 solid #e5e7eb;
+  padding-top: 1em;
+}
+
+dialog::backdrop {
+  /* background: rgba(0, 0, 0, 0.05); */
+  /* background: --background-color: #fed469; */
+  background-color: #fed469c2 !important;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+dialog>form {
+  text-align: left;
+}
+
+dialog>form[method=dialog] {
+  text-align: right;
+  /* margin-bottom: -1em; */
+  position: absolute;
+  top: 1em;
+  padding: 0;
+  margin: 0;
+  right: 1em;
+}
+
+dialog>form[method=dialog]>button {
+  border: none;
+  background-color: transparent;
+  outline: transparent;
+  font-size: 42px;
+  line-height: 1em;
+  padding: 0;
+  margin: 0;
+  vertical-align: top;
+  text-align: right;
+  color: black;
+}
+
+@media (max-width:750px) {
+  dialog {
+    max-height: none;
+    max-width: none;
+    border-radius: 0;
+    padding-top: max(env(safe-area-inset-top, 0), 1em);
+  }
+
+  dialog>form[method=dialog] {
+    top: max(calc(env(safe-area-inset-top, 0px)), 1em);
+  }
+
+  html:has(dialog[open]) {
+    background-color: var(--color4);
+  }
+
+}

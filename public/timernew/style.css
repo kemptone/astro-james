@@ -1,0 +1,240 @@
+:root {
+  --stroke-color: white;
+}
+
+#jamestimer {
+  /* border:10px solid red; */
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+.innerwrap .blades-wrap {
+  display: block;
+  all: unset;
+  cursor: pointer;
+  /* transform: scale(var(--blade-scale, 30)); */
+  /* position: fixed; */
+  /* top: 50%; */
+  /* left: 50%; */
+  /* margin: -50px -30px; */
+  /* z-index: -1; */
+}
+
+.innerwrap svg {
+  display: block;
+}
+
+.innerwrap svg path.background-blade {
+  opacity: var(--opacity, 1);
+  stroke: none;
+  /* -webkit-stroke */
+}
+
+.innerwrap svg path.forground-blade {
+  stroke-width: var(--stroke-width, 0.02);
+  opacity: var(--opacity, 1);
+  /* stroke: white; */
+  fill: none;
+  stroke: var(--stroke-color, white);
+  /* fill: var(--fill, rgba(0,0,0,.6)); */
+}
+
+body.darkmode2 .innerwrap svg path.background-blade {
+  display: none;
+}
+
+body.darkmode2 .innerwrap svg path.forground-blade {
+  stroke: black;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 36px);
+
+}
+
+footer>div.new-timer-section {
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer>div.new-timer-section>label,
+footer>div.new-timer-section>div {
+  width: 100%;
+}
+
+footer>div.new-timer-section input {
+  padding: 10px;
+  font-size: 20px;
+  display: block;
+  width: 120px;
+}
+
+footer>div.new-timer-section button {
+  padding: 20px;
+  width: 290px;
+}
+
+footer>div>input {
+  padding: 20px;
+}
+
+footer>div {
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+}
+
+footer select {
+  padding: 10px 6px;
+  flex: 1;
+  border: 1px solid rgba(0, 0, 0, .2);
+  height: 90px;
+  font-size: 17px;
+}
+
+.innerwrap svg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: calc(30px * var(--blade-scale, 30));
+  height: calc(30px * var(--blade-scale, 30));
+  margin-left: calc(calc(30px * var(--blade-scale, 30)) * -.5);
+  margin-top: calc(calc(calc(30px * var(--blade-scale, 30)) * -.5) - 20px);
+  /* top: 100px;
+  left: 50%;
+  width: 400px;
+  height: 400px; */
+  /* margin:0 0 0 -200px; */
+}
+
+.started .innerwrap svg,
+.started .innerwrap img {
+  transform: rotate(var(--rotations_speedup));
+  transition: transform ease-in;
+  transition-duration: var(--speedup);
+}
+
+.middle .innerwrap svg,
+.middle .innerwrap img {
+  transform: rotate(var(--rotations_runtime));
+  transition: transform linear;
+  transition-duration: var(--runtime);
+}
+
+.ending .innerwrap svg,
+.ending .innerwrap img {
+  transform: rotate(var(--rotations_slowdown));
+  transition: transform ease-out;
+  transition-duration: var(--slowdown);
+}
+
+.controls {
+  /* padding:10px; */
+  /* display: flex; */
+  /* justify-content: space-between; */
+  /* font-size: 30px; */
+  /* font-family: monospace; */
+}
+
+
+@keyframes start {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes end {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+fieldset {
+  margin: 20px;
+}
+
+html:has(body.darkmode) {
+  background-color: black;
+  color: white;
+}
+
+html:has(body.whitemode) {
+  background-color: white;
+  color: black;
+}
+
+html:has(body.whitemode.darkmode) {
+  background-color: gray;
+  color: white;
+}
+
+
+.darkmode button {
+  color: white;
+  border-color: white;
+}
+
+.darkmode #hamburgermenu span {
+  background-color: white;
+  ;
+}
+
+.darkmode header nav>a {
+  color: white;
+}
+
+.darkmode dialog {
+  color: black;
+}
+
+form>fieldset:first-of-type {
+  margin-top: 50px;
+}
+
+.range-with-ticks {}
+
+.range-with-ticks legend {}
+
+.range-with-ticks input[type="range"] {
+  width: 100%;
+}
+
+#timersettings {
+  padding-top: max(env(safe-area-inset-top), 13px);
+  font-size: 21px;
+  padding-left: 10px;
+  position: fixed;
+}
+
+.setting-item {}
+
+.setting-item:has(input[type=checkbox]) {
+  padding-right: 5px;
+}

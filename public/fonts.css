@@ -1,0 +1,58 @@
+@font-face {
+    font-family: CooperHewitt;
+    src: url(/CooperHewitt-WebFonts-public/CooperHewitt-Light.woff);
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: CooperHewitt;
+    src: url(/CooperHewitt-WebFonts-public/CooperHewitt-Book.woff);
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: CooperHewitt;
+    src: url(/CooperHewitt-WebFonts-public/CooperHewitt-Medium.woff);
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: CooperHewitt;
+    src: url(/CooperHewitt-WebFonts-public/CooperHewitt-Semibold.woff);
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: CooperHewitt;
+    src: url(/CooperHewitt-WebFonts-public/CooperHewitt-Heavy.woff);
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: CooperHewittThin;
+    src: url(/CooperHewitt-WebFonts-public/CooperHewitt-Thin.woff);
+}
+
+@font-face {
+    font-family: CooperHewittThin;
+    src: url(/CooperHewitt-WebFonts-public/CooperHewitt-ThinItalic.woff);
+    font-style: italic;
+}
+
+
+@font-face {
+    font-family: Short_Stack;
+    src: url(/Short_Stack/ShortStack-Regular.ttf);
+}
+
+@font-face {
+    font-family: Fuzzy_Bubbles;
+    src: url(/Fuzzy_Bubbles/FuzzyBubbles-Bold.ttf);
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: Fuzzy_Bubbles;
+    src: url(/Fuzzy_Bubbles/FuzzyBubbles-Regular.ttf);
+    font-weight: 400;
+}

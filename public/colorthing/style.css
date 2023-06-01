@@ -1,0 +1,65 @@
+:root {
+  --buttton-width: 5em;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+  background-color: rgba(174, 144, 123, 0.484);
+  background-image: url(/noise-texture-100x100-b.png);
+}
+
+main.colorthing {
+  padding-top: 80px;
+  max-width: 890px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+main.colorthing .readout {
+  min-height: 200px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 20px;
+}
+
+main.colorthing .readout .chosen {
+  width: 140px;
+  /* height:100px; */
+}
+
+main.colorthing .colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 20px;
+}
+
+main.colorthing .colors button {
+  padding: 20px 0;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+main.colorthing .readout .chosen,
+main.colorthing .colors button {
+  width: 100px;
+  font-size: 2rem;
+}
+
+@media (max-width:480px) {
+
+  main.colorthing .colors button {
+    width: 60px;
+    height: 60px;
+    font-size: 1rem;
+  }
+
+  main.colorthing .readout .chosen {
+    width: 60px;
+    height: 60px;
+  }
+
+}

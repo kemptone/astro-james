@@ -1,0 +1,13 @@
+{
+  "lang": "en",
+  "dir": "ltr",
+  "name": "Number Deno Dev",
+  "short_name": "numberdeno",
+  "scope": "/",
+  "id": "number_deno_dev",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "aliceblue",
+  "background_color": "red"
+}

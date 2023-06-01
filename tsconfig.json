@@ -9,7 +9,16 @@
     "moduleResolution": "Node",
     "jsx": "react-jsx",
     "allowJs": true,
-    "jsxImportSource": "react"
+    "jsxImportSource": "preact",
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@islands/*": ["src/islands/*"],
+      "@data/*": ["src/data/*"],
+      "@effects/*": ["src/effects/*"],
+      "@helpers*": ["src/helpers/*"],
+      "@hooks*": ["src/hooks/*"],
+    }
   },
   "extends": "astro/tsconfigs/strict"
 }

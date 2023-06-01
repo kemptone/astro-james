@@ -4,6 +4,8 @@ import UnoCSS from 'unocss/astro';
 
 import react from "@astrojs/react";
 
+import preact from "@astrojs/preact";
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [UnoCSS({
@@ -17,7 +19,7 @@ export default defineConfig({
     //     presetTagify(),
     //     presetTypography()
     // ]
-  }), react()]
+  }), react(), preact()]
 });
 
 // from their sample

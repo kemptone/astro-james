@@ -1,0 +1,174 @@
+:root {
+    --color1: #5bccf6;
+    --color1-a: #5bccf699;
+    --color2: #fed469;
+    --color3: #030e12;
+    --color3-a: #030e1299;
+    --color4: #fff;
+}
+
+html {
+    font-family: system-ui, sans-serif;
+    font-size: 100%;
+    color: var(--color3);
+    background-color: var(--color2);
+    padding: 0;
+    margin: 0;
+}
+
+input,
+select {
+    font-size: 1rem;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    color: var(--color3);
+    text-decoration: none;
+    opacity: .8;
+}
+
+a:hover {
+    color: var(--color3);
+}
+
+button {
+    /* background-color: var(--color2); */
+    background-color: transparent;
+    border: 2px solid var(--color3);
+    user-select: none;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+button:active {
+    background-color: var(--color3);
+    color: var(--color4);
+}
+
+button.icon {
+    border: none;
+}
+
+.main,
+.math-problems {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 100%;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.math-problems .problem {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    text-align: center;
+    gap: 26px;
+    justify-content: space-between;
+    justify-content: space-around;
+    justify-content: center;
+    /* max-width: 47em; */
+    margin: 10px auto;
+    flex-wrap: wrap;
+}
+
+.math-problems .problem .group {
+    display: flex;
+    gap: 21px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.math-problems .problem .num1,
+.math-problems .problem .num2 {
+    display: inline-block;
+    font-size: 3.0rem;
+    font-weight: 600;
+}
+
+.math-problems .problem .act,
+.math-problems .problem .equals {
+    display: inline-block;
+    font-size: 3.0rem;
+    font-weight: 100;
+}
+
+.math-problems .problem input {
+    display: inline-block;
+    border: 4px dashed var(--color3);
+    width: 8rem;
+    padding: 1rem;
+    font-size: 3.5rem;
+    text-align: center;
+    background-color: transparent;
+    border-radius: 0.4rem;
+}
+
+.math-problems .problem input:focus {
+    outline: none;
+    border: 4px dashed var(--color1);
+}
+
+@media (max-width:450px) {
+    .math-problems .problem input {
+        display: block;
+    }
+}
+
+.problem button {
+    font-size: 2.3rem;
+    color: var(--color2);
+    background-color: var(--color3);
+    padding: 1.8rem;
+    border-radius: .5em;
+    display: block;
+}
+
+.actions {
+    display: flex;
+    width: fit-content;
+    margin-top: 5em;
+}
+
+.actions button {
+    padding: .5em;
+    font-size: 1rem;
+}
+
+#divisible {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    opacity: .1;
+    font-size: 3.0rem;
+}
+
+.animation.top {
+    padding-top: 70px;
+    display: flex;
+    justify-content: center;
+}
+
+.animation.bottom {
+    display: none;
+    position: absolute;
+    bottom: 10px;
+}
+
+@media (max-width:450px), (max-height:450px) {
+    .animation.top {
+        display: none;
+    }
+
+    .animation.bottom {
+        display: block;
+    }
+}
