@@ -15,10 +15,11 @@ import {
   setBodyStyleProp,
   setClassListItem,
 } from "../helpers/setBodyStyleProp.ts";
-import { TCurveType } from "../components/AdjustableBlades.tsx";
+import type { TCurveType } from "../components/AdjustableBlades.tsx";
 import Select from "../components/SelectWithFieldset.tsx";
 import { getState, populate } from "../helpers/localStorage.ts";
 import ModeItem from "../components/ModeItem.tsx";
+import '../../public/timernew/style.css'
 
 const TimerState = {
   Stopped: 0,

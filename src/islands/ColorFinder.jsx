@@ -1,5 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import { onPickerChange } from "../helpers/colorFinder.helper.js";
+import '../../public/colorfinder/style.css'
 
 const def = {
   "hex": "B2FFFF",

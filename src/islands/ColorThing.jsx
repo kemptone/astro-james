@@ -1,4 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
+import '../../public/colorthing/style.css'
 
 const Primary = [
   "FF0000", // red

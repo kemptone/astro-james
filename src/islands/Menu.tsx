@@ -39,7 +39,7 @@ export default () => {
         <nav>
           <a href="/">Home</a>
           <a href="/calculator">Calculator</a>
-          <a href="/kids">Kids</a>
+          <a href="/kidthing">Kids</a>
           <span>
             <a href="/brownthing">Brown Thing</a>
             <span>&nbsp;&nbsp;</span>
@@ -52,7 +52,7 @@ export default () => {
             <a href="/brownthing?countby=10">10</a>
           </span>
           <span>
-            <a href="/voice">Voice</a>
+            <a href="/voicemaker">Voice Maker</a>
             <span>&nbsp;&&nbsp;</span>
             <a href="/music2">Music</a>
             <span>&nbsp;&&nbsp;</span>
@@ -60,7 +60,7 @@ export default () => {
             <span>&nbsp;&&nbsp;</span>
             <a href="/nightnight">night night</a>
             <span>&nbsp;&&nbsp;</span>
-            <a href="/recorderGame">rec</a>
+            <a href="/recordergame">rec</a>
           </span>
           <span>
             <a href="/colorthing">Color Thing</a>
@@ -71,7 +71,7 @@ export default () => {
           <span>
             <a href="/speedup">Speed Up</a>
             <span>&nbsp;&&nbsp;</span>
-            <a href="/timer3">Timer</a>
+            <a href="/timer4">Timer</a>
             <span>&nbsp;&&nbsp;</span>
             <a href="/spin">Spin</a>
             <span>&nbsp;&&nbsp;</span>

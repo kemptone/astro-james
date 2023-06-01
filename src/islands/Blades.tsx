@@ -2,6 +2,7 @@ import Preact from "preact";
 import { FunctionComponent } from "preact/compat";
 import { useEffect, useRef, useState } from "preact/hooks";
 import AdjustableBlades from "../components/AdjustableBlades.tsx";
+import '../../public/blades/style.css'
 
 const Fan: FunctionComponent = () => {
   const outerSVG = useRef<HTMLDivElement>(null);

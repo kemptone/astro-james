@@ -1,0 +1,109 @@
+---
+import Layout from "../layouts/Layout.astro";
+import AmPm from '../islands/AmPm.tsx'
+import BigNumbers from '../islands/BigNumbers.tsx'
+import Blades from '../islands/Blades.tsx'
+import Calculator from '../islands/Calculator.tsx'
+import ColorFinder from '../islands/ColorFinder.jsx'
+import ColorThing from '../islands/ColorThing.jsx'
+import FancyRecorder from '../islands/FancyRecorder.tsx'
+// import GlobalSettings from '../islands/GlobalSettings.tsx'
+// import JamesSettings from '../islands/JamesSettings.tsx'
+import KidThing from '../islands/KidThing.jsx'
+import LiveCams from '../islands/LiveCams.tsx'
+// import Menu from '../islands/Menu.tsx'
+import Music2 from '../islands/Music2.jsx'
+import NightNight from '../islands/NightNight.tsx'
+import NumberGame from '../islands/NumberGame.jsx'
+import Recorder from '../islands/Recorder.tsx'
+import RecorderGame from '../islands/RecorderGame.tsx'
+import SpeedUp from '../islands/SpeedUp.tsx'
+import Spin from '../islands/Spin.tsx'
+import Timer4 from '../islands/Timer4.tsx'
+import VoiceMaker from '../islands/VoiceMaker.tsx'
+import SpinSounds from '../islands/spin.sounds.tsx'
+import Timer2 from '../islands/timer2.jsx'
+import Timer3 from '../islands/timer3.jsx'
+
+
+// AmPm.tsx
+// BigNumbers.tsx
+// Blades.tsx
+// Calculator.tsx
+// ColorFinder.jsx
+// ColorThing.jsx
+// FancyRecorder.tsx
+// GlobalSettings.tsx
+// JamesSettings.tsx
+// KidThing.jsx
+// LiveCams.tsx
+// Menu.tsx
+// Music2.jsx
+// NightNight.tsx
+// NumberGame.jsx
+// Recorder.tsx
+// RecorderGame.tsx
+// SpeedUp.tsx
+// Spin.tsx
+// Timer4.tsx
+// VoiceMaker.tsx
+// spin.sounds.tsx
+// timer2.jsx
+// timer3.jsx
+// useLoopSounds.tsx
+
+
+export async function getStaticPaths() {
+	return [
+		{ params: { slug : 'ampm' } },
+		{ params: { slug : 'bignumbers' } }, 
+		{ params: { slug : 'blades' } },
+		{ params: { slug : 'calculator' } },
+		{ params: { slug : 'colorfinder' } },
+		{ params: { slug : 'colorthing' } },
+		{ params: { slug : 'fancyrecorder' } },
+		{ params: { slug : 'kidthing' } },
+		{ params: { slug : 'live-cams' } },
+		{ params: { slug : 'music2' } },
+		{ params: { slug : 'nightnight' } },
+		{ params : { slug : 'numbergame' } },
+		{ params: { slug : 'recorder' } },
+		{ params: { slug : 'recordergame' } }, 
+		{ params: { slug : 'speedup' } }, 
+		{ params: { slug : 'spin' } },
+		{ params: { slug : 'timer4' } },
+		{ params: { slug : 'voicemaker' } },
+		{ params: { slug : 'timer2' } },
+		{ params: { slug : 'timer3' } }
+	]
+}
+
+const { slug } = Astro.params;
+const { View, title } = Astro.props;
+---
+
+<Layout title=`${ title }`>
+	<main>
+		{ slug === 'ampm' && <AmPm client:only="preact" /> }
+		{ slug == 'bignumbers' && <BigNumbers client:only="preact" /> }
+		{ slug == 'blades' && <Blades client:only="preact" /> }
+		{ slug == 'calculator' && <Calculator client:only="preact" /> }
+		{ slug == 'colorfinder' && <ColorFinder client:only="preact" /> }
+		{ slug == 'colorthing' && <ColorThing client:only="preact" /> }
+		{ slug == 'fancyrecorder' && <FancyRecorder client:only="preact" /> }
+		{ slug == 'kidthing' && <KidThing client:only="preact" /> }
+		{ slug == 'live-cams' && <LiveCams client:only="preact" /> }
+		{ slug == 'music2' && <Music2 client:only="preact" /> }
+		{ slug == 'nightnight' && <NightNight client:only="preact" /> }
+		{ slug == 'numbergame' && <NumberGame client:only="preact" /> }
+		{ slug == 'recorder' && <Recorder client:only="preact" /> }
+		{ slug == 'recordergame' && <RecorderGame client:only="preact" /> }
+		{ slug == 'speedup' && <SpeedUp client:only="preact" /> }
+		{ slug == 'spin' && <Spin client:only="preact" /> }
+		{ slug == 'voicemaker' && <VoiceMaker client:only="preact" /> }
+		{ slug == 'timer2' && <Timer2 client:only="preact" /> }
+		{ slug == 'timer3' && <Timer3 client:only="preact" /> }
+		{ slug == 'timer4' && <Timer4 client:only="preact" /> }
+	</main>
+</Layout>
+

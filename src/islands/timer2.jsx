@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import { buildTimeleftHtml, max } from "../helpers/timer.js";
+import { Howl } from "howler";
+import '../../public/timer/style.css'
 
 export default () => {
   const [maxTime, setMaxtime] = useState(0);

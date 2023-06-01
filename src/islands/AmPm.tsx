@@ -1,5 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import Dialog from "../components/Dialog.tsx";
+import '../../public/ampm/style.css'
 
 // Creates a range of times that has ranges that correspond to times
 const Times = [

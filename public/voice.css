@@ -6,7 +6,6 @@
   /* height: calc(100vh - 80px); */
   /* max-width: calc(100vw - 20px); */
   /* margin:auto; */
-  padding-top:100px;
 }
 
 .voice-page label {
@@ -16,6 +15,7 @@
 .voice-maker {
     max-width: 800px;
     margin:0 auto;
+  padding-top:100px;
 }
 
 .voice-page h1 {

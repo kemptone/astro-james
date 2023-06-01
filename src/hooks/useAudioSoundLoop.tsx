@@ -1,4 +1,4 @@
-import { IS_BROWSER } from "https://deno.land/x/fresh@1.1.4/runtime.ts";
+import IS_BROWSER from "../effects/IS_BROWSER";
 import {
   MutableRef,
   useCallback,

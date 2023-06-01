@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
+import { Howl } from "howler";
+import '../../public/timer/style.css'
 
 function constantRateReduction(rate, time, finalRate) {
   return -Math.log(finalRate / rate) / time;

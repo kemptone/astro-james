@@ -16,6 +16,10 @@ html {
     margin: 0;
 }
 
+body > main {
+    /* padding-top:100px; */
+}
+
 input,
 select {
     font-size: 1rem;

@@ -2,6 +2,7 @@ import { useState } from "preact/hooks";
 import { firstFive } from "../helpers/bignumbers/firstFive.js";
 import { buildCardinals } from "../helpers/bignumbers/buildCardinals.ts";
 import useVoices from "../effects/useVoices.ts";
+import '../../public/bignumbers/style.css'
 // import { ChangeEvent } from "preact/compat";
 
 const First = [

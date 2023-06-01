@@ -12,8 +12,10 @@ import type { SoundItem } from "../types/NightNight.ts";
 import { AllSounds } from "../utils/AllNightNightSounds.ts";
 import NightNightButton from "../components/nightNight/NightNightButton.tsx";
 import NightNightItem from "../components/nightNight/NightNightItem.tsx";
-import { ClassAttributes } from "https://esm.sh/v113/preact@10.13.2/src/index.js";
+// import { ClassAttributes } from "https://esm.sh/v113/preact@10.13.2/src/index.js";
+import type { ClassAttributes } from "preact";
 import { isDarkHexColor } from "../helpers/helpers.ts";
+import '../../public/nightnight/style.css';
 
 type ItemsType = {
   [key: string]: ClassAttributes<HTMLDivElement>["ref"] | undefined;

@@ -3,6 +3,7 @@ import SpinSounds from "./spin.sounds.tsx";
 import Dialog from "../components/Dialog.tsx";
 import Recorder from "./Recorder.tsx";
 import _localStorage from "../helpers/localStorage.js";
+import '../../public/spin/style.css'
 
 const { persist, populate } = _localStorage("spin");
 
