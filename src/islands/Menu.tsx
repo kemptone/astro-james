@@ -81,7 +81,7 @@ export default (props : {
             <a href="https://number-ry8ams9hd2p0.deno.dev/timer3">Old Timer</a>
           </span>
           <a href="/lasko">Lasko</a>
-          <a href="/live">Cameras</a>
+          {/* <a href="/live">Cameras</a> */}
           <a href="/ampm">AM PM</a>
           <a href="https://smooth.talkrapp.com/#/">Talker</a>
           <AllSettings />

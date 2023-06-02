@@ -131,14 +131,15 @@ header:has(.navigation.open) {
 header {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
+  right: 0;
+  width: fit-content;
   padding: 18px 16px;
   padding-top: max(env(safe-area-inset-top), 18px);
 }
 
-header:has(nav.open) {
+header:has(.navigation.open) {
   background-color: rgb(254 211 103 / 70%);
+  width: 100%;
 }
 
 header nav ul li {
