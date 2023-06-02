@@ -1,8 +1,8 @@
-import Buttons from "../components/CalculatorButtons.tsx";
-import Values from "../components/CalculatorValues.tsx";
-import Log from "../components/CalculatorLog.tsx";
-import Dialog from "../components/Dialog.tsx";
-import '../../public/calculator.css'
+import Buttons from "../../components/CalculatorButtons.tsx";
+import Values from "../../components/CalculatorValues.tsx";
+import Log from "../../components/CalculatorLog.tsx";
+import Dialog from "../../components/Dialog.tsx";
+import './calculator.css'
 
 export default () => {
   return (
