@@ -1,6 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
-import Dialog from "../components/Dialog.tsx";
-import '../../public/kidthing/style.css';
+import Dialog from "../../components/Dialog.tsx";
+import './style.css';
 
 const Primary =
   "Abby  Adaliz  Aiden  Angelo  Anthony  Bailey  Benny  Briana  Chase  Cierra  Cruz  Daniel  Gustavo  Hudson  Iker  James  Leilani  Lindsey  Merryck  Michael  Sophia C  Sofia V  Kenia  Melanie  Valerie"
