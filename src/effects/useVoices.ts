@@ -21,8 +21,14 @@ export default function () {
   const { voice_name, read } = populate("voice") ?? {};
   const [voices, addVoices] = useState<MetaVoice[]>([]);
   const [englishOnly, changeEnglishOnly] = useState(true);
+  const [voicesChanged, setVoicesChanged] = useState(false)
 
   useEffect(() => {
+    window.speechSynthesis.onvoiceschanged = () => setVoicesChanged(true) 
+  }, [])
+
+  useEffect(() => {
+
     const allVoices = loadAllVoiceList();
     const flatlist: MetaVoice[] = [];
 
@@ -52,7 +58,7 @@ export default function () {
 
     // const languages_set = new Set(allVoices.map(i => i.lang))
     addVoices(flatlist);
-  }, [englishOnly]);
+  }, [englishOnly, voicesChanged]);
 
   const Speak = ({
     read = "",
