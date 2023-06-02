@@ -6,16 +6,15 @@ import {
   useRef,
   useState,
 } from "preact/hooks";
-import { loadSoundFile } from "../utils/loadSoundFile.tsx"; // A helper function to load the sound file using Web Audio API
-import Draggable from "../components/CustomDraggable.tsx";
-import type { SoundItem } from "../types/NightNight.ts";
-import { AllSounds } from "../utils/AllNightNightSounds.ts";
-import NightNightButton from "../components/nightNight/NightNightButton.tsx";
-import NightNightItem from "../components/nightNight/NightNightItem.tsx";
-// import { ClassAttributes } from "https://esm.sh/v113/preact@10.13.2/src/index.js";
+import { loadSoundFile } from "../../utils/loadSoundFile.tsx"; // A helper function to load the sound file using Web Audio API
+import Draggable from "../../components/CustomDraggable.tsx";
+import type { SoundItem } from "../../types/NightNight.ts";
+import { AllSounds } from "../../utils/AllNightNightSounds.ts";
+import NightNightButton from "../../components/nightNight/NightNightButton.tsx";
+import NightNightItem from "../../components/nightNight/NightNightItem.tsx";
 import type { ClassAttributes } from "preact";
-import { isDarkHexColor } from "../helpers/helpers.ts";
-import '../../public/nightnight/style.css';
+import { isDarkHexColor } from "../../helpers/helpers.ts";
+import './style.css';
 
 type ItemsType = {
   [key: string]: ClassAttributes<HTMLDivElement>["ref"] | undefined;
