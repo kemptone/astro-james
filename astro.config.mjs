@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import UnoCSS from 'unocss/astro';
+import Deno from '@astrojs/deno'
 // import { presetWind, presetUno, presetAttributify, presetIcons, presetMini, presetTagify, presetTypography } from 'unocss'
 
 import react from "@astrojs/react";
@@ -8,6 +9,7 @@ import preact from "@astrojs/preact";
 
 // https://astro.build/config
 export default defineConfig({
+  adapters: [Deno()],
   integrations: [UnoCSS({
     injectReset: true
     // presets: [
@@ -19,7 +21,10 @@ export default defineConfig({
     //     presetTagify(),
     //     presetTypography()
     // ]
-  }), react(), preact()]
+  }), 
+  react(), 
+  preact(),
+]
 });
 
 // from their sample
