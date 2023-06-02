@@ -1,0 +1,110 @@
+:root {
+  --buttton-width: 5em;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+  background-color: rgba(174, 144, 123, 0.484);
+  background-image: url(/noise-texture-100x100-b.png);
+}
+
+
+main {
+  display: flex;
+  height: 100vh;
+  /* width: 80%; */
+  margin: 0 auto;
+  flex-direction: column;
+}
+
+#wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-self: center;
+  margin: auto;
+  max-width: 41em;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+#letters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.letters button {
+  font-size: 22px;
+  height: 2.7em;
+  min-width: var(--buttton-width);
+  box-sizing: border-box;
+  /* border: 0; */
+  /* color:black;
+  background-color:white; */
+  flex: 1;
+  /* margin: 8px; */
+  user-select: none;
+  touch-action: manipulation;
+  /* font-family: Short_Stack; */
+  border-width: .07rem;
+  color: var(--color3);
+}
+
+@media (max-width:463px) {
+
+  .letters button {
+    height: 2.0em;
+  }
+
+  html body header {
+    display: none;
+  }
+
+}
+
+.letters button.control.space {
+  min-width: calc(var(--buttton-width) * 1);
+  flex: 1;
+}
+
+.letters button i {
+  font-style: normal;
+}
+
+.letters .control {
+  flex: 1;
+}
+
+.letters.show-numbers button b {
+  display: none;
+}
+
+.letters.show-letters button i {
+  display: none;
+}
+
+.letters.show-numbers .toggle-numbers {
+  display: none;
+}
+
+.letters.show-letters .toggle-letters {
+  display: none;
+}
+
+#readout {
+  text-align: center;
+  font-size: 40px;
+  min-height: 1.5em;
+  flex: 1;
+  /* border:0; */
+  border: 2px solid black;
+  /* font-family: Arial, sans-serif; */
+  margin-bottom: 8px;
+  border: none;
+  background-color: transparent;
+  /* font-family: Short_Stack; */
+}

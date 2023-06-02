@@ -1,0 +1,122 @@
+/* .spinner {
+  text-align: center;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+} */
+
+main.recorder {
+  padding: 200px;
+}
+
+html:has( body.darkmode ) {
+  background-color:black;
+  color: white;
+}
+
+html:has( body.whitemode ) {
+  background-color:white;
+  color: black;
+}
+
+html:has( body.whitemode.darkmode ) {
+  background-color:gray;
+  color: white;
+}
+
+html:has( body.darkmode2 ) .spinner img {
+  filter: invert(100%);
+}
+
+.spinner img {
+  /* max-height: fit-content; */
+}
+
+.spinner {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner img {
+  /* width: 100%;
+  height: 100%; */
+  transition: transform var(--spintimer);
+
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
+
+.zoommode .spinner img {
+  max-width:initial;
+  max-height: initial;
+  zoom: var(--zoomlevel);
+}
+
+.spinner.spin img {
+  transform: rotate(var(--totalrotations));
+}
+
+.spinner.return img {
+  transition: all 0s;
+}
+
+.control {
+  max-width: 16rem;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.control fieldset {
+  margin: 1rem;
+  padding: 1rem;
+}
+
+.control fieldset input {
+  font-size: 1.5rem;
+  padding: .3rem;
+  width: calc(100%);
+  box-sizing: border-box;
+}
+
+.control > button {
+  margin: 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.control .modes {
+
+}
+
+.control .modes input {
+  width: auto;
+
+}
+
+details > summary {
+  cursor: pointer;
+}
+
+.recording-items {
+  padding-top: 1rem;
+}
+
+.recording-item {
+  display: flex;
+  padding: .2rem 0;
+}

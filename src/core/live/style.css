@@ -1,0 +1,136 @@
+:root {
+  --buttton-width: 5em;
+  --color: black;
+  --background-color: #fed469;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+main.ampm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  font-family: 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
+}
+
+main.ampm select {
+  font-size: 3rem;
+  /* font-family: 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace; */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  /* font-weight: 600; */
+  color: var(--color);
+  background-color: var(--background-color);
+}
+
+main.ampm select option {}
+
+main.ampm form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem;
+}
+
+main.ampm button {
+  font-size: 3rem;
+  font-family: 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 0.125rem;
+  color: var(--color);
+  background-color: var(--background-color);
+  cursor: pointer;
+  padding: 0.180rem 0.8rem;
+}
+
+
+html.ampm-game {
+  background-color: var(--background-color);
+  color: var(--color);
+}
+
+.dark.night {
+  --color: white;
+  --background-color: black;
+}
+
+.early-sunrise {
+  --color: rgb(225, 230, 204);
+  --background-color: rgb(255, 255, 0);
+}
+
+.sunrise {
+  --color: rgb(5, 90, 1);
+  --background-color: rgb(255, 255, 0);
+}
+
+.sunrise-early-morning {
+  --color: rgb(9, 169, 0);
+  --background-color: rgb(5, 0, 50);
+}
+
+.early-morning {
+  --color: rgb(0, 100, 63);
+  --background-color: rgb(0, 255, 17);
+}
+
+.morning {
+  --color: rgb(0, 227, 45);
+  --background-color: rgb(0, 106, 255);
+}
+
+.before-noon {
+  --color: rgb(255, 0, 0);
+  --background-color: rgb(0, 171, 250);
+}
+
+.noon {
+  --color: rgb(0, 0, 0);
+  --background-color: rgb(0, 51, 255);
+}
+
+.post-noon {
+  --color: rgb(0, 50, 69);
+  --background-color: rgb(0, 174, 255);
+}
+
+.after-noon {
+  --color: rgb(0, 109, 152);
+  --background-color: rgb(74, 213, 255);
+}
+
+.post-after-noon {
+  --color: rgb(26, 80, 101);
+  --background-color: rgb(255, 230, 0);
+}
+
+.sunset {
+  --color: rgb(48, 35, 11);
+  --background-color: rgb(255, 179, 0);
+}
+
+.sunset-end {
+  --color: rgb(48, 35, 11);
+  --background-color: rgb(255, 179, 0);
+}
+
+.after-sunset {
+  --color: rgb(200, 182, 150);
+  --background-color: rgb(71, 31, 1);
+}
+
+.early-evening {
+  --color: white;
+  --background-color: rgb(29, 23, 87);
+}
+
+.dark.evening {
+  --color: white;
+  --background-color: rgb(11, 0, 82);
+}
