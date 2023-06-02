@@ -16,6 +16,15 @@ html {
     margin: 0;
 }
 
+body.darkmode {
+    color: var(--color4);
+}
+
+body.darkmode input,
+body.darkmode select {
+    color: var(--color3);
+}
+
 body > main {
     /* padding-top:100px; */
 }

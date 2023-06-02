@@ -200,3 +200,12 @@ header nav>a {
     text-align: right;
   }
 }
+
+  .darkmode #hamburgermenu span {
+    background-color: white;
+    ;
+  }
+  
+  .darkmode header nav>a {
+    color: white;
+  }

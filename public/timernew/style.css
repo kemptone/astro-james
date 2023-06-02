@@ -233,6 +233,10 @@ form>fieldset:first-of-type {
   position: fixed;
 }
 
+#timersettings button {
+  padding:2px 10px;
+}
+
 .setting-item {}
 
 .setting-item:has(input[type=checkbox]) {
