@@ -148,12 +148,12 @@ header nav ul li {
 header nav a {
   cursor: pointer;
   user-select: none;
-  font-size: 1.7rem;
+  font-size: 1.4rem;
   margin-bottom: .8rem;
 }
 
 header nav>span {
-  font-size: 1.7rem;
+  font-size: 1.4rem;
   margin-bottom: .8rem;
 }
 
@@ -173,16 +173,29 @@ header code {
 
 header nav {
   font-size: 22px;
-  padding: 2.5rem;
+  padding: 1.4rem;
   text-align: right;
-  width: fit-content;
-  float: right;
 }
 
 header nav>span,
 header nav>a {
   display: block;
-  line-height: 2rem;
+  line-height:1.4rem;
   width: fit-content;
-  text-align: right;
+  text-align: left;
+}
+
+@media (min-width:480px) {
+
+  header nav {
+    padding: 2.5rem;
+    float: right;
+    width: fit-content;
+  }
+
+  header nav>span,
+  header nav>a {
+    line-height: 2rem;
+    text-align: right;
+  }
 }

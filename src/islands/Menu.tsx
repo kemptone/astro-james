@@ -1,8 +1,11 @@
 import AllSettings from "../components/AllSettings.tsx";
 import { useEffect, useState } from "preact/hooks";
+import '../../public/menu.css'
 
-export default () => {
-  const [MenuOpen, open] = useState(false);
+export default (props : {
+  initialMenuOpen?: boolean;
+}) => {
+  const [MenuOpen, open] = useState(props.initialMenuOpen || false);
 
   const $menu = (
     <div class="menu-wrap">
@@ -23,7 +26,6 @@ export default () => {
   useEffect(() => {
     document.querySelectorAll("#main-header a").forEach((Element) => {
       Element.addEventListener("click", (e: Event) => {
-        // e.preventDefault()
         e.stopPropagation();
       });
     });
@@ -36,7 +38,12 @@ export default () => {
         class={`navigation ${MenuOpen ? "open" : ""}`}
         onClick={(e) => open(false)}
       >
-        <nav>
+        <nav
+          className="
+            sm:(font-size: 1.5rem;)
+            md:(font-size: 1.5rem;)
+          "
+        >
           <a href="/">Home</a>
           <a href="/calculator">Calculator</a>
           <a href="/kidthing">Kids</a>
@@ -51,16 +58,13 @@ export default () => {
             <span>&nbsp;&nbsp;</span>
             <a href="/brownthing?countby=10">10</a>
           </span>
-          <span>
             <a href="/voicemaker">Voice Maker</a>
-            <span>&nbsp;&&nbsp;</span>
+          <span>
             <a href="/music2">Music</a>
             <span>&nbsp;&&nbsp;</span>
             <a href="/recorder">Recorder</a>
             <span>&nbsp;&&nbsp;</span>
             <a href="/nightnight">night night</a>
-            <span>&nbsp;&&nbsp;</span>
-            <a href="/recordergame">rec</a>
           </span>
           <span>
             <a href="/colorthing">Color Thing</a>
@@ -68,9 +72,8 @@ export default () => {
             <a href="/colorfinder">Finder</a>
           </span>
           <a href="/bignumbers">Big Numbers</a>
-          <span>
             <a href="/speedup">Speed Up</a>
-            <span>&nbsp;&&nbsp;</span>
+          <span>
             <a href="/timer4">Timer</a>
             <span>&nbsp;&&nbsp;</span>
             <a href="/spin">Spin</a>

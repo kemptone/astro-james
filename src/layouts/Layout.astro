@@ -4,6 +4,7 @@ export interface Props {
 }
 
 import Menu from '../islands/Menu.tsx'
+// import '../../public/reset.css'
 import '../../public/style.css'
 
 const { title } = Astro.props;
@@ -18,9 +19,6 @@ const { title } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
-		<link rel="stylesheet" href="/reset.css" />
-		<link rel="stylesheet" href="/style.css" />
-		<link rel="stylesheet" href="/menu.css" />
 	</head>
 	<body>
 		<slot />
