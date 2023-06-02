@@ -1,12 +1,12 @@
-import { Problem } from "../components/Problem.tsx";
+import { Problem } from "../../components/Problem.tsx";
 import {
   CurrentMathProblem,
   // MenuOpen,
   Number1MultiplyBy,
   Number2MultiplyBy,
   Step,
-} from "../data/State.ts";
-import { Logo, LogoBottom } from "../components/Logos.jsx";
+} from "../../data/State.ts";
+import { Logo, LogoBottom } from "../../components/Logos.jsx";
 
 export default function NumberGame() {
   return (

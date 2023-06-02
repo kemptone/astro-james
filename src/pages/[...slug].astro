@@ -7,21 +7,16 @@ import Calculator from '../core/calculator'
 import ColorFinder from '../core/colorfinder'
 import ColorThing from '../core/colorthing'
 import FancyRecorder from '../islands/FancyRecorder.tsx'
-// import GlobalSettings from '../islands/GlobalSettings.tsx'
-// import JamesSettings from '../islands/JamesSettings.tsx'
 import KidThing from '../core/kidthing'
 import LiveCams from '../core/live'
-// import Menu from '../islands/Menu.tsx'
 import Music2 from '../core/music2'
 import NightNight from '../core/nightnight'
-import NumberGame from '../islands/NumberGame.jsx'
 import Recorder from '../islands/Recorder.tsx'
 import RecorderGame from '../islands/RecorderGame.tsx'
 import SpeedUp from '../islands/SpeedUp.tsx'
 import Spin from '../islands/Spin.tsx'
 import Timer4 from '../islands/Timer4.tsx'
 import VoiceMaker from '../islands/VoiceMaker.tsx'
-import SpinSounds from '../islands/spin.sounds.tsx'
 import Timer2 from '../islands/timer2.jsx'
 import Timer3 from '../islands/timer3.jsx'
 
@@ -66,7 +61,6 @@ export async function getStaticPaths() {
 		{ params: { slug : 'live-cams' } },
 		{ params: { slug : 'music2' } },
 		{ params: { slug : 'nightnight' } },
-		{ params : { slug : 'numbergame' } },
 		{ params: { slug : 'recorder' } },
 		{ params: { slug : 'recordergame' } }, 
 		{ params: { slug : 'speedup' } }, 
@@ -95,7 +89,6 @@ const { View, title } = Astro.props;
 		{ slug == 'live-cams' && <LiveCams client:only="preact" /> }
 		{ slug == 'music2' && <Music2 client:only="preact" /> }
 		{ slug == 'nightnight' && <NightNight client:only="preact" /> }
-		{ slug == 'numbergame' && <NumberGame client:only="preact" /> }
 		{ slug == 'recorder' && <Recorder client:only="preact" /> }
 		{ slug == 'recordergame' && <RecorderGame client:only="preact" /> }
 		{ slug == 'speedup' && <SpeedUp client:only="preact" /> }
