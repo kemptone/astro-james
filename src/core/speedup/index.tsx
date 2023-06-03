@@ -1,11 +1,11 @@
 import { useCallback, useRef, useState } from "preact/hooks";
 import type { JSX } from "preact/jsx-runtime";
-import useAudioSoundLoop from "../hooks/useAudioSoundLoop.tsx";
-import Dialog from "../components/Dialog.tsx";
-import { SettingItem } from "../components/SettingItem.tsx";
-import { formatTimer } from "../helpers/number.helpers.ts";
-import SpeedUpChangeFrequency from "../components/SpeedUpChangeFrequency.tsx";
-import '../../public/speedup/style.css';
+import useAudioSoundLoop from "../../hooks/useAudioSoundLoop.tsx";
+import Dialog from "../../components/Dialog";
+import { SettingItem } from "../../components/SettingItem.tsx";
+import { formatTimer } from "../../helpers/number.helpers.ts";
+import SpeedUpChangeFrequency from "../../components/SpeedUpChangeFrequency.tsx";
+import './style.css';
 
 const Cs = 32.70;
 const C = 261.63;

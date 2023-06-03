@@ -1,6 +1,6 @@
-import AllSettings from "../components/AllSettings.tsx";
+import AllSettings from "../../components/AllSettings.tsx";
 import { useEffect, useState } from "preact/hooks";
-import '../../public/menu.css'
+import './menu.css'
 
 export default (props : {
   initialMenuOpen?: boolean;

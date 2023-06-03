@@ -1,6 +1,6 @@
-import useVoices from "../effects/useVoices.ts";
-import { persist, populate } from "../helpers/localStorage.js";
-import '../../public/voice.css';
+import useVoices from "../../effects/useVoices.ts";
+import { persist, populate } from "../../helpers/localStorage.js";
+import './style.css';
 
 export default (args) => {
   const {

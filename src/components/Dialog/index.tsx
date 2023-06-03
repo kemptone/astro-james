@@ -1,7 +1,7 @@
-import { FunctionalComponent, JSX } from "preact";
+import type { FunctionalComponent, JSX } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { forwardRef } from "preact/compat";
-import '../../public/dialog.css'
+import './dialog.css'
 
 const Dialog = forwardRef<HTMLDialogElement>(
   (args: JSX.HTMLAttributes<HTMLDialogElement>, ref) => {

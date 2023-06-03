@@ -1,25 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
-import useAudioLoop from '../hooks/useAudioLoop.tsx'
-import type { AudioThing } from '../hooks/useAudioLoop.tsx'
-import { loadReverb } from '../hooks/useReverb.tsx'
+import useAudioLoop from '../../hooks/useAudioLoop.tsx'
+import type { AudioThing } from '../../hooks/useAudioLoop.tsx'
+import { loadReverb } from '../../hooks/useReverb.tsx'
 import AdjustableBlades, {
   CurveTypes
-} from '../components/AdjustableBlades.tsx'
-import Dialog from '../components/Dialog.tsx'
-import OuterWrap from '../components/Timer/OuterWrap.tsx'
-import RangeWithTicks from '../components/RangeWithTicks.tsx'
-import { SettingItem } from '../components/SettingItem.tsx'
+} from '../../components/AdjustableBlades.tsx'
+import Dialog from '../../components/Dialog'
+import OuterWrap from '../../components/Timer/OuterWrap.tsx'
+import RangeWithTicks from '../../components/RangeWithTicks.tsx'
+import { SettingItem } from '../../components/SettingItem.tsx'
 import {
   getValueFromRef,
   removeClassListItem,
   setBodyStyleProp,
   setClassListItem
-} from '../helpers/setBodyStyleProp.ts'
-import type { TCurveType } from '../components/AdjustableBlades.tsx'
-import Select from '../components/SelectWithFieldset.tsx'
-import { getState, populate } from '../helpers/localStorage.ts'
-import ModeItem from '../components/ModeItem.tsx'
-import '../../public/timernew/style.css'
+} from '../../helpers/setBodyStyleProp.ts'
+import type { TCurveType } from '../../components/AdjustableBlades.tsx'
+import Select from '../../components/SelectWithFieldset.tsx'
+import { getState, populate } from '../../helpers/localStorage.ts'
+import ModeItem from '../../components/ModeItem.tsx'
+import './style.css'
 
 const TimerState = {
   Stopped: 0,

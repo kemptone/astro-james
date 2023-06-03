@@ -1,9 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import AmPm from "../core/ampm"
 import BigNumbers from '../core/bignumbers'
 import Blades from '../core/blades'
-import Calculator from '../core/calculator'
 import ColorFinder from '../core/colorfinder'
 import ColorThing from '../core/colorthing'
 import FancyRecorder from '../islands/FancyRecorder.tsx'
@@ -11,20 +9,19 @@ import KidThing from '../core/kidthing'
 import LiveCams from '../core/live'
 import Music2 from '../core/music2'
 import NightNight from '../core/nightnight'
-import Recorder from '../islands/Recorder.tsx'
-import RecorderGame from '../islands/RecorderGame.tsx'
-import SpeedUp from '../islands/SpeedUp.tsx'
-import Spin from '../islands/Spin.tsx'
-import Timer4 from '../islands/Timer4.tsx'
-import VoiceMaker from '../islands/VoiceMaker.tsx'
+import Recorder from '../core/recorder'
+import RecorderGame from '../core/recorderGame'
+import SpeedUp from '../core/speedup'
+import SpeedUpFard from '../core/speedup/fard.jsx'
+import Spin from '../core/spin'
+import Timer4 from '../core/timer4'
+import VoiceMaker from '../core/voicemaker'
 import Timer2 from '../islands/timer2.jsx'
 import Timer3 from '../islands/timer3.jsx'
 
 
-// AmPm.tsx
 // BigNumbers.tsx
 // Blades.tsx
-// Calculator.tsx
 // ColorFinder.jsx
 // ColorThing.jsx
 // FancyRecorder.tsx
@@ -50,10 +47,8 @@ import Timer3 from '../islands/timer3.jsx'
 
 export async function getStaticPaths() {
 	return [
-		{ params: { slug : 'ampm' } },
 		{ params: { slug : 'bignumbers' } }, 
 		{ params: { slug : 'blades' } },
-		{ params: { slug : 'calculator' } },
 		{ params: { slug : 'colorfinder' } },
 		{ params: { slug : 'colorthing' } },
 		{ params: { slug : 'fancyrecorder' } },
@@ -64,6 +59,7 @@ export async function getStaticPaths() {
 		{ params: { slug : 'recorder' } },
 		{ params: { slug : 'recordergame' } }, 
 		{ params: { slug : 'speedup' } }, 
+		{ params: { slug : 'speedup-fard' } }, 
 		{ params: { slug : 'spin' } },
 		{ params: { slug : 'timer4' } },
 		{ params: { slug : 'voicemaker' } },
@@ -77,11 +73,8 @@ const { View, title } = Astro.props;
 ---
 
 <Layout title=`${ title }`>
-	<main>
-		{ slug === 'ampm' && <AmPm client:only="preact" /> }
 		{ slug == 'bignumbers' && <BigNumbers client:only="preact" /> }
 		{ slug == 'blades' && <Blades client:only="preact" /> }
-		{ slug == 'calculator' && <Calculator client:only="preact" /> }
 		{ slug == 'colorfinder' && <ColorFinder client:only="preact" /> }
 		{ slug == 'colorthing' && <ColorThing client:only="preact" /> }
 		{ slug == 'fancyrecorder' && <FancyRecorder client:only="preact" /> }
@@ -91,12 +84,12 @@ const { View, title } = Astro.props;
 		{ slug == 'nightnight' && <NightNight client:only="preact" /> }
 		{ slug == 'recorder' && <Recorder client:only="preact" /> }
 		{ slug == 'recordergame' && <RecorderGame client:only="preact" /> }
-		{ slug == 'speedup' && <SpeedUp client:only="preact" /> }
+		{ slug == 'speedup' && <SpeedUp client:load /> }
+		{ slug == 'speedup-fard' && <SpeedUpFard client:only="preact" /> }
 		{ slug == 'spin' && <Spin client:only="preact" /> }
 		{ slug == 'voicemaker' && <VoiceMaker client:only="preact" /> }
 		{ slug == 'timer2' && <Timer2 client:only="preact" /> }
 		{ slug == 'timer3' && <Timer3 client:only="preact" /> }
 		{ slug == 'timer4' && <Timer4 client:only="preact" /> }
-	</main>
 </Layout>
 

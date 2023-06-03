@@ -1,9 +1,9 @@
 import { useEffect, useState } from "preact/hooks";
 import SpinSounds from "./spin.sounds.tsx";
-import Dialog from "../components/Dialog.tsx";
-import Recorder from "./Recorder.tsx";
-import _localStorage from "../helpers/localStorage.js";
-import '../../public/spin/style.css'
+import Dialog from "../../components/Dialog";
+import Recorder from "../recorder";
+import _localStorage from "../../helpers/localStorage.js";
+import './style.css'
 
 const { persist, populate } = _localStorage("spin");
 

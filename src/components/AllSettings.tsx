@@ -1,5 +1,5 @@
 import { FunctionalComponent, JSX } from "preact";
-import Dialog from "../components/Dialog.tsx";
+import Dialog from "../components/Dialog";
 import NumberGameActions from "./numberGame.actions.jsx";
 
 import _LS from "../helpers/localStorage.js";

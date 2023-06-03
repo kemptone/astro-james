@@ -1,6 +1,5 @@
-import { useEffect, useState } from "preact/hooks";
-import RecordingItem from "../components/RecordingItem.tsx";
-import recorderHooks from "../hooks/recorderHooks.tsx";
+import RecordingItem from "../../components/RecordingItem.tsx";
+import recorderHooks from "../../hooks/recorderHooks.tsx";
 
 const AudioRecorder = ({
   setAsSound,

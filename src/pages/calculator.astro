@@ -1,0 +1,9 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Calculator from '../core/calculator'
+---
+
+<Layout title="Calculator">
+	<Calculator client:only="preact" />
+</Layout>
+

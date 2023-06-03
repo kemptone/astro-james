@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import Dialog from "../../components/Dialog.tsx";
+import Dialog from "../../components/Dialog";
 import './style.css';
 
 const Primary =

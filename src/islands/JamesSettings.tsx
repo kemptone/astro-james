@@ -1,4 +1,4 @@
-import Dialog from "../components/Dialog.tsx";
+import Dialog from "../components/Dialog";
 
 import _LS from "../helpers/localStorage.js";
 import { useEffect, useRef, useState } from "preact/hooks";

@@ -5,7 +5,7 @@ import {
   Number2MultiplyBy,
   Step,
 } from "../data/State.ts";
-import Dialog from "../components/Dialog.tsx";
+import Dialog from "../components/Dialog";
 
 import _LS from "../helpers/localStorage.js";
 const LS = _LS("Game");
