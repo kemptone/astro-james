@@ -17,11 +17,17 @@ export type MetaVoice = {
 };
 
 export default function () {
-  const synth = window.speechSynthesis;
+  // const synth = window.speechSynthesis;
   const { voice_name, read } = populate("voice") ?? {};
   const [voices, addVoices] = useState<MetaVoice[]>([]);
   const [englishOnly, changeEnglishOnly] = useState(true);
   const [voicesChanged, setVoicesChanged] = useState(false)
+  const [synth, setSynth] = useState<SpeechSynthesis | null>(null)
+
+
+  useEffect(() => {
+    setSynth(window.speechSynthesis)
+  }, [])
 
   useEffect(() => {
     window.speechSynthesis.onvoiceschanged = () => setVoicesChanged(true) 
