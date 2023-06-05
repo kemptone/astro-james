@@ -100,7 +100,6 @@ export default () => {
               }
 
               const value = Cardinals[key]
-
               const name = value.stringArray.join('')
               const pro = value.stringArray.join(' ').replace(/  /g, ' ')
 
@@ -122,7 +121,9 @@ export default () => {
             })
           }}
         >
-          <legend>English name</legend>
+          <legend>
+            English name
+          </legend>
           <textarea
             name='name'
             id='name'

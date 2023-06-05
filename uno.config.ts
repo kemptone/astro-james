@@ -4,7 +4,8 @@ import {
   presetUno,
   presetAttributify,
   transformerVariantGroup,
-  transformerDirectives
+  // transformerCompileClass, // DOES NOT WORK WELL WITH ASTRO, for some unknown reason
+  // transformerDirectives // cool, but we don't need it
 } from 'unocss'
 
 export default defineConfig({
@@ -12,8 +13,9 @@ export default defineConfig({
     { 'i-logo': 'i-logos-astro w-6em h-6em transform transition-800' }
   ],
   transformers: [
-    transformerDirectives(),
-    transformerVariantGroup()
+    // transformerDirectives(),
+    transformerVariantGroup(),
+    // transformerCompileClass(),
   ],
   presets: [
     presetUno(),

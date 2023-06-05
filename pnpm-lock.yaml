@@ -36,9 +36,21 @@ devDependencies:
   '@astrojs/deno':
     specifier: ^4.1.1
     version: 4.1.1(astro@2.5.5)
+  '@iconify-json/mdi':
+    specifier: ^1.1.52
+    version: 1.1.52
+  '@unocss/preset-icons':
+    specifier: ^0.52.7
+    version: 0.52.7
   '@unocss/reset':
     specifier: ^0.52.3
     version: 0.52.3
+  '@unocss/transformer-compile-class':
+    specifier: ^0.53.0
+    version: 0.53.0
+  '@unocss/transformer-directives':
+    specifier: ^0.53.0
+    version: 0.53.0
   unocss:
     specifier: ^0.52.3
     version: 0.52.3(postcss@8.4.23)(vite@4.3.8)
@@ -589,6 +601,12 @@ packages:
     requiresBuild: true
     optional: true
 
+  /@iconify-json/mdi@1.1.52:
+    resolution: {integrity: sha512-tLzpFcmoGw1/jHcl+BshUd4bqvP4755OUluaARsuKskTp2aIPIAkRQOhzJGpry9CZ0i82z0alq4HrKrp9uvj4A==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
   /@iconify/types@2.0.0:
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
     dev: true
@@ -831,6 +849,14 @@ packages:
     resolution: {integrity: sha512-AdpksuSj1+jAjF7Ek1Ubtt+pE/bi4EmVqz/sx7PTgp9RUyBX1457kDlSWJPFOvEEkKL8VLtwXB46hD2oPAp36Q==}
     dev: true
 
+  /@unocss/core@0.52.7:
+    resolution: {integrity: sha512-dZonrlfu33SkUMsZXlsyYSM79tr2nLer/hBEU2ZaemRik2KchxIUNlZV6kX1f1k3m+gEtVQOyx1MImpgLS8PWg==}
+    dev: true
+
+  /@unocss/core@0.53.0:
+    resolution: {integrity: sha512-MB6hqSN2wjmm3NNYspNqzxvMv7LnyLqz0uCWr15elRqnjsuq01w7DZ1iPS9ckA2M3YjQIRTXR9YPtDbSqY0jcA==}
+    dev: true
+
   /@unocss/extractor-arbitrary-variants@0.52.3:
     resolution: {integrity: sha512-dEDQ9mfwlS/aC420iRO6wUT1p0z2WBH5nupTdVgrU9Wjtff+NmLaas78skN+GPE5FCPXgKTJJsaDX6+etc/hrw==}
     dependencies:
@@ -869,6 +895,16 @@ packages:
     dependencies:
       '@iconify/utils': 2.1.5
       '@unocss/core': 0.52.3
+      ofetch: 1.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@unocss/preset-icons@0.52.7:
+    resolution: {integrity: sha512-4M8V7dhNxA+XGRqz+mlmEtqHOnyXYuqFpc+3biqjhlJb4zirNgJ9ujEty0OWwrKhC8QKfxifVlTtHInfjQQkDA==}
+    dependencies:
+      '@iconify/utils': 2.1.5
+      '@unocss/core': 0.52.7
       ofetch: 1.0.1
     transitivePeerDependencies:
       - supports-color
@@ -942,10 +978,23 @@ packages:
       '@unocss/core': 0.52.3
     dev: true
 
+  /@unocss/transformer-compile-class@0.53.0:
+    resolution: {integrity: sha512-PTPysxBAimEWspMU3gMo+053M5RURnLT88Wp0y8f4F8oEMg7fV9Tn5f/bftvG+iI7dPyl4m/OsislxfucoESYw==}
+    dependencies:
+      '@unocss/core': 0.53.0
+    dev: true
+
   /@unocss/transformer-directives@0.52.3:
     resolution: {integrity: sha512-19ECVhIOzllR8iTA9oTupsMdVs9F1+5ooLmfeRtvl9hJP+3YhSP0nPHau5x172rbx2lrt4MsomjWBlcQV+twUw==}
     dependencies:
       '@unocss/core': 0.52.3
+      css-tree: 2.3.1
+    dev: true
+
+  /@unocss/transformer-directives@0.53.0:
+    resolution: {integrity: sha512-EIrrVphm0Bv+Ng2w1Qj5f0JFkfbN0b1/1fJ9hwgb5S2ewE3Xvwk59/h321D/GGDraQCUqqyZGgcG368xVh3pQA==}
+    dependencies:
+      '@unocss/core': 0.53.0
       css-tree: 2.3.1
     dev: true
 
