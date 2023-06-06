@@ -45,6 +45,7 @@ export default (props : {
           "
         >
           <a href="/">Home</a>
+          <a href="/star">Star</a>
           <a href="/calculator">Calculator</a>
           <a href="/kidthing">Kids</a>
           <span>

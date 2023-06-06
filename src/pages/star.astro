@@ -1,0 +1,98 @@
+---
+import Layout from "../layouts/Layout.astro";
+const initial = {
+size : 13
+, points : 5
+, oddOffset : -2
+, star_width : "50px"
+}
+---
+
+<Layout title="ampm">
+	<div>
+		<svg>
+			<path class="star-path"></path>
+		</svg>
+	</div>
+	<form id="form">
+		<input type="range" id="range1" min="0" max="100" value=`${ initial.size }` />
+		<input type="range" id="range2" min="0" max="500" value=`${ initial.points }` />
+		<input type="range" id="range3" min="-5.000" max="5.0000" value=`${ initial.oddOffset }` step="0.001"  />
+	</form>
+</Layout>
+
+<script is:inline define:vars={{ 
+	o_star_width : initial.star_width 
+	, o_size : initial.size
+	, o_oddOffset : initial.oddOffset
+	, o_points : initial.points
+}}>
+
+let size = o_size
+let points = o_points
+let oddOffset = o_oddOffset
+
+const createStar = ({ points = 5, x = 0, y = 0, size = 1 }) => {
+	const length = points * 2;
+
+	return Array.from({ length }, (_, i) =>
+		new DOMMatrix()
+			.translate(x, y)
+			.scale(size)
+			.rotate((i / length) * 360)
+			.translate(0, i % 2 ? -1 : oddOffset)
+			.transformPoint({ x: 0, y: 0 })
+	);
+};
+
+function metaCreateStar() {
+	const starPoints = createStar({ x: 50, y: 50, size, points });
+	const starPath = document.querySelector(".star-path");
+	starPath.setAttribute(
+		"d",
+		// SVG path syntax
+		`M ${starPoints
+			.map((point) => `${point.x} ${point.y}`)
+			.join(", ")} z`
+	);
+}
+
+metaCreateStar(23);
+
+document.querySelector("#range1").addEventListener("input", (e) => {
+	const value = Number(e.target.value)
+	size = value
+	metaCreateStar()
+});
+
+document.querySelector("#range2").addEventListener("input", (e) => {
+	const value = Number(e.target.value)
+	points = value
+	metaCreateStar()
+});
+
+document.querySelector("#range3").addEventListener("input", (e) => {
+	const value = Number(e.target.value)
+	oddOffset = value
+	metaCreateStar()
+});
+
+</script>
+
+<style define:vars={{ star_width : initial.star_width }}>
+	div > svg {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%) scale(20);
+		/* width: 100px; */
+		/* height: 100px; */
+		width: calc(var(--star_width) * 2);
+		height: calc(var(--star_width) * 2);
+	}
+	#form {
+		position: absolute;
+		bottom: 10px;
+		left: 10px;
+	}
+</style>
