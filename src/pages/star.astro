@@ -18,6 +18,7 @@ size : 13
 		<input type="range" id="range1" min="0" max="100" value=`${ initial.size }` />
 		<input type="range" id="range2" min="0" max="500" value=`${ initial.points }` />
 		<input type="range" id="range3" min="-5.000" max="5.0000" value=`${ initial.oddOffset }` step="0.001"  />
+		<button class="px-5 py-3">start</button>
 	</form>
 </Layout>
 
@@ -80,6 +81,10 @@ document.querySelector("#range3").addEventListener("input", (e) => {
 </script>
 
 <style define:vars={{ star_width : initial.star_width }}>
+
+:root {
+	--gap: 40px;
+}
 	div > svg {
 		position: absolute;
 		left: 50%;
@@ -92,7 +97,13 @@ document.querySelector("#range3").addEventListener("input", (e) => {
 	}
 	#form {
 		position: absolute;
-		bottom: 10px;
-		left: 10px;
+		bottom: var(--gap);
+		left: var(--gap);
+		display: flex;
+		width: calc(100vw - (var(--gap) * 2));
+		gap: var(--gap);
+	}
+	#form > input {
+		flex:1;
 	}
 </style>
