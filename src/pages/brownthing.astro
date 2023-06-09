@@ -1,15 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import '../../public/brownthing/style.css';
+import '../core/brownthing/style.css';
 ---
 
 <Layout title="Welcome to Astro.">
 	<main>
 		<div id="wrap">
-			<textarea id="readout" onClick="this.setSelectionRange(0, this.value.length)"></textarea>
+			<textarea id="readout"></textarea>
 			<div id="letters" class="letters show-numbers"></div>
 		</div>
 	</main>
 </Layout>
 
-<script is:inline src="/brownthing/index.js"></script>
+<script src="../core/brownthing"></script>

@@ -9,9 +9,9 @@ import {
 } from 'unocss'
 
 export default defineConfig({
-  shortcuts: [
-    { 'i-logo': 'i-logos-astro w-6em h-6em transform transition-800' }
-  ],
+  // shortcuts: [
+  //   { 'i-logo': 'i-logos-astro w-6em h-6em transform transition-800' }
+  // ],
   transformers: [
     // transformerDirectives(),
     transformerVariantGroup(),
