@@ -6,7 +6,7 @@ import './dialog.css'
 const Dialog = forwardRef<HTMLDialogElement>(
   (args: JSX.HTMLAttributes<HTMLDialogElement>, ref) => {
     return (
-      <dialog {...args} ref={ref}>
+      <dialog className="dd" {...args} ref={ref}>
         {args.children}
         <form method="dialog">
           <button>✕</button>

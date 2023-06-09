@@ -1,9 +1,9 @@
-dialog:not([open]) {
+dialog.dd:not([open]) {
   display: none;
 }
 
 
-dialog {
+dialog.dd {
   position: fixed;
   top: 0;
   right: 0;
@@ -26,7 +26,7 @@ dialog {
   padding-top: 1em;
 }
 
-dialog::backdrop {
+dialog.dd::backdrop {
   /* background: rgba(0, 0, 0, 0.05); */
   /* background: --background-color: #fed469; */
   background-color: #fed469c2 !important;
@@ -34,11 +34,11 @@ dialog::backdrop {
   -webkit-backdrop-filter: blur(3px);
 }
 
-dialog>form {
+dialog.dd>form {
   text-align: left;
 }
 
-dialog>form[method=dialog] {
+dialog.dd>form[method=dialog] {
   text-align: right;
   /* margin-bottom: -1em; */
   position: absolute;
@@ -48,7 +48,7 @@ dialog>form[method=dialog] {
   right: 1em;
 }
 
-dialog>form[method=dialog]>button {
+dialog.dd>form[method=dialog]>button {
   border: none;
   background-color: transparent;
   outline: transparent;
@@ -62,18 +62,18 @@ dialog>form[method=dialog]>button {
 }
 
 @media (max-width:750px) {
-  dialog {
+  dialog.dd {
     max-height: none;
     max-width: none;
     border-radius: 0;
     padding-top: max(env(safe-area-inset-top, 0), 1em);
   }
 
-  dialog>form[method=dialog] {
+  dialog.dd>form[method=dialog] {
     top: max(calc(env(safe-area-inset-top, 0px)), 1em);
   }
 
-  html:has(dialog[open]) {
+  html:has(dialog.dd[open]) {
     background-color: var(--color4);
   }
 

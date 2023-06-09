@@ -20,12 +20,12 @@ export default defineConfig({
   presets: [
     presetUno(),
     presetAttributify(),
-    presetIcons({
-      extraProperties: {
-        display: 'inline-block',
-        'vertical-align': 'middle'
-      }
-    })
+    // presetIcons({
+    //   extraProperties: {
+    //     display: 'inline-block',
+    //     'vertical-align': 'middle'
+    //   }
+    // })
   ]
 })
 
