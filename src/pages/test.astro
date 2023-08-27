@@ -1,15 +1,42 @@
 ---
-import Empty from "../layouts/Empty.astro";
+import Empty from '../layouts/Empty.astro'
+// import { SimpleGreeting } from '../litComponents/SimpleGreeting/SimpleGreeting.lit'
 ---
 
 <Empty title="ampm">
-	Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ullam similique consequatur veniam. Corporis hic odio omnis sequi quo aspernatur, repellat molestias facilis accusamus atque voluptatem architecto deleniti obcaecati ullam tempore.
-	Beatae, libero. Eius, possimus minus placeat odit ipsam totam inventore impedit quo at dignissimos earum magnam iusto aut eum, error itaque fugiat, maxime laborum. Eos dicta dolor enim dolores repellendus!
-	Hic reiciendis, asperiores laudantium provident tempora quo ducimus temporibus non maiores accusantium quidem minima, natus et deserunt culpa dolor alias sunt sapiente. Unde at eum asperiores id in voluptates neque!
-	Minus, aut amet? Eaque possimus illum cum minus eius eos qui sit officiis fuga architecto quae non ratione nisi voluptatum est rem laudantium rerum, dolor similique quas quibusdam! Animi, assumenda!
-	Ullam rerum pariatur dignissimos enim eveniet corporis, ea modi iusto beatae rem molestias aliquam perspiciatis deserunt perferendis dolor, facilis facere quisquam molestiae quam natus consequuntur libero ratione repellendus. Libero, nemo.
-	Consequatur nihil quidem eius quisquam necessitatibus laboriosam, blanditiis rerum iste, obcaecati ratione, esse accusamus repudiandae consectetur? Fugiat neque facere, totam omnis accusantium veniam illo! Dolor blanditiis inventore aut quaerat nostrum.
-	Accusamus ab non quasi excepturi iusto, nisi delectus laborum soluta. Totam dolorum deleniti soluta eos maiores architecto accusamus adipisci praesentium, labore culpa perspiciatis commodi nam eligendi eum voluptas ratione magni.
-	Eos impedit quae amet aliquam deserunt nisi adipisci soluta, sunt esse iusto quasi omnis, saepe autem debitis dolores quisquam, sed temporibus nesciunt quas ab corrupti totam perferendis earum! Quae, vel?
-	Velit pariatur minima nihil deleniti, ad doloremque quas blanditiis incidunt quam dolores totam enim adipisci officiis obcaecati exercitationem cum soluta ea iste doloribus. Nulla fugit quas laudantium ratione, perspiciatis incidunt!
+	<div style="height:200px"></div>
+	<div>
+		<popup-info
+		  data-text="fard was cool"
+		>hello</popup-info>
+	</div>
+	Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ullam similique consequatur
+	veniam. Corporis hic odio omnis sequi quo aspernatur, repellat molestias facilis
+	accusamus atque voluptatem architecto deleniti obcaecati ullam tempore. Beatae,
+	libero. Eius, possimus minus placeat odit ipsam totam inventore impedit quo at
+	dignissimos earum magnam iusto aut eum, error itaque fugiat, maxime laborum.
+	Eos dicta dolor enim dolores repellendus! Hic reiciendis, asperiores laudantium
+	provident tempora quo ducimus temporibus non maiores accusantium quidem minima,
+	natus et deserunt culpa dolor alias sunt sapiente. Unde at eum asperiores id
+	in voluptates neque! Minus, aut amet? Eaque possimus illum cum minus eiusG eos
+	qui sit officiis fuga architecto quae non ratione nisi voluptatum est rem laudantium
+	rerum, dolor similique quas quibusdam! Animi, assumenda! Ullam rerum pariatur
+	dignissimos enim eveniet corporis, ea modi iusto beatae rem molestias aliquam
+	perspiciatis deserunt perferendis dolor, facilis facere quisquam molestiae quam
+	natus consequuntur libero ratione repellendus. Libero, nemo. Consequatur nihil
+	quidem eius quisquam necessitatibus laboriosam, blanditiis rerum iste, obcaecati
+	ratione, esse accusamus repudiandae consectetur? Fugiat neque facere, totam omnis
+	accusantium veniam illo! Dolor blanditiis inventore aut quaerat nostrum. Accusamus
+	ab non quasi excepturi iusto, nisi delectus laborum soluta. Totam dolorum deleniti
+	soluta eos maiores architecto accusamus adipisci praesentium, labore culpa perspiciatis
+	commodi nam eligendi eum voluptas ratione magni. Eos impedit quae amet aliquam
+	deserunt nisi adipisci soluta, sunt esse iusto quasi omnis, saepe autem debitis
+	dolores quisquam, sed temporibus nesciunt quas ab corrupti totam perferendis
+	earum! Quae, vel? Velit pariatur minima nihil deleniti, ad doloremque quas blanditiis
+	incidunt quam dolores totam enim adipisci officiis obcaecati exercitationem cum
+	soluta ea iste doloribus. Nulla fugit quas laudantium ratione, perspiciatis incidunt!
 </Empty>
+
+<script type="module">
+	import '/webComponents/popupInfo.wc.js'
+</script>

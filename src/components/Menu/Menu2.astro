@@ -1,0 +1,168 @@
+---
+import fs from "node:fs/promises";
+const url = new URL("../../pages", import.meta.url);
+const routes = await fs.readdir(url);
+---
+
+<header>
+    <site-menu>
+        <dialog data-as="links">
+            <ol>
+                {
+                    routes.map((item) => {
+                        const route =
+                            item === "index.astro" ? "/" : item.split(".")[0];
+
+                        return (
+                            <li>
+                                <a href={`/${route}`}>{route}</a>
+                            </li>
+                        );
+                    })
+                }
+            </ol>
+        </dialog>
+        <button data-as="hamburgermenu" class="hamburgermenu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </site-menu>
+</header>
+
+<script>
+    import { Base } from "../Base";
+
+    customElements.define(
+        "site-menu",
+        class extends Base {
+            constructor() {
+                super();
+
+                const e_hamburgermenu = this.elements
+                    .hamburgermenu as HTMLButtonElement;
+                const e_dialog = this.elements.links as HTMLDialogElement;
+
+                if (!e_hamburgermenu || !e_dialog) return;
+
+                e_hamburgermenu?.addEventListener?.("click", () => {
+                    e_hamburgermenu?.classList?.toggle("open");
+                    e_dialog?.showModal?.();
+                });
+
+                e_dialog.addEventListener("click", () => {
+                    e_hamburgermenu.classList.toggle("open");
+                    e_dialog?.close?.();
+                });
+            }
+        }
+    );
+</script>
+
+<style is:global>
+    site-menu dialog ol {
+        font-size: 1.2rem;
+    }
+
+    site-menu dialog {
+        right: 0;
+        top: 50px;
+        margin: 50px;
+        left: auto;
+        background-color: transparent;
+        border: none;
+    }
+
+    site-menu dialog::backdrop {
+        /* background-color:rgba(255,255,255,0.5); */
+        background-color: #fed469a4;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+    }
+    site-menu .hamburgermenu {
+        position: absolute;
+        right: 13px;
+        top: 13px;
+        width: 60px;
+        height: 45px;
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+        -webkit-transition: 0.5s ease-in-out;
+        -moz-transition: 0.5s ease-in-out;
+        -o-transition: 0.5s ease-in-out;
+        transition: 0.5s ease-in-out;
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
+    }
+
+    site-menu .hamburgermenu span {
+        display: block;
+        position: absolute;
+        height: 9px;
+        width: 100%;
+        background: black;
+        border-radius: 9px;
+        opacity: 1;
+        left: 0;
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+        -webkit-transition: 0.25s ease-in-out;
+        -moz-transition: 0.25s ease-in-out;
+        -o-transition: 0.25s ease-in-out;
+        transition: 0.25s ease-in-out;
+    }
+
+    /* Icon 4 */
+
+    site-menu .hamburgermenu span:nth-child(1) {
+        top: 0px;
+        -webkit-transform-origin: left center;
+        -moz-transform-origin: left center;
+        -o-transform-origin: left center;
+        transform-origin: left center;
+    }
+
+    site-menu .hamburgermenu span:nth-child(2) {
+        top: 18px;
+        -webkit-transform-origin: left center;
+        -moz-transform-origin: left center;
+        -o-transform-origin: left center;
+        transform-origin: left center;
+    }
+
+    site-menu .hamburgermenu span:nth-child(3) {
+        top: 36px;
+        -webkit-transform-origin: left center;
+        -moz-transform-origin: left center;
+        -o-transform-origin: left center;
+        transform-origin: left center;
+    }
+
+    site-menu .hamburgermenu.open span:nth-child(1) {
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+        top: -3px;
+        left: 8px;
+    }
+
+    site-menu .hamburgermenu.open span:nth-child(2) {
+        width: 0%;
+        opacity: 0;
+    }
+
+    site-menu .hamburgermenu.open span:nth-child(3) {
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        top: 39px;
+        left: 8px;
+    }
+</style>
