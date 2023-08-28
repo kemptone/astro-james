@@ -1,29 +1,4 @@
-type Values = {
-  [key: string]: FormDataEntryValue | FormDataEntryValue[] | null
-}
-
-export interface Props<T> {
-  e_form: HTMLFormElement
-  onChange?: (form: ReturnValues<T>) => void
-  onBlur?: (
-    obj: ReturnValues<T> & {
-      name: string
-    }
-  ) => void
-  onIsValid?: (form: ReturnValues<T>) => void
-  onIsInvalid?: (form: ReturnValues<T>) => void
-  onSubmit?: (form: ReturnValues<T>) => void
-  children?: HTMLElement | HTMLElement[]
-  noValidate?: Boolean
-}
-
-export interface ReturnValues<T> {
-  values: T
-  blurredKeys: Set<string>
-  keys: Set<string>
-  e_form: HTMLFormElement
-  lastTouched?: string
-}
+import type {ProtoFormProps, Values} from './ProtoForm.types'
 
 const WhenItChanges =
   (
@@ -50,12 +25,10 @@ const WhenItChanges =
     return {values}
   }
 
-export default function ProtoForm<T>(props: Props<T>) {
-  const {e_form} = props
+export default function ProtoForm<T>(props: ProtoFormProps<T>) {
+  const e_form = props.e_form || new HTMLFormElement()
 
-  if (!e_form.current) return
-
-  if (props.noValidate) e_form.current.noValidate = true
+  if (props.noValidate) e_form.noValidate = true
 
   const values: Values = {}
   const keys = new Set<string>()
@@ -65,38 +38,39 @@ export default function ProtoForm<T>(props: Props<T>) {
   // since they have multiple values, it might be needed for multiselects too,
   // come back to this if needed
   const allUniqueCheckboxKeys = new Set<string>()
-  e_form.current.querySelectorAll?.('input[type=checkbox][name]').forEach((e : HTMLInputElement) => {
-    if (
-      e_form.current?.querySelectorAll?.(
-        `input[type=checkbox][name=${e?.name}]`
-      ).length > 1
-    ) {
-      // it's more than one, then string[], otherwise, it's a string
-      // @ts-ignore, since it's a checkbox, it's always a checkbox
-      allUniqueCheckboxKeys.add(e.name)
-    }
-  })
+  e_form
+    .querySelectorAll?.('input[type=checkbox][name]')
+    .forEach((e: Element) => {
+      if (
+        e_form?.querySelectorAll?.(`input[type=checkbox][name=${e?.name}]`)
+          .length > 1
+      ) {
+        // it's more than one, then string[], otherwise, it's a string
+        // @ts-ignore, since it's a checkbox, it's always a checkbox
+        allUniqueCheckboxKeys.add(e.name)
+      }
+    })
 
   const whenItChanges = WhenItChanges(
-    e_form.current,
+    e_form,
     allUniqueCheckboxKeys,
     values,
     keys
   )
 
-  function onChange (e: Event) {
+  function onChange(e: Event) {
     const {values} = whenItChanges(e)
     props.onChange?.({
       values: values as T,
       blurredKeys,
       keys,
-      e_form: e_form.current as HTMLFormElement,
+      e_form: e_form as HTMLFormElement,
       lastTouched: e?.name || e?.target?.name || e?.currentTarget?.name,
     })
     checkValidity()
   }
 
-  function onSubmit (e: Event) {
+  function onSubmit(e: Event) {
     e.preventDefault()
     const {values} = whenItChanges(e)
     if (checkValidity()) {
@@ -104,19 +78,19 @@ export default function ProtoForm<T>(props: Props<T>) {
         values: values as T,
         blurredKeys,
         keys,
-        e_form: e_form.current as HTMLFormElement,
+        e_form: e_form as HTMLFormElement,
         lastTouched: '',
       })
     }
   }
 
   function checkValidity() {
-    if (e_form.current?.checkValidity()) {
+    if (e_form?.checkValidity()) {
       props.onIsValid?.({
         values: values as T,
         blurredKeys,
         keys,
-        e_form: e_form.current as HTMLFormElement,
+        e_form: e_form as HTMLFormElement,
         lastTouched: '',
       })
       // console.count("valid")
@@ -126,7 +100,7 @@ export default function ProtoForm<T>(props: Props<T>) {
         values: values as T,
         blurredKeys,
         keys,
-        e_form: e_form.current as HTMLFormElement,
+        e_form: e_form as HTMLFormElement,
         lastTouched: '',
       })
       // console.count("invalid")
@@ -134,27 +108,27 @@ export default function ProtoForm<T>(props: Props<T>) {
     }
   }
 
-  function onBlur (e: Event) {
-    // console.count("onBlur")
-    // @ts-ignore, since it always has a name
-    blurredKeys.add(e.name || e.target.name)
+  function onBlur(e: Event) {
+
+    const target = e.target as HTMLInputElement
+    if (!target) return
+
+    blurredKeys.add(target.name)
     props.onBlur?.({
       // @ts-ignore, since it always has a name
       name: e.name || e.target.name,
       blurredKeys,
       values: values as T,
       keys,
-      e_form: e_form.current as HTMLFormElement,
-      lastTouched: e?.name || e?.target?.name || e?.currentTarget?.name || '',
+      e_form: e_form as HTMLFormElement,
+      lastTouched: target.name,
     })
 
-    const target = e.target as HTMLInputElement
-    if (!target) return
 
     // if the id is set, then we can inject the error message there
     // otherwise, we can still mark it as invalid
     // That allows us complete customization of the error message
-    let e_error = e_form.current?.querySelector(
+    let e_error = e_form?.querySelector(
       `#${target.dataset.validationid}`
     ) as HTMLElement | null
 
@@ -170,7 +144,7 @@ export default function ProtoForm<T>(props: Props<T>) {
     checkValidity()
   }
 
-  function onKeyUp (e: Event) {
+  function onKeyUp(e: Event) {
     checkValidity()
   }
 
@@ -179,14 +153,12 @@ export default function ProtoForm<T>(props: Props<T>) {
     e_form.replaceWith(clonedElement) // Replace the original element with the clone
   }
 
-  e_form.current.addEventListener('change', onChange)
-  e_form.current.addEventListener('submit', onSubmit)
-  e_form.current
-    .querySelectorAll?.('input[name], textarea[name]')
-    .forEach(e => {
-      e.addEventListener('blur', onBlur)
-      e.addEventListener('keyup', onKeyUp)
-    })
+  e_form.addEventListener('change', onChange)
+  e_form.addEventListener('submit', onSubmit)
+  e_form.querySelectorAll?.('input[name], textarea[name]').forEach(e => {
+    e.addEventListener('blur', onBlur)
+    e.addEventListener('keyup', onKeyUp)
+  })
 
   // Check the validity of the form on load
   checkValidity()

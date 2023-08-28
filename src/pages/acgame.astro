@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro'
+import WCFloatingLabel from '../components/WCFloatingLabel.astro'
+import WCFieldsetInputs from '../components/WCFieldsetInputs.astro'
+---
+
+<Layout title="ampm">
+  <h1>AC Game</h1>
+  <form id="main">
+    <fieldset style="padding:1rem">
+      <WCFloatingLabel label="Name" adderror="true" addclear={'true'}>
+        <input
+          type="text"
+          name="name"
+          required
+          minlength="3"
+          autocomplete="off"
+          placeholder="Your Name"
+        />
+      </WCFloatingLabel>
+      <WCFloatingLabel label="Age" adderror="true" addclear={'true'}>
+        <input
+          type="text"
+          name="age"
+          required
+          minlength="1"
+          autocomplete="off"
+          placeholder="Your Age"
+        />
+      </WCFloatingLabel>
+      <WCFloatingLabel label="Birth" adderror="true" addclear={'true'}>
+        <input
+          type="text"
+          name="birth"
+          required
+          minlength="1"
+          autocomplete="off"
+          placeholder="Your Birth"
+        />
+      </WCFloatingLabel>
+      <WCFloatingLabel label="When do you want to go?" adderror="true">
+        <input
+          type="date"
+          name="date"
+          required
+          minlength="1"
+          autocomplete="off"
+          placeholder="Your date"
+        />
+      </WCFloatingLabel>
+      <WCFloatingLabel label="try a select" adderror="true" addclear={'true'}>
+        <select>
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </WCFloatingLabel>
+      <WCFieldsetInputs name="fardo" legend="Fardo was here" adderror="1">
+        <input type="checkbox" data-label="1" value="1" />
+        <input type="checkbox" data-label="2" value="2" />
+        <input type="checkbox" data-label="3" value="3" />
+        <input type="checkbox" data-label="4" value="4" />
+      </WCFieldsetInputs>
+      <WCFieldsetInputs name="franko" legend="Franko was here" adderror="1">
+        <input type="radio" data-label="a" value="a" />
+        <input type="radio" data-label="b" value="b" />
+        <input type="radio" data-label="c" value="c" />
+        <input type="radio" data-label="d" value="d" />
+      </WCFieldsetInputs>
+      <fieldset>
+        <legend>Pick at least one</legend>
+        <input type="checkbox" name="pick" value="1" />
+        <input type="checkbox" name="pick" value="2" />
+        <input type="checkbox" name="pick" value="3" />
+        <input type="checkbox" name="pick" value="4" />
+      </fieldset>
+      <fieldset>
+        <legend>Pick one</legend>
+        <input type="radio" name="pick2" value="1" />
+        <input type="radio" name="pick2" value="2" />
+        <input type="radio" name="pick2" value="3" />
+        <input type="radio" name="pick2" value="4" />
+      </fieldset>
+      <WCFloatingLabel
+        label="When do you want to go?"
+        adderror="true"
+        addclear={'true'}
+      >
+        <textarea
+          placeholder="Enter in some information here"
+          name="sometextarea"
+          cols="30"
+          rows="10"
+          minlength="30"
+          maxlength="500"></textarea>
+      </WCFloatingLabel>
+      <button type="submit" style="padding-inline:1rem; padding-block:.5rem"
+        >Submit</button
+      >
+    </fieldset>
+  </form>
+</Layout>
+
+<script src="../core/acgame/ACGame"></script>
+
+<style is:inline>
+  form {
+    margin-top: 100px;
+  }
+</style>

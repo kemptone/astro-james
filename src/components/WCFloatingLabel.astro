@@ -1,0 +1,18 @@
+---
+export interface Props {
+  children: any;
+  addclear? : string
+  label? : any
+  adderror? : any
+}
+const { children, addclear, label, adderror } = Astro.props;
+---
+<wc-floating-label-input
+  data-addclear={ addclear }
+  data-label={ label }
+  data-adderror={ adderror }
+>
+<slot />
+</wc-floating-label-input>
+
+<script src="./wc-floating-label-input"></script>

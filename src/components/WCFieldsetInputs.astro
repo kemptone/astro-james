@@ -1,0 +1,20 @@
+---
+export interface Props {
+  children: any
+  addclear?: string
+  legend?: string
+  adderror?: any
+  name?: string
+}
+const {children, legend, adderror, name} = Astro.props
+---
+
+<wc-fieldset-inputs
+  data-adderror={adderror}
+  data-name={name}
+  data-legend={legend}
+>
+  <slot />
+</wc-fieldset-inputs>
+
+<script src="./wc-fieldset-inputs"></script>
