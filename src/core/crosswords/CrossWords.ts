@@ -3,14 +3,18 @@ import ProtoForm from '../../components/ProtoForm/ProtoForm'
 const values = {
   width: 9,
   height: 9,
-  words: ['hello', 'world'],
-  grid: new Array(9)
+  words: ['fardo', 'the', 'lop', 'was', 'here'],
+  grid: new Array(9),
 }
 
-// have to do it this way, or it will be a reference to the same array
-for (let i = 0; i < values.height; i++) {
-    values.grid[i] = new Array(values.width).fill(' ')
+function buildX(height = 9, width = 9) {
+  // have to do it this way, or it will be a reference to the same array
+  for (let i = 0; i < height; i++) {
+    values.grid[i] = new Array(width).fill(' ')
+  }
 }
+
+buildX(values.height, values.width)
 
 const e_grid = document.querySelector('#crosswordgrid') as HTMLDivElement
 const e_width = document.querySelector(
@@ -31,37 +35,31 @@ const protoForm = ProtoForm<{
   e_form,
   onSubmit: e => {
     changeGrid()
+    buildFromWords()
   },
 })
 
 function changeGrid() {
   const width = parseInt(e_width.value)
   const height = parseInt(e_height.value)
-  const words = e_words.value.split(new RegExp('[\n ]')).filter(Boolean)
-  const grid = new Array(height).fill(new Array(width).fill(''))
+  const words = e_words.value.split(new RegExp('[\n ,.]')).filter(Boolean)
+  const grid = new Array(height)
   values.width = width
   values.height = height
   values.words = words
   values.grid = grid
+  buildX(height, width)
   console.log(values)
 }
 
-function addWord(word: string, tries = 0) {
+function addWord(word: string, tries = 0): void {
   const direction = Math.random() < 0.5 ? 'horizontal' : 'vertical'
   const x = Math.floor(Math.random() * values.width)
   const y = Math.floor(Math.random() * values.height)
 
-  console.log({
-    x,
-    y,
-    word,
-    tries,
-    direction,
-  })
-
   function tryAgain() {
     if (tries > 100) {
-      return false
+      return
     }
     return addWord(word, tries + 1)
   }
@@ -76,30 +74,71 @@ function addWord(word: string, tries = 0) {
       }
     }
 
-    // add word
-    for (let i = 0; i < word.length; i++) {
-        values.grid[y][x + i] = word[i]
+    let chars = word.match(/./ug) as RegExpMatchArray
+    let i = 0
+    for (let char of chars) {
+      values.grid[y][x + i] = char
+      i++
     }
 
   }
 
   if (direction === 'vertical') {
-    if (y + word.length > values.height) {
+    if (y + word.length >= values.height) {
       return tryAgain()
     }
     for (let i = 0; i < word.length; i++) {
-      if (values.grid[y + 1][x] !== ' ') {
+      if (values.grid[y + i][x] !== ' ') {
         return tryAgain()
       }
     }
 
-    // add word
-    for (let i = 0; i < word.length; i++) {
-        values.grid[y + i][x] = word[i]
+    let chars = word.match(/./ug) as RegExpMatchArray
+    let i = 0
+    for (let char of chars) {
+      values.grid[y + i][x] = char
+      i++
     }
-  }
 
+  }
 }
 
-addWord('fardo')
-console.log(values)
+function buildGrid() {
+  e_grid.innerHTML = ''
+  for (let y = 0; y < values.height; y++) {
+    const e_row = document.createElement('div')
+    e_row.classList.add('row')
+    for (let x = 0; x < values.width; x++) {
+      const e_cell = document.createElement('div')
+      e_cell.classList.add('cell')
+      e_cell.innerText = values.grid[y][x]
+      e_row.appendChild(e_cell)
+    }
+    e_grid.appendChild(e_row)
+  }
+}
+
+function fillGrid() {
+  for (let y = 0; y < values.height; y++) {
+    for (let x = 0; x < values.width; x++) {
+      if (values.grid[y][x] === ' ') {
+        values.grid[y][x] = String.fromCharCode(
+          Math.floor(Math.random() * 26) + 97
+        )
+      }
+    }
+  }
+}
+
+function buildFromWords() {
+  ;(e_words.value || '')
+    .split(new RegExp('[\n ,.]'))
+    .filter(Boolean)
+    .forEach(word => {
+      addWord(word)
+    })
+  fillGrid()
+  buildGrid()
+}
+
+buildFromWords()

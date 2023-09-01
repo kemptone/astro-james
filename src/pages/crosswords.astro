@@ -5,12 +5,13 @@ import Layout from '../layouts/Layout.astro'
 ---
 
 <Layout title="ampm">
-  <h1>Crosswords</h1>
+  <h1>Mommy's Crossword Puzzle</h1>
   <div id="crosswordgrid"></div>
   <form id="crosswords">
     <WCFloatingLabel label={'Words'} adderror={'1'}>
       <textarea name="words" id="" cols="30" rows="5" required minlength="2"
-      >hello world</textarea>
+        >😐 😀 😡 james kempton is here</textarea
+      >
     </WCFloatingLabel>
     <div class="group">
       <WCFloatingLabel label={'width'} adderror={'1'}>
@@ -28,19 +29,22 @@ import Layout from '../layouts/Layout.astro'
 <script src="../core/crosswords/Crosswords"></script>
 
 <style is:inline>
+  html,
+  body {
+    background-color: white;
+  }
 
-input {
-    padding:9px;
+  input {
+    padding: 9px;
     border-radius: 3px;
-}
+  }
 
-    #crosswordgrid {
-        margin-top:80px;
-
-    }
+  #crosswordgrid {
+    margin-top: 80px;
+  }
   .group {
     display: flex;
-    gap:10px;
+    gap: 10px;
     justify-content: space-between;
   }
 
@@ -52,6 +56,36 @@ input {
     max-width: 1200px;
     padding: 10px;
     margin-inline: auto;
+  }
+
+  #crosswordgrid {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    margin-inline: auto;
+    width: min-content;
+    border: 1px solid #000;
+  }
+  #crosswordgrid .row {
+    display: flex;
+    gap: 0px;
+    /* justify-content: space-between; */
+  }
+
+  #crosswordgrid .cell {
+    width: 3.2rem;
+    height: 3.2rem;
+    border: 1px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+  }
+
+  @media print {
+    #crosswords {
+      display:none;
+    }
   }
 
 </style>
