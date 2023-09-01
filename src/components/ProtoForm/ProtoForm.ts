@@ -72,8 +72,13 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
 
   function onSubmit(e: Event) {
     e.preventDefault()
+
+    for (const field of e_form.elements) {
+      field.removeAttribute('aria-invalid')
+    }
+
     const {values} = whenItChanges(e)
-    if (checkValidity()) {
+    if (checkValidity(false)) {
       props.onSubmit?.({
         values: values as T,
         blurredKeys,
@@ -81,11 +86,16 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
         e_form: e_form as HTMLFormElement,
         lastTouched: '',
       })
+    } else {
+      debugger
     }
   }
 
-  function checkValidity() {
-    if (e_form?.checkValidity()) {
+  function checkValidity(useRefortValidity = false) {
+    // if (e_form?.checkValidity()) {
+    if (
+      useRefortValidity ? e_form?.reportValidity() : e_form?.checkValidity()
+    ) {
       props.onIsValid?.({
         values: values as T,
         blurredKeys,
@@ -109,7 +119,6 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
   }
 
   function onBlur(e: Event) {
-
     const target = e.target as HTMLInputElement
     if (!target) return
 
@@ -124,7 +133,6 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
       lastTouched: target.name,
     })
 
-
     // if the id is set, then we can inject the error message there
     // otherwise, we can still mark it as invalid
     // That allows us complete customization of the error message
@@ -132,7 +140,7 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
       `#${target.dataset.validationid}`
     ) as HTMLElement | null
 
-    if (checkValidity()) {
+    if (checkValidity(false)) {
       target.removeAttribute('aria-invalid')
     } else {
       target.setAttribute('aria-invalid', 'true')
@@ -145,7 +153,11 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
   }
 
   function onKeyUp(e: Event) {
-    checkValidity()
+    if (e.target?.getAttribute('aria-invalid') === 'true') {
+      checkValidity(false)
+    } else {
+      checkValidity(false)
+    }
   }
 
   function removeAllEventListeners() {
@@ -155,6 +167,25 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
 
   e_form.addEventListener('change', onChange)
   e_form.addEventListener('submit', onSubmit)
+
+  for (const field of e_form.elements) {
+
+    field.removeAttribute('aria-invalid')
+    // const e_error = e_form?.querySelector( `#${field.dataset.validationid}` ) as HTMLElement | null
+
+    field.addEventListener('invalid', function handleInvalidField(event) {
+      if (!blurredKeys.has(field?.name || "BBBBBB")) return
+      field.setAttribute('aria-invalid', 'true')
+      if (field?.dataset) {
+        const e_error = e_form?.querySelector(
+          `#${field.dataset.validationid}`
+        ) as HTMLElement | null
+        if (!e_error) return
+        e_error.innerHTML = field?.validationMessage || ""
+      }
+    })
+  }
+
   e_form.querySelectorAll?.('input[name], textarea[name]').forEach(e => {
     e.addEventListener('blur', onBlur)
     e.addEventListener('keyup', onKeyUp)

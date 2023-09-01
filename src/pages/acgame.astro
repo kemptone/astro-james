@@ -61,25 +61,11 @@ import WCFieldsetInputs from '../components/WCFieldsetInputs.astro'
         <input type="checkbox" data-label="4" value="4" />
       </WCFieldsetInputs>
       <WCFieldsetInputs name="franko" legend="Franko was here" adderror="1">
-        <input type="radio" data-label="a" value="a" />
+        <input type="radio" data-label="a" value="a" required />
         <input type="radio" data-label="b" value="b" />
         <input type="radio" data-label="c" value="c" />
         <input type="radio" data-label="d" value="d" />
       </WCFieldsetInputs>
-      <fieldset>
-        <legend>Pick at least one</legend>
-        <input type="checkbox" name="pick" value="1" />
-        <input type="checkbox" name="pick" value="2" />
-        <input type="checkbox" name="pick" value="3" />
-        <input type="checkbox" name="pick" value="4" />
-      </fieldset>
-      <fieldset>
-        <legend>Pick one</legend>
-        <input type="radio" name="pick2" value="1" />
-        <input type="radio" name="pick2" value="2" />
-        <input type="radio" name="pick2" value="3" />
-        <input type="radio" name="pick2" value="4" />
-      </fieldset>
       <WCFloatingLabel
         label="When do you want to go?"
         adderror="true"

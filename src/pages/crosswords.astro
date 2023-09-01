@@ -1,0 +1,45 @@
+---
+import ProtoForm from '../components/ProtoForm/ProtoForm'
+import WCFloatingLabel from '../components/WCFloatingLabel.astro'
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="ampm">
+  <h1>Crosswords</h1>
+  <div id="crosswordgrid"></div>
+  <form id="crosswords">
+    <WCFloatingLabel label={'Words'} adderror={'1'}>
+      <textarea name="words" id="" cols="30" rows="5" required minlength="2"
+      ></textarea>
+    </WCFloatingLabel>
+    <div class="group">
+      <WCFloatingLabel label={'width'} adderror={'1'}>
+        <input type="number" name="width" value="9" min="3" required />
+      </WCFloatingLabel>
+      <WCFloatingLabel label={'height'} adderror={'1'}>
+        <input type="number" name="height" value="9" min="3" required />
+      </WCFloatingLabel>
+
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+</Layout>
+
+<script src="../core/crosswords/Crosswords"></script>
+
+<style is:inline>
+    #crosswordgrid {
+        margin-top:80px;
+
+    }
+  .group {
+    display: flex;
+    gap:10px;
+    justify-content: space-between;
+  }
+
+  .group button {
+    padding-inline: 30px;
+  }
+
+</style>

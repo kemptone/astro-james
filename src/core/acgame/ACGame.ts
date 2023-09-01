@@ -13,4 +13,5 @@ ProtoForm<FormType>({
     debugger
     console.log(JSON.stringify(values))
   },
+  noValidate: true,
 })

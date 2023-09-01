@@ -1,0 +1,32 @@
+:root {
+  --chakra-colors-red-500: #f56565;
+}
+
+wc-fieldset-inputs {
+}
+
+wc-fieldset-inputs .fieldset-inputs {
+  display: flex;
+  flex-direction: row;
+  margin-block: 1.2rem;
+  gap: 1rem;
+}
+
+wc-fieldset-inputs .fieldset-inputs > label {
+  display: flex;
+  flex-direction: row;
+  gap: .3rem;
+}
+
+/* These groupings can expand as we go */
+wc-fieldset-inputs .error {
+  display: none;
+  color: var(--chakra-colors-red-500);
+  font-weight: bold;
+}
+
+/* These groupings can expand as we go */
+wc-fieldset-inputs:has(textarea[aria-invalid='true']) .error,
+wc-fieldset-inputs:has(input[aria-invalid='true']) .error {
+  display: block;
+}

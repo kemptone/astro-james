@@ -1,10 +1,8 @@
-import './wc-floating-label.css'
+import './wc-fieldset-inputs.css'
 
 class WCFieldsetInputs extends HTMLElement {
-
   connectedCallback() {
-
-    const { legend, adderror, name, values } = this.dataset
+    const {legend, adderror, name, values} = this.dataset
 
     if (legend) {
       const e_legend = document.createElement('legend')
@@ -12,8 +10,8 @@ class WCFieldsetInputs extends HTMLElement {
       this.prepend(e_legend)
     }
 
-
-    const e_fragment = document.createDocumentFragment()
+    // const e_fragment = document.createDocumentFragment()
+    const e_group = document.createElement('div')
     const e_inputs = this.querySelectorAll('input')
 
     e_inputs.forEach(e_input => {
@@ -22,19 +20,22 @@ class WCFieldsetInputs extends HTMLElement {
       e_label.innerText = label
       e_label.htmlFor = e_input.id = `${name}_${label}`
       e_input.name = name || ''
-      e_fragment.appendChild(e_label)
+      e_input.dataset.validationid = name + '_error'
+
+      e_group.appendChild(e_label)
       // removes the input from the dom, and adds it to the label
       e_label.prepend(e_input)
     })
 
-    this.appendChild(e_fragment)
+    e_group.className = 'fieldset-inputs'
+    this.appendChild(e_group)
 
     if (adderror) {
       const e_error = document.createElement('div')
       e_error.className = 'error'
+      e_error.id = name + '_error'
       this.appendChild(e_error)
     }
-
   }
 }
 
