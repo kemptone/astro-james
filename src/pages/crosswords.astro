@@ -10,7 +10,7 @@ import Layout from '../layouts/Layout.astro'
   <form id="crosswords">
     <WCFloatingLabel label={'Words'} adderror={'1'}>
       <textarea name="words" id="" cols="30" rows="5" required minlength="2"
-      ></textarea>
+      >hello world</textarea>
     </WCFloatingLabel>
     <div class="group">
       <WCFloatingLabel label={'width'} adderror={'1'}>
@@ -28,6 +28,12 @@ import Layout from '../layouts/Layout.astro'
 <script src="../core/crosswords/Crosswords"></script>
 
 <style is:inline>
+
+input {
+    padding:9px;
+    border-radius: 3px;
+}
+
     #crosswordgrid {
         margin-top:80px;
 
@@ -40,6 +46,12 @@ import Layout from '../layouts/Layout.astro'
 
   .group button {
     padding-inline: 30px;
+  }
+
+  #crosswords {
+    max-width: 1200px;
+    padding: 10px;
+    margin-inline: auto;
   }
 
 </style>
