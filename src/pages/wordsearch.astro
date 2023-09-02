@@ -5,21 +5,23 @@ import Layout from '../layouts/Layout.astro'
 ---
 
 <Layout title="ampm">
-  <h1>Mommy's Crossword Puzzle</h1>
+  <h1>Mommy's Wacky Word Search Game</h1>
   <div id="crosswordgrid"></div>
   <form id="crosswords">
-    <WCFloatingLabel label={'Words'} adderror={'1'}>
-      <textarea name="words" id="" cols="30" rows="5" required minlength="2"
-        >😐 😀 😡 james kempton is here</textarea
-      >
-    </WCFloatingLabel>
     <div class="group">
-      <WCFloatingLabel label={'width'} adderror={'1'}>
-        <input type="number" name="width" value="9" min="3" required />
+      <WCFloatingLabel label={'Words'} adderror={'1'}>
+        <textarea name="words" id="" cols="30" rows="5" required minlength="2"
+          >😐 😀 😡 james kempton is here</textarea
+        >
       </WCFloatingLabel>
-      <WCFloatingLabel label={'height'} adderror={'1'}>
-        <input type="number" name="height" value="9" min="3" required />
-      </WCFloatingLabel>
+      <div>
+        <WCFloatingLabel label={'width'} adderror={'1'}>
+          <input type="number" name="width" value="9" min="3" required />
+        </WCFloatingLabel>
+        <WCFloatingLabel label={'height'} adderror={'1'}>
+          <input type="number" name="height" value="9" min="3" required />
+        </WCFloatingLabel>
+      </div>
 
       <button type="submit">Submit</button>
     </div>
@@ -48,8 +50,16 @@ import Layout from '../layouts/Layout.astro'
     justify-content: space-between;
   }
 
+  .group wc-floating-label-input {
+    flex: 1;
+  }
+
   .group button {
     padding-inline: 30px;
+  }
+
+  button:disabled {
+    opacity: .05;
   }
 
   #crosswords {
@@ -75,7 +85,7 @@ import Layout from '../layouts/Layout.astro'
   #crosswordgrid .cell {
     width: 3.2rem;
     height: 3.2rem;
-    border: 1px solid #000;
+    /* border: 1px solid #000; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -83,9 +93,13 @@ import Layout from '../layouts/Layout.astro'
   }
 
   @media print {
-    #crosswords {
-      display:none;
+    #crosswords button,
+    #crosswords wc-floating-label-input label,
+    #crosswords input {
+      display: none;
+    }
+    #crosswords textarea {
+      height:3rem;
     }
   }
-
 </style>

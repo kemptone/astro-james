@@ -1,9 +1,12 @@
 import ProtoForm from '../../components/ProtoForm/ProtoForm'
+import {persist, populate} from '../../helpers/localStorage'
 
-const values = {
+const stored_values = populate('crosswords-values')
+
+const values = stored_values || {
   width: 9,
   height: 9,
-  words: ['fardo', 'the', 'lop', 'was', 'here'],
+  words: 'fardo the lop was here',
   grid: new Array(9),
 }
 
@@ -13,8 +16,6 @@ function buildX(height = 9, width = 9) {
     values.grid[i] = new Array(width).fill(' ')
   }
 }
-
-buildX(values.height, values.width)
 
 const e_grid = document.querySelector('#crosswordgrid') as HTMLDivElement
 const e_width = document.querySelector(
@@ -27,29 +28,60 @@ const e_words = document.querySelector(
   'textarea[name="words"]'
 ) as HTMLTextAreaElement
 const e_form = document.querySelector('form#crosswords') as HTMLFormElement
+const e_button = e_form.querySelector(
+  'button[type="submit"]'
+) as HTMLButtonElement
 const protoForm = ProtoForm<{
   height: string
   width: string
   words: string
 }>({
   e_form,
-  onSubmit: e => {
+  onChange: args => {
+    console.count("afdfdfs")
+  },
+  onBlur: args => {
+    if (
+      args.values.words === values.words &&
+      Number(args.values.width) === values.width &&
+      Number(args.values.height) === values.height
+    ) {
+      e_button.setAttribute('disabled', 'disabled')
+    } else {
+      e_button.removeAttribute('disabled')
+    }
+  },
+  onSubmit: args => {
+    e_button.setAttribute('disabled', 'disabled')
+    if (
+      args.values.words === values.words &&
+      Number(args.values.width) === values.width &&
+      Number(args.values.height) === values.height
+    )
+      return
     changeGrid()
     buildFromWords()
   },
 })
 
+e_words.addEventListener('keypress', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault()
+    // changeGrid()
+    // buildFromWords()
+    e_form.querySelector('button[type="submit"]')?.click()
+  }
+})
+
 function changeGrid() {
   const width = parseInt(e_width.value)
   const height = parseInt(e_height.value)
-  const words = e_words.value.split(new RegExp('[\n ,.]')).filter(Boolean)
   const grid = new Array(height)
   values.width = width
   values.height = height
-  values.words = words
+  values.words = e_words.value
   values.grid = grid
   buildX(height, width)
-  console.log(values)
 }
 
 function addWord(word: string, tries = 0): void {
@@ -74,13 +106,12 @@ function addWord(word: string, tries = 0): void {
       }
     }
 
-    let chars = word.match(/./ug) as RegExpMatchArray
+    let chars = word.match(/./gu) as RegExpMatchArray
     let i = 0
     for (let char of chars) {
       values.grid[y][x + i] = char
       i++
     }
-
   }
 
   if (direction === 'vertical') {
@@ -93,13 +124,12 @@ function addWord(word: string, tries = 0): void {
       }
     }
 
-    let chars = word.match(/./ug) as RegExpMatchArray
+    let chars = word.match(/./gu) as RegExpMatchArray
     let i = 0
     for (let char of chars) {
       values.grid[y + i][x] = char
       i++
     }
-
   }
 }
 
@@ -131,14 +161,26 @@ function fillGrid() {
 }
 
 function buildFromWords() {
+  buildX(values.height, values.width)
   ;(e_words.value || '')
     .split(new RegExp('[\n ,.]'))
     .filter(Boolean)
     .forEach(word => {
       addWord(word)
     })
+
   fillGrid()
+  persist('crosswords-values', values)
   buildGrid()
 }
 
-buildFromWords()
+if (stored_values) {
+  e_words.value = values.words
+  e_height.value = values.height.toString()
+  e_width.value = values.width.toString()
+  buildGrid()
+  e_button.setAttribute('disabled', 'disabled')
+} else {
+  buildFromWords()
+  e_button.setAttribute('disabled', 'disabled')
+}
