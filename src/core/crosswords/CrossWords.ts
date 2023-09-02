@@ -31,47 +31,6 @@ const e_form = document.querySelector('form#crosswords') as HTMLFormElement
 const e_button = e_form.querySelector(
   'button[type="submit"]'
 ) as HTMLButtonElement
-const protoForm = ProtoForm<{
-  height: string
-  width: string
-  words: string
-}>({
-  e_form,
-  onChange: args => {
-    console.count("afdfdfs")
-  },
-  onBlur: args => {
-    if (
-      args.values.words === values.words &&
-      Number(args.values.width) === values.width &&
-      Number(args.values.height) === values.height
-    ) {
-      e_button.setAttribute('disabled', 'disabled')
-    } else {
-      e_button.removeAttribute('disabled')
-    }
-  },
-  onSubmit: args => {
-    e_button.setAttribute('disabled', 'disabled')
-    if (
-      args.values.words === values.words &&
-      Number(args.values.width) === values.width &&
-      Number(args.values.height) === values.height
-    )
-      return
-    changeGrid()
-    buildFromWords()
-  },
-})
-
-e_words.addEventListener('keypress', e => {
-  if (e.key === 'Enter') {
-    e.preventDefault()
-    // changeGrid()
-    // buildFromWords()
-    e_form.querySelector('button[type="submit"]')?.click()
-  }
-})
 
 function changeGrid() {
   const width = parseInt(e_width.value)
@@ -90,7 +49,7 @@ function addWord(word: string, tries = 0): void {
   const y = Math.floor(Math.random() * values.height)
 
   function tryAgain() {
-    if (tries > 100) {
+    if (tries > 300) {
       return
     }
     return addWord(word, tries + 1)
@@ -115,7 +74,7 @@ function addWord(word: string, tries = 0): void {
   }
 
   if (direction === 'vertical') {
-    if (y + word.length >= values.height) {
+    if (y + word.length > values.height) {
       return tryAgain()
     }
     for (let i = 0; i < word.length; i++) {
@@ -174,13 +133,64 @@ function buildFromWords() {
   buildGrid()
 }
 
-if (stored_values) {
-  e_words.value = values.words
-  e_height.value = values.height.toString()
-  e_width.value = values.width.toString()
-  buildGrid()
-  e_button.setAttribute('disabled', 'disabled')
-} else {
-  buildFromWords()
-  e_button.setAttribute('disabled', 'disabled')
+function init() {
+  ProtoForm<{
+    height: string
+    width: string
+    words: string
+  }>({
+    e_form,
+    onChange: args => {
+      console.count('afdfdfs')
+    },
+    onBlur: args => {
+      if (
+        args.values.words === values.words &&
+        Number(args.values.width) === values.width &&
+        Number(args.values.height) === values.height
+      ) {
+        e_form.classList.add('is-dirty')
+        // e_button.setAttribute('disabled', 'disabled')
+      } else {
+        e_form.classList.remove('is-dirty')
+        // e_button.removeAttribute('disabled')
+      }
+    },
+    onSubmit: args => {
+      e_form.classList.add('is-dirty')
+      // e_button.setAttribute('disabled', 'disabled')
+      if (
+        args.values.words === values.words &&
+        Number(args.values.width) === values.width &&
+        Number(args.values.height) === values.height
+      )
+        return
+      changeGrid()
+      buildFromWords()
+    },
+  })
+
+  e_words.addEventListener('keypress', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      // changeGrid()
+      // buildFromWords()
+      e_form.querySelector('button[type="submit"]')?.click()
+    }
+  })
+
+  if (stored_values) {
+    e_words.value = values.words
+    e_height.value = values.height.toString()
+    e_width.value = values.width.toString()
+    buildGrid()
+    e_form.classList.add('is-dirty')
+    // e_button.setAttribute('disabled', 'disabled')
+  } else {
+    buildFromWords()
+    e_form.classList.add('is-dirty')
+    // e_button.setAttribute('disabled', 'disabled')
+  }
 }
+
+init()
