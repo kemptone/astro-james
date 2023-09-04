@@ -17,6 +17,7 @@ function buildX(height = 9, width = 9) {
   }
 }
 
+const e_reset = document.querySelector('#reset') as HTMLButtonElement
 const e_grid = document.querySelector('#crosswordgrid') as HTMLDivElement
 const e_width = document.querySelector(
   'input[name="width"]'
@@ -177,6 +178,12 @@ function init() {
       // buildFromWords()
       e_form.querySelector('button[type="submit"]')?.click()
     }
+  })
+
+  e_reset.addEventListener('click', e => {
+    e.preventDefault()
+    localStorage.clear()
+    location.reload()
   })
 
   if (stored_values) {

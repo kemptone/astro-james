@@ -13,11 +13,11 @@ const routes = await fs.readdir(url);
                         const route =
                             item === "index.astro" ? "/" : item.split(".")[0];
 
-                        return (
+                        return route !== '/' ? (
                             <li>
                                 <a href={`/${route}`}>{route}</a>
                             </li>
-                        );
+                        ) : null;
                     })
                 }
             </ol>
@@ -62,15 +62,24 @@ const routes = await fs.readdir(url);
 <style is:global>
     site-menu dialog ol {
         font-size: 1.2rem;
+        max-height: 95vh;
+        overflow: auto;
     }
 
     site-menu dialog {
         right: 0;
-        top: 50px;
-        margin: 50px;
+        top: 0px;
+        margin: 0px;
         left: auto;
         background-color: transparent;
         border: none;
+    }
+
+    @media (min-height: 768px) {
+        site-menu dialog {
+            top: 50px;
+            margin: 50px;
+        }
     }
 
     site-menu dialog::backdrop {

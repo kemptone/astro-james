@@ -5,9 +5,10 @@ import Layout from '../layouts/Layout.astro'
 ---
 
 <Layout title="ampm">
-  <h1>Mommy's Wacky Word Search Game</h1>
+  <h1>Mommy's Wacky Word Search Game <button id="reset">reset!</button></h1>
   <div id="crosswordgrid"></div>
   <form id="crosswords">
+    <div id="words-to-find">🔭 Words to find 👀</div>
     <div class="group">
       <WCFloatingLabel label={'Words'} adderror={'1'}>
         <textarea name="words" id="" cols="30" rows="5" required minlength="2"
@@ -52,7 +53,7 @@ import Layout from '../layouts/Layout.astro'
 
   .group wc-floating-label-input {
     flex: 1;
-    margin:0;
+    margin: 0;
   }
 
   .group button {
@@ -60,7 +61,7 @@ import Layout from '../layouts/Layout.astro'
   }
 
   #crosswords.is-dirty button {
-    opacity: .05;
+    opacity: 0.05;
   }
 
   #crosswords {
@@ -83,6 +84,11 @@ import Layout from '../layouts/Layout.astro'
     /* justify-content: space-between; */
   }
 
+  #reset {
+    margin-left: 100px;
+    padding-inline: 10px;
+  }
+
   #crosswordgrid .cell {
     width: 3.2rem;
     height: 3.2rem;
@@ -93,14 +99,28 @@ import Layout from '../layouts/Layout.astro'
     font-size: 1.8rem;
   }
 
+  #words-to-find {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: none;
+    margin-top:20px;
+  }
+
   @media print {
+    #reset,
     #crosswords button,
     #crosswords wc-floating-label-input label,
     #crosswords input {
       display: none;
     }
     #crosswords textarea {
-      height:3rem;
+      height: 6rem;
+      font-size: 2rem;
+    }
+
+    #words-to-find {
+      display: block;
     }
   }
 </style>
