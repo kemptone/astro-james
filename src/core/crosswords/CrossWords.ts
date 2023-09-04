@@ -1,7 +1,7 @@
 import ProtoForm from '../../components/ProtoForm/ProtoForm'
 import {persist, populate} from '../../helpers/localStorage'
-
 const stored_values = populate('crosswords-values')
+type OtherSettings = 'is_uppercase' | 'is_squared'
 
 const values: {
   width: number
@@ -9,12 +9,14 @@ const values: {
   words: string
   placed_words: string[]
   grid: string[][]
+  other_settings: OtherSettings[]
 } = stored_values || {
   width: 9,
   height: 9,
-  words: 'fardo the lop was here',
+  words: '𓂾 𓄁 𓃰 𓃽 𓅮 james kempton',
   placed_words: [''],
   grid: new Array(9),
+  other_settings: [],
 }
 
 function buildX(height = 9, width = 9) {
@@ -24,6 +26,14 @@ function buildX(height = 9, width = 9) {
   }
 }
 
+function buildOtherSettings () {
+  e_body.className = ''
+    values.other_settings?.forEach(setting => {
+      e_body.classList.add(setting)
+    })
+}
+
+const e_body = document.body
 const e_reset = document.querySelector('#reset') as HTMLButtonElement
 const e_grid = document.querySelector('#crosswordgrid') as HTMLDivElement
 const e_words_list = document.querySelector(
@@ -39,9 +49,17 @@ const e_words = document.querySelector(
   'textarea[name="words"]'
 ) as HTMLTextAreaElement
 const e_form = document.querySelector('form#crosswords') as HTMLFormElement
-const e_button = e_form.querySelector(
-  'button[type="submit"]'
-) as HTMLButtonElement
+const e_dialog = document.querySelector('dialog#settings') as HTMLDialogElement
+const e_settings = document.querySelector('#showsettings') as HTMLButtonElement
+
+function printFindTheWords() {
+  values.placed_words.forEach(word => {
+    if (word.codePointAt(0) > 500) return
+    const e_word = document.createElement('span')
+    e_word.innerText = word
+    e_words_list.appendChild(e_word)
+  })
+}
 
 function changeGrid() {
   const width = parseInt(e_width.value)
@@ -146,11 +164,7 @@ function buildFromWords() {
 
   fillGrid()
   e_words_list.innerHTML = ''
-  values.placed_words.forEach(word => {
-    const e_word = document.createElement('span')
-    e_word.innerText = word
-    e_words_list.appendChild(e_word)
-  })
+  printFindTheWords()
   persist('crosswords-values', values)
   buildGrid()
 }
@@ -160,12 +174,18 @@ function init() {
     height: string
     width: string
     words: string
+    other_settings: OtherSettings[]
   }>({
     e_form,
     onChange: args => {
-      console.count('afdfdfs')
+      values.other_settings = args.values.other_settings
+      persist('crosswords-values', values)
+      buildOtherSettings()
     },
     onBlur: args => {
+      values.other_settings = args.values.other_settings
+      persist('crosswords-values', values)
+      buildOtherSettings()
       if (
         args.values.words === values.words &&
         Number(args.values.width) === values.width &&
@@ -192,6 +212,27 @@ function init() {
     },
   })
 
+  e_settings.addEventListener('click', e => {
+    e.preventDefault()
+    e_dialog.showModal()
+  })
+
+  e_dialog.addEventListener('click', e => {
+    e.stopPropagation()
+    const target = e.target as HTMLDialogElement
+
+    if (target.nodeName === 'DIALOG' || target.nodeName === 'BUTTON') {
+      if (
+        e.offsetX < 0 ||
+        e.offsetX > target.offsetWidth ||
+        e.offsetY < 0 ||
+        e.offsetY > target.offsetHeight
+      ) {
+        e_dialog.close()
+      }
+    }
+  })
+
   e_words.addEventListener('keypress', e => {
     if (e.key === 'Enter') {
       e.preventDefault()
@@ -203,8 +244,10 @@ function init() {
 
   e_reset.addEventListener('click', e => {
     e.preventDefault()
-    localStorage.clear()
-    location.reload()
+    if (confirm('Are you sure you want to reset?')) {
+      localStorage.clear()
+      location.reload()
+    }
   })
 
   if (stored_values) {
@@ -221,10 +264,11 @@ function init() {
   }
 
   e_words_list.innerHTML = ''
-  values.placed_words.forEach(word => {
-    const e_word = document.createElement('span')
-    e_word.innerText = word
-    e_words_list.appendChild(e_word)
+  printFindTheWords()
+  buildOtherSettings()
+
+  e_form.querySelectorAll("input[name='other_settings']").forEach((e:HTMLInputElement) => {
+    e.checked = values.other_settings?.includes(e.value as OtherSettings)
   })
 
 }

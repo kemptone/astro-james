@@ -50,11 +50,13 @@
     /* justify-content: space-between; */
   }
 
+  #showsettings,
   #reset {
     padding-inline: 10px;
     margin:10px 0;
     border:none;
-    margin-left:40px;
+    font-size: 16px;
+    font-weight: 400;
   }
 
   #crosswordgrid .cell {
@@ -88,11 +90,49 @@
   body h1 {
     font-size: 25px;
     font-weight: 800;
+    text-align: center;
+  }
+
+  #words-to-find,
+  .controls {
+    text-align: center;
+  }
+  
+  dialog {
+    position:fixed;
+  }
+
+  dialog form[method='dialog'] {
+    text-align: right;
+  }
+
+  dialog form[method='dialog'] button {
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+  }
+
+  dialog::backdrop {
+    /* background: rgba(0, 0, 0, 0.05); */
+    /* background: --background-color: #fed469; */
+    /* background-color: #fed469c2 !important; */
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+
+  body.is_squared #crosswordgrid .cell {
+    border: 1px solid #000;
+  }
+
+
+  body.is_uppercase #words-to-find-list,
+  body.is_uppercase #crosswordgrid .cell {
+    text-transform: uppercase;
   }
 
   @media print {
-    #reset,
     #crosswords,
+    .controls,
     #crosswords button,
     #crosswords wc-floating-label-input label,
     #crosswords input {

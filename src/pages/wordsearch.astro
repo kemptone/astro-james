@@ -2,6 +2,7 @@
 import WCFloatingLabel from '../components/WCFloatingLabel.astro'
 import Layout from '../layouts/Layout.astro'
 import '../core/crosswords/wordsearch.css'
+import WCFieldsetInputs from '../components/WCFieldsetInputs.astro';
 ---
 
 <Layout title="ampm">
@@ -9,30 +10,42 @@ import '../core/crosswords/wordsearch.css'
   <div id="words-to-find">
     <span contenteditable>Find these words:</span>
     <span contenteditable id="words-to-find-list"></span>
-    <button id="reset">♼</button>
   </div>
-  <div>
+  <div class="controls">
+    <button id="reset">♼ reset</button>
+    <button id="showsettings">edit settings</button>
   </div>
+  <div></div>
   <div id="crosswordgrid"></div>
-  <form id="crosswords">
-    <div class="group">
-      <WCFloatingLabel label={''} adderror={'1'}>
-        <textarea name="words" id="" cols="30" rows="5" required minlength="1"
-          >𓂾 𓄁 𓃰 𓃽 𓅮 james kempton</textarea
-        >
-      </WCFloatingLabel>
-      <div>
-        <WCFloatingLabel label={'width'} adderror={'1'}>
-          <input type="number" name="width" value="9" min="1" required />
-        </WCFloatingLabel>
-        <WCFloatingLabel label={'height'} adderror={'1'}>
-          <input type="number" name="height" value="9" min="1" required />
-        </WCFloatingLabel>
-      </div>
 
-      <button type="submit">Submit</button>
-    </div>
-  </form>
+  <dialog id="settings">
+    <form method="dialog">
+      <button>✕</button>
+    </form>
+    <form id="crosswords">
+      <div class="group">
+        <WCFloatingLabel label={'Words to find'} adderror={'1'}>
+          <textarea name="words" id="" cols="30" rows="5" required minlength="1"
+            >𓂾 𓄁 𓃰 𓃽 𓅮 james kempton</textarea
+          >
+        </WCFloatingLabel>
+        <div>
+          <WCFloatingLabel label={'width'} adderror={'1'}>
+            <input type="number" name="width" value="9" min="1" required />
+          </WCFloatingLabel>
+          <WCFloatingLabel label={'height'} adderror={'1'}>
+            <input type="number" name="height" value="9" min="1" required />
+          </WCFloatingLabel>
+          <WCFieldsetInputs>
+            <input id="uppercase" type="checkbox" name="other_settings" data-label="Uppercase" value="is_uppercase" />
+            <input id="squared" type="checkbox" name="other_settings" data-label="Use Squares" value="is_squared" />
+          </WCFieldsetInputs>
+        </div>
+
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </dialog>
 </Layout>
 
 <script src="../core/crosswords/CrossWords"></script>

@@ -16,11 +16,15 @@ class WCFieldsetInputs extends HTMLElement {
 
     e_inputs.forEach(e_input => {
       const e_label = document.createElement('label')
-      const label = e_input.dataset.label || e_input.name
-      e_label.innerText = label
-      e_label.htmlFor = e_input.id = `${name}_${label}`
-      e_input.name = name || ''
-      e_input.dataset.validationid = name + '_error'
+      const label = e_input.dataset.label || e_input.value || e_input.name
+      e_label.innerText = String(label).replace(/_/g, ' ')
+      if (!e_input.id) {
+        e_label.htmlFor = e_input.id = `${name}_${label}`
+      } else {
+        e_label.htmlFor = e_input.id
+      }
+      e_input.name = e_input.name || name || ''
+      e_input.dataset.validationid = (e_input.name || name) + '_error'
 
       e_group.appendChild(e_label)
       // removes the input from the dom, and adds it to the label
