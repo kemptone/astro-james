@@ -1,18 +1,24 @@
 ---
-import ProtoForm from '../components/ProtoForm/ProtoForm'
 import WCFloatingLabel from '../components/WCFloatingLabel.astro'
 import Layout from '../layouts/Layout.astro'
+import '../core/crosswords/wordsearch.css'
 ---
 
 <Layout title="ampm">
-  <h1>Mommy's Wacky Word Search Game <button id="reset">reset!</button></h1>
+  <h1 contenteditable>𐂅 Mommy's Wacky Word Search Game 𓀡</h1>
+  <div id="words-to-find">
+    <span contenteditable>Find these words:</span>
+    <span contenteditable id="words-to-find-list"></span>
+    <button id="reset">♼</button>
+  </div>
+  <div>
+  </div>
   <div id="crosswordgrid"></div>
   <form id="crosswords">
-    <div id="words-to-find">🔭 Words to find 👀</div>
     <div class="group">
-      <WCFloatingLabel label={'Words'} adderror={'1'}>
+      <WCFloatingLabel label={''} adderror={'1'}>
         <textarea name="words" id="" cols="30" rows="5" required minlength="1"
-          >😐 😀 😡 james kempton is here</textarea
+          >𓂾 𓄁 𓃰 𓃽 𓅮 james kempton</textarea
         >
       </WCFloatingLabel>
       <div>
@@ -30,97 +36,3 @@ import Layout from '../layouts/Layout.astro'
 </Layout>
 
 <script src="../core/crosswords/CrossWords"></script>
-
-<style is:inline>
-  html,
-  body {
-    background-color: white;
-  }
-
-  input {
-    padding: 9px;
-    border-radius: 3px;
-  }
-
-  #crosswordgrid {
-    margin-top: 80px;
-  }
-  .group {
-    display: flex;
-    gap: 10px;
-    justify-content: space-between;
-  }
-
-  .group wc-floating-label-input {
-    flex: 1;
-    margin: 0;
-  }
-
-  .group button {
-    padding-inline: 30px;
-  }
-
-  #crosswords.is-dirty button {
-    opacity: 0.05;
-  }
-
-  #crosswords {
-    max-width: 1200px;
-    padding: 10px;
-    margin-inline: auto;
-  }
-
-  #crosswordgrid {
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
-    margin-inline: auto;
-    width: min-content;
-    border: 1px solid #000;
-  }
-  #crosswordgrid .row {
-    display: flex;
-    gap: 0px;
-    /* justify-content: space-between; */
-  }
-
-  #reset {
-    margin-left: 100px;
-    padding-inline: 10px;
-  }
-
-  #crosswordgrid .cell {
-    width: 3.2rem;
-    height: 3.2rem;
-    /* border: 1px solid #000; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.8rem;
-  }
-
-  #words-to-find {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    display: none;
-    margin-top:20px;
-  }
-
-  @media print {
-    #reset,
-    #crosswords button,
-    #crosswords wc-floating-label-input label,
-    #crosswords input {
-      display: none;
-    }
-    #crosswords textarea {
-      height: fit-content;
-      font-size: 2rem;
-    }
-
-    #words-to-find {
-      display: block;
-    }
-  }
-</style>

@@ -3,10 +3,17 @@ import {persist, populate} from '../../helpers/localStorage'
 
 const stored_values = populate('crosswords-values')
 
-const values = stored_values || {
+const values: {
+  width: number
+  height: number
+  words: string
+  placed_words: string[]
+  grid: string[][]
+} = stored_values || {
   width: 9,
   height: 9,
   words: 'fardo the lop was here',
+  placed_words: [''],
   grid: new Array(9),
 }
 
@@ -19,6 +26,9 @@ function buildX(height = 9, width = 9) {
 
 const e_reset = document.querySelector('#reset') as HTMLButtonElement
 const e_grid = document.querySelector('#crosswordgrid') as HTMLDivElement
+const e_words_list = document.querySelector(
+  '#words-to-find-list'
+) as HTMLDivElement
 const e_width = document.querySelector(
   'input[name="width"]'
 ) as HTMLInputElement
@@ -66,6 +76,8 @@ function addWord(word: string, tries = 0): void {
       }
     }
 
+    values.placed_words.push(word)
+
     let chars = word.match(/./gu) as RegExpMatchArray
     let i = 0
     for (let char of chars) {
@@ -83,6 +95,8 @@ function addWord(word: string, tries = 0): void {
         return tryAgain()
       }
     }
+
+    values.placed_words.push(word)
 
     let chars = word.match(/./gu) as RegExpMatchArray
     let i = 0
@@ -122,6 +136,7 @@ function fillGrid() {
 
 function buildFromWords() {
   buildX(values.height, values.width)
+  values.placed_words.length = 0
   ;(e_words.value || '')
     .split(new RegExp('[\n ,.]'))
     .filter(Boolean)
@@ -130,6 +145,12 @@ function buildFromWords() {
     })
 
   fillGrid()
+  e_words_list.innerHTML = ''
+  values.placed_words.forEach(word => {
+    const e_word = document.createElement('span')
+    e_word.innerText = word
+    e_words_list.appendChild(e_word)
+  })
   persist('crosswords-values', values)
   buildGrid()
 }
@@ -198,6 +219,14 @@ function init() {
     e_form.classList.add('is-dirty')
     // e_button.setAttribute('disabled', 'disabled')
   }
+
+  e_words_list.innerHTML = ''
+  values.placed_words.forEach(word => {
+    const e_word = document.createElement('span')
+    e_word.innerText = word
+    e_words_list.appendChild(e_word)
+  })
+
 }
 
 init()
