@@ -233,14 +233,14 @@ function init() {
     }
   })
 
-  e_words.addEventListener('keypress', e => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      // changeGrid()
-      // buildFromWords()
-      e_form.querySelector('button[type="submit"]')?.click()
-    }
-  })
+  // e_words.addEventListener('keypress', e => {
+  //   if (e.key === 'Enter') {
+  //     e.preventDefault()
+  //     // changeGrid()
+  //     // buildFromWords()
+  //     e_form.querySelector('button[type="submit"]')?.click()
+  //   }
+  // })
 
   e_reset.addEventListener('click', e => {
     e.preventDefault()
