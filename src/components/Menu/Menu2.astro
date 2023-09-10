@@ -1,177 +1,206 @@
 ---
-import fs from "node:fs/promises";
-const url = new URL("../../pages", import.meta.url);
-const routes = await fs.readdir(url);
+import fs from 'node:fs/promises'
+const url = new URL('../../pages', import.meta.url)
+const routes = await fs.readdir(url)
 ---
 
 <header>
-    <site-menu>
-        <dialog data-as="links">
-            <ol>
-                {
-                    routes.map((item) => {
-                        const route =
-                            item === "index.astro" ? "/" : item.split(".")[0];
+  <site-menu>
+    <dialog data-as="links">
+      <ol>
+        {
+          routes.map(item => {
+            const route = item === 'index.astro' ? '/' : item.split('.')[0]
 
-                        return route !== '/' ? (
-                            <li>
-                                <a href={`/${route}`}>{route}</a>
-                            </li>
-                        ) : null;
-                    })
-                }
-            </ol>
-        </dialog>
-        <button data-as="hamburgermenu" class="hamburgermenu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-    </site-menu>
+            return route !== '/' ? (
+              <li>
+                <a href={`/${route}`}>{route}</a>
+              </li>
+            ) : null
+          })
+        }
+      </ol>
+      <button data-as="reinstall" class="reinstall" type="button">Reinstall app</button>
+    </dialog>
+    <button data-as="hamburgermenu" class="hamburgermenu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </site-menu>
 </header>
 
 <script>
-    import { Base } from "../Base";
+  import {Base} from '../Base'
 
-    customElements.define(
-        "site-menu",
-        class extends Base {
-            constructor() {
-                super();
+  customElements.define(
+    'site-menu',
+    class extends Base {
+      constructor() {
+        super()
 
-                const e_hamburgermenu = this.elements
-                    .hamburgermenu as HTMLButtonElement;
-                const e_dialog = this.elements.links as HTMLDialogElement;
+        const e_hamburgermenu = this.elements.hamburgermenu as HTMLButtonElement
+        const e_dialog = this.elements.links as HTMLDialogElement
+        const e_reinstall = this.elements.reinstall as HTMLButtonElement
 
-                if (!e_hamburgermenu || !e_dialog) return;
+        if (!e_hamburgermenu || !e_dialog) return
 
-                e_hamburgermenu?.addEventListener?.("click", () => {
-                    e_hamburgermenu?.classList?.toggle("open");
-                    e_dialog?.showModal?.();
-                });
+        e_hamburgermenu?.addEventListener?.('click', () => {
+          e_hamburgermenu?.classList?.toggle('open')
+          e_dialog?.showModal?.()
+        })
 
-                e_dialog.addEventListener("click", () => {
-                    e_hamburgermenu.classList.toggle("open");
-                    e_dialog?.close?.();
-                });
-            }
-        }
-    );
+        e_dialog.addEventListener('click', () => {
+          e_hamburgermenu.classList.toggle('open')
+          e_dialog?.close?.()
+        })
+
+        if (!e_reinstall) return
+
+        e_reinstall.addEventListener('click', () => {
+          localStorage.clear()
+          caches.delete('my-cache')
+
+          setTimeout(() => {
+            location.reload()
+          }, 1000)
+
+          navigator.serviceWorker.getRegistration().then(registration => {
+            registration?.unregister().then(() => {
+              console.log('Service worker unregistered')
+              location.reload()
+            })
+          })
+        })
+      }
+    }
+  )
 </script>
 
 <style is:global>
-    site-menu dialog ol {
-        font-size: 1.2rem;
-        max-height: 95vh;
-        overflow: auto;
-    }
+  site-menu dialog ol {
+    font-size: 1.2rem;
+    max-height: 95vh;
+    overflow: auto;
+  }
 
+  site-menu dialog {
+    right: 0;
+    top: 0px;
+    margin: 0px;
+    left: auto;
+    background-color: transparent;
+    border: none;
+  }
+
+  @media (min-height: 768px) {
     site-menu dialog {
-        right: 0;
-        top: 0px;
-        margin: 0px;
-        left: auto;
-        background-color: transparent;
-        border: none;
+      top: 50px;
+      margin: 50px;
     }
+  }
 
-    @media (min-height: 768px) {
-        site-menu dialog {
-            top: 50px;
-            margin: 50px;
-        }
-    }
+  site-menu dialog::backdrop {
+    /* background-color:rgba(255,255,255,0.5); */
+    background-color: #fed469a4;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  site-menu .hamburgermenu {
+    position: absolute;
+    right: 13px;
+    top: 13px;
+    width: 60px;
+    height: 45px;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-transition: 0.5s ease-in-out;
+    -moz-transition: 0.5s ease-in-out;
+    -o-transition: 0.5s ease-in-out;
+    transition: 0.5s ease-in-out;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+  }
 
-    site-menu dialog::backdrop {
-        /* background-color:rgba(255,255,255,0.5); */
-        background-color: #fed469a4;
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-    }
-    site-menu .hamburgermenu {
-        position: absolute;
-        right: 13px;
-        top: 13px;
-        width: 60px;
-        height: 45px;
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
-        -webkit-transition: 0.5s ease-in-out;
-        -moz-transition: 0.5s ease-in-out;
-        -o-transition: 0.5s ease-in-out;
-        transition: 0.5s ease-in-out;
-        cursor: pointer;
-        border: none;
-        background-color: transparent;
-    }
+  site-menu .hamburgermenu span {
+    display: block;
+    position: absolute;
+    height: 9px;
+    width: 100%;
+    background: black;
+    border-radius: 9px;
+    opacity: 1;
+    left: 0;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-transition: 0.25s ease-in-out;
+    -moz-transition: 0.25s ease-in-out;
+    -o-transition: 0.25s ease-in-out;
+    transition: 0.25s ease-in-out;
+  }
 
-    site-menu .hamburgermenu span {
-        display: block;
-        position: absolute;
-        height: 9px;
-        width: 100%;
-        background: black;
-        border-radius: 9px;
-        opacity: 1;
-        left: 0;
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
-        -webkit-transition: 0.25s ease-in-out;
-        -moz-transition: 0.25s ease-in-out;
-        -o-transition: 0.25s ease-in-out;
-        transition: 0.25s ease-in-out;
-    }
+  /* Icon 4 */
 
-    /* Icon 4 */
+  site-menu .hamburgermenu span:nth-child(1) {
+    top: 0px;
+    -webkit-transform-origin: left center;
+    -moz-transform-origin: left center;
+    -o-transform-origin: left center;
+    transform-origin: left center;
+  }
 
-    site-menu .hamburgermenu span:nth-child(1) {
-        top: 0px;
-        -webkit-transform-origin: left center;
-        -moz-transform-origin: left center;
-        -o-transform-origin: left center;
-        transform-origin: left center;
-    }
+  site-menu .hamburgermenu span:nth-child(2) {
+    top: 18px;
+    -webkit-transform-origin: left center;
+    -moz-transform-origin: left center;
+    -o-transform-origin: left center;
+    transform-origin: left center;
+  }
 
-    site-menu .hamburgermenu span:nth-child(2) {
-        top: 18px;
-        -webkit-transform-origin: left center;
-        -moz-transform-origin: left center;
-        -o-transform-origin: left center;
-        transform-origin: left center;
-    }
+  site-menu .hamburgermenu span:nth-child(3) {
+    top: 36px;
+    -webkit-transform-origin: left center;
+    -moz-transform-origin: left center;
+    -o-transform-origin: left center;
+    transform-origin: left center;
+  }
 
-    site-menu .hamburgermenu span:nth-child(3) {
-        top: 36px;
-        -webkit-transform-origin: left center;
-        -moz-transform-origin: left center;
-        -o-transform-origin: left center;
-        transform-origin: left center;
-    }
+  site-menu .hamburgermenu.open span:nth-child(1) {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    top: -3px;
+    left: 8px;
+  }
 
-    site-menu .hamburgermenu.open span:nth-child(1) {
-        -webkit-transform: rotate(45deg);
-        -moz-transform: rotate(45deg);
-        -o-transform: rotate(45deg);
-        transform: rotate(45deg);
-        top: -3px;
-        left: 8px;
-    }
+  site-menu .hamburgermenu.open span:nth-child(2) {
+    width: 0%;
+    opacity: 0;
+  }
 
-    site-menu .hamburgermenu.open span:nth-child(2) {
-        width: 0%;
-        opacity: 0;
-    }
+  site-menu .hamburgermenu.open span:nth-child(3) {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    top: 39px;
+    left: 8px;
+  }
 
-    site-menu .hamburgermenu.open span:nth-child(3) {
-        -webkit-transform: rotate(-45deg);
-        -moz-transform: rotate(-45deg);
-        -o-transform: rotate(-45deg);
-        transform: rotate(-45deg);
-        top: 39px;
-        left: 8px;
-    }
+  button.reinstall {
+    position: fixed;
+    top: 14px;
+    left: 10px;
+    padding: 2px 10px;
+    font-size: 21px;
+    cursor: pointer;
+    margin:10px;
+  }
+
 </style>

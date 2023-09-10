@@ -1,6 +1,8 @@
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url)
 
+  console.log(url.pathname)
+
   // these files will not be cached at all
   if (
     url.protocol === 'chrome-extension:'
