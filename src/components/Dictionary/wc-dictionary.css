@@ -1,0 +1,61 @@
+wc-dictionary-item {
+  margin-block: 6rem;
+  display: block;
+  /* font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif; */
+  font-family: system-ui, sans-serif;
+  font-weight: 300;
+  font-size:1.1rem;
+  max-width: 44rem;
+}
+
+wc-dictionary-item .word {
+    font-size: 1.8rem;
+    font-weight: 600;
+    opacity: 1;
+    font-family: Rockwell, 'Rockwell Nova', 'Roboto Slab', 'DejaVu Serif', 'Sitka Small', serif;
+}
+
+wc-dictionary-item .pronounciation:not(:empty):before,
+wc-dictionary-item .definitions:not(:empty):before,
+wc-dictionary-item .examples:not(:empty):before,
+wc-dictionary-item .synonyms:not(:empty):before,
+wc-dictionary-item .antonyms:not(:empty):before,
+wc-dictionary-item .related:not(:empty):before,
+wc-dictionary-item .etymology:not(:empty):before {
+  display: block;
+  text-transform: capitalize;
+  opacity: 1;
+  margin-top: 0.9rem;
+  margin-bottom: 0.2rem;
+  font-family: Rockwell, 'Rockwell Nova', 'Roboto Slab', 'DejaVu Serif', 'Sitka Small', serif;
+  font-size: 1.2rem;
+  color: rgb(86, 174, 174);
+}
+
+wc-dictionary-item .etymology:not(:empty):before {
+  content: 'etymology:';
+}
+
+wc-dictionary-item .pronounciation:not(:empty):before {
+  content: 'pronounciation:';
+}
+wc-dictionary-item .definitions:not(:empty):before {
+  content: 'definitions:';
+}
+wc-dictionary-item .examples:not(:empty):before {
+  content: 'examples:';
+}
+wc-dictionary-item .synonyms:not(:empty):before {
+  content: 'synonyms:';
+}
+wc-dictionary-item .antonyms:not(:empty):before {
+  content: 'antonyms:';
+}
+wc-dictionary-item .related:not(:empty):before {
+  content: 'related:';
+}
+
+wc-dictionary-item .pronounciation:not(:empty) {
+    /* font-weight: 500; */
+    margin-bottom: 2rem;
+}

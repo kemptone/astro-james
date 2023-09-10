@@ -4,6 +4,18 @@ import Layout from '../layouts/Layout.astro'
 
 <Layout title="dictionary">
     <h1>Dictionary</h1>
+    <div id="dictionary">
+        <div id="list"></div>
+    </div>
 </Layout>
 
 <script src="../core/dictionary/Dictionary"></script>
+
+<style is:inline>
+    #dictionary {
+        max-width: 890px;
+        margin-inline: auto;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 2rem;
+    }
+</style>
