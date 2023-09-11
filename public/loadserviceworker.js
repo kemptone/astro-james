@@ -1,5 +1,5 @@
 if ("serviceWorker" in navigator) {
-  if (true || window.location.hostname.indexOf("localhost") === -1) {
+  if (window.location.hostname.indexOf("localhost") === -1) {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("/serviceworker.js").then(
         (registration) => {
