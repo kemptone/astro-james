@@ -1,30 +1,26 @@
 ---
 import WCFloatingLabel from '../WCFloatingLabel.astro'
+import WCFieldsetInputs from '../WCFieldsetInputs.astro'
 ---
 
 <wc-dictionary-search>
   <form>
     <fieldset>
       <legend>Find words</legend>
-      <div class="group">
         <WCFloatingLabel
           label="search for word by letters"
           addclear="1"
           adderror={'1'}
         >
-          <input
-            type="text"
-            name="word"
-            placeholder="look for the name"
-          />
+          <input type="text" name="word" placeholder="look for the name" />
         </WCFloatingLabel>
-        <WCFloatingLabel label="search by number of letters" adderror={'1'}>
-          <input
-            type="number"
-            name="number_of_letters"
-          />
-        </WCFloatingLabel>
-      </div>
+        <WCFieldsetInputs legend='search settings'>
+          <input type="checkbox" name="search_settings" value="start_of_word" data-label="start of word" checked>
+          <input type="checkbox" name="search_settings" value="match_whole_word" data-label="match whole word">
+        </WCFieldsetInputs>
+      <WCFloatingLabel label="search by number of letters" adderror={'1'}>
+        <input type="number" name="number_of_letters" />
+      </WCFloatingLabel>
       <div class="action">
         <button type="submit">Search</button>
       </div>
@@ -55,6 +51,5 @@ import WCFloatingLabel from '../WCFloatingLabel.astro'
     .action button:disabled {
       opacity: 0.2;
     }
-
   </style></wc-dictionary-search
 >
