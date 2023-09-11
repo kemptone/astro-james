@@ -1,0 +1,58 @@
+---
+import WCFloatingLabel from '../WCFloatingLabel.astro'
+---
+
+<wc-dictionary-search>
+  <form>
+    <fieldset>
+      <legend>Find words</legend>
+      <div class="group">
+        <WCFloatingLabel
+          label="search for word by letters"
+          addclear="1"
+          adderror={'1'}
+        >
+          <input
+            type="text"
+            name="word"
+            placeholder="look for the name"
+            minlength="2"
+          />
+        </WCFloatingLabel>
+        <WCFloatingLabel label="search by number of letters" adderror={'1'}>
+          <input
+            type="number"
+            name="number_of_letters"
+            min="2"
+            maxlength="9000"
+          />
+        </WCFloatingLabel>
+      </div>
+      <div class="action">
+        <button type="submit">Search</button>
+      </div>
+    </fieldset>
+  </form>
+
+  <script src="./wc-dictionary-search"></script>
+
+  <style is:inline>
+    form > fieldset {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      padding: 14px;
+    }
+
+    form input[type='number'] {
+      padding: 0.6rem;
+    }
+
+    .action {
+      padding-block: 1rem;
+    }
+
+    .action button {
+      padding: 1rem;
+    }
+  </style></wc-dictionary-search
+>

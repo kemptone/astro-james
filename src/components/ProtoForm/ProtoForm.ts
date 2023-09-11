@@ -1,4 +1,5 @@
 import type {ProtoFormProps, Values} from './ProtoForm.types'
+import type {ReturnValues} from './ProtoForm.types'
 
 const WhenItChanges =
   (
@@ -29,6 +30,18 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
   const e_form = props.e_form || new HTMLFormElement()
 
   if (props.noValidate) e_form.noValidate = true
+
+  function dispatchWraper<Z = {}>(
+    name: string,
+    Event: ReturnValues<T> & Z
+  ) {
+    e_form.dispatchEvent(
+      new CustomEvent(name, {
+        detail: Event,
+      })
+    )
+    return Event
+  }
 
   const values: Values = {}
   const keys = new Set<string>()
@@ -79,13 +92,23 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
 
     const {values} = whenItChanges(e)
     if (checkValidity(false)) {
-      props.onSubmit?.({
+
+      let r = dispatchWraper('proto-submit', {
         values: values as T,
         blurredKeys,
         keys,
         e_form: e_form as HTMLFormElement,
         lastTouched: '',
       })
+
+      props.onSubmit?.(r)
+      // props.onSubmit?.({
+      //   values: values as T,
+      //   blurredKeys,
+      //   keys,
+      //   e_form: e_form as HTMLFormElement,
+      //   lastTouched: '',
+      // })
     } else {
       debugger
     }
@@ -96,23 +119,39 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
     if (
       useRefortValidity ? e_form?.reportValidity() : e_form?.checkValidity()
     ) {
-      props.onIsValid?.({
+      let r = dispatchWraper('proto-valid', {
         values: values as T,
         blurredKeys,
         keys,
         e_form: e_form as HTMLFormElement,
         lastTouched: '',
       })
+      // props.onIsValid?.({
+      //   values: values as T,
+      //   blurredKeys,
+      //   keys,
+      //   e_form: e_form as HTMLFormElement,
+      //   lastTouched: '',
+      // })
+      props.onIsValid?.(r)
       // console.count("valid")
       return true
     } else {
-      props.onIsInvalid?.({
+      let r = dispatchWraper('proto-invalid', {
         values: values as T,
         blurredKeys,
         keys,
         e_form: e_form as HTMLFormElement,
         lastTouched: '',
       })
+      // props.onIsInvalid?.({
+      //   values: values as T,
+      //   blurredKeys,
+      //   keys,
+      //   e_form: e_form as HTMLFormElement,
+      //   lastTouched: '',
+      // })
+      props.onIsInvalid?.(r)
       // console.count("invalid")
       return false
     }
@@ -123,7 +162,7 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
     if (!target) return
 
     blurredKeys.add(target.name)
-    props.onBlur?.({
+    let r = dispatchWraper<{ name : string }>('proto-blur', {
       // @ts-ignore, since it always has a name
       name: e.name || e.target.name,
       blurredKeys,
@@ -132,6 +171,16 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
       e_form: e_form as HTMLFormElement,
       lastTouched: target.name,
     })
+    props.onBlur?.(r)
+    // props.onBlur?.({
+    //   // @ts-ignore, since it always has a name
+    //   name: e.name || e.target.name,
+    //   blurredKeys,
+    //   values: values as T,
+    //   keys,
+    //   e_form: e_form as HTMLFormElement,
+    //   lastTouched: target.name,
+    // })
 
     // if the id is set, then we can inject the error message there
     // otherwise, we can still mark it as invalid
