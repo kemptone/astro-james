@@ -3,7 +3,6 @@ export type DictionaryEntry = {
   endIndex: number
   raw: string
   word: string
-  alternatives?: string[]
   prounciation?: string
   definitions?: string[]
   examples?: string[]

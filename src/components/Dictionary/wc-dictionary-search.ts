@@ -13,16 +13,12 @@ class WCDictionarySearch extends HTMLElement {
 
     ProtoForm<FormType>({
       e_form: this.querySelector('form'),
-      onIsValid: (formData) => {
+      onIsValid: () => {
         e_button?.removeAttribute('disabled')
       },
-      onIsInvalid: (formData) => {
+      onIsInvalid: () => {
         e_button?.setAttribute('disabled', 'true')
       }
-      // onSubmit: (formData) => {
-      //   formData.values
-      //   debugger
-      // }
     })
   }
 

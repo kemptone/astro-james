@@ -1,32 +1,33 @@
 import '../../components/Dictionary/wc-dictionary-item'
-// fetch sample.txt
+import { loader } from './Dictionary.helpers'
+import type { DictionaryEntry } from './Dictionary.types'
 
-type DictionaryEntry = {
-  startIndex: number
-  endIndex: number
-  raw: string
-  word: string
-  prounciation?: string
-  definitions?: string[]
-  examples?: string[]
-  synonyms?: string[]
-  antonyms?: string[]
-  related?: string[]
-  etymology?: string
-  others?: string
-}
-
-const e_dictionary = document.querySelector('#dictionary')
 const e_list = document.querySelector('#list')
 const e_form = document.querySelector('form')
 
-e_form?.addEventListener('proto-submit', e => {
-  debugger
-})
+const parts : DictionaryEntry[] = []
 
+e_form?.addEventListener('proto-submit', (e : any) => {
+  const word = e.detail.values.word.toUpperCase()
+  const length = Number(e.detail.values.number_of_letters || '0')
+
+  if (word) {
+    let results =  parts.filter(part => part.word.indexOf(word) > -1)
+    if (length) {
+      return renderList(results.filter(part => part.word.length === length))
+    } else {
+      return renderList(results)
+    }
+  } else {
+    if (length) {
+      return renderList(parts.filter(part => part.word.length === length))
+    }
+  }
+})
 
 function renderList (list : DictionaryEntry[]) {
   if (!e_list) return
+  e_list.innerHTML = ''
   const e_fragment = document.createDocumentFragment()
   list.forEach(entry => {
     const e_element = document.createElement('wc-dictionary-item')
@@ -44,70 +45,10 @@ function renderList (list : DictionaryEntry[]) {
   e_list.appendChild(e_fragment)
 }
 
-fetch('/dictionary/sample.txt')
-  .then(response => {
-    return response.text()
-  })
-  .then(text => {
-    console.log(text)
+loader(parts).then(() => {
 
-    // split the text by CAPITAL LETTERS
-    // finds all the matches of beginning of line, followed by n number of capital letters, followed by end of line
+  // creates a new array that is only 100 length
+  const sanity = parts.slice(0, 50)
 
-    const entryExp = /^([A-Z; ]+)$/gm
-
-    const parts: DictionaryEntry[] = []
-
-    let match
-    let lastIndex = 0
-    let lastWord = ''
-    while ((match = entryExp.exec(text)) !== null) {
-      let raw = match.input.slice(lastIndex, match.index)
-      let splitByNewLine = raw.split('\n\n')
-      let chunk1 = splitByNewLine[0].replace(lastWord, '')
-      let etymology_index = chunk1.search(/Etym:/)
-      let etymology, prounciation
-      let definitions : string[] = []
-      let synonyms
-
-      if (etymology_index > -1) {
-        etymology = chunk1.slice(etymology_index + 5).trim()
-        prounciation = chunk1.slice(0, etymology_index - 1).trim()
-      } else {
-        prounciation = chunk1.trim()
-      }
-
-      const rest = splitByNewLine.slice(1)
-
-      rest.forEach(chunk => {
-        if (chunk.startsWith('Defn:')) {
-          definitions.push(chunk.replace('Defn:', '').trim())
-        } else if (chunk.startsWith('Etym:')) {
-          etymology = chunk.replace('Etym:', '').trim()
-        } else if (chunk.startsWith('Syn.')) {
-          synonyms = chunk.replace('Syn.', '').trim()
-        } else {
-          if (chunk.trim()) definitions.push(chunk.trim())
-        }
-      })
-
-      if (lastWord) {
-        parts.push({
-          startIndex: lastIndex,
-          endIndex: match.index,
-          word: lastWord,
-          raw,
-          prounciation,
-          definitions,
-          etymology,
-          synonyms,
-        })
-      }
-
-      lastIndex = match.index
-      lastWord = match[0]
-    }
-
-    renderList(parts)
-
-  })
+  renderList(sanity)
+})
