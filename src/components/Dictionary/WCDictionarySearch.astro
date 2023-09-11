@@ -17,6 +17,7 @@ import WCFloatingLabel from '../WCFloatingLabel.astro'
             name="word"
             placeholder="look for the name"
             minlength="2"
+            required
           />
         </WCFloatingLabel>
         <WCFloatingLabel label="search by number of letters" adderror={'1'}>
@@ -25,6 +26,7 @@ import WCFloatingLabel from '../WCFloatingLabel.astro'
             name="number_of_letters"
             min="2"
             maxlength="9000"
+            required
           />
         </WCFloatingLabel>
       </div>
@@ -54,5 +56,10 @@ import WCFloatingLabel from '../WCFloatingLabel.astro'
     .action button {
       padding: 1rem;
     }
+
+    .action button:disabled {
+      opacity: 0.2;
+    }
+
   </style></wc-dictionary-search
 >
