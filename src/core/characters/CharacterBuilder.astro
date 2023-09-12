@@ -49,6 +49,7 @@ const def = 77824
     render() {
       const def = 77824
       const e_form = this.querySelector('form')
+      const e_input = this.querySelector('input') as HTMLInputElement
       const e_character = this.querySelector('.character')
       ProtoForm<FormType>({
         e_form,
@@ -62,8 +63,10 @@ const def = 77824
       // creates a random character between 77824 and 78895
       const rand = Math.floor(Math.random() * 1072) + 77824
 
-      if (!e_character) return
+      if (!e_character || !e_input) return
+
       e_character.innerHTML = '&#x' + rand.toString(16) + ';'
+      e_input.value = String(rand)
     }
 
     connectedCallback() {
