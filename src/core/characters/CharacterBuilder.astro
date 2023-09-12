@@ -31,7 +31,7 @@ const def = 77824
 
   init()
 
-  const template = `
+  const template = () => `
     <form>
         <div class="character"></div>
         <input
@@ -59,28 +59,15 @@ const def = 77824
         },
       })
 
+      // creates a random character between 77824 and 78895
+      const rand = Math.floor(Math.random() * 1072) + 77824
+
       if (!e_character) return
-      e_character.innerHTML = '&#x' + def.toString(16) + ';'
+      e_character.innerHTML = '&#x' + rand.toString(16) + ';'
     }
 
     connectedCallback() {
-      // this.innerHTML = template
-      this.innerHTML = template
-
-      //   const def = 77824
-      //   const e_form = this.querySelector('form')
-      //   const e_character = this.querySelector('.character')
-      //   ProtoForm<FormType>({
-      //     e_form,
-      //     onChange(form) {
-      //       if (!e_character) return
-      //       const char = parseInt(form.values.a)
-      //       e_character.innerHTML = '&#x' + char.toString(16) + ';'
-      //     },
-      //   })
-
-      //   if (!e_character) return
-      //   e_character.innerHTML = '&#x' + def.toString(16) + ';'
+      this.innerHTML = template()
       setTimeout(this.render.bind(this), 100)
     }
   }
@@ -92,14 +79,14 @@ const def = 77824
   #outer {
     width: 100%;
     height: 100%;
-    max-width: 900px;
+    max-width: 1200px;
     margin-inline: auto;
-    padding-bottom:100px;
+    padding-block:100px;
   }
   wc-character-builder {
     display: inline-block;
     position: relative;
-    width: 160px;
+    width: 200px;
     height: 250px;
     margin-inline: auto;
   }
@@ -113,7 +100,8 @@ const def = 77824
     text-align: center;
   }
   .character {
-    font-size: 10rem;
+    font-size: 9rem;
+    text-align: center;
   }
   #add {
     position: fixed;
@@ -123,4 +111,12 @@ const def = 77824
     padding: 0.5rem 1rem;
     background-color: white;
   }
+
+  @media print {
+    input,
+    #add {
+      display: none;
+    }
+  }
+
 </style>
