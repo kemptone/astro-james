@@ -3,11 +3,11 @@ import Dialog from "../../components/Dialog";
 import './style.css';
 
 const Primary =
-  "Abby  Adaliz  Aiden  Angelo  Anthony  Bailey  Benny  Briana  Chase  Cierra  Cruz  Daniel  Gustavo  Hudson  Iker  James  Leilani  Lindsey  Merryck  Michael  Sophia C  Sofia V  Kenia  Melanie  Valerie"
+  "Abby  Adaliz  Aiden  Angelo  Anthony  Bailey  Benny  Briana  Chase  Cierra  Cruz  Daniel  Gustavo  Hudson  Iker  James  Leilani  Lindsey  Merryck  Michael  Sophia C  Sofia V  Kenia  Melanie  Valerie  Mrs Kobylka"
     .split("  ");
 
 const Secondary =
-  "Beau, Gianna, Makenzie, Blake, Merlin, Santa Claus, Tooth Fairy, Audry, Braxton, Adley, Crista, Jake, Makayla, Atticus, Presly P, Alexis, Sophie, Mikey, Davey Jack, Hazel, Oliver, Lucas, Presly, Jackson, Aubrey, Elliot, Dumpy, Kevin, Glinda, Dorothy, Scarecrow, Tin Man, The Lion, Auntie M, Wizard of Oz, Nixon, Easter Bunny"
+  "Beau, Gianna, Makenzie, Blake, Merlin, Santa Claus, Tooth Fairy, Audry, Braxton, Adley, Crista, Jake, Makayla, Atticus, Presly P, Alexis, Sophie, Mikey, Davey Jack, Hazel, Oliver, Lucas, Presly, Jackson, Aubrey, Elliot, Dumpy, Kevin, Glinda, Dorothy, Scarecrow, Tin Man, The Lion, Auntie M, Wizard of Oz, Nixon, Easter Bunny, Dave, Ava"
     .split(", ");
 
 // const Primary = [
