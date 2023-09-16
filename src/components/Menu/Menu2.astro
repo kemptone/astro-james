@@ -8,6 +8,11 @@ const routes = await fs.readdir(url)
   <site-menu>
     <dialog data-as="links">
       <ol>
+
+              <li>
+                <a href={`/`}>Home</a>
+              </li>
+
         {
           routes.map(item => {
             const route = item === 'index.astro' ? '/' : item.split('.')[0]
@@ -79,9 +84,15 @@ const routes = await fs.readdir(url)
 
 <style is:global>
   site-menu dialog ol {
-    font-size: 1.2rem;
+    font-size: 1.9rem;
     max-height: 95vh;
     overflow: auto;
+    width:50%;
+    min-width: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5vw;
+    text-transform: capitalize;
   }
 
   site-menu dialog {
