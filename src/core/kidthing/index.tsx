@@ -3,11 +3,11 @@ import Dialog from "../../components/Dialog";
 import './style.css';
 
 const Primary =
-  "Abby  Adaliz  Aiden  Angelo  Anthony  Bailey  Benny  Briana  Chase  Cierra  Cruz  Daniel  Gustavo  Hudson  Iker  James  Leilani  Lindsey  Merryck  Michael  Sophia C  Sofia V  Kenia  Melanie  Mia  Mrs Kobylka  valrie  atreyu  xoxder "
+  "Abby  Adaliz  Aiden  Angelo  Anthony  Bailey  Benny  Briana  Chase  Cierra  Cruz  Gustavo  Hudson  Iker  James  Leilani  Lindsey  Merryck  Michael  Sophia C  Sofia V  Kenia  Melanie, the swamps of sadness"
     .split("  ");
 
 const Secondary =
-  "Beau, Gianna, Makenzie, Blake, Merlin, Santa Claus, Tooth Fairy, Audry, Braxton, Adley, Crista, Jake, Makayla, Atticus, Presly P, Alexis, Sophie, Mikey, Davey Jack, Hazel, Oliver, Lucas, Presly, Jackson, Aubrey, Elliot, Dumpy, Kevin, Glinda, Dorothy, Scarecrow, Tin Man, lion, Auntie M, Wizard of Oz, Nixon, Easter Bunny, Dave, Ava, Atreyu, Moonchild, Bastian, truck, valkor, zromby, xoxder, daddy, mommy, king of the bigest thing of the cramps of sadniss, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0"
+  "Beau, Gianna, Makenzie, Blake, Merlin, Santa Claus, Tooth Fairy, Audry, Braxton, Adley, Crista, Jake, Makayla, Atticus, Presly P, Alexis, Sophie, Mikey, Davey Jack, Hazel, Oliver, Lucas, Presly, Jackson, Aubrey, Elliot, Dumpy, Kevin, dave, Dorothy, Scarecrow, Tin Man, lion, Auntie M, Wizard of Oz, stephanie,  Easter Bunny, Dave, Ava, Atreyu, Moonchild, Bastian, valkor, artax, gmork, rock biter, morla, southern oracle, neverending story, James"
     .split(", ");
 
 // const Primary = [
