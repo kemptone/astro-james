@@ -11,6 +11,7 @@
     "allowJs": true,
     "jsxImportSource": "preact",
     "allowImportingTsExtensions": true,
+    "lib": ["DOM", "ESNext", "DOM.Iterable"],
     "paths": {
       "@components/*": ["src/components/*"],
       "@islands/*": ["src/islands/*"],
