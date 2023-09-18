@@ -30,12 +30,12 @@ import Layout from '../layouts/Layout.astro'
     items: 'hello, world',
   }
 
-  const $ = document.querySelector.bind(document)
-  const e_dialog = $('dialog')
-  const e_button = $('button#show')
-  const e_form = $('form')
-  const e_items = $('div#items')
-  const e_textarea = $('textarea[name="james_code"]')
+  // const $ = document.querySelector
+  const e_dialog = document.querySelector('dialog')
+  const e_button = document.querySelector('button#show')
+  const e_form = document.querySelector('form')
+  const e_items = document.querySelector('div#items')
+  const e_textarea = document.querySelector('textarea[name="james_code"]')
 
   function renderItems() {
     if (e_items) {
@@ -61,7 +61,7 @@ import Layout from '../layouts/Layout.astro'
   }
 
   if (e_dialog && e_button) {
-    e_button.addEventListener('click', e_dialog.showModal)
+    e_button.addEventListener('click', () => e_dialog.showModal())
   }
 
   type Form = {

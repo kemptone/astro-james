@@ -1,0 +1,15 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="ampm">
+    <h1>This should reinstall the app</h1>
+</Layout>
+
+<script>
+    localStorage.clear()
+    setTimeout(() => {
+        window.location.href = '/'
+    }, 1000)
+</script>
+
