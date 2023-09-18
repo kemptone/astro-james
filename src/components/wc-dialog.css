@@ -1,4 +1,4 @@
-dialog {
+dialog.wc-dialog {
   position: absolute;
   left: 0;
   right: 0;
@@ -18,24 +18,24 @@ dialog {
   height: fit-content;
 }
 
-dialog,
-dialog[open]::backdrop {
+dialog.wc-dialog,
+dialog.wc-dialog[open]::backdrop {
   visibility: hidden;
   opacity: 0;
   transition: visibility 0s linear 0.3s, opacity 0.3s linear;
 }
 
-dialog::backdrop {
+dialog.wc-dialog::backdrop {
   background: rgba(0, 0, 0, 0.3);
 }
 
-dialog[open].in,
-dialog[open].in::backdrop {
+dialog.wc-dialog[open].in,
+dialog.wc-dialog[open].in::backdrop {
   transition-delay: 0s;
 }
 
-dialog[open].in,
-dialog[open].in::backdrop {
+dialog.wc-dialog[open].in,
+dialog.wc-dialog[open].in::backdrop {
   opacity: 1;
   visibility: visible;
 }

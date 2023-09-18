@@ -9,6 +9,8 @@ class WCDialog extends HTMLDialogElement {
     const close = this.close.bind(this)
     const that = this
 
+    this.classList.add("wc-dialog")
+
     function fadeClose () {
       close()
       that.removeEventListener('transitionend', fadeClose)
