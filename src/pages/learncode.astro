@@ -1,35 +1,117 @@
 ---
+import WCFloatingLabel from '../components/WCFloatingLabel.astro'
 import Layout from '../layouts/Layout.astro'
 ---
 
-<Layout title="ampm">
-  <h1 contenteditable>Learn to Code</h1>
-  <button id="show">Show Dialog</button>
-  <dialog is="wc-dialog">
-    <h1>hello</h1>
-    <div>
-      atrayu moonchild is a web developer and designer based in the bay area.
-    </div>
-    <form method="dialog">
-      <input type="text" name="fardo" />
-      <input type="text" name="lopo" />
-      <button>✕</button>
-    </form>
-  </dialog>
+<Layout title="learn to code">
+  <div id="learntocode">
+    <h1>Learn to Code</h1>
+    <div id="items"></div>
+    <button type="button" id="show">Edit</button>
+    <dialog is="wc-dialog">
+      <form>
+        <fieldset>
+          <legend>Make a list, use 1 comma, and 1 space</legend>
+          <WCFloatingLabel addclear="1" adderror={'1'}>
+            <textarea name="james_code" cols="30" rows="10"></textarea>
+          </WCFloatingLabel>
+        </fieldset>
+        <button>done</button>
+      </form>
+    </dialog>
+  </div>
 </Layout>
 
 <script>
   import '../components/wc-dialog'
+  import ProtoForm from '../components/ProtoForm/ProtoForm'
 
-  const e_dialog = document.querySelector('dialog')
-  const e_button = document.querySelector('button#show')
-  const e_custom = document.querySelector('button#custom1')
+  const state = {
+    items: 'hello, world',
+  }
+
+  const $ = document.querySelector.bind(document)
+  const e_dialog = $('dialog')
+  const e_button = $('button#show')
+  const e_form = $('form')
+  const e_items = $('div#items')
+  const e_textarea = $('textarea[name="james_code"]')
+
+  function renderItems() {
+    if (e_items) {
+      const e_fragment = document.createDocumentFragment()
+      e_items.innerHTML = ''
+
+      state.items.split(', ').forEach(item => {
+        const e_item = document.createElement('div')
+        e_item.className = 'item'
+        e_item.innerText = item
+        e_fragment.appendChild(e_item)
+      })
+
+      e_items.appendChild(e_fragment)
+    }
+  }
+
+  function init() {
+    renderItems()
+    if (e_textarea) {
+      e_textarea.innerHTML = state.items
+    }
+  }
 
   if (e_dialog && e_button) {
     e_button.addEventListener('click', e_dialog.showModal)
   }
 
-  e_custom?.addEventListener('click', () => {
-    e_dialog?.close()
+  type Form = {
+    james_code: string
+  }
+
+  ProtoForm<Form>({
+    e_form,
+    onChange(args) {
+      state.items = args.values.james_code
+      renderItems()
+    },
   })
+
+  init()
 </script>
+
+<style is:inline>
+  #learntocode {
+    margin-top: 100px;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  #items {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-block: 100px;
+  }
+  div.item {
+    font-size: 24px;
+    font-weight: 600;
+    border: 1px solid black;
+    padding: 10px;
+  }
+
+  button {
+    font-size: 20px;
+    font-weight: 600;
+    border: 1px solid cornflowerblue;
+    color: cornflowerblue;
+    border-radius: 7px;
+    padding: 8px;
+  }
+
+  dialog[is='wc-dialog'] {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 7px;
+  }
+</style>
