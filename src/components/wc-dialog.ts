@@ -1,5 +1,10 @@
 import './wc-dialog.css'
 
+// * DEAD CODE */
+// https://stackoverflow.com/questions/67466609/customizable-built-in-elements-on-safari-polyfill-via-script-tag-vs-es6-import
+// Safari will NEVER support extending Native Elements other than HTMLElement
+// However, this will allow it to work, for now
+// <script is:inline src="//unpkg.com/@ungap/custom-elements/es.js"></script>
 class WCDialog extends HTMLDialogElement {
   constructor() {
     super()
@@ -68,6 +73,7 @@ class WCDialog extends HTMLDialogElement {
       }
     )
   }
+
 }
 
 if (typeof window != 'undefined')
