@@ -1,5 +1,6 @@
 ---
 import WCFloatingLabel from '../components/WCFloatingLabel.astro'
+import WCDialogWrap from '../components/WCDialogWrap.astro';
 import Layout from '../layouts/Layout.astro'
 ---
 
@@ -8,19 +9,19 @@ import Layout from '../layouts/Layout.astro'
     <h1>Learn to Code</h1>
     <div id="items"></div>
     <button type="button" id="show">Edit</button>
-    <dialog is="wc-dialog">
+    <WCDialogWrap id="main_form">
       <form id="main">
         <fieldset>
           <legend>Make a list, use 1 comma, and 1 space</legend>
           <WCFloatingLabel addclear="1" adderror={'1'}>
-            <textarea name="james_code" cols="30" rows="10"></textarea>
+            <textarea placeholder="word, word, word, word" name="james_code" cols="30" rows="10"></textarea>
           </WCFloatingLabel>
         </fieldset>
       </form>
       <form>
         <button formmethod="dialog">done</button>
       </form>
-    </dialog>
+    </WCDialogWrap>
   </div>
 </Layout>
 
@@ -33,7 +34,7 @@ import Layout from '../layouts/Layout.astro'
   }
 
   // const $ = document.querySelector
-  const e_dialog = document.querySelector('dialog')
+  const e_dialog = document.querySelector('#main_form')
   const e_button = document.querySelector('button#show')
   const e_form = document.querySelector('form#main')
   const e_items = document.querySelector('div#items')
