@@ -1,0 +1,17 @@
+---
+export interface Props {
+  children: any
+  class?: string
+  id?: string
+}
+
+const {class: cls, id} = Astro.props
+---
+
+<wc-dialog-wrap>
+  <dialog id={id} class={cls}>
+    <slot />
+  </dialog>
+</wc-dialog-wrap>
+
+<script src="./wc-dialog-wrap.ts"></script>
