@@ -1,8 +1,8 @@
 import '../../components/wc-dialog'
-import Words from './learnCode.words'
+import Words from './learnCode.Words'
 import Alerts from './learnCode.Alerts'
 import Colors from './learnCode.Colors'
-import { State } from './learnCode.types'
+import type { State } from './learnCode.types'
 
 const state: State = {
   items: 'hello, world',
