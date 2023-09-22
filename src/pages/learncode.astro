@@ -11,8 +11,9 @@ import '../core/learncode/learncode.css'
     <div id="items"></div>
     <fieldset>
       <legend>Edit</legend>
-      <button type="button" id="show">Words</button>
-      <button type="button" id="btn_alerts">Alerts</button>
+      <button id="show">Words</button>
+      <button id="btn_alerts">Alerts</button>
+      <button id="btn_colors">Colors</button>
     </fieldset>
     <WCDialogWrap id="input_words">
       <form>
@@ -42,18 +43,30 @@ import '../core/learncode/learncode.css'
         <button formmethod="dialog">done</button>
       </form>
     </WCDialogWrap>
+    <WCDialogWrap id="colors">
+      <form>
+        <fieldset class="unset">
+          <legend>Add your colors</legend>
+          <div id="color_list"></div>
+        </fieldset>
+      </form>
+      <form>
+        <button formmethod="dialog">done</button>
+      </form>
+    </WCDialogWrap>
   </div>
 </Layout>
 
 <script src="../core/learncode/learnCode"></script>
 
 <style>
-
   fieldset.unset {
     box-sizing: border-box;
     border: none;
     margin: 0;
     padding: 0;
   }
+
+
 
 </style>
