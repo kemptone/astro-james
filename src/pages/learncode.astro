@@ -1,20 +1,40 @@
 ---
 import WCFloatingLabel from '../components/WCFloatingLabel.astro'
-import WCDialogWrap from '../components/WCDialogWrap.astro';
+import WCDialogWrap from '../components/WCDialogWrap.astro'
 import Layout from '../layouts/Layout.astro'
+import '../core/learncode/learncode.css'
 ---
 
 <Layout title="learn to code">
   <div id="learntocode">
     <h1>Learn to Code</h1>
     <div id="items"></div>
-    <button type="button" id="show">Edit</button>
-    <WCDialogWrap id="main_form">
-      <form id="main">
-        <fieldset>
+    <fieldset>
+      <legend>Edit</legend>
+      <button type="button" id="show">Words</button>
+      <button type="button" id="btn_alerts">Alerts</button>
+    </fieldset>
+    <WCDialogWrap id="input_words">
+      <form>
+        <fieldset class="unset">
           <legend>Make a list, use 1 comma, and 1 space</legend>
           <WCFloatingLabel addclear="1" adderror={'1'}>
-            <textarea placeholder="word, word, word, word" name="james_code" cols="30" rows="10"></textarea>
+            <textarea placeholder="word, word, word, word" name="james_code"
+            ></textarea>
+          </WCFloatingLabel>
+        </fieldset>
+      </form>
+      <form>
+        <button formmethod="dialog">done</button>
+      </form>
+    </WCDialogWrap>
+    <WCDialogWrap id="alerts">
+      <form>
+        <fieldset class="unset">
+          <legend>Make a list, use 1 comma, and 1 space</legend>
+          <WCFloatingLabel addclear="1" adderror={'1'}>
+            <textarea placeholder="word, word, word, word" name="alert_texts"
+            ></textarea>
           </WCFloatingLabel>
         </fieldset>
       </form>
@@ -25,96 +45,15 @@ import Layout from '../layouts/Layout.astro'
   </div>
 </Layout>
 
-<script>
-  import '../components/wc-dialog'
-  import ProtoForm from '../components/ProtoForm/ProtoForm'
+<script src="../core/learncode/learnCode"></script>
 
-  const state = {
-    items: 'hello, world',
+<style>
+
+  fieldset.unset {
+    box-sizing: border-box;
+    border: none;
+    margin: 0;
+    padding: 0;
   }
 
-  // const $ = document.querySelector
-  const e_dialog = document.querySelector('#main_form')
-  const e_button = document.querySelector('button#show')
-  const e_form = document.querySelector('form#main')
-  const e_items = document.querySelector('div#items')
-  const e_textarea = document.querySelector('textarea[name="james_code"]')
-
-  function renderItems() {
-    if (e_items) {
-      const e_fragment = document.createDocumentFragment()
-      e_items.innerHTML = ''
-
-      state.items.split(', ').forEach(item => {
-        const e_item = document.createElement('div')
-        e_item.className = 'item'
-        e_item.innerText = item
-        e_fragment.appendChild(e_item)
-      })
-
-      e_items.appendChild(e_fragment)
-    }
-  }
-
-  function init() {
-    renderItems()
-    if (e_textarea) {
-      e_textarea.innerHTML = state.items
-    }
-  }
-
-  if (e_dialog && e_button) {
-    e_button.addEventListener('click', () => e_dialog.showModal())
-  }
-
-  type Form = {
-    james_code: string
-  }
-
-  ProtoForm<Form>({
-    e_form,
-    onChange(args) {
-      state.items = args.values.james_code
-      renderItems()
-    },
-  })
-
-  init()
-</script>
-
-<style is:inline>
-  #learntocode {
-    margin-top: 100px;
-    max-width: 1200px;
-    margin: auto;
-  }
-
-  #items {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding-block: 100px;
-  }
-  div.item {
-    font-size: 24px;
-    font-weight: 600;
-    border: 1px solid black;
-    padding: 10px;
-  }
-
-  button {
-    font-size: 20px;
-    font-weight: 600;
-    border: 1px solid cornflowerblue;
-    color: cornflowerblue;
-    border-radius: 7px;
-    padding: 8px;
-  }
-
-  dialog[is='wc-dialog'] {
-    width: 100%;
-    max-width: 600px;
-    border-radius: 7px;
-  }
 </style>
