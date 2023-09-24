@@ -27,7 +27,7 @@ e_form?.addEventListener('proto-submit', (e: any) => {
     }
   } else {
     if (length) {
-      return renderList(parts.filter(part => part.word.length === length))
+      return renderList(parts.filter(part => part.word.indexOf(" ") === -1).filter(part => part.word.length === length))
     }
   }
 })
