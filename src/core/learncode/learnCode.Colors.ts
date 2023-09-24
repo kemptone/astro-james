@@ -15,6 +15,7 @@ const main: SubFunction = ({ state, z, render, $ }) => {
     parts.forEach((part) => {
       const e_item = document.createElement("input") as HTMLInputElement
       e_item.type = "color"
+      e_item.value = state.colors[parts.indexOf(part)] || "#000000"
       e_fragment.appendChild(e_item)
     })
 

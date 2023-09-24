@@ -1,15 +1,18 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import View from "../core/kidthing"
+import Layout from '../layouts/Layout.astro'
+import View from '../core/kidthing'
 ---
 
 <Layout title="ampm">
-	<View client:only="preact" />
+  <View client:only="preact" />
 </Layout>
 
 <style is:global>
-	#links::backdrop {
-		background-color:rgba(255, 255, 255, 0.645)!important;
-	} 
-</style>
+  #links::backdrop {
+    background-color: rgba(255, 255, 255, 0.645) !important;
+  }
 
+  main.colorthing .colors button {
+	color:black;
+  }
+</style>

@@ -221,6 +221,13 @@ html {
     line-height: 1.5;
   }
 
+  fieldset {
+    border-style: solid;
+    border-color: rgba(0,0,0,1);
+    border-radius: 8px;
+    width: fit-content;
+  }
+
 /* fieldset {
     border:none;
     margin:0;

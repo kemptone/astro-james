@@ -4,11 +4,15 @@ import Alerts from './learnCode.Alerts'
 import Colors from './learnCode.Colors'
 import type { State } from './learnCode.types'
 
+const Secondary =
+  'Beau, Gianna, Makenzie, Blake, Merlin, Santa Claus, Tooth Fairy, Audry, Braxton, Adley, Crista, Jake, Makayla, Atticus, Presly P, Alexis, Sophie, Mikey, Davey Jack, Hazel, Oliver, Lucas, Presly, Jackson, Aubrey, Elliot, Dumpy, Kevin, Glinda, Dorothy, Scarecrow, Tin Man, The Lion, Auntie M, Wizard of Oz, Nixon, Easter Bunny, Dave, Ava, Atreyu, Moonchild, Bastian, Emmerson'
+
 const state: State = {
-  items: 'hello, world',
+  items: Secondary,
   alert_texts: '',
   actions: [],
-  colors: []
+  colors: [],
+  present: []
 }
 
 const z: Record<string, HTMLElement | any> = {}

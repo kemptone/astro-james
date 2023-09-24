@@ -27,8 +27,22 @@ button {
   padding: 8px;
 }
 
-dialog[is='wc-dialog'] {
+#learntocode dialog fieldset {
+  width: 100%;
+}
+
+#learntocode dialog {
   width: 100%;
   max-width: 600px;
   border-radius: 7px;
 }
+
+#learntocode dialog textarea {
+  min-height: 9rem;
+}
+
+/* dialog[is='wc-dialog'] {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 7px;
+} */
