@@ -11,7 +11,6 @@ e_edit?.addEventListener('click', () => {
   e_edit.classList.toggle('active')
   document.querySelectorAll('wc-spinner').forEach((e_spinner: any) => {
     e_spinner.setAttribute('edit', e_edit.classList.contains('active'))
-    // e_spinner.edit = e_edit.classList.contains('active')
   })
 })
 
@@ -20,23 +19,26 @@ e_fans?.addEventListener('click', () => {
 })
 
 e_num_fans?.addEventListener('input', e => {
+  const is_edit_mode = e_edit?.classList.contains('active')
 
   // @ts-ignore
-  const count = parseInt( e.target.value )
+  const count = parseInt(e.target.value)
   let x = 0
 
   const e_fragment = document.createDocumentFragment()
 
   while (x < count) {
     let e_item = document.createElement('wc-spinner')
+    if (is_edit_mode) {
+      e_item.setAttribute('edit', 'true')
+    }
     e_fragment.appendChild(e_item)
     x++
   }
 
-  let e_target = $("#spinners")
+  let e_target = $('#spinners')
   if (e_target) {
-    e_target.innerHTML = ""
+    e_target.innerHTML = ''
     e_target.appendChild(e_fragment)
   }
-
 })

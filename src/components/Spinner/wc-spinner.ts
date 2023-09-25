@@ -96,10 +96,10 @@ class WCSpinner extends HTMLElement {
     if (this.form) {
       ProtoForm<FormType>({
         e_form: this.form,
+        // onChange(args) {
+        //   const { lastTouched } = args
+        // },
         onChange(args) {
-          const { lastTouched } = args
-        },
-        onSubmit(args) {
           const values = args.values
           that.state = {
             ...that.state,
