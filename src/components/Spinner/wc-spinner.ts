@@ -28,7 +28,7 @@ class WCSpinner extends HTMLElement {
     slow_down: 2,
     speed_up: 2,
     wait: 0,
-    blade_scale: 1,
+    blade_scale: 30,
     rate: 1.5,
     opacity: 1,
     audio_rate: 1,
@@ -96,21 +96,19 @@ class WCSpinner extends HTMLElement {
     if (this.form) {
       ProtoForm<FormType>({
         e_form: this.form,
-        // onChange(args) {
-        //   const { lastTouched } = args
-        // },
         onChange(args) {
           const values = args.values
           that.state = {
             ...that.state,
             ...{
-              blade_count: parseInt(values.blade_count),
+              blade_count: parseFloat(values.blade_count),
               run_time: parseInt(values.run_time),
-              slow_down: parseInt(values.slow_down),
-              speed_up: parseInt(values.speed_up),
-              wait: parseInt(values.wait),
+              slow_down: parseFloat(values.slow_down),
+              speed_up: parseFloat(values.speed_up),
+              wait: parseFloat(values.wait),
               blade_scale: parseFloat(values.blade_scale),
-              curve_type: values.curve_type
+              curve_type: values.curve_type,
+              rate: parseFloat(values.rate),
             },
           }
           that.setTimes()
@@ -120,6 +118,36 @@ class WCSpinner extends HTMLElement {
         },
       })
     }
+  }
+
+  setTimes() {
+    const set = (name: string, value: string) => {
+      this.main?.style.setProperty(name, value)
+    }
+
+    const FACTOR = 0.666 // Magic number
+    const {rate, speed_up, run_time, slow_down, blade_scale} = this.state
+    const rotations_speedup = Math.ceil(speed_up * FACTOR * rate)
+    const rotations_runtime = Math.ceil(run_time * rate) + rotations_speedup
+    const rotations_slowdown =
+      Math.ceil(slow_down * FACTOR * rate) + rotations_runtime
+    this.state = {
+      ...this.state,
+      rotations_speedup,
+      rotations_runtime,
+      rotations_slowdown,
+      rate,
+      run_time,
+      slow_down,
+      blade_scale,
+    }
+    set('--rotations_speedup', `${rotations_speedup}turn`)
+    set('--rotations_runtime', `${rotations_runtime}turn`)
+    set('--rotations_slowdown', `${rotations_slowdown}turn`)
+    set('--speed_up', `${speed_up}s`)
+    set('--run_time', `${run_time}s`)
+    set('--slow_down', `${slow_down}s`)
+    set('--blade_scale', `${blade_scale}`)
   }
 
   setClass(name: string) {
@@ -137,10 +165,20 @@ class WCSpinner extends HTMLElement {
   }
 
   start() {
-    this.state = {...this.state, running: true, timer_state: 'started'}
-    this.main?.classList.remove('ending')
-    this.main?.classList.remove('middle')
-    this.main?.classList.add('started')
+
+    const run = () => {
+      this.state = {...this.state, running: true, timer_state: 'started'}
+      this.main?.classList.remove('ending')
+      this.main?.classList.remove('middle')
+      this.main?.classList.add('started')
+    }
+
+    if (this.state.wait) {
+      return setTimeout(run, this.state.wait * 1000)
+    } else {
+      run()
+    }
+
   }
 
   startStop() {
@@ -152,30 +190,6 @@ class WCSpinner extends HTMLElement {
     }
   }
 
-  setTimes() {
-    const set = (name: string, value: string) => {
-      this.main?.style.setProperty(name, value)
-    }
-
-    const FACTOR = 0.666 // Magic number
-    const {rate, speed_up, run_time, slow_down} = this.state
-    const rotations_speedup = Math.ceil(speed_up * FACTOR * rate)
-    const rotations_runtime = Math.ceil(run_time * rate) + rotations_speedup
-    const rotations_slowdown =
-      Math.ceil(slow_down * FACTOR * rate) + rotations_runtime
-    this.state = {
-      ...this.state,
-      rotations_speedup,
-      rotations_runtime,
-      rotations_slowdown,
-    }
-    set('--rotations_speedup', `${rotations_speedup}turn`)
-    set('--rotations_runtime', `${rotations_runtime}turn`)
-    set('--rotations_slowdown', `${rotations_slowdown}turn`)
-    set('--speed_up', `${speed_up}s`)
-    set('--run_time', `${run_time}s`)
-    set('--slow_down', `${slow_down}s`)
-  }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (name === 'edit') {

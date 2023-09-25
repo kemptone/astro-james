@@ -48,6 +48,12 @@ export default `
     height: 100%;
     margin-left: -50%;
     margin-top: -50%;
+
+    width: calc(10px * var(--blade_scale, 30));
+    height: calc(10px * var(--blade_scale, 30));
+    margin-left: calc(calc(10px * var(--blade_scale, 30)) * -.5);
+    margin-top: calc(calc(calc(10px * var(--blade_scale, 30)) * -.5) - 20px);
+
   }
 
   main svg {
@@ -70,7 +76,28 @@ export default `
   }
 
   dialog.wc-dialog {
-    min-width: 400px;
+    min-width: 500px;
+    max-width:600px;
+  }
+
+  dialog.wc-dialog form {
+    column-count: 3;
+    margin-block:1.2rem;
+    margin-inline:1.2rem;
+  }
+
+  dialog.wc-dialog form wc-floating-label-input {
+    break-inside: avoid;
+  }
+
+  @media (max-width: 600px) {
+    dialog.wc-dialog form {
+      column-count: 2;
+    }
+  }
+
+  dialog.wc-dialog form > *:first-child {
+    margin-top:0;
   }
 
   dialog.wc-dialog input {
@@ -88,6 +115,9 @@ export default `
   <wc-dialog-wrap>
     <dialog>
     <form>
+      <wc-floating-label-input data-label="Speed or Rate" data-adderror="1">
+        <input type="number" name="rate" min=".001" max="10" step=".001" value="1.5" required>
+      </wc-floating-label-input>
       <wc-floating-label-input data-label="Blade Count" data-adderror="1">
         <input type="number" name="blade_count" min="1" max="1000" step="1" value="5" required>
       </wc-floating-label-input>
@@ -98,10 +128,10 @@ export default `
         <input type="number" name="speed_up" min="1" max="100" step=".001" value="5" required>
       </wc-floating-label-input>
       <wc-floating-label-input data-label="Wait" data-adderror="1">
-        <input type="number" name="wait" min="0" max="100" step=".001" value="5" required>
+        <input type="number" name="wait" min="0" max="100" step=".001" value="0" required>
       </wc-floating-label-input>
       <wc-floating-label-input data-label="Blade Scale" data-adderror="1">
-        <input type="number" name="slow_down" min=".001" max="100" step=".001" value="5" required>
+        <input type="number" name="blade_scale" min="1" max="100" step=".001" value="30" required>
       </wc-floating-label-input>
       <wc-floating-label-input data-label="Slow Down" data-adderror="1">
         <input type="number" name="slow_down" min="1" max="100" step="1" value="5" required>
@@ -123,7 +153,6 @@ export default `
           <option>paddleSpacer</option>
         </select>
       </wc-floating-label-input>
-      <button type="submit">Save</button>
     </form>
     </dialog>
   </wc-dialog-wrap>
