@@ -1,9 +1,14 @@
 ---
+import WCDialogWrap from '../components/WCDialogWrap.astro';
+import WCFloatingLabel from '../components/WCFloatingLabel.astro';
 import Layout from '../layouts/Layout.astro'
 ---
 
 <Layout title="learn to code">
-  <h1>Spinners</h1>
+  <h1>Spinners
+    <button id="edit">Edit On</button>
+    <button id="change_fans">Change Fans</button>
+  </h1>
   <div id="spinners">
     <wc-spinner></wc-spinner>
     <wc-spinner></wc-spinner>
@@ -12,12 +17,45 @@ import Layout from '../layouts/Layout.astro'
     <wc-spinner></wc-spinner>
     <wc-spinner></wc-spinner>
     <wc-spinner></wc-spinner>
-    <wc-spinner></wc-spinner>
-    <wc-spinner></wc-spinner>
-    <wc-spinner></wc-spinner>
-    <wc-spinner></wc-spinner>
-    <wc-spinner></wc-spinner>
   </div>
+  <WCDialogWrap id="page_settings">
+    <form>
+      <WCFloatingLabel label="Number of Fans" adderror={'1'}>
+        <input type="number" name="number_of_fans" min="0" max="80" required>
+      </WCFloatingLabel>
+    </form>
+  </WCDialogWrap>
 </Layout>
 
 <script src="../core/spinners/index"></script>
+
+<style>
+  #spinners {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  wc-spinner svg {
+    margin:-20px;
+  }
+
+  h1 {
+    display: flex;
+    gap:1rem;
+  }
+  #change_fans,
+  #edit {
+    /* align-self: center; */
+    vertical-align: middle;
+  }
+
+  #edit.active {
+    background-color: red;
+    color:white;
+  }
+
+  #spinners {
+    margin-top:20px;
+  }
+
+</style>

@@ -1,3 +1,6 @@
+import type { TCurveType } from "./AdjustableBlades"
+
+
 export type State = {
   blade_count: number
   run_time: number
@@ -14,4 +17,6 @@ export type State = {
   rotations_runtime?: number
   rotations_slowdown?: number
   running: boolean
+  edit_mode: boolean
+  curve_type: TCurveType
 }
