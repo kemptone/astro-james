@@ -6,8 +6,6 @@ import Layout from '../layouts/Layout.astro'
 
 <Layout title="learn to code">
   <h1>Spinners
-    <button id="edit">Edit On</button>
-    <button id="change_fans">Change Fans</button>
   </h1>
   <div id="spinners">
     <wc-spinner></wc-spinner>
@@ -25,6 +23,10 @@ import Layout from '../layouts/Layout.astro'
       </WCFloatingLabel>
     </form>
   </WCDialogWrap>
+  <div class="actionButtons">
+    <button id="edit">Edit On</button>
+    <button id="change_fans">Change Fans</button>
+  </div>
 </Layout>
 
 <script src="../core/spinners/index"></script>
@@ -56,6 +58,22 @@ import Layout from '../layouts/Layout.astro'
 
   #spinners {
     margin-top:20px;
+  }
+
+  .actionButtons {
+    position:fixed;
+    left:20px;
+    bottom:20px;
+  }
+
+  .actionButtons button {
+    padding:10px;
+    font-size: 20px;
+    background: white;
+  }
+
+  html, body {
+    height: 100%;
   }
 
 </style>
