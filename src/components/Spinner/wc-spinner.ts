@@ -63,7 +63,25 @@ class WCSpinner extends HTMLElement {
   connectedCallback() {
     this.setTimes()
 
-    this.spinner?.addEventListener('click', this.startStop.bind(this))
+    let longpressTimer: any
+
+    const triggerEdit = () => {
+      longpressTimer = setTimeout(() => {
+        debugger
+        this.main?.querySelector('dialog')?.showModal()
+      }, 900)
+    }
+
+    const cancelTriggerEdit = () => {
+      clearTimeout(longpressTimer)
+    }
+
+    this.spinner?.addEventListener('touchstart', triggerEdit)
+    this.spinner?.addEventListener('mousedown', triggerEdit)
+    this.spinner?.addEventListener('mouseup', cancelTriggerEdit)
+    this.spinner?.addEventListener('touchend', cancelTriggerEdit)
+
+    // this.spinner?.addEventListener('click', this.startStop.bind(this))
     this.spinner?.addEventListener('transitionend', () => {
       const {timer_state} = this.state
 
