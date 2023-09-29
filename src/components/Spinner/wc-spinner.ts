@@ -67,13 +67,13 @@ class WCSpinner extends HTMLElement {
 
     const triggerEdit = () => {
       longpressTimer = setTimeout(() => {
-        debugger
         this.main?.querySelector('dialog')?.showModal()
       }, 900)
     }
 
     const cancelTriggerEdit = () => {
       clearTimeout(longpressTimer)
+      this.startStop()
     }
 
     this.spinner?.addEventListener('touchstart', triggerEdit)

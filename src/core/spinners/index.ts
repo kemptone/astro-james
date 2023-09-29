@@ -2,26 +2,9 @@ import '../../components/Spinner/wc-spinner'
 
 const $ = (selector: string) => document.querySelector(selector)
 
-const e_edit = $('#edit')
-const e_fans = $('#change_fans')
-const e_dialog = $('#page_settings') as HTMLDialogElement
 const e_num_fans = $("input[name='number_of_fans']") as HTMLInputElement
 
-e_edit?.addEventListener('click', () => {
-  e_edit.classList.toggle('active')
-  document.querySelectorAll('wc-spinner').forEach((e_spinner: any) => {
-    e_spinner.setAttribute('edit', e_edit.classList.contains('active'))
-  })
-})
-
-e_fans?.addEventListener('click', () => {
-  e_dialog.showModal()
-})
-
 e_num_fans?.addEventListener('input', e => {
-  const is_edit_mode = e_edit?.classList.contains('active')
-
-  // @ts-ignore
   const count = parseInt(e.target.value)
   let x = 0
 
@@ -29,9 +12,9 @@ e_num_fans?.addEventListener('input', e => {
 
   while (x < count) {
     let e_item = document.createElement('wc-spinner')
-    if (is_edit_mode) {
-      e_item.setAttribute('edit', 'true')
-    }
+    // if (is_edit_mode) {
+    //   e_item.setAttribute('edit', 'true')
+    // }
     e_fragment.appendChild(e_item)
     x++
   }
