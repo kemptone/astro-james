@@ -5,7 +5,7 @@ import template from './wc-spinner.template'
 import type {State} from './wc-spinner.types'
 import {AdjustableBlades} from './AdjustableBlades'
 import ProtoForm from '../ProtoForm/ProtoForm'
-import type { TCurveType } from '../AdjustableBlades'
+import type {TCurveType} from '../AdjustableBlades'
 
 type FormType = {
   blade_count: string
@@ -64,22 +64,31 @@ class WCSpinner extends HTMLElement {
     this.setTimes()
 
     let longpressTimer: any
+    let blocked = false
 
     const triggerEdit = () => {
       longpressTimer = setTimeout(() => {
         this.main?.querySelector('dialog')?.showModal()
+        blocked = true
+        setTimeout(() => {
+          blocked = false
+        }, 500)
       }, 900)
     }
 
     const cancelTriggerEdit = () => {
       clearTimeout(longpressTimer)
-      this.startStop()
+      longpressTimer = undefined
+      if (!blocked) this.startStop()
     }
 
     this.spinner?.addEventListener('touchstart', triggerEdit)
     this.spinner?.addEventListener('mousedown', triggerEdit)
     this.spinner?.addEventListener('mouseup', cancelTriggerEdit)
     this.spinner?.addEventListener('touchend', cancelTriggerEdit)
+    // this.spinner?.addEventListener('touchmove', cancelTriggerNoStart)
+    // this.spinner?.addEventListener('touchcancel', cancelTriggerNoStart)
+    this.spinner?.addEventListener('click', cancelTriggerEdit)
 
     // this.spinner?.addEventListener('click', this.startStop.bind(this))
     this.spinner?.addEventListener('transitionend', () => {
@@ -183,7 +192,6 @@ class WCSpinner extends HTMLElement {
   }
 
   start() {
-
     const run = () => {
       this.state = {...this.state, running: true, timer_state: 'started'}
       this.main?.classList.remove('ending')
@@ -196,18 +204,16 @@ class WCSpinner extends HTMLElement {
     } else {
       run()
     }
-
   }
 
   startStop() {
-    if (this.state.edit_mode) {
-      this.main?.querySelector('dialog')?.showModal()
-    } else {
-      if (this.state.running) this.stop()
-      else this.start()
-    }
+    // if (this.state.edit_mode) {
+    //   this.main?.querySelector('dialog')?.showModal()
+    // } else {
+    if (this.state.running) this.stop()
+    else this.start()
+    // }
   }
-
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (name === 'edit') {
