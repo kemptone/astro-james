@@ -82,10 +82,18 @@ class WCSpinner extends HTMLElement {
       if (!blocked) this.startStop()
     }
 
-    this.spinner?.addEventListener('touchstart', triggerEdit)
+    this.spinner?.addEventListener('touchstart', e => {
+      e.preventDefault()
+      if (e.touches.length > 1) return
+      triggerEdit()
+    })
     this.spinner?.addEventListener('mousedown', triggerEdit)
     this.spinner?.addEventListener('mouseup', cancelTriggerEdit)
-    this.spinner?.addEventListener('touchend', cancelTriggerEdit)
+    this.spinner?.addEventListener('touchend', e => {
+      e.preventDefault()
+      if (e.touches.length > 1) return
+      cancelTriggerEdit()
+    })
     // this.spinner?.addEventListener('touchmove', cancelTriggerNoStart)
     // this.spinner?.addEventListener('touchcancel', cancelTriggerNoStart)
     this.spinner?.addEventListener('click', cancelTriggerEdit)
