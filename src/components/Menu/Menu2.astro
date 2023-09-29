@@ -2,6 +2,7 @@
 import fs from 'node:fs/promises'
 const url = new URL('../../pages', import.meta.url)
 const routes = await fs.readdir(url)
+const filteredRoutes = routes.filter(item => item !== 'recorderGame.astro' && item !== 'index.astro')
 ---
 
 <header>
@@ -14,7 +15,7 @@ const routes = await fs.readdir(url)
               </li>
 
         {
-          routes.map(item => {
+          filteredRoutes.map(item => {
             const route = item === 'index.astro' ? '/' : item.split('.')[0]
 
             return route !== '/' ? (
