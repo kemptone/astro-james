@@ -1,10 +1,10 @@
 {
   "lang": "en",
   "dir": "ltr",
-  "name": "Number Deno Dev",
-  "short_name": "numberdeno",
+  "name": "Astro James",
+  "short_name": "AstroJames",
   "scope": "/",
-  "id": "number_deno_dev",
+  "id": "astro_james",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
