@@ -15,7 +15,7 @@ export default `
     width: 300px;
     height: 300px;
     display: inline-block;
-    margin:-30px;
+    margin:0;
   }
 
   main>button {

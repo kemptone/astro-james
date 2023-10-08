@@ -82,21 +82,23 @@ class WCSpinner extends HTMLElement {
       if (!blocked) this.startStop()
     }
 
-    this.spinner?.addEventListener('touchstart', e => {
-      e.preventDefault()
-      if (e.touches.length > 1) return
-      triggerEdit()
-    })
     this.spinner?.addEventListener('mousedown', triggerEdit)
     this.spinner?.addEventListener('mouseup', cancelTriggerEdit)
-    this.spinner?.addEventListener('touchend', e => {
-      e.preventDefault()
-      if (e.touches.length > 1) return
-      cancelTriggerEdit()
-    })
+    this.spinner?.addEventListener('touchstart', triggerEdit)
+    this.spinner?.addEventListener('touchend', cancelTriggerEdit)
+    // this.spinner?.addEventListener('touchstart', e => {
+    //   e.preventDefault()
+    //   if (e.touches.length > 1) return
+    //   triggerEdit()
+    // })
+    // this.spinner?.addEventListener('touchend', e => {
+    //   e.preventDefault()
+    //   if (e.touches.length > 1) return
+    //   cancelTriggerEdit()
+    // })
     // this.spinner?.addEventListener('touchmove', cancelTriggerNoStart)
     // this.spinner?.addEventListener('touchcancel', cancelTriggerNoStart)
-    this.spinner?.addEventListener('click', cancelTriggerEdit)
+    // this.spinner?.addEventListener('click', cancelTriggerEdit)
 
     // this.spinner?.addEventListener('click', this.startStop.bind(this))
     this.spinner?.addEventListener('transitionend', () => {
@@ -195,16 +197,23 @@ class WCSpinner extends HTMLElement {
 
   stop() {
     this.state = {...this.state, running: false, timer_state: 'ending'}
-    this.main?.classList.remove('started')
-    this.main?.classList.remove('middle')
+    this.removeClass('started')
+    this.removeClass('middle')
+    // this.main?.classList.remove('started')
+    // this.main?.classList.remove('middle')
+    console.log("stop")
   }
 
   start() {
     const run = () => {
       this.state = {...this.state, running: true, timer_state: 'started'}
-      this.main?.classList.remove('ending')
-      this.main?.classList.remove('middle')
-      this.main?.classList.add('started')
+      this.removeClass('ending')
+      this.removeClass('middle')
+      this.setClass('started')
+      // this.main?.classList.remove('ending')
+      // this.main?.classList.remove('middle')
+      // this.main?.classList.add('started')
+      console.log("run")
     }
 
     if (this.state.wait) {

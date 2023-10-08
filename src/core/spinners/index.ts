@@ -5,6 +5,7 @@ const $ = (selector: string) => document.querySelector(selector)
 const e_num_fans = $("input[name='number_of_fans']") as HTMLInputElement
 
 e_num_fans?.addEventListener('input', e => {
+  //@ts-ignore
   const count = parseInt(e.target.value)
   let x = 0
 
