@@ -1,0 +1,163 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="decibel meter">
+  <main>
+    <div class="card">
+      <div class="card-header">
+        <h1>Decibel Monitor</h1>
+        <p>Monitor your environment's noise level.</p>
+      </div>
+
+      <wc-decibel>
+        <div class="card-content">
+          <button class="circle">
+            <span></span>
+          </button>
+          <h2 class="reading">70 dB</h2>
+          <p class="reading-name">Normal conversation level</p>
+        </div>
+
+        <div class="stats">
+          <div class="graph graph1">
+            <!-- <div style="height:30px"></div> -->
+            <!-- <div style="height:10px"></div> -->
+            <!-- <div style="height:2px"></div> -->
+          </div>
+          <!-- <div class="graph graph2"></div> -->
+          <!-- <div class="graph graph3"></div> -->
+        </div>
+      </wc-decibel>
+      <!-- <div class="card-footer"></div> -->
+    </div>
+  </main>
+</Layout>
+
+<script src="../core/decibel/index"></script>
+
+<style is:global>
+  main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  .card {
+    max-width: 28rem;
+    width: 100%;
+    margin: 1.5rem;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .card-header {
+    padding: 1.5rem;
+  }
+
+  .card-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .card-header p {
+    color: #718096;
+  }
+
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .card-content .circle {
+    width: 8rem;
+    height: 8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eee;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+
+  .card-content .circle:hover {
+    background-color: #e3e3e3;
+  }
+
+  .card-content .circle > span {
+    color: #2d6a9f;
+    display: inline-block;
+    font-size: 4.2rem;
+  }
+
+  .card-content h2 {
+    font-size: 2.25rem;
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+
+  .card-content p {
+    color: #718096;
+    margin-top: 0.5rem;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+  }
+
+  .card-footer button {
+    background-color: #3182ce;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+
+  .stats .graph {
+    display: flex;
+    overflow-x: hidden;
+    align-items: flex-end;
+    justify-items: stretch;
+    /* min-height: 50px; */
+  }
+
+  .stats .graph div {
+    /* width: 5px; */
+    background-color: #ff0000;
+    /* margin: 0 .5px; */
+    /* border-left:2px solid rgba(255,255,255,.5); */
+    display: inline-block;
+    flex:1;
+    /* background: linear-gradient(to top, white, black); */
+    /* background-size: 200px 100%; */
+    /* background-repeat: no-repeat; */
+    border-radius: 5px 5px 0 0;
+    background-image: url(/gradient.png);
+    background-position-y: bottom;
+    background-repeat:repeat-x;
+  }
+
+  /* .stats .graph div:is(.silent, .quiet, .quiet-room) {
+    background-color: lightblue;
+  }
+
+  .stats .graph div:is(.conversation, .background, .busy-street) {
+    background-color: gray;
+  }
+
+  .stats .graph div.very-noisy {
+    background-color: orangered;
+  }
+
+  .stats .graph div.extremely-loud {
+    background-color: rebeccapurple;
+  } */
+
+</style>
