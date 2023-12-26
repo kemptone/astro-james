@@ -28,6 +28,23 @@ import Layout from '../layouts/Layout.astro'
           <!-- <div class="graph graph2"></div> -->
           <!-- <div class="graph graph3"></div> -->
         </div>
+
+        <audio controls>
+          <source src="/too_loud/too_loud_1.m4a" type="audio/mp4">
+        </audio>
+        <audio controls>
+          <source src="/too_loud/too_loud_2.m4a" type="audio/mp4">
+        </audio>
+        <audio controls>
+          <source src="/too_loud/too_loud_3.m4a" type="audio/mp4">
+        </audio>
+        <audio controls>
+          <source src="/too_loud/too_loud_4.m4a" type="audio/mp4">
+        </audio>
+        <audio controls>
+          <source src="/too_loud/too_loud_5.m4a" type="audio/mp4">
+        </audio>
+
       </wc-decibel>
       <!-- <div class="card-footer"></div> -->
     </div>
@@ -159,5 +176,9 @@ import Layout from '../layouts/Layout.astro'
   .stats .graph div.extremely-loud {
     background-color: rebeccapurple;
   } */
+
+  wc-decibel audio {
+    display: none;
+  }
 
 </style>

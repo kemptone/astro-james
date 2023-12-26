@@ -9,6 +9,9 @@ import preact from "@astrojs/preact";
 // https://astro.build/config
 export default defineConfig({
   // adapters: [Deno()],
+  server: {
+    port: 8080
+  },
   integrations: [
   //   UnoCSS({
   //   injectReset: true

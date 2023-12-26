@@ -107,9 +107,26 @@ class WCDecibel extends HTMLElement {
     const e_reading = $('.reading')
     const e_reading_name = $('.reading-name')
     const e_graph1 = $('.graph1')
+
+    const e_audios = this.querySelectorAll('audio')
+
     const that = this
 
     if (!e_reading || !e_reading_name || !e_button_inner) return
+
+    let stop = false
+
+    function playRandomAudio() {
+      if (stop) return
+      stop = true
+      let length = e_audios.length
+      let random = Math.floor(Math.random() * length)
+      e_audios[random].play()
+      console.log("playing audio")
+      setTimeout(() => {
+        stop = false
+      }, 2000)
+    }
 
     const decibelEvent = (e: any) => {
       const {detail} = e
@@ -129,6 +146,11 @@ class WCDecibel extends HTMLElement {
       e_button_inner.innerHTML = range?.symbol || '🎧'
 
       e_graph1?.append(buildGraphItem(averageAmplitude, range))
+
+      if (maxSmall > 85) {
+        playRandomAudio()
+      }
+
     }
 
     const listener = addDecibelListener(this, (stream, interval) => {

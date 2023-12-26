@@ -5,6 +5,7 @@ import template from './wc-spinner.template'
 import type {State} from './wc-spinner.types'
 import {AdjustableBlades} from './AdjustableBlades'
 import ProtoForm from '../ProtoForm/ProtoForm'
+import {useAudioLoop} from './spinnerSound'
 import type {TCurveType} from '../AdjustableBlades'
 
 type FormType = {
@@ -58,6 +59,11 @@ class WCSpinner extends HTMLElement {
     this.spinner = shadow.querySelector(
       'main > button'
     ) as HTMLButtonElement | null
+
+    useAudioLoop(this, {
+      audioFile: '/spin/fans/00.wav',
+      initialPlaybackRate: 1,
+    })
   }
 
   connectedCallback() {
@@ -86,21 +92,6 @@ class WCSpinner extends HTMLElement {
     this.spinner?.addEventListener('mouseup', cancelTriggerEdit)
     this.spinner?.addEventListener('touchstart', triggerEdit)
     this.spinner?.addEventListener('touchend', cancelTriggerEdit)
-    // this.spinner?.addEventListener('touchstart', e => {
-    //   e.preventDefault()
-    //   if (e.touches.length > 1) return
-    //   triggerEdit()
-    // })
-    // this.spinner?.addEventListener('touchend', e => {
-    //   e.preventDefault()
-    //   if (e.touches.length > 1) return
-    //   cancelTriggerEdit()
-    // })
-    // this.spinner?.addEventListener('touchmove', cancelTriggerNoStart)
-    // this.spinner?.addEventListener('touchcancel', cancelTriggerNoStart)
-    // this.spinner?.addEventListener('click', cancelTriggerEdit)
-
-    // this.spinner?.addEventListener('click', this.startStop.bind(this))
     this.spinner?.addEventListener('transitionend', () => {
       const {timer_state} = this.state
 
@@ -125,6 +116,28 @@ class WCSpinner extends HTMLElement {
         this.state = {...this.state, timer_state: ''}
         return
       }
+    })
+
+    this.addEventListener('started', () => {
+      const run = () => {
+        this.state = {...this.state, running: true, timer_state: 'started'}
+        this.removeClass('ending')
+        this.removeClass('middle')
+        this.setClass('started')
+      }
+
+      if (this.state.wait) {
+        return setTimeout(run, this.state.wait * 1000)
+      } else {
+        run()
+      }
+    })
+    this.addEventListener('middle', () => {})
+    this.addEventListener('ending', () => {})
+    this.addEventListener('stopped', () => {
+      this.state = {...this.state, running: false, timer_state: 'ending'}
+      this.removeClass('started')
+      this.removeClass('middle')
     })
 
     const that = this
@@ -195,41 +208,9 @@ class WCSpinner extends HTMLElement {
     this.main?.classList?.remove?.(name)
   }
 
-  stop() {
-    this.state = {...this.state, running: false, timer_state: 'ending'}
-    this.removeClass('started')
-    this.removeClass('middle')
-    // this.main?.classList.remove('started')
-    // this.main?.classList.remove('middle')
-    console.log("stop")
-  }
-
-  start() {
-    const run = () => {
-      this.state = {...this.state, running: true, timer_state: 'started'}
-      this.removeClass('ending')
-      this.removeClass('middle')
-      this.setClass('started')
-      // this.main?.classList.remove('ending')
-      // this.main?.classList.remove('middle')
-      // this.main?.classList.add('started')
-      console.log("run")
-    }
-
-    if (this.state.wait) {
-      return setTimeout(run, this.state.wait * 1000)
-    } else {
-      run()
-    }
-  }
-
   startStop() {
-    // if (this.state.edit_mode) {
-    //   this.main?.querySelector('dialog')?.showModal()
-    // } else {
-    if (this.state.running) this.stop()
-    else this.start()
-    // }
+    if (this.state.running) this.dispatchEvent(new CustomEvent('stopped'))
+    else this.dispatchEvent(new CustomEvent('started'))
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {

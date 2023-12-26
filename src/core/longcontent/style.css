@@ -1,0 +1,14 @@
+
+  .long-content {
+    margin: auto;
+    max-width: 900px;
+    position: relative;
+  }
+  .long-content main {
+    margin-right: 300px;
+  }
+  .long-content menu {
+    position: fixed;
+    right: 100px;
+    top:20px;
+  }
