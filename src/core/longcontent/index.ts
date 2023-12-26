@@ -1,5 +1,3 @@
-import {e} from 'unocss'
-
 const e_smart_anchors = document.querySelector(
   '#smart-anchors'
 ) as HTMLDivElement
