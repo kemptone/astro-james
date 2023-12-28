@@ -161,8 +161,13 @@ class WCDecibel extends HTMLElement {
     const e_reading = $('.reading')
     const e_reading_name = $('.reading-name')
     const e_graph1 = $('.graph1')
+    const e_slider = $('input[type=range]') as HTMLInputElement
 
-    // const e_audios = this.querySelectorAll('audio')
+    let threshold = Number(e_slider.value || '86')
+
+    e_slider.addEventListener('input', () => {
+      threshold = Number(e_slider.value || '86')
+    })
 
     const that = this
 
@@ -201,7 +206,7 @@ class WCDecibel extends HTMLElement {
 
       e_graph1?.append(buildGraphItem(averageAmplitude, range))
 
-      if (maxSmall > 85) {
+      if (maxSmall > threshold) {
         playAudio()
         // playRandomAudio()
       }

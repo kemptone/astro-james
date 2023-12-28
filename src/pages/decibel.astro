@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro'
+import WCSliderDisplay from '../components/FormItems/WCSliderDisplay.astro'
 ---
 
 <Layout title="decibel meter">
@@ -17,6 +18,13 @@ import Layout from '../layouts/Layout.astro'
           </button>
           <h2 class="reading">70 dB</h2>
           <p class="reading-name">Normal conversation level</p>
+        </div>
+
+        <div class="range">
+          <WCSliderDisplay>
+            <input type="range" min="0" max="100" value="85" step="1" />
+            <span class="reading"></span><span> dB</span>
+          </WCSliderDisplay>
         </div>
 
         <div class="stats">
@@ -44,7 +52,6 @@ import Layout from '../layouts/Layout.astro'
         <audio controls>
           <source src="/too_loud/too_loud_5.m4a" type="audio/mp4">
         </audio> -->
-
       </wc-decibel>
       <!-- <div class="card-footer"></div> -->
     </div>
@@ -129,6 +136,12 @@ import Layout from '../layouts/Layout.astro'
     padding-top: 1rem;
   }
 
+  .range {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+  }
+
   .card-footer button {
     background-color: #3182ce;
     color: #fff;
@@ -151,14 +164,14 @@ import Layout from '../layouts/Layout.astro'
     /* margin: 0 .5px; */
     /* border-left:2px solid rgba(255,255,255,.5); */
     display: inline-block;
-    flex:1;
+    flex: 1;
     /* background: linear-gradient(to top, white, black); */
     /* background-size: 200px 100%; */
     /* background-repeat: no-repeat; */
     border-radius: 5px 5px 0 0;
     background-image: url(/gradient.png);
     background-position-y: bottom;
-    background-repeat:repeat-x;
+    background-repeat: repeat-x;
   }
 
   /* .stats .graph div:is(.silent, .quiet, .quiet-room) {
@@ -180,5 +193,4 @@ import Layout from '../layouts/Layout.astro'
   wc-decibel audio {
     display: none;
   }
-
 </style>
