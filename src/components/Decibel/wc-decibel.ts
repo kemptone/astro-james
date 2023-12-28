@@ -1,12 +1,66 @@
 // let audioContext: AudioContext
 import {soundLevels, type SoundLevel} from './soundLevels'
 
+const audios = [
+  '/too_loud/too_loud_1.m4a',
+  '/too_loud/too_loud_2.m4a',
+  '/too_loud/too_loud_3.m4a',
+  '/too_loud/too_loud_4.m4a',
+  '/too_loud/too_loud_5.m4a',
+]
+
+// TypeScript code
+
+// Get the audio file
+// const audioFileUrl = 'path/to/your/audiofile.mp4';
+
+// Initialize the AudioContext
+// const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+let stop = false
+
+// Function to load and play the audio
+const playAudio = async () => {
+
+  if (stop) return
+  stop = true
+
+  let length = audios.length
+  const audioFileUrl = audios[Math.floor(Math.random() * length)]
+
+  // const audioFileUrl = 'path/to/your/audiofile.mp4'
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+
+  try {
+    const response = await fetch(audioFileUrl)
+    const arrayBuffer = await response.arrayBuffer()
+    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
+
+    // Create a buffer source node
+    const source = audioContext.createBufferSource()
+    source.buffer = audioBuffer
+    source.connect(audioContext.destination)
+
+    // Play the audio
+    source.start(0)
+
+    setTimeout(() => {
+      stop = false
+    }, 2000)
+
+  } catch (error) {
+    console.error('Error loading audio:', error)
+  }
+}
+
 const addDecibelListener =
   (self: any, callback: (stream: MediaStream, _interval: any) => void) =>
   () => {
     const $ = (selector: string) => self.querySelector(selector)
     const e_graph1: HTMLElement = $('.graph1')
     let audioContext: AudioContext
+
+    playAudio()
 
     // @ts-ignore
     if (window.AudioContext || window.webkitAudioContext) {
@@ -108,25 +162,25 @@ class WCDecibel extends HTMLElement {
     const e_reading_name = $('.reading-name')
     const e_graph1 = $('.graph1')
 
-    const e_audios = this.querySelectorAll('audio')
+    // const e_audios = this.querySelectorAll('audio')
 
     const that = this
 
     if (!e_reading || !e_reading_name || !e_button_inner) return
 
-    let stop = false
+    // let stop = false
 
-    function playRandomAudio() {
-      if (stop) return
-      stop = true
-      let length = e_audios.length
-      let random = Math.floor(Math.random() * length)
-      e_audios[random].play()
-      console.log("playing audio")
-      setTimeout(() => {
-        stop = false
-      }, 2000)
-    }
+    // function playRandomAudio() {
+    //   if (stop) return
+    //   stop = true
+    //   let length = e_audios.length
+    //   let random = Math.floor(Math.random() * length)
+    //   e_audios[random].play()
+    //   console.log('playing audio')
+    //   setTimeout(() => {
+    //     stop = false
+    //   }, 2000)
+    // }
 
     const decibelEvent = (e: any) => {
       const {detail} = e
@@ -148,9 +202,9 @@ class WCDecibel extends HTMLElement {
       e_graph1?.append(buildGraphItem(averageAmplitude, range))
 
       if (maxSmall > 85) {
-        playRandomAudio()
+        playAudio()
+        // playRandomAudio()
       }
-
     }
 
     const listener = addDecibelListener(this, (stream, interval) => {
