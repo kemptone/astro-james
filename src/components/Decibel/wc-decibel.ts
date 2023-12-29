@@ -39,7 +39,12 @@ const playAudio = async () => {
     // Create a buffer source node
     const source = audioContext.createBufferSource()
     source.buffer = audioBuffer
-    source.connect(audioContext.destination)
+
+    const gainNode = audioContext.createGain()
+    gainNode.gain.value = 3.0
+
+    source.connect(gainNode)
+    gainNode.connect(audioContext.destination)
 
     // Play the audio
     source.start(0)
