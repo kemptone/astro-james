@@ -9,25 +9,26 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+
     permissions:
       id-token: write # Needed for auth with Deno Deploy
       contents: read # Needed to clone the repository
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
+      - name: Install Deno
+        uses: denoland/setup-deno@v1
         with:
-          node-version: lts/*
+          deno-version: v1.x
 
       - name: Build step
-        run: npm install && npm run build # 📝 Update the build command(s)
+        run: "npm install && npm run build"
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: "short-mole-73"
-          entrypoint: "index.js" # 📝 Update the entrypoint
+          project: "number"
+          entrypoint: "index.js"
           root: "."
