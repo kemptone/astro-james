@@ -1,0 +1,54 @@
+---
+import Layout from '../layouts/Layout.astro'
+import WCFloatingLabel from '../components/WCFloatingLabel.astro'
+---
+
+<Layout title="ampm">
+  <h1>Ladder Game</h1>
+  <form id="main">
+    <fieldset>
+      <WCFloatingLabel label="Triangle">
+        <input type="radio" name="type" value="vertical" />
+      </WCFloatingLabel>
+      <WCFloatingLabel label="Vertical">
+        <input type="radio" name="type" value="triangle" />
+      </WCFloatingLabel>
+      <WCFloatingLabel label="Bottom">
+        <input type="range" name="" max="7" min="4" step="1">
+        <input type="text" readonly />
+      </WCFloatingLabel>
+      <WCFloatingLabel label="Top">
+        <input type="range" name="" max="7" min="4" step="1">
+        <input type="text" readonly />
+      </WCFloatingLabel>
+
+      <button type="submit" style="padding-inline:1rem; padding-block:.5rem"
+        >Submit</button
+      >
+    </fieldset>
+  </form>
+</Layout>
+
+<style is:inline>
+  form {
+    margin-top: 100px;
+  }
+
+  #main fieldset {
+    min-width: 230px;
+    padding: 2rem;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  #main fieldset wc-floating-label-input {
+    text-align: center;
+  }
+
+  #main fieldset input {
+    padding: 0.2rem;
+    text-align: center;
+    font-size: 1.5rem;
+    display: inline-block;
+  }
+</style>

@@ -6,7 +6,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "cd ./dist && deployctl deploy --project=<number> https://deno.land/std@0.224.0/http/file_server.ts && cd .."
   },
   "dependencies": {
     "@astrojs/preact": "^2.2.1",
