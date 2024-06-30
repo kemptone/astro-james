@@ -28,7 +28,9 @@ ProtoForm<FormType>({
         'When Jack tested the temperature, he came back with the following results.'
 
       for (let key in others) {
-        utterance += ` ${key} was ${others[key]}, `
+        if (others[key] !== null) {
+          utterance += ` ${key} was ${others[key]}, `
+        }
       }
 
       const utterThis = new SpeechSynthesisUtterance(utterance)
@@ -58,7 +60,7 @@ function onChange() {
     e_wc_floating_label_input.dataset.label = split_of_names[i]
 
     let e_input = document.createElement('input')
-    e_input.type = 'number'
+    e_input.type = 'text'
     e_input.name = split_of_names[i]
 
     e_wc_floating_label_input.appendChild(e_input)
