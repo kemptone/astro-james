@@ -1,4 +1,5 @@
 import ProtoForm from '../../components/ProtoForm/ProtoForm'
+import {persist, populate} from '../../helpers/localStorage'
 
 type FormType = {
   name_of_inputs: string
@@ -21,11 +22,16 @@ const e_speak_the_values = document.querySelector(
 ProtoForm<FormType>({
   e_form: document.querySelector('form'),
   onSubmit: ({values}) => {
+
+    const $ = (path : string) => document.querySelector(path)
+    // @ts-ignore
+    const $v = (name  : string) => $(`input[name="${ name }"]`)?.value
+
     if (e_speak_the_values.checked === true) {
-      const {name_of_inputs, speak_the_values, ...others} = values
+      const {name_of_inputs, speak_the_values, girls_name, boys_name, thing_to_test, ...others} = values
 
       let utterance =
-        'When Jack tested the temperature, he came back with the following results.'
+        `When ${ $v('boys_name')} tested the ${ $v('thing_to_test')}, he shared the following results with ${ $v('girls_name')}...`
 
       for (let key in others) {
         if (others[key] !== null) {
@@ -43,6 +49,19 @@ ProtoForm<FormType>({
     }
   },
   noValidate: true,
+})
+
+document.addEventListener('DOMContentLoaded', () => {
+
+
+const e_open_settings = document.querySelector(
+  '#open_settings'
+) as HTMLButtonElement
+const e_dialog = document.querySelector('#more_settings') as HTMLDialogElement
+
+  e_open_settings.addEventListener('click', () => {
+    e_dialog.showModal()
+  })
 })
 
 function onChange() {

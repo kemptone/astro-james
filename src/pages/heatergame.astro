@@ -1,30 +1,60 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import WCFloatingLabel from '../components/WCFloatingLabel.astro'
+import WCDialogWrap from '../components/WCDialogWrap.astro'
 ---
 
 <Layout title="ampm">
-  <h1>Heater Game</h1>
+  <h1>Speak the values</h1>
   <form id="main">
     <fieldset>
+      <WCDialogWrap id="more_settings">
+        <fieldset>
+          <WCFloatingLabel label="Name of boy" addclear={'true'}>
+            <input
+              type="text"
+              autocomplete="off"
+              placeholder="Name of boy"
+              name="boys_name"
+              value="Jack"
+            />
+          </WCFloatingLabel>
 
-      <WCFloatingLabel label="Name of inputs" addclear={'false'}>
-        <input
-          type="text"
+          <WCFloatingLabel label="Name of girl" addclear={'true'}>
+            <input
+              type="text"
+              autocomplete="off"
+              placeholder="Name of girl"
+              name="girls_name"
+              value="Ellie"
+            />
+          </WCFloatingLabel>
+
+          <WCFloatingLabel label="thing to test" addclear={'true'}>
+            <input
+              type="text"
+              autocomplete="off"
+              placeholder="thing to test"
+              name="thing_to_test"
+              value="temperature"
+            />
+          </WCFloatingLabel>
+
+        </fieldset>
+      </WCDialogWrap>
+
+      <WCFloatingLabel label="Names of inputs" addclear={'false'}>
+        <input type="text"
           autocomplete="off"
           placeholder="Name of inputs"
           name="name_of_inputs"
-          id="name_of_inputs"
-          value="pipes"
-        />
+          value="pipes">
       </WCFloatingLabel>
 
+      <button type="button" id="open_settings">more settings</button>
+
       <WCFloatingLabel label="Speak the values">
-        <input
-          type="checkbox"
-          name="speak_the_values"
-          checked
-        />
+        <input type="checkbox" name="speak_the_values" checked />
       </WCFloatingLabel>
 
       <div id="inputs"></div>
@@ -48,6 +78,7 @@ import WCFloatingLabel from '../components/WCFloatingLabel.astro'
     padding: 2rem;
     margin: 0 auto;
     text-align: center;
+    width: calc(100% - 8rem);
   }
 
   #main fieldset wc-floating-label-input {
