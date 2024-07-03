@@ -3,11 +3,11 @@ import Dialog from "../../components/Dialog";
 import './style.css';
 
 const Primary =
-  "Abby  Adaliz  Aiden  Angelo  Anthony  Bailey  Benny  Briana  Chase  Cierra  Cruz  Gustavo  Hudson  Iker  James  Leilani  Lindsey  Merryck  Michael  Sophia C  Sofia V  Kenia  Melanie, the swamps of sadness"
+  "Abby  Adaliz  Aiden  Angelo  Anthony  Bailey  Benny  Briana  Chase  Cierra  Cruz  Gustavo  Hudson  Iker  James  Leilani  Lindsey  Merryck  Michael  Sophia C  Sofia V  Kenia  Melanie  the swamps of sadness"
     .split("  ");
 
 const Secondary =
-  "Beau, Gianna, Makenzie, Blake, Merlin, Santa Claus, Tooth Fairy, Audry, Braxton, Adley, Crista, Jake, Makayla, Atticus, Presly P, Alexis, Sophie, Mikey, Davey Jack, Hazel, Oliver, Lucas, Presly, Jackson, Aubrey, Elliot, Dumpy, Kevin, dave, Dorothy, Scarecrow, Tin Man, lion, Auntie M, Wizard of Oz, stephanie,  Easter Bunny, Dave, Ava, Atreyu, Moonchild, Bastian, Emerson, Ellie, Danial"
+  "Beau, Gianna, Makenzie, Blake, Merlin, Santa Claus, Tooth Fairy, Audry, Braxton, Adley, Crista, Jake, Makayla, Atticus, Presly P, Alexis, Sophie, Mikey, Davey Jack, Hazel, Oliver, Lucas, Presly, Jackson, Aubrey, Elliot, Dumpy, Kevin, dave, Dorothy, Scarecrow, Tin Man, lion, Auntie M, Wizard of Oz, stephanie, Easter Bunny, Dave, Ava, Atreyu, Moonchild, Bastian, Emerson, Ellie, Danial"
     .split(", ");
 
 // const Primary = [
