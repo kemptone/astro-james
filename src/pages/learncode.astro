@@ -10,6 +10,10 @@ import '../core/learncode/learncode.css'
     <h1>Learn to Code</h1>
     <div id="items"></div>
     <fieldset>
+      <legend>all of the kids</legend>
+      <div id="all"></div>
+    </fieldset>
+    <fieldset>
       <legend>numbers</legend>
       <ol id="numbers"></ol>
     </fieldset>
@@ -18,7 +22,8 @@ import '../core/learncode/learncode.css'
       <button id="show">Words</button>
       <button id="btn_alerts">Alerts</button>
       <button id="btn_colors">Colors</button>
-      <button id="btn_numbers">Numbers</button>
+      <button id="btn_numbers">*</button>
+      <button id="btn_switch">Switch</button>
     </fieldset>
     <WCDialogWrap id="input_words">
       <form>
@@ -75,6 +80,10 @@ import '../core/learncode/learncode.css'
   #numbers {
     columns: 4;
     column-gap: 10px;
+  }
+
+  fieldset:has(#all:empty) {
+    display: none;
   }
 
   fieldset:has(#numbers:empty) {

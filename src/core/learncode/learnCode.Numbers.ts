@@ -1,13 +1,13 @@
 import type {SubFunction} from './learnCode.types'
 import ProtoForm from '../../components/ProtoForm/ProtoForm'
 
-const main: SubFunction = ({ state, z, render, $ }) => {
+const main: SubFunction = ({ state, z, render, renderAsNumbers, $ }) => {
 
   const e_button = $('button#btn_numbers') as HTMLButtonElement
+  const e_switch = $('button#btn_switch') as HTMLButtonElement
   const e_numbers = $('#numbers') as HTMLDivElement
-  const e_textarea = $('#input_words textarea') as HTMLTextAreaElement
 
-
+  e_switch.addEventListener('click', renderAsNumbers)
 
   e_button.addEventListener('click', () => {
     e_numbers.innerHTML = ''
