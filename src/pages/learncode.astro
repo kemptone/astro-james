@@ -10,18 +10,15 @@ import '../core/learncode/learncode.css'
     <h1>Learn to Code</h1>
     <div id="items"></div>
     <fieldset>
+      <legend>numbers</legend>
+      <ol id="numbers"></ol>
+    </fieldset>
+    <fieldset>
       <legend>Edit</legend>
       <button id="show">Words</button>
       <button id="btn_alerts">Alerts</button>
       <button id="btn_colors">Colors</button>
-    </fieldset>
-    <fieldset>
-      <legend>present</legend>
-      <div id="present"></div>
-    </fieldset>
-    <fieldset>
-      <legend>absent</legend>
-      <div id="absent"></div>
+      <button id="btn_numbers">Numbers</button>
     </fieldset>
     <WCDialogWrap id="input_words">
       <form>
@@ -75,6 +72,21 @@ import '../core/learncode/learncode.css'
     padding: 0;
   }
 
+  #numbers {
+    columns: 4;
+    column-gap: 10px;
+  }
 
+  fieldset:has(#numbers:empty) {
+    display: none;
+  }
+
+  fieldset:has(#numbers) {
+    width: 90%;
+  }
+
+  #numbers li {
+    white-space: nowrap;
+  }
 
 </style>
