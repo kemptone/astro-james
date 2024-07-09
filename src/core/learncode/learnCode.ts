@@ -2,6 +2,7 @@ import '../../components/wc-dialog'
 import Words from './learnCode.Words'
 import Alerts from './learnCode.Alerts'
 import Colors from './learnCode.Colors'
+import Numbers from './learnCode.Numbers'
 import type { State } from './learnCode.types'
 
 const Secondary =
@@ -58,5 +59,6 @@ const obj = {
 Words(obj)
 Alerts(obj)
 Colors(obj)
+Numbers(obj)
 
 render()
