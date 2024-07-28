@@ -1,121 +1,61 @@
-import { MutableRef, useEffect, useRef } from "preact/hooks";
-
-function removeYoutubeLink(url: string) {
-  let id;
-
-  if (url.indexOf("embed/") !== -1) {
-    id = url.split("embed/")[1].split("?")[0];
-  } else {
-    id = url.split("v=")[1];
-  }
-
-  const ampersandPosition = id.indexOf("&");
-  if (ampersandPosition !== -1) {
-    return id.substring(0, ampersandPosition);
-  }
-  return id;
+const State = {
+  rows: 2,
+  boxes: 10,
 }
 
-const CAMS: string[] = [];
+const $ = (a: string) => document.querySelector(a)
+const e_boxes = $(`input[name="boxes"]`) as HTMLInputElement
+const e_rows = $(`input[name="rows"]`) as HTMLInputElement
+const e_all_of_the_boxes = $('.all-of-the-boxes') as HTMLDivElement
 
-function add(url: string) {
-  CAMS.push(removeYoutubeLink(url));
+function updateGridLayout() {
+  const rows = State.rows
+  const boxes = State.boxes
+
+  const gridContainer = document.getElementById(
+    'all_of_the_boxes'
+  ) as HTMLDivElement
+
+  // Calculate the number of columns based on rows and totalBoxes
+  const columns = Math.ceil(boxes / rows)
+
+  // Set the grid-template-rows and grid-template-columns properties
+  gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`
+  gridContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`
+
+  // Clear existing grid items
+  gridContainer.innerHTML = ''
+
+  // Add the grid items
+  for (let i = 0; i < boxes; i++) {
+    const e_box = document.createElement('label')
+    const e_inner = document.createElement('span')
+    const e_input = document.createElement('input')
+    e_box.appendChild(e_input)
+    e_box.appendChild(e_inner)
+    e_input.type = 'checkbox'
+    e_box.className = 'grid-item'
+    e_inner.textContent = i + 1
+    gridContainer.appendChild(e_box)
+  }
 }
 
-add("https://www.youtube.com/embed/EgIZ7abXpUE?autoplay=1&mute=1");
-// add("https://www.youtube.com/embed/1HuXun1vURc?autoplay=1&mute=1");
-// add("https://www.youtube.com/embed/mLhR80JlLY8?autoplay=1&mute=1");
-// add("https://www.youtube.com/watch?v=2uabwdYMzVk");
-// add("https://www.youtube.com/watch?v=1-iS7LArMPA");
-// add("https://www.youtube.com/watch?v=pXe8MpU7uzk");
-// add("https://www.youtube.com/watch?v=gcDWT-mTCOI");
-// add("https://www.youtube.com/watch?v=-HxJYZI9AMk");
-// add("https://www.youtube.com/watch?v=1lPnLBUIlko");
+function render() {
+  e_all_of_the_boxes.innerHTML = ''
+}
 
-export default () => {
-  const e_players: MutableRef<HTMLDivElement | null>[] = [];
-  CAMS.forEach((cam, index, arr) => {
-    e_players.push(useRef<HTMLDivElement | null>(null));
-  });
+e_boxes?.addEventListener('input', e => {
+  const target = e?.target as HTMLInputElement
+  State.boxes = parseInt(target.value)
+  updateGridLayout()
+})
 
-  useEffect(() => {
-    if (typeof window === "undefined" || e_players[0].current === null) {
-      return;
-    }
+e_rows?.addEventListener('input', e => {
+  const target = e?.target as HTMLInputElement
+  State.rows = parseInt(target.value)
+  updateGridLayout()
+})
 
-    const players: any[] = [];
-
-    const FACTOR = 0.8;
-
-    const origin = window.location.origin;
-
-    // debugger;
-
-    window.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReady() {
-      CAMS.forEach((cam, index, arr) => {
-        players.push(
-          new YT.Player(e_players[index].current, {
-            height: String(390 * FACTOR),
-            width: String(640 * FACTOR),
-            videoId: CAMS[index],
-            playerVars: {
-              "playsinline": 1,
-              "controls": 0,
-              "enablejsapi": 1,
-              "modestbranding": 1,
-              "color": "white",
-              "iv_load_policy": 3,
-              "rel": 0,
-              // "origin": origin,
-            },
-            events: {
-              "onReady": onPlayerReady(index),
-              "onStateChange": onPlayerStateChange(index),
-            },
-          }),
-        );
-      });
-
-      //   player = new YT.Player(e_player.current, {
-      //     height: "390",
-      //     width: "640",
-      //     videoId: CAMS[0],
-      //     playerVars: {
-      //       "playsinline": 1,
-      //       "controls": 0,
-      //       "enablejsapi": 1,
-      //       "modestbranding": 1,
-      //       "color": "white",
-      //       "iv_load_policy": 3,
-      //     },
-      //     events: {
-      //       "onReady": onPlayerReady,
-      //       "onStateChange": onPlayerStateChange,
-      //     },
-      //   });
-    };
-
-    // Control the video player using JavaScript
-    const onPlayerReady = (index) => (event) => {
-      // You can control the video player here
-      players[index].playVideo();
-      //   player.playVideo();
-    };
-
-    const onPlayerStateChange = (index) => (event) => {
-      //   debugger;
-      // You can listen to the video player state changes here
-    };
-  }, []);
-
-  return (
-    <div className="live-cams">
-      {CAMS.map((cam, index) => {
-        return <div ref={e_players[index]}></div>;
-      })}
-      {/* <div ref={e_players[0]}></div> */}
-      {/* <div ref={e_players[1]}></div> */}
-      {/* <div ref={e_players[2]}></div> */}
-    </div>
-  );
-};
+document.addEventListener('readystatechange', () => {
+  updateGridLayout()
+})

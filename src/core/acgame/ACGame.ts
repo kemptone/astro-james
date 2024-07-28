@@ -7,9 +7,26 @@ type FormType = {
   [key: string]: string
 }
 
+export type MetaVoice = {
+  name: string
+  localService: boolean
+  voiceURI: string
+  lang: {
+    countryKey: string
+    langKey: string
+    countryName: string
+    name?: string
+  }
+  voice: SpeechSynthesisVoice
+}
+
 // gets an input with the name jack
 // and returns the value of
 // the value of the
+
+const {voice_name, read} = populate('voice') ?? {}
+
+debugger
 
 const e_name_of_inputs = document.querySelector(
   'input[name="name_of_inputs"]'
@@ -22,16 +39,23 @@ const e_speak_the_values = document.querySelector(
 ProtoForm<FormType>({
   e_form: document.querySelector('form'),
   onSubmit: ({values}) => {
-
-    const $ = (path : string) => document.querySelector(path)
+    const $ = (path: string) => document.querySelector(path)
     // @ts-ignore
-    const $v = (name  : string) => $(`input[name="${ name }"]`)?.value
+    const $v = (name: string) => $(`input[name="${name}"]`)?.value
 
     if (e_speak_the_values.checked === true) {
-      const {name_of_inputs, speak_the_values, girls_name, boys_name, thing_to_test, ...others} = values
+      const {
+        name_of_inputs,
+        speak_the_values,
+        girls_name,
+        boys_name,
+        thing_to_test,
+        ...others
+      } = values
 
-      let utterance =
-        `When ${ $v('boys_name')} tested the ${ $v('thing_to_test')}, he shared the following results with ${ $v('girls_name')}...`
+      let utterance = `When ${$v('boys_name')} tested the ${$v(
+        'thing_to_test'
+      )}, he shared the following results with ${$v('girls_name')}...`
 
       for (let key in others) {
         if (others[key] !== null) {
@@ -40,6 +64,7 @@ ProtoForm<FormType>({
       }
 
       const utterThis = new SpeechSynthesisUtterance(utterance)
+      utterThis.voice = voice_name
       const synth = window.speechSynthesis
       synth.speak(utterThis)
 
@@ -52,12 +77,10 @@ ProtoForm<FormType>({
 })
 
 document.addEventListener('DOMContentLoaded', () => {
-
-
-const e_open_settings = document.querySelector(
-  '#open_settings'
-) as HTMLButtonElement
-const e_dialog = document.querySelector('#more_settings') as HTMLDialogElement
+  const e_open_settings = document.querySelector(
+    '#open_settings'
+  ) as HTMLButtonElement
+  const e_dialog = document.querySelector('#more_settings') as HTMLDialogElement
 
   e_open_settings.addEventListener('click', () => {
     e_dialog.showModal()
@@ -92,3 +115,19 @@ function onChange() {
 e_name_of_inputs.addEventListener('input', onChange)
 
 onChange()
+
+export function loadAllVoiceList() {
+  const synth = window.speechSynthesis
+  const voices = synth.getVoices().sort(function (a, b) {
+    const aname = a.lang
+    const bname = b.lang
+    if (aname < bname) {
+      return -1
+    } else if (aname == bname) {
+      return 0
+    } else {
+      return +1
+    }
+  })
+  return voices
+}

@@ -1,9 +1,82 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import View from "../core/live"
+import Layout from '../layouts/Layout.astro'
+import WCFloatingLabel from '../components/WCFloatingLabel.astro'
 ---
 
-<Layout title="ampm">
-	<View client:only="preact" />
+<Layout title="live">
+  <form id="main">
+    <fieldset>
+      <legend>Set the Live AC's</legend>
+      <WCFloatingLabel label="Number of Boxes">
+        <input type="number" name="boxes" value="10" increment="1" />
+      </WCFloatingLabel>
+      <WCFloatingLabel label="Number of Rows">
+        <input type="number" name="rows" value="2" increment="1" />
+      </WCFloatingLabel>
+    </fieldset>
+    <section class="all_of_the_boxes">
+		<div id="all_of_the_boxes"></div>
+	</section>
+  </form>
 </Layout>
 
+<style is:inline>
+  form {
+    margin-top: 100px;
+  }
+
+  #main .all_of_the_boxes,
+  #main fieldset {
+    min-width: 230px;
+    padding: 1rem;
+    margin: 0 auto;
+    text-align: left;
+    width: calc(100% - 8rem);
+    display: flex;
+    gap: 8px;
+    background-color: unset;
+    box-sizing: border-box;
+  }
+
+  #main .all_of_the_boxes {
+    display: block;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 1);
+    border-radius: 8px;
+    margin-top: 20px;
+    min-height: 400px;
+  }
+
+  #main #all_of_the_boxes {
+	display: grid;
+	gap:10px;
+  }
+
+  .grid-item {
+    border: 1px solid #000; /* Example border */
+    text-align: center; /* Center-align text */
+	padding: 1rem 0;
+  }
+
+  .grid-item:has(input:checked) {
+	background-color:red;
+  }
+
+  .grid-item input {
+	visibility: hidden;
+  }
+
+  #main fieldset wc-floating-label-input {
+    text-align: left;
+  }
+
+  #main fieldset input {
+    padding: 0.2rem;
+    text-align: center;
+    font-size: 1.5rem;
+    display: inline-block;
+  }
+
+</style>
+
+<script src="../core/live/index"></script>
