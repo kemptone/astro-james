@@ -7,8 +7,8 @@ import WCFloatingLabel from '../components/WCFloatingLabel.astro'
   <form id="main">
     <fieldset>
       <legend>Set the Live AC's</legend>
-      <WCFloatingLabel label="Number of Boxes">
-        <input type="number" name="boxes" value="10" increment="1" />
+      <WCFloatingLabel label="Number of Columns">
+        <input type="number" name="columns" value="10" increment="1" />
       </WCFloatingLabel>
       <WCFloatingLabel label="Number of Rows">
         <input type="number" name="rows" value="2" increment="1" />
@@ -45,6 +45,7 @@ import WCFloatingLabel from '../components/WCFloatingLabel.astro'
     border-radius: 8px;
     margin-top: 20px;
     min-height: 400px;
+    border:none;
   }
 
   #main #all_of_the_boxes {
@@ -64,6 +65,7 @@ import WCFloatingLabel from '../components/WCFloatingLabel.astro'
 
   .grid-item input {
 	visibility: hidden;
+  position: absolute;
   }
 
   #main fieldset wc-floating-label-input {

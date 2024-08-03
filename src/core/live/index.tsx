@@ -1,23 +1,25 @@
 const State = {
   rows: 2,
-  boxes: 10,
+  columns: 10
 }
 
 const $ = (a: string) => document.querySelector(a)
+const e_columns = $(`input[name="columns"]`) as HTMLInputElement
 const e_boxes = $(`input[name="boxes"]`) as HTMLInputElement
 const e_rows = $(`input[name="rows"]`) as HTMLInputElement
 const e_all_of_the_boxes = $('.all-of-the-boxes') as HTMLDivElement
 
 function updateGridLayout() {
   const rows = State.rows
-  const boxes = State.boxes
+  const columns = State.columns
+  const boxes = rows * columns
 
   const gridContainer = document.getElementById(
     'all_of_the_boxes'
   ) as HTMLDivElement
 
   // Calculate the number of columns based on rows and totalBoxes
-  const columns = Math.ceil(boxes / rows)
+  // const columns = Math.ceil(boxes / rows)
 
   // Set the grid-template-rows and grid-template-columns properties
   gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`
@@ -44,9 +46,9 @@ function render() {
   e_all_of_the_boxes.innerHTML = ''
 }
 
-e_boxes?.addEventListener('input', e => {
+e_columns?.addEventListener('input', e => {
   const target = e?.target as HTMLInputElement
-  State.boxes = parseInt(target.value)
+  State.columns = parseInt(target.value)
   updateGridLayout()
 })
 
