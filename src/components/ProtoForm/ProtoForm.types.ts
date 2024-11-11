@@ -15,6 +15,7 @@ export interface ProtoFormProps<T> {
   onSubmit?: (form: ReturnValues<T>) => void
   children?: HTMLElement | HTMLElement[]
   noValidate?: Boolean 
+  allUniqueCheckboxKeys? : string[]
 }
 
 export interface ReturnValues<T> {

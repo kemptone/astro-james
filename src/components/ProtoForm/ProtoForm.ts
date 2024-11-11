@@ -50,7 +50,7 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
   // Values are generally a string, but can be a string[] for checkboxes
   // since they have multiple values, it might be needed for multiselects too,
   // come back to this if needed
-  const allUniqueCheckboxKeys = new Set<string>()
+  const allUniqueCheckboxKeys = new Set<string>(props.allUniqueCheckboxKeys)
   e_form
     .querySelectorAll?.('input[type=checkbox][name]')
     .forEach((e: Element) => {
