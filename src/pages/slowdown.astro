@@ -1,0 +1,79 @@
+---
+import WCFloatingLabel from "../components/WCFloatingLabel.astro";
+import Layout from "../layouts/Layout.astro";
+import WCDialogWrap from "../components/WCDialogWrap.astro";
+---
+
+<Layout title="Slow down!">
+  <form action="">
+  <div id="slowdown">
+    <header>Where the fan will go</header>
+    <footer>
+      <button type="button" id="trigger_settings">Settings</button>
+      <button type="button" id="start">Start</button>
+    </footer>
+  </div>
+  <WCDialogWrap id="settings">
+    <h4>Settings for Slowdown</h4>
+    <WCFloatingLabel label="Number of steps">
+      <input type="number" name="number_of_steps" value="2">
+    </WCFloatingLabel>
+    <div id="steps">
+      <input type="number" name="step" value="1">
+      <input type="number" name="step" value="2">
+    </div>
+    <footer>
+      <button type="submit">Save</button>
+    </footer>
+  </WCDialogWrap>
+  </form>
+</Layout>
+
+<script src="../core/SlowDown/index"></script>
+
+<style>
+  #slowdown {
+    position: absolute;
+    top:0;
+    left:0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+  }
+
+  #slowdown header {
+    flex:1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #slowdown footer {
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    padding:1rem;
+    background-color: white;
+  }
+
+  #slowdown footer button {
+    padding:1rem 2rem;
+  }
+
+  #slowdown footer input {
+    padding:.4rem .4rem;
+  }
+
+  #settings {
+    min-width: 40rem;
+  }
+
+  #settings button {
+    padding:.5rem 1.3rem;
+  }
+
+</style>

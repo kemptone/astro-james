@@ -1,0 +1,45 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Tide game">
+    <h1>Tidal Predictions over the next 7 days</h1>
+    <div id="graph"></div>
+    <div id="days"></div>
+    <div id="lines-x"></div>
+    <div id="lines-y"></div>
+</Layout>
+
+<script src="../core/tide/tide.ts"></script>
+
+<style>
+
+    :root {
+        --width : 100vw;
+    }
+
+    #graph {
+        margin:0 auto;
+        width:var(--width);
+        margin-top: 5rem;
+        position: absolute;
+    }
+    #graph > svg {
+        width:fit-content;
+        height: fit-content;
+    }
+    #days {
+        margin:0 auto;
+        width:var(--width);
+        margin-top: 5rem;
+        display: flex;
+        justify-content: space-between;
+    }
+    #lines-x {
+        margin:0 auto;
+        width:var(--width);
+        margin-top: 5rem;
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
