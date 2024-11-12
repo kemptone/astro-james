@@ -7,7 +7,7 @@ const Primary =
     .split("  ");
 
 const Secondary =
-  "Beau, Gianna, Makenzie, Blake, Merlin, Santa Claus, Tooth Fairy, Audry, Braxton, Adley, Crista, Jake, Makayla, Atticus, Presly P, Alexis, Sophie, Mikey, Davey Jack, Hazel, Oliver, Lucas, Presly, Jackson, Aubrey, Elliot, Dumpy, Kevin, dave, Dorothy, Scarecrow, Tin Man, lion, Auntie M, Wizard of Oz, stephanie, Easter Bunny, Dave, Ava, Atreyu, Moonchild, Bastian, Emerson, Ellie, Danial"
+  "Beau, Gianna, Makenzie, Blake, Merlin, Santa Claus, Tooth Fairy, Audry, Braxton, Adley, Crista, Jake, Makayla, Atticus, Presly P, Alexis, Sophie, Mikey, Davey Jack, Hazel, Oliver, Lucas, Presly, Jackson, Aubrey, Elliot, Dumpy, Kevin, dave, Dorothy, Scarecrow, Tin Man, lion, Auntie M, Wizard of Oz, stephanie, Easter Bunny, Dave, Ava, Atreyu, Moonchild, Bastian, Emerson, Ellie, Danial, Carmen, Zander, Lita, Linnie"
     .split(", ");
 
 // const Primary = [
