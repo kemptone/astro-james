@@ -1,3 +1,4 @@
+import { PAST_DAYS } from "./helpers"
 export const Format = new Intl.DateTimeFormat('en-CA', {
   dateStyle : 'short'
 })
@@ -5,6 +6,7 @@ export const Format = new Intl.DateTimeFormat('en-CA', {
 export async function getData(today = new Date(), addedDays = 7) {
   const futureDate = new Date()
   futureDate.setDate(today.getDate() + addedDays)
+  today.setDate(today.getDate() - PAST_DAYS)
 
   const begin_date = Format.format(today).replace(/-/g, '')
   const end_date = Format.format(futureDate).replace(/-/g, '')

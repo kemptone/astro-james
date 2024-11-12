@@ -1,9 +1,15 @@
-import { type Predictions } from "./getData"
-import { Format } from "./getData"
+import {type Predictions} from './getData'
+import {Format} from './getData'
+import { PAST_DAYS } from './helpers'
 
-export function buildGraph(Pre: Predictions, date : Date, addedDays : number) {
+export function buildGraph(Pre: Predictions, date: Date, addedDays: number) {
   const {predictions} = Pre
   const Days = new Set<string>()
+
+  const per = 40
+  const _width = predictions.length * per
+  const height = 400
+  const gridLines = 20
 
   predictions.forEach(item => {
     const date = new Date(item.t)
@@ -17,9 +23,10 @@ export function buildGraph(Pre: Predictions, date : Date, addedDays : number) {
   const maxTime = Math.max(...predictions.map(p => parseDate(p.t)))
 
   const mapX = (t: string) => {
+    console.log({ t })
     const timestamp = parseDate(t)
-    const width = 700 // SVG width
-    return ((timestamp - minTime) / (maxTime - minTime)) * width + 50
+    const width = _width  // SVG width
+    return ((timestamp - minTime) / (maxTime - minTime)) * width
   }
 
   const mapY = (v: number) => {
@@ -61,48 +68,38 @@ export function buildGraph(Pre: Predictions, date : Date, addedDays : number) {
   }))
 
   const svgPathData = generateCubicBezierPath(svgPoints)
-  const width = 800
-  const height = 400
-  const gridLines = 10
   const uniqueDays = new Set()
 
-  Array.from({length: addedDays + 2}, (_, i) => {
+  Array.from({length: addedDays + 2 + (PAST_DAYS * 2)}, (_, i) => {
     const future_date = new Date()
-    future_date.setDate( date?.getDate() + i )
-    uniqueDays.add( Format.format( future_date ) )
+    future_date.setDate(date?.getDate() + (i - PAST_DAYS))
+    uniqueDays.add(Format.format(future_date))
   }).join('')
 
   // Create an SVG element (you can inject this into your HTML page)
   const svg = `
-    <svg width="800px" height="400px" xmlns="http://www.w3.org/2000/svg">
-      <path d="${svgPathData}" stroke="gray" fill="none" stroke-width="2"/>
-      ${svgPoints
-        .map(
-          (point, index) =>
-            `<circle cx="${point.x}" cy="${point.y}" r="3" fill="${
-              (index + 2) % 4 === 0 ? 'blue' : 'red'
-            }"/>`
-        )
-        .join('')}
+    <svg width="${_width}px" height="${height}px" xmlns="http://www.w3.org/2000/svg">
 
         <g stroke="gray" stroke-width="0.5">
             ${Array.from(uniqueDays)
-              .map(time_as_string => {
+              .map((time_as_string, index, all) => {
                 // @ts-ignore
-                const x = mapX(time_as_string)
+                const x : number = mapX(time_as_string + " 00:00")
+                const nextTime = all[ index + 1]
+                // @ts-ignore
+                const x2 : number = nextTime ? mapX(nextTime + " 00:00") : undefined
+                const average = (x + x2) / 2
 
-                return `<text font-size="10" x="${x + ( 153 / addedDays )}" y="${
-                  height - 15
-                }">${time_as_string}</text>`
+                return x2 ? `<text font-size="10" text-align="center" text-anchor="middle" x="${average || x}" y="${ height - 15 }">${time_as_string}</text>` : ''
               })
               .join('')}
         </g>
 
-        <g stroke="gray" stroke-width="0.5">
+        <g stroke="gray" stroke-width="0.25">
             ${Array.from(uniqueDays)
               .map(time_as_string => {
                 // @ts-ignore
-                const x = mapX(time_as_string)
+                const x = mapX(time_as_string + " 00:00")
 
                 return `<line x1="${x}" y1="0" y2="${height}" x2="${x}"  />`
               })
@@ -110,12 +107,29 @@ export function buildGraph(Pre: Predictions, date : Date, addedDays : number) {
         </g>
         
 
-        <g stroke="gray" stroke-width="0.5">
+        <g stroke="gray" stroke-width="0.25">
         ${Array.from({length: gridLines + 1}, (_, i) => {
-          const y = (height / gridLines) * i
-          return `<line x1="0" y1="${y}" x2="${width}" y2="${y}" />`
+          const y = ((height / gridLines) * i) - 40
+          return `<line x1="0" y1="${y}" x2="${_width}" y2="${y}" />`
         }).join('')}
         </g>
+        <text id="inner_tooltip" x="0" y="0" visibility="hidden" text-anchor="middle" font-size="12" fill="black"></text>
+
+      <path d="${svgPathData}" stroke="black" fill="none" stroke-width="1"/>
+      <g>
+      ${svgPoints
+        .map(
+          (point, index) =>
+            `<circle cx="${point.x}" cy="${point.y}" r="5" fill="${
+              (index + 2) % 4 === 0 ? 'blue' : 'red'
+            }" data-tooltip="1">
+            <title>${ point.t}</title>
+            </circle>
+            `
+        )
+        .join('')}
+      </g>
+
     </svg>
   `
 

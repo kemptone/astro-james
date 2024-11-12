@@ -3,16 +3,14 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Tide game">
-    <h1>Tidal Predictions over the next 7 days</h1>
+    <h1 id="heading"></h1>
     <div id="graph"></div>
     <div id="days"></div>
-    <div id="lines-x"></div>
-    <div id="lines-y"></div>
 </Layout>
 
 <script src="../core/tide/tide.ts"></script>
 
-<style>
+<style is:global>
 
     :root {
         --width : 100vw;
@@ -20,26 +18,47 @@ import Layout from "../layouts/Layout.astro";
 
     #graph {
         margin:0 auto;
-        width:var(--width);
+        max-width:var(--width);
         margin-top: 5rem;
-        position: absolute;
+        overflow-x:auto;
+        overflow-y:hidden;
+        background-color: rgba(255,255,255,.5);
+        height: 400px;
     }
     #graph > svg {
         width:fit-content;
         height: fit-content;
     }
     #days {
-        margin:0 auto;
-        width:var(--width);
-        margin-top: 5rem;
-        display: flex;
-        justify-content: space-between;
+        display: block;
+        padding:20px;
     }
-    #lines-x {
+    #days table {
+        width: 100%;
+        max-width: 30rem;
         margin:0 auto;
-        width:var(--width);
-        margin-top: 5rem;
-        display: flex;
-        justify-content: space-between;
+
+    }
+
+    #days table td:is(:nth-child(2)) {
+        text-align: center;
+    }
+    #days table th:is(:nth-child(1)),
+    #days table td:is(:nth-child(1)) {
+        text-align: left;
+        padding-left:2rem;
+    }
+    #days table th:is(:nth-child(3)),
+    #days table td:is(:nth-child(3)) {
+        text-align: center;
+    }
+    #days table td {
+        background-color: rgba(255,255,255,.5);
+        padding: .5rem;
+    }
+    #days table tr:nth-child(odd) {
+        background-color: rgba(255,255,255,.6);
+    }
+    #days {
     }
 </style>

@@ -1,0 +1,1 @@
+export const PAST_DAYS = 7
