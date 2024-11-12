@@ -53,14 +53,13 @@ const filteredRoutes = routes.filter(item => item !== 'recordergame.astro' && it
         if (!e_hamburgermenu || !e_dialog) return
 
         e_hamburgermenu?.addEventListener?.('click', () => {
-          e_hamburgermenu?.classList?.toggle('open')
           e_dialog?.showModal?.()
         })
 
-        e_dialog.addEventListener('click', () => {
-          e_hamburgermenu.classList.toggle('open')
-          e_dialog?.close?.()
-        })
+        // e_dialog.addEventListener('click', () => {
+        //   debugger
+        //   e_dialog?.close?.()
+        // })
 
         if (!e_reinstall) return
 
@@ -85,6 +84,11 @@ const filteredRoutes = routes.filter(item => item !== 'recordergame.astro' && it
 </script>
 
 <style is:global>
+
+html body:has(dialog[open]) {
+  overflow: hidden;
+}
+
   site-menu dialog ol {
     font-size: 1.9rem;
     max-height: 95vh;
@@ -121,7 +125,7 @@ const filteredRoutes = routes.filter(item => item !== 'recordergame.astro' && it
     -webkit-backdrop-filter: blur(6px);
   }
   site-menu .hamburgermenu {
-    position: absolute;
+    position: fixed;
     right: 13px;
     top: 13px;
     width: 60px;
@@ -184,7 +188,7 @@ const filteredRoutes = routes.filter(item => item !== 'recordergame.astro' && it
     transform-origin: left center;
   }
 
-  site-menu .hamburgermenu.open span:nth-child(1) {
+  site-menu:has(dialog[open]) .hamburgermenu span:nth-child(1) {
     -webkit-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
     -o-transform: rotate(45deg);
@@ -193,12 +197,21 @@ const filteredRoutes = routes.filter(item => item !== 'recordergame.astro' && it
     left: 8px;
   }
 
-  site-menu .hamburgermenu.open span:nth-child(2) {
+  /* site-menu .hamburgermenu.open span:nth-child(1) {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    top: -3px;
+    left: 8px;
+  } */
+
+  site-menu:has(dialog[open]) .hamburgermenu span:nth-child(2) {
     width: 0%;
     opacity: 0;
   }
 
-  site-menu .hamburgermenu.open span:nth-child(3) {
+  site-menu:has(dialog[open]) .hamburgermenu span:nth-child(3) {
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
     -o-transform: rotate(-45deg);
@@ -216,5 +229,11 @@ const filteredRoutes = routes.filter(item => item !== 'recordergame.astro' && it
     cursor: pointer;
     margin:10px;
   }
+
+@media (max-width:700px) {
+  site-menu dialog ol {
+    font-size: 1.5rem;
+  }
+}
 
 </style>

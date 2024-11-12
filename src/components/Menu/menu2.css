@@ -27,7 +27,7 @@ site-menu dialog::backdrop {
   -webkit-backdrop-filter: blur(6px);
 }
 site-menu .hamburgermenu {
-  position: absolute;
+  position: fixed;
   right: 13px;
   top: 13px;
   width: 60px;
