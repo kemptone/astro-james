@@ -8,6 +8,7 @@ import preact from "@astrojs/preact";
 
 // https://astro.build/config
 export default defineConfig({
+  output: 'hybrid',
   // adapters: [Deno()],
   server: {
     port: 8080

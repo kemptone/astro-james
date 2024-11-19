@@ -1,0 +1,34 @@
+---
+import WCFloatingLabel from "../components/WCFloatingLabel.astro";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="talkers">
+    <main id="talkers">
+        <header>
+            <h1>Talkers</h1>
+        </header>
+        <form>
+            <div id="list"></div>
+            <WCFloatingLabel addclear="1" label="Say this">
+                <textarea name="texts"></textarea>
+            </WCFloatingLabel>
+        </form>
+    </main>
+</Layout>
+
+<script src="../core/talkers/index.ts"></script>
+
+<style is:global>
+    main {
+        max-width: 1100px;
+        margin: 0 auto;
+        background-color: white;
+        min-height: 100vh;
+        padding: 0 2rem;
+        box-sizing: border-box;
+    }
+    main header {
+        min-height: 110px;
+    }
+</style>
