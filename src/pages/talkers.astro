@@ -8,12 +8,16 @@ import Layout from "../layouts/Layout.astro";
         <header>
             <h1>Talkers</h1>
         </header>
-        <form>
-            <div id="list"></div>
-            <WCFloatingLabel addclear="1" label="Say this">
-                <textarea name="texts"></textarea>
-            </WCFloatingLabel>
-        </form>
+            <div class="layout">
+                <div id="list"></div>
+                <div id="input_area">
+                    <form>
+                        <WCFloatingLabel addclear="1" label="Say this">
+                            <textarea name="texts"></textarea>
+                        </WCFloatingLabel>
+                    </form>
+                </div>
+            </div>
     </main>
 </Layout>
 
@@ -30,5 +34,12 @@ import Layout from "../layouts/Layout.astro";
     }
     main header {
         min-height: 110px;
+    }
+    main .layout {
+        display: flex;
+        gap: 2rem;
+    }
+    main .layout #input_area {
+        flex: 1;
     }
 </style>

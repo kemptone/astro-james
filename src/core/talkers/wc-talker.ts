@@ -1,10 +1,12 @@
-import {type Voice} from '@aws-sdk/client-polly'
+import {type Voice } from '@aws-sdk/client-polly'
+import ProtoForm from '../../components/ProtoForm/ProtoForm'
+import { type FormType, OnSubmit } from './wc-talkers.helpers'
 
 class Talker extends HTMLElement {
   connectedCallback() {
     const info = JSON.parse(this.dataset.info || '{}') as Voice
     const shadow = this.attachShadow({mode: 'open'})
-    const e_wrapper = document.createElement('div')
+    const e_wrapper = document.createElement('form')
     const style = document.createElement('style')
 
     style.textContent = /*css*/ `
@@ -30,6 +32,7 @@ class Talker extends HTMLElement {
 
     e_wrapper.innerHTML = `
     <div class="talker">
+        <input type="hidden" name="voiceId" value="${info.Id}" />
         <div class="face">
             <img src="${info.Face}">
         </div>
@@ -38,7 +41,7 @@ class Talker extends HTMLElement {
                 ${info.Name}
             </div>
             <div class="sample">
-                <button type="button">Play</button>
+                <button>Play</button>
             </div>
         </div>
     </div>
@@ -47,48 +50,11 @@ class Talker extends HTMLElement {
     shadow.appendChild(e_wrapper)
     shadow.appendChild(style)
 
-    const e_button = e_wrapper.querySelector?.('button')
+    ProtoForm<FormType>({
+      e_form : e_wrapper,
+      onSubmit : OnSubmit(info)
+    })
 
-    if (e_button) {
-      e_button.addEventListener('click', async e => {
-        const engine = info.SupportedEngines?.[0]
-
-        const response = await fetch('/api/polly/say', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            text: 'Fardo the great was once a hill of a man',
-            voiceId: info.Id,
-            engine,
-          }),
-        })
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch audio')
-        }
-
-        // Read the response body as a ReadableStream
-        const reader = response.body?.getReader()
-        const chunks = []
-
-        // Read chunks of data from the stream
-        while (true) {
-          const {done, value} = await reader?.read?.()
-          if (done) break
-          chunks.push(value)
-        }
-
-        // Convert chunks to a Blob
-        const audioBlob = new Blob(chunks, {type: 'audio/mpeg'})
-        const audioUrl = URL.createObjectURL(audioBlob)
-
-        // Create and play an audio element
-        const audio = new Audio(audioUrl)
-        audio.play()
-      })
-    }
   }
 }
 
