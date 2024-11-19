@@ -36,13 +36,11 @@ export async function post({
     },
   })
 
-  // const {text, voiceId} = request.body
   const text: string = requestBody.text
   const voiceId: VoiceId = requestBody.voiceId as VoiceId
   const engine: Engine = requestBody.engine as Engine
 
   if (!text || !voiceId) {
-
     return new Response(
       JSON.stringify({
         missing_text: true,
@@ -50,8 +48,7 @@ export async function post({
       {
         status: 400,
         headers: {
-          'Content-Type': 'text/plain',
-          'Custom-Header': 'value',
+          'Content-Type': 'application/json',
         },
       }
     )
@@ -69,22 +66,26 @@ export async function post({
     const command = new SynthesizeSpeechCommand(params)
     const response = await pollyClient.send(command)
 
-    const res = new Response('', {
-      headers: {
-        'Content-Type': 'audio/mpeg',
-        'Content-Disposition': 'inline; filename="output.mp3"',
-        'Content-Length': response.AudioStream.length,
-      },
-    })
+    // Collect the AudioStream data
+    if (response.AudioStream) {
+      const audioChunks = []
+      for await (const chunk of response.AudioStream) {
+        audioChunks.push(chunk)
+      }
+      const audioBuffer = Buffer.concat(audioChunks)
 
-    // Stream the audio directly to the response
-    response.AudioStream.pipe(res)
-
-    return response
-
+      return new Response(audioBuffer, {
+        headers: {
+          'Content-Type': 'audio/mpeg',
+          'Content-Disposition': 'inline; filename="output.mp3"',
+        },
+      })
+    } else {
+      throw new Error('AudioStream is empty')
+    }
   } catch (error) {
     console.error('Error synthesizing speech:', error)
-    return new Response(JSON.stringify({}), {
+    return new Response(JSON.stringify({ error: 'Failed to synthesize speech' }), {
       status: 500,
     })
   }
