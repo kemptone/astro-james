@@ -1,4 +1,4 @@
-import { computed, effect, signal, useSignal } from "@preact/signals";
+import { computed, effect, signal } from "@preact/signals";
 import _LS from "../helpers/localStorage.js";
 // import { initial, MathProblem } from '../helpers/smartMathGuy.ts'
 import Animations from "./Animations.ts";

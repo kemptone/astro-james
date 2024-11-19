@@ -26,8 +26,6 @@ export type MetaVoice = {
 
 const {voice_name, read} = populate('voice') ?? {}
 
-debugger
-
 const e_name_of_inputs = document.querySelector(
   'input[name="name_of_inputs"]'
 ) as HTMLInputElement

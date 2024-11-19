@@ -1,8 +1,45 @@
 ---
-import fs from 'node:fs/promises'
-const url = new URL('../../pages', import.meta.url)
-const routes = await fs.readdir(url)
+const routes = `
+acgame.astro      decibel.astro     music2.astro      talkers.astro
+ampm.astro        dictionary.astro  nightnight.astro  test.astro
+api               heatergame.astro  recorder.astro    tide.astro
+bignumbers.astro  index.astro       reinstall.astro   timer2.astro
+blades.astro      kidthing.astro    scrolling.astro   timer3.astro
+brownthing.astro  laddergame.astro  slowdown.astro    timer4.astro
+calculator.astro  lasko.astro       speedup.astro     voicemaker.astro
+characters.astro  learncode.astro   spin.astro        wordsearch.astro
+colorfinder.astro live.astro        spinners.astro
+colorthing.astro  longcontent.astro star.astro`.split(/[ \n]/g)
+ .filter( item => !!item)
+// const routes = import.meta.glob('/src/pages/*.astro', { eager: true })
+// const routes = import.meta.glob('/src/pages/*.astro')
+// const routes = { hello : 133 }
+
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log({
+  routes
+})
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log("..................")
+console.log("..................")
+
+// const routes = await fs.readdir(url)
 const filteredRoutes = routes
+  .map(item => item.replace("../../pages/", ""))
   .filter(item => item !== 'recordergame.astro' && item !== 'index.astro')
   .filter(item => item !== 'api')
 ---
@@ -11,10 +48,9 @@ const filteredRoutes = routes
   <site-menu>
     <dialog data-as="links">
       <ol>
-
-              <li>
-                <a href={`/`}>Home</a>
-              </li>
+        <li>
+          <a href={`/`}>Home</a>
+        </li>
 
         {
           filteredRoutes.map(item => {
@@ -28,7 +64,9 @@ const filteredRoutes = routes
           })
         }
       </ol>
-      <button data-as="reinstall" class="reinstall" type="button">Reinstall app</button>
+      <button data-as="reinstall" class="reinstall" type="button"
+        >Reinstall app</button
+      >
     </dialog>
     <button data-as="hamburgermenu" class="hamburgermenu">
       <span></span>
@@ -70,13 +108,13 @@ const filteredRoutes = routes
           caches.delete('my-cache')
 
           setTimeout(() => {
-            location.reload()
+            // location.reload()
           }, 1000)
 
           navigator.serviceWorker.getRegistration().then(registration => {
             registration?.unregister().then(() => {
               console.log('Service worker unregistered')
-              location.reload()
+              // location.reload()
             })
           })
         })
@@ -86,16 +124,15 @@ const filteredRoutes = routes
 </script>
 
 <style is:global>
-
-html body:has(dialog[open]) {
-  overflow: hidden;
-}
+  html body:has(dialog[open]) {
+    overflow: hidden;
+  }
 
   site-menu dialog ol {
     font-size: 1.9rem;
     max-height: 95vh;
     overflow: auto;
-    width:50vw;
+    width: 50vw;
     min-width: 300px;
     display: flex;
     flex-wrap: wrap;
@@ -229,13 +266,12 @@ html body:has(dialog[open]) {
     padding: 2px 10px;
     font-size: 21px;
     cursor: pointer;
-    margin:10px;
+    margin: 10px;
   }
 
-@media (max-width:700px) {
-  site-menu dialog ol {
-    font-size: 1.5rem;
+  @media (max-width: 700px) {
+    site-menu dialog ol {
+      font-size: 1.5rem;
+    }
   }
-}
-
 </style>
