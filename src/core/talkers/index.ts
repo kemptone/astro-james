@@ -26,7 +26,6 @@ async function getVoices() {
   const response = await fetch('/api/polly/list')
   const json = (await response.json()) as {data: DescribeVoicesCommandOutput}
 
-  debugger
   json.data.Voices = json.data.Voices?.filter?.(item => {
     return item.LanguageCode?.startsWith('en')
   })
@@ -43,22 +42,32 @@ async function getVoices() {
 document.addEventListener('DOMContentLoaded', async e => {
   const data = (await getVoices()) as DescribeVoicesCommandOutput
 
-  const e_form = document.querySelector('#talkers form') as HTMLFormElement
+  // const e_form = document.querySelector('#talkers form') as HTMLFormElement
   const e_list = document.querySelector('#list') as HTMLFormElement
+  const e_input_area = document.querySelector("#input_area") as HTMLDivElement
   const e_fragment = document.createDocumentFragment()
 
   data?.Voices?.forEach(item => {
     const element = document.createElement('wc-talker')
     element.setAttribute('data-info', JSON.stringify(item))
+    element.setAttribute('data-preview', "1")
     e_fragment.appendChild(element)
   })
 
   e_list.append(e_fragment)
 
-  ProtoForm<FormType>({
-    e_form,
-    onIsInvalid: () => {},
-    onIsValid: () => {},
-    onSubmit: form => {},
+  e_list.addEventListener('clicked_add', e => {
+    // @ts-ignore
+    const detail = e.detail as Voice
+    const element = document.createElement('wc-talker')
+    element.setAttribute('data-info', JSON.stringify(detail))
+    e_input_area.appendChild(element)
   })
+
+  // ProtoForm<FormType>({
+  //   e_form,
+  //   onIsInvalid: () => {},
+  //   onIsValid: () => {},
+  //   onSubmit: form => {},
+  // })
 })

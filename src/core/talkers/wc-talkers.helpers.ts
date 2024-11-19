@@ -4,6 +4,7 @@ import { type ReturnValues } from '../../components/ProtoForm/ProtoForm.types'
 export type FormType = {
   voiceId : VoiceId
   text : string
+  text_hidden : string
   engine : string
 }
 
@@ -14,7 +15,7 @@ export const onSubmit = async (form : ReturnValues<FormType>) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      text: form.values.text,
+      text: form.values.text || form.values.text_hidden,
       voiceId: form.values.voiceId,
       engine : form.values.engine,
     }),
