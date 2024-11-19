@@ -2,6 +2,7 @@ import {
   Engine,
   PollyClient,
   SynthesizeSpeechCommand,
+  type TextType,
   type SynthesizeSpeechCommandInput,
   type VoiceId,
 } from '@aws-sdk/client-polly'
@@ -39,6 +40,7 @@ export async function post({
   const text: string = requestBody.text
   const voiceId: VoiceId = requestBody.voiceId as VoiceId
   const engine: Engine = requestBody.engine as Engine
+  const textType: TextType = requestBody.textType as TextType
 
   if (!text || !voiceId) {
     return new Response(
@@ -59,7 +61,7 @@ export async function post({
     Text: text,
     VoiceId: voiceId,
     Engine: engine,
-    TextType: 'text', // Change to 'ssml' if using SSML input
+    TextType : textType || 'text', // Change to 'ssml' if using SSML input
   }
 
   try {
