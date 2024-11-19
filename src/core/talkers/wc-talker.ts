@@ -1,6 +1,6 @@
-import {type Voice } from '@aws-sdk/client-polly'
+import {type Voice} from '@aws-sdk/client-polly'
 import ProtoForm from '../../components/ProtoForm/ProtoForm'
-import { type FormType, OnSubmit } from './wc-talkers.helpers'
+import {type FormType, onSubmit} from './wc-talkers.helpers'
 
 class Talker extends HTMLElement {
   connectedCallback() {
@@ -8,6 +8,7 @@ class Talker extends HTMLElement {
     const shadow = this.attachShadow({mode: 'open'})
     const e_wrapper = document.createElement('form')
     const style = document.createElement('style')
+    const engine = info.SupportedEngines?.[0]
 
     style.textContent = /*css*/ `
     .talker {
@@ -28,20 +29,31 @@ class Talker extends HTMLElement {
     }
     .talker .sample {
     }
+    .talker .action {
+        display:flex;
+        gap:10px;
+        align-items:center;
+    }
     `
 
     e_wrapper.innerHTML = `
     <div class="talker">
         <input type="hidden" name="voiceId" value="${info.Id}" />
+        <input type="hidden" name="engine" value="${engine}" />
         <div class="face">
             <img src="${info.Face}">
         </div>
         <div class="group">
             <div class="name">
-                ${info.Name}
             </div>
             <div class="sample">
-                <button>Play</button>
+                <textarea name="text">Fardo the great was once a hill of a man</textarea>
+            </div>
+            <div class="action">
+                <span>
+                  ${info.Name}
+                </span>
+                <button>Play</button> 
             </div>
         </div>
     </div>
@@ -51,10 +63,9 @@ class Talker extends HTMLElement {
     shadow.appendChild(style)
 
     ProtoForm<FormType>({
-      e_form : e_wrapper,
-      onSubmit : OnSubmit(info)
+      e_form: e_wrapper,
+      onSubmit
     })
-
   }
 }
 

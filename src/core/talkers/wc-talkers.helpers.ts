@@ -4,20 +4,19 @@ import { type ReturnValues } from '../../components/ProtoForm/ProtoForm.types'
 export type FormType = {
   voiceId : VoiceId
   text : string
+  engine : string
 }
 
-export const OnSubmit = (info: Voice) => async (form : ReturnValues<FormType>) => {
-  const engine = info.SupportedEngines?.[0]
-
+export const onSubmit = async (form : ReturnValues<FormType>) => {
   const response = await fetch('/api/polly/say', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      text: 'Fardo the great was once a hill of a man',
-      voiceId: info.Id,
-      engine,
+      text: form.values.text,
+      voiceId: form.values.voiceId,
+      engine : form.values.engine,
     }),
   })
 
