@@ -1,5 +1,5 @@
 import {
-  MutableRef,
+  type MutableRef,
   useCallback,
   useEffect,
   useRef,

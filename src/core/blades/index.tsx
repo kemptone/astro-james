@@ -1,4 +1,3 @@
-import Preact from "preact";
 import type { FunctionComponent } from "preact/compat";
 import { useEffect, useRef, useState } from "preact/hooks";
 import AdjustableBlades from "../../components/AdjustableBlades.tsx";

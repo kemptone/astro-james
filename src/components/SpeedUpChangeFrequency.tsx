@@ -1,4 +1,4 @@
-import { MutableRef, useRef } from "preact/hooks";
+import { type MutableRef, useRef } from "preact/hooks";
 import Select from "./Select.tsx";
 
 type Note = {

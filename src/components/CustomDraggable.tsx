@@ -1,5 +1,4 @@
-import { ClassAttributes, Component, h } from "preact";
-import { MutableRef } from "preact/hooks";
+import { type ClassAttributes, Component, h } from "preact";
 
 interface DraggableProps {
   positionX: number;

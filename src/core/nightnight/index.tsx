@@ -1,8 +1,5 @@
 import {
-  MutableRef,
-  useCallback,
   useEffect,
-  useId,
   useRef,
   useState,
 } from "preact/hooks";

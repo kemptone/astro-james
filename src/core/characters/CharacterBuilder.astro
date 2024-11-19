@@ -45,37 +45,41 @@ const def = 77824
     </form> 
   `
 
-  class CharacterBuilder extends HTMLElement {
-    render() {
-      const def = 77824
-      const e_form = this.querySelector('form')
-      const e_input = this.querySelector('input') as HTMLInputElement
-      const e_character = this.querySelector('.character')
-      ProtoForm<FormType>({
-        e_form,
-        onChange(form) {
-          if (!e_character) return
-          const char = parseInt(form.values.a)
-          e_character.innerHTML = '&#x' + char.toString(16) + ';'
-        },
-      })
+  if (typeof window != 'undefined')
+    customElements.define(
+      'wc-character-builder',
+      class CharacterBuilder extends HTMLElement {
+        render() {
+          const def = 77824
+          const e_form = this.querySelector('form')
+          const e_input = this.querySelector('input') as HTMLInputElement
+          const e_character = this.querySelector('.character')
+          ProtoForm<FormType>({
+            e_form,
+            onChange(form) {
+              if (!e_character) return
+              const char = parseInt(form.values.a)
+              e_character.innerHTML = '&#x' + char.toString(16) + ';'
+            },
+          })
 
-      // creates a random character between 77824 and 78895
-      const rand = Math.floor(Math.random() * 1072) + 77824
+          // creates a random character between 77824 and 78895
+          const rand = Math.floor(Math.random() * 1072) + 77824
 
-      if (!e_character || !e_input) return
+          if (!e_character || !e_input) return
 
-      e_character.innerHTML = '&#x' + rand.toString(16) + ';'
-      e_input.value = String(rand)
-    }
+          e_character.innerHTML = '&#x' + rand.toString(16) + ';'
+          e_input.value = String(rand)
+        }
 
-    connectedCallback() {
-      this.innerHTML = template()
-      setTimeout(this.render.bind(this), 100)
-    }
-  }
+        connectedCallback() {
+          this.innerHTML = template()
+          setTimeout(this.render.bind(this), 100)
+        }
+      }
+    )
 
-  customElements.define('wc-character-builder', CharacterBuilder)
+  // customElements.define('wc-character-builder', CharacterBuilder)
 </script>
 
 <style is:global>
@@ -84,7 +88,7 @@ const def = 77824
     height: 100%;
     max-width: 1200px;
     margin-inline: auto;
-    padding-block:100px;
+    padding-block: 100px;
   }
   wc-character-builder {
     display: inline-block;
@@ -127,10 +131,9 @@ const def = 77824
       font-size: 64px;
     }
     wc-character-builder {
-      width:fit-content;
-      height:fit-content;
-      margin:4px;
+      width: fit-content;
+      height: fit-content;
+      margin: 4px;
     }
   }
-
 </style>

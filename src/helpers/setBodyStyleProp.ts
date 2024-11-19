@@ -1,4 +1,4 @@
-import { MutableRef } from "https://esm.sh/v113/preact@10.13.2/hooks/src/index.js";
+import { type MutableRef } from "https://esm.sh/v113/preact@10.13.2/hooks/src/index.js";
 
 export const setBodyStyleProp = (prop: string, value: string) => {
   document.body.style.setProperty(prop, value);

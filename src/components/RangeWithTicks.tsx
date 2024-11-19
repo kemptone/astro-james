@@ -1,5 +1,5 @@
-import { MutableRef, useId, useRef } from "preact/hooks";
-import { HTMLAttributes } from "preact/compat";
+import { type MutableRef, useId, useRef } from "preact/hooks";
+import { type HTMLAttributes } from "preact/compat";
 import { persist, populate } from "../helpers/localStorage.ts";
 
 // NOTES on Event Handlers

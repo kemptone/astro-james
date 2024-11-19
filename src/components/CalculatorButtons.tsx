@@ -1,4 +1,4 @@
-import { JSX } from 'preact'
+import { type JSX } from 'preact'
 import _onMouseDown from './CalculatorOnMouseDown2.tsx'
 
 function Action(props: JSX.HTMLAttributes<HTMLButtonElement>) {

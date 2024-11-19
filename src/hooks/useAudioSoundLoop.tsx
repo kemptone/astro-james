@@ -1,10 +1,6 @@
 import IS_BROWSER from "../effects/IS_BROWSER";
 import {
-  MutableRef,
   useCallback,
-  useEffect,
-  useRef,
-  useState,
 } from "preact/hooks";
 
 type SoundSettings = {

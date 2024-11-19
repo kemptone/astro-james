@@ -1,5 +1,3 @@
-import preact from "preact";
-
 const RecordingItem: preact.FunctionalComponent<{
   audioURL: string;
   timestamp: number;

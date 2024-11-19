@@ -14,7 +14,7 @@ type RequestBody = {
 
 export const prerender = false
 
-export async function post({
+export async function POST({
   request,
 }: {
   request: Request & {

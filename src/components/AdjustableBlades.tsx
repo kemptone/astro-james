@@ -1,4 +1,4 @@
-import { FunctionComponent } from "preact/compat";
+import { type FunctionComponent } from "preact/compat";
 
 export const CurveTypes = {
   normal: "m 14 15 q 0 5 -2 10 q 3 2 6 0 q -2 -5 -2 -10 z", // 60 x 60
