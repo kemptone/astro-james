@@ -10,6 +10,7 @@ export type FormType = {
 export const playText = async (form : {
   values : FormType
 }, should_play : boolean) => {
+  debugger
   const response = await fetch('/api/polly/say', {
     method: 'POST',
     headers: {

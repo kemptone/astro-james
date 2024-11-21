@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', async e => {
   const e_input_area = document.querySelector('#input_area') as HTMLFormElement
   const e_fragment = document.createDocumentFragment()
   const e_clear_all = document.getElementById('clear_all')
+  const e_remove_all = document.getElementById('remove_all')
   const e_play_all = document.getElementById('play_all')
   const e_hidden_button = document.getElementById('hidden_button')
 
@@ -64,10 +65,17 @@ document.addEventListener('DOMContentLoaded', async e => {
     e_hidden_button?.click()
   })
 
-  e_clear_all?.addEventListener('click', () => {
+  e_remove_all?.addEventListener('click', () => {
     const all = e_input_area.querySelectorAll('wc-talker')
     all.forEach(item => {
       e_input_area.removeChild(item)
+    })
+  })
+
+  e_clear_all?.addEventListener('click', () => {
+    const all = e_input_area.querySelectorAll('textarea')
+    all.forEach(item => {
+      item.value = ''
     })
   })
 

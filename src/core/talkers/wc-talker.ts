@@ -41,16 +41,16 @@ if (typeof window != 'undefined')
               <button type="button" class="add_talker plus">⊕</button>
             </div>
           <div class="preview">
-            <button class="play_sample">sample</button> 
+            <button type="button" class="play_sample">sample</button> 
           </div>
           `
             : `
             <div class="action">
                 <span class="name">${info.Name}</span>
                 <div class="subgroup">
-                <button class="remove_talker">remove</button>
-                <button class="clear">clear</button> 
-                <button class="play_sample">play</button> 
+                <button type="button" class="remove_talker">remove</button>
+                <button type="button" class="clear">clear</button> 
+                <button type="button" class="play_sample">play</button> 
                 </div>
             </div>
           `
