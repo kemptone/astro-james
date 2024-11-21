@@ -8,7 +8,9 @@ export type FormType = {
   engine : string
 }
 
-export const onSubmit = async (form : ReturnValues<FormType>) => {
+export const playText = async (form : {
+  values : FormType
+}, should_play : boolean) => {
   const response = await fetch('/api/polly/say', {
     method: 'POST',
     headers: {
@@ -42,5 +44,8 @@ export const onSubmit = async (form : ReturnValues<FormType>) => {
 
   // Create and play an audio element
   const audio = new Audio(audioUrl)
-  audio.play()
+  if (should_play) {
+    audio.play()
+  }
+  return audio
 }
