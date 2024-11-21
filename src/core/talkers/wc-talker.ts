@@ -1,5 +1,5 @@
 import {type Voice} from '@aws-sdk/client-polly'
-import { playText} from './wc-talkers.helpers'
+import {playText} from './wc-talkers.helpers'
 
 if (typeof window != 'undefined')
   customElements.define(
@@ -15,7 +15,9 @@ if (typeof window != 'undefined')
 
         e_wrapper.innerHTML = `
     <div class="talker ${is_preview ? 'preview' : ''}">
-        <input type="hidden" name="text_hidden" value="${ is_preview ? defaultText : ''}" />
+        <input type="hidden" name="text_hidden" value="${
+          is_preview ? defaultText : ''
+        }" />
         <input type="hidden" name="voiceId" value="${info.Id}" />
         <input type="hidden" name="engine" value="${engine}" />
         <div class="face">
@@ -57,18 +59,26 @@ if (typeof window != 'undefined')
     </div>
     `
 
-    const e_textarea = e_wrapper.querySelector('textarea') as HTMLTextAreaElement
+        const e_textarea = e_wrapper.querySelector(
+          'textarea'
+        ) as HTMLTextAreaElement
+
+        const addEvent = new CustomEvent('clicked_add', {
+          detail: info,
+          bubbles: true,
+          composed: true, // Allows the event to pass through the shadow DOM boundary
+        })
+
+        if (is_preview) {
+          e_wrapper.querySelector('.face img')?.addEventListener('click', e => {
+            this.dispatchEvent(addEvent)
+          })
+        }
 
         e_wrapper
           .querySelector('button.add_talker')
           ?.addEventListener('click', e => {
-            this.dispatchEvent(
-              new CustomEvent('clicked_add', {
-                detail: info,
-                bubbles: true,
-                composed: true, // Allows the event to pass through the shadow DOM boundary
-              })
-            )
+            this.dispatchEvent(addEvent)
           })
 
         e_wrapper
@@ -89,14 +99,13 @@ if (typeof window != 'undefined')
             const inputs = e_wrapper.querySelectorAll('input, select, textarea')
             const values = {}
             // @ts-ignore
-            inputs?.forEach?.((input : HTMLInputElement) => {
+            inputs?.forEach?.((input: HTMLInputElement) => {
               // @ts-ignore
               values[input.name] = input.value
             })
 
             // @ts-ignore
-            playText({ values }, true)
-
+            playText({values}, true)
           })
 
         shadow.appendChild(e_wrapper)

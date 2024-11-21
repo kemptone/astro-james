@@ -1,5 +1,4 @@
-import {type Voice, VoiceId} from '@aws-sdk/client-polly'
-import { type ReturnValues } from '../../components/ProtoForm/ProtoForm.types'
+import {VoiceId} from '@aws-sdk/client-polly'
 
 export type FormType = {
   voiceId : VoiceId

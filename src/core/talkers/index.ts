@@ -39,7 +39,7 @@ async function getVoices() {
   })
 
   localStorage.setItem(VOICES, JSON.stringify(json.data))
-  dog[VOICES] = json.data
+  return dog[VOICES] = json.data
 }
 
 document.addEventListener('DOMContentLoaded', async e => {
