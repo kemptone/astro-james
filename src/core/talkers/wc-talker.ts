@@ -15,7 +15,7 @@ if (typeof window != 'undefined')
 
         e_wrapper.innerHTML = `
     <div class="talker ${is_preview ? 'preview' : ''}">
-        <input type="hidden" name="text_hidden" value="${defaultText}" />
+        <input type="hidden" name="text_hidden" value="${ is_preview ? defaultText : ''}" />
         <input type="hidden" name="voiceId" value="${info.Id}" />
         <input type="hidden" name="engine" value="${engine}" />
         <div class="face">
@@ -27,7 +27,7 @@ if (typeof window != 'undefined')
             ? ``
             : `
             <div class="sample">
-                <textarea name="text">${defaultText}</textarea>
+                <textarea name="text"></textarea>
             </div>
           `
         }
@@ -44,17 +44,20 @@ if (typeof window != 'undefined')
           `
             : `
             <div class="action">
-                <div class="subgroup">
                 <span class="name">${info.Name}</span>
-                <button type="button" class="remove_talker plus">⊖</button>
-                </div>
+                <div class="subgroup">
+                <button class="remove_talker">remove</button>
+                <button class="clear">clear</button> 
                 <button class="play_sample">play</button> 
+                </div>
             </div>
           `
         }
         </div>
     </div>
     `
+
+    const e_textarea = e_wrapper.querySelector('textarea') as HTMLTextAreaElement
 
         e_wrapper
           .querySelector('button.add_talker')
@@ -72,6 +75,12 @@ if (typeof window != 'undefined')
           .querySelector('button.remove_talker')
           ?.addEventListener('click', e => {
             this.parentElement?.removeChild(this)
+          })
+
+        e_wrapper
+          .querySelector('button.clear')
+          ?.addEventListener('click', e => {
+            e_textarea.value = ''
           })
 
         e_wrapper

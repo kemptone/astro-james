@@ -4,7 +4,7 @@ import { type ReturnValues } from '../../components/ProtoForm/ProtoForm.types'
 export type FormType = {
   voiceId : VoiceId
   text : string
-  text_hidden : string
+  text_hidden? : string
   engine : string
 }
 

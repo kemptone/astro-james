@@ -1,7 +1,7 @@
 import ProtoForm from '../../components/ProtoForm/ProtoForm'
 import './wc-talker'
 import {VoiceId, type DescribeVoicesCommandOutput} from '@aws-sdk/client-polly'
-import { playText } from './wc-talkers.helpers'
+import {playText} from './wc-talkers.helpers'
 
 const VOICES = 'get_voices'
 
@@ -10,10 +10,10 @@ function makeFace(name: string) {
 }
 
 type FormType = {
-  text : string[]
-  text_hidden : string[]
-  engine : string[]
-  voiceId : string[]
+  text: string[]
+  text_hidden: string[]
+  engine: string[]
+  voiceId: string[]
 }
 
 const dog = {
@@ -45,16 +45,16 @@ async function getVoices() {
 document.addEventListener('DOMContentLoaded', async e => {
   const data = (await getVoices()) as DescribeVoicesCommandOutput
   const e_list = document.querySelector('#list') as HTMLFormElement
-  const e_input_area = document.querySelector("#input_area") as HTMLFormElement
+  const e_input_area = document.querySelector('#input_area') as HTMLFormElement
   const e_fragment = document.createDocumentFragment()
-  const e_clear_all = document.getElementById("clear_all")
-  const e_play_all = document.getElementById("play_all")
-  const e_hidden_button = document.getElementById("hidden_button")
+  const e_clear_all = document.getElementById('clear_all')
+  const e_play_all = document.getElementById('play_all')
+  const e_hidden_button = document.getElementById('hidden_button')
 
   data?.Voices?.forEach(item => {
     const element = document.createElement('wc-talker')
     element.setAttribute('data-info', JSON.stringify(item))
-    element.setAttribute('data-preview', "1")
+    element.setAttribute('data-preview', '1')
     e_fragment.appendChild(element)
   })
 
@@ -80,41 +80,39 @@ document.addEventListener('DOMContentLoaded', async e => {
   })
 
   ProtoForm<FormType>({
-    e_form : e_input_area,
+    e_form: e_input_area,
     onIsInvalid: () => {},
     onIsValid: () => {},
-    onSubmit: async (form) => {
-      const { values } = form
-      const { text, engine, voiceId, text_hidden } = values // arrays
-      const audios : HTMLAudioElement[] = []
+    onSubmit: async form => {
+      const {values} = form
+      const {text, engine, voiceId, text_hidden} = values // arrays
+      const audios: HTMLAudioElement[] = []
 
-      text.forEach(async (t, index) => {
-        const audio = await playText({ values : {
-          engine : engine[index],
-          voiceId : voiceId[index] as VoiceId,
-          text : t,
-          text_hidden : text_hidden[index]
-        }}, false)
+      for (let x = 0; x < text.length; x++) {
+        let audio = await playText(
+          {
+            values: {
+              engine: engine[x],
+              voiceId: voiceId[x] as VoiceId,
+              text: text[x],
+            },
+          },
+          false
+        )
         audios.push(audio)
-        if (index === 0) {
-          playThenNext(audios)
-        }
-      })
-
+      }
+      playThenNext(audios)
     },
-    allUniqueCheckboxKeys: [
-      "engine", "text",  "text_hidden", "voiceId"
-    ]
+    allUniqueCheckboxKeys: ['engine', 'text', 'text_hidden', 'voiceId'],
   })
 })
 
-function playThenNext (audios : HTMLAudioElement[]) {
-  const length = audios.length
-  if (length) {
-    const audio = audios.shift()
-    audio?.play?.()
-    audio?.addEventListener('ended', () => {
-      playThenNext(audios)
-    })
-  }
+function playThenNext(audios: HTMLAudioElement[]) {
+  const audio = audios.shift()
+  if (!audio) return
+
+  audio?.play?.()
+  audio?.addEventListener('ended', () => {
+    playThenNext(audios)
+  })
 }
