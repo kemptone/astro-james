@@ -19,7 +19,7 @@ if (typeof window != 'undefined')
           is_preview ? defaultText : ''
         }" />
         <input type="hidden" name="voiceId" value="${info.Id}" />
-        <input type="hidden" name="engine" value="${engine}" />
+        ${ is_preview ? `<input type="hidden" name="engine" value="${engine}" />` : '' }
         <div class="face">
             <img src="${info.Face}">
         </div>
@@ -46,7 +46,14 @@ if (typeof window != 'undefined')
           `
             : `
             <div class="action">
+                <div class="subgroup">
                 <span class="name">${info.Name}</span>
+                <select name="engine">
+                ${info.SupportedEngines?.map(
+                  item => `<option>${item}</option>`
+                )}
+                </select>
+                </div>
                 <div class="subgroup">
                 <button type="button" class="remove_talker">remove</button>
                 <button type="button" class="clear">clear</button> 
