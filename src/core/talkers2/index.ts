@@ -1,7 +1,7 @@
 import ProtoForm from '../../components/ProtoForm/ProtoForm'
 import './wc-talker-azure'
 import {VoiceId, type DescribeVoicesCommandOutput} from '@aws-sdk/client-polly'
-import {playText} from './wc-talkers.helpers'
+import {playText, playTextAzure} from './wc-talkers.helpers'
 import { type AzureVoiceInfo } from './types'
 
 const VOICES = 'get_ms_voices'
@@ -12,9 +12,10 @@ function makeFace(name: string) {
 
 type FormType = {
   text: string[]
-  text_hidden: string[]
-  engine: string[]
-  voiceId: string[]
+  text_hidden?: string[]
+  ShortName: string[]
+  Gender: string[]
+  Locale: string[]
 }
 
 const dog = {
@@ -42,15 +43,9 @@ async function getMicrosoftVoices() {
     return item
   })
 
-  debugger
-
   localStorage.setItem(VOICES, JSON.stringify(voices))
   return dog[VOICES] = voices
 }
-
-// document.addEventListener('DOMContentLoaded', async e => {
-//   const data = await getMicrosoftVoices()
-// })
 
 document.addEventListener('DOMContentLoaded', async e => {
   const data = await getMicrosoftVoices()
@@ -103,16 +98,17 @@ document.addEventListener('DOMContentLoaded', async e => {
     onIsValid: () => {},
     onSubmit: async form => {
       const {values} = form
-      const {text, engine, voiceId, text_hidden} = values // arrays
+      const {text, ShortName, Gender, Locale } = values // arrays
       const audios: HTMLAudioElement[] = []
 
       for (let x = 0; x < text.length; x++) {
-        let audio = await playText(
+        let audio = await playTextAzure(
           {
             values: {
-              engine: engine[x],
-              voiceId: voiceId[x] as VoiceId,
               text: text[x],
+              ShortName: ShortName[x],
+              Gender: Gender[x],
+              Locale: Locale[x]
             },
           },
           false
@@ -121,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async e => {
       }
       playThenNext(audios)
     },
-    allUniqueCheckboxKeys: ['engine', 'text', 'text_hidden', 'voiceId'],
+    allUniqueCheckboxKeys: ['ShortName', 'text', 'Gender', 'Locale'],
   })
 })
 

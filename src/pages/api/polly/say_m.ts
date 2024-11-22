@@ -34,7 +34,6 @@ async function synthesizeSpeech(requestBody : any) {
         'Ocp-Apim-Subscription-Key': subscriptionKey,
         'X-Microsoft-OutputFormat': 'riff-24khz-16bit-mono-pcm',
         'Content-Type': 'application/ssml+xml',
-        Authorization: `Bearer ${subscriptionKey}`,
       },
       body: ssmlContent,
     }
