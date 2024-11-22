@@ -116,6 +116,14 @@ if (typeof window != 'undefined')
           })
 
         shadow.appendChild(e_wrapper)
+        // shadow.appendChild(style)
+
+        // ProtoForm<FormType>({
+        //   e_form: e_wrapper,
+        //   onSubmit,
+        // })
       }
     }
   )
+
+// if (typeof window != 'undefined') customElements.define('wc-talker', Talker)

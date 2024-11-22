@@ -1,0 +1,168 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="talkers">
+  <div id="talkers" class="container">
+    <header class="banner">
+      <h1>The Talkers</h1>
+      <div class="buttons">
+        <a href="/">back to site</a>
+        <button id="remove_all">Remove All</button>
+        <button id="clear_all">Clear</button>
+        <button id="play_all">Play All</button>
+      </div>
+    </header>
+    <main class="content">
+      <aside class="left-column" id="list"></aside>
+      <form class="right-column" id="input_area">
+        <button id="hidden_button" type="submit">Fake Button</button>
+      </form>
+    </main>
+  </div>
+</Layout>
+
+<script src="../core/talkers2/index.ts"></script>
+
+<style is:global>
+  html:has(#talkers) {
+    background-color: white;
+  }
+
+  html:has(#talkers) site-menu {
+    display: none;
+  }
+
+  .container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+
+  .banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e0e0e0;
+    color: #9b9b9b;
+    padding: 1rem;
+    height: 3rem;
+  }
+
+  .banner h1 {
+    margin: 0;
+  }
+
+  .buttons button {
+    margin-left: 10px;
+    padding: 0.5rem 1rem;
+    background-color: white;
+    /* color: #007acc; */
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .buttons button:hover {
+    background-color: #005f99;
+    color: white;
+  }
+
+  .content {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 0.2rem;
+    padding: 0.2rem;
+  }
+
+  .left-column {
+    background-color: #f0f0f0;
+    padding: 1rem;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+  }
+
+  .right-column {
+    background-color: #efefef;
+    padding: 1rem;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+  }
+
+  #hidden_button {
+    display: none;
+  }
+
+  .talker {
+    display: flex;
+    gap: 10px;
+    margin-top: 2rem;
+  }
+  .talker.preview {
+    margin-top: 1rem;
+    align-items: flex-start;
+  }
+  .talker button {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    padding: 0.2rem .5rem;
+  }
+  .talker.preview button {
+    font-size: 0.8rem;
+  }
+  .talker .group {
+    flex: 1;
+  }
+  .talker .name {
+    font-weight: 600;
+  }
+  .talker .face {
+  }
+  .talker .face img {
+    width: 80px;
+    height: 80px;
+    mix-blend-mode: multiply;
+  }
+  .talker.preview .face img {
+    width: 60px;
+    height: 60px;
+    filter: grayscale(0.6) opacity(0.4);
+  }
+  .talker .sample {
+  }
+  .talker .action {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+  }
+  .talker.preview .action {
+    padding-top: 0rem;
+  }
+
+  .talker .action > .subgroup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .talker .action .plus {
+    font-size: 1.5rem;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+  }
+  .talker textarea {
+    display: block;
+    width: 100%;
+    min-height: 4rem;
+    box-sizing: border-box;
+    padding: 0.3rem;
+    min-height: 4.5rem;
+  }
+</style>

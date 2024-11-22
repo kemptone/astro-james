@@ -1,16 +1,16 @@
 import {type Voice} from '@aws-sdk/client-polly'
-import {playText} from './wc-talkers.helpers'
+import {playText, playTextAzure} from './wc-talkers.helpers'
+import { type AzureVoiceInfo } from './types'
 
 if (typeof window != 'undefined')
   customElements.define(
-    'wc-talker',
+    'wc-talker-azure',
     class Talker extends HTMLElement {
       connectedCallback() {
-        const info = JSON.parse(this.dataset.info || '{}') as Voice
+        const info = JSON.parse(this.dataset.info || '{}') as AzureVoiceInfo
         const is_preview = !!this.dataset.preview
         const shadow = this
         const e_wrapper = document.createElement('div')
-        const engine = info.SupportedEngines?.[0]
         const defaultText = `Fardo the great was once a hill of a man`
 
         e_wrapper.innerHTML = `
@@ -18,8 +18,7 @@ if (typeof window != 'undefined')
         <input type="hidden" name="text_hidden" value="${
           is_preview ? defaultText : ''
         }" />
-        <input type="hidden" name="voiceId" value="${info.Id}" />
-        ${ is_preview ? `<input type="hidden" name="engine" value="${engine}" />` : '' }
+        <input type="hidden" name="Name" value="${info.Name}" />
         <div class="face">
             <img src="${info.Face}">
         </div>
@@ -37,7 +36,7 @@ if (typeof window != 'undefined')
           is_preview
             ? `
           <div class="action">
-              <span class="name">${info.Name}</span>
+              <span class="name">${info.LocalName}</span>
               <button type="button" class="add_talker plus">⊕</button>
             </div>
           <div class="preview">
@@ -47,12 +46,7 @@ if (typeof window != 'undefined')
             : `
             <div class="action">
                 <div class="subgroup">
-                <span class="name">${info.Name}</span>
-                <select name="engine">
-                ${info.SupportedEngines?.map(
-                  item => `<option>${item}</option>`
-                )}
-                </select>
+                <span class="name">${info.LocalName}</span>
                 </div>
                 <div class="subgroup">
                 <button type="button" class="remove_talker">remove</button>
@@ -112,7 +106,7 @@ if (typeof window != 'undefined')
             })
 
             // @ts-ignore
-            playText({values}, true)
+            playTextAzure({values}, true)
           })
 
         shadow.appendChild(e_wrapper)
