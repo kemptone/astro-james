@@ -1,15 +1,27 @@
-import sdk from 'microsoft-cognitiveservices-speech-sdk'
-import {PassThrough} from 'node:stream'
-
-// Replace with your Azure subscription key and service region
 const subscriptionKey = import.meta.env.AZURE_SPEECH_KEY // 'YourSubscriptionKey';
 const serviceRegion = import.meta.env.AZURE_SPEECH_REGION // 'YourServiceRegion';
 
-async function synthesizeSpeech() {
+async function synthesizeSpeech(requestBody : any) {
+
+  const { ShortName, Gender, Locale, text, text_hidden } = requestBody
+
+  // console.log("$$$$$$$$$$$$$")
+  // console.log("$$$$$$$$$$$$$")
+  // console.log("$$$$$$$$$$$$$")
+  // console.log("$$$$$$$$$$$$$")
+  // console.log("$$$$$$$$$$$$$")
+  // console.log({ requestBody })
+  // console.log("$$$$$$$$$$$$$")
+  // console.log("$$$$$$$$$$$$$")
+  // console.log("$$$$$$$$$$$$$")
+  // console.log("$$$$$$$$$$$$$")
+  // console.log("$$$$$$$$$$$$$")
+  // console.log("$$$$$$$$$$$$$")
+
   const ssmlContent = `
 <speak version='1.0' xml:lang='en-US'>
-  <voice xml:lang='en-US' xml:gender='Male' name='en-US-ChristopherNeural'>
-    I'm excited to try text to speech!
+  <voice xml:lang='${ Locale }' xml:gender='${ Gender }' name='${ ShortName }'>
+  ${ text || text_hidden}
   </voice>
 </speak>
 `
@@ -22,7 +34,7 @@ async function synthesizeSpeech() {
         'Ocp-Apim-Subscription-Key': subscriptionKey,
         'X-Microsoft-OutputFormat': 'riff-24khz-16bit-mono-pcm',
         'Content-Type': 'application/ssml+xml',
-        Authorization: `Bearer ${subscriptionKey}`, // Replace with your actual access token
+        Authorization: `Bearer ${subscriptionKey}`,
       },
       body: ssmlContent,
     }
@@ -31,8 +43,7 @@ async function synthesizeSpeech() {
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`)
   }
-  const blob = await response.blob()
-  return blob
+  return response.blob()
 }
 
 export const prerender = false
@@ -53,20 +64,20 @@ export async function POST({
     })
   }
 
-  const text: string = requestBody.text
-  const voiceName: string = requestBody.voiceName
+  // const text: string = requestBody.text
+  // const voiceName: string = requestBody.voiceName
 
-  if (!text || !voiceName) {
-    return new Response(
-      JSON.stringify({error: 'Invalid voiceName or text', voiceName, text}),
-      {
-        status: 400,
-      }
-    )
-  }
+  // if (!text || !voiceName) {
+  //   return new Response(
+  //     JSON.stringify({error: 'Invalid voiceName or text', voiceName, text}),
+  //     {
+  //       status: 400,
+  //     }
+  //   )
+  // }
 
   try {
-    const output = await synthesizeSpeech()
+    const output = await synthesizeSpeech(requestBody)
     return new Response(output, {
       headers: {
         'Content-Type': 'audio/mpeg',

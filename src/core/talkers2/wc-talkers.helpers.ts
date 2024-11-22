@@ -59,8 +59,8 @@ export const playTextAzure = async (form : {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
+      ...form.values,
       text: form.values.text || form.values.text_hidden,
-      voiceName: form.values.Name,
     }),
   })
 

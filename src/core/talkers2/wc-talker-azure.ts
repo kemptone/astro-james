@@ -1,6 +1,21 @@
 import {type Voice} from '@aws-sdk/client-polly'
 import {playText, playTextAzure} from './wc-talkers.helpers'
-import { type AzureVoiceInfo } from './types'
+import {type AzureVoiceInfo} from './types'
+
+// {
+//   "Name": "Microsoft Server Speech Text to Speech Voice (en-AU, NatashaNeural)",
+//   "DisplayName": "Natasha",
+//   "LocalName": "Natasha",
+//   "ShortName": "en-AU-NatashaNeural",
+//   "Gender": "Female",
+//   "Locale": "en-AU",
+//   "LocaleName": "English (Australia)",
+//   "SampleRateHertz": "48000",
+//   "VoiceType": "Neural",
+//   "Status": "GA",
+//   "WordsPerMinute": "139",
+//   "Face": "https://api.multiavatar.com/Microsoft Server Speech Text to Speech Voice (en-AU, NatashaNeural).png"
+// }
 
 if (typeof window != 'undefined')
   customElements.define(
@@ -15,6 +30,9 @@ if (typeof window != 'undefined')
 
         e_wrapper.innerHTML = `
     <div class="talker ${is_preview ? 'preview' : ''}">
+
+        ${Object.keys(info).map(key => `<input type="hidden" name="${key}" value="${info[key]}" />`).join(" ")}
+
         <input type="hidden" name="text_hidden" value="${
           is_preview ? defaultText : ''
         }" />
@@ -61,7 +79,7 @@ if (typeof window != 'undefined')
     `
 
         const e_textarea = e_wrapper.querySelector(
-          'textarea'
+          'textarea',
         ) as HTMLTextAreaElement
 
         const addEvent = new CustomEvent('clicked_add', {
@@ -111,5 +129,5 @@ if (typeof window != 'undefined')
 
         shadow.appendChild(e_wrapper)
       }
-    }
+    },
   )
