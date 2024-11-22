@@ -1,75 +1,38 @@
-import {
-  SpeechConfig,
-  AudioConfig,
-  SpeechSynthesizer,
-  AudioOutputStream,
-  ResultReason,
-} from 'microsoft-cognitiveservices-speech-sdk'
+import sdk from 'microsoft-cognitiveservices-speech-sdk'
+import {PassThrough} from 'node:stream'
 
 // Replace with your Azure subscription key and service region
 const subscriptionKey = import.meta.env.AZURE_SPEECH_KEY // 'YourSubscriptionKey';
 const serviceRegion = import.meta.env.AZURE_SPEECH_REGION // 'YourServiceRegion';
 
-// Set up the speech configuration
-const speechConfig = SpeechConfig.fromSubscription(
-  subscriptionKey,
-  serviceRegion
-)
+async function synthesizeSpeech() {
+  const ssmlContent = `
+<speak version='1.0' xml:lang='en-US'>
+  <voice xml:lang='en-US' xml:gender='Male' name='en-US-ChristopherNeural'>
+    I'm excited to try text to speech!
+  </voice>
+</speak>
+`
 
-// Types for the request body
-interface SynthesizeRequest {
-  text: string
-  voiceName: string
-}
-
-// Utility function to synthesize speech
-const synthesizeSpeech = async (
-  text: string,
-  voiceName: string
-): Promise<Buffer> => {
-  return new Promise((resolve, reject) => {
-    // const pushStream = AudioOutputStream.createPushStream()
-    const pushStream = AudioOutputStream.createPullStream()
-    const audioConfig = AudioConfig.fromStreamOutput(pushStream)
-    const synthesizer = new SpeechSynthesizer(speechConfig, audioConfig)
-
-    const audioChunks: Buffer[] = []
-
-    // Collect audio chunks
-    pushStream.on('data', (chunk: ArrayBuffer) => {
-      audioChunks.push(Buffer.from(chunk))
-    })
-
-    pushStream.on('end', () => {
-      synthesizer.close()
-      resolve(Buffer.concat(audioChunks))
-    })
-
-    // Error handling for synthesis
-    pushStream.on('error', error => {
-      synthesizer.close()
-      reject(error)
-    })
-
-    // Set voice and synthesize text
-    speechConfig.speechSynthesisVoiceName = voiceName
-    synthesizer.speakTextAsync(
-      text,
-      result => {
-        if (result.reason !== ResultReason.SynthesizingAudioCompleted) {
-          reject(new Error(result.errorDetails || 'Speech synthesis failed.'))
-        }
+  const response = await fetch(
+    `https://${serviceRegion}.tts.speech.microsoft.com/cognitiveservices/v1`,
+    {
+      method: 'POST',
+      headers: {
+        'Ocp-Apim-Subscription-Key': subscriptionKey,
+        'X-Microsoft-OutputFormat': 'riff-24khz-16bit-mono-pcm',
+        'Content-Type': 'application/ssml+xml',
+        Authorization: `Bearer ${subscriptionKey}`, // Replace with your actual access token
       },
-      error => {
-        reject(error)
-      }
-    )
-  })
-}
+      body: ssmlContent,
+    }
+  )
 
-type RequestBody = {
-  text: string
-  voiceId: string
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`)
+  }
+  const blob = await response.blob()
+  return blob
 }
 
 export const prerender = false
@@ -77,7 +40,7 @@ export async function POST({
   request,
 }: {
   request: Request & {
-    body: RequestBody
+    body: any
   }
 }) {
   let requestBody
@@ -94,14 +57,17 @@ export async function POST({
   const voiceName: string = requestBody.voiceName
 
   if (!text || !voiceName) {
-    return new Response(JSON.stringify({error: 'Invalid voiceName or text', voiceName, text}), {
-      status: 400,
-    })
+    return new Response(
+      JSON.stringify({error: 'Invalid voiceName or text', voiceName, text}),
+      {
+        status: 400,
+      }
+    )
   }
 
   try {
-    const audioBuffer = await synthesizeSpeech(text, voiceName)
-    return new Response(audioBuffer, {
+    const output = await synthesizeSpeech()
+    return new Response(output, {
       headers: {
         'Content-Type': 'audio/mpeg',
         'Content-Disposition': 'inline; filename="output.mp3"',
