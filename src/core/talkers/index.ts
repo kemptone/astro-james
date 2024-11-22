@@ -27,19 +27,19 @@ const dog = {
 async function getVoices() {
   if (dog[VOICES]) return dog[VOICES]
   const response = await fetch('/api/polly/list')
-  const json = (await response.json()) as {data: DescribeVoicesCommandOutput}
+  const json = (await response.json()) as DescribeVoicesCommandOutput
 
-  json.data.Voices = json.data.Voices?.filter?.(item => {
+  json.Voices = json.Voices?.filter?.(item => {
     return item.LanguageCode?.startsWith('en')
   })
 
-  json.data.Voices?.forEach(item => {
-    item.Face = makeFace(item.Name)
+  json.Voices?.forEach(item => {
+    item.Face = makeFace(item.Name || '')
     return item
   })
 
-  localStorage.setItem(VOICES, JSON.stringify(json.data))
-  return dog[VOICES] = json.data
+  localStorage.setItem(VOICES, JSON.stringify(json))
+  return dog[VOICES] = json
 }
 
 document.addEventListener('DOMContentLoaded', async e => {

@@ -1,7 +1,7 @@
 import {PollyClient, DescribeVoicesCommand} from '@aws-sdk/client-polly'
 
 export const prerender = false
-export async function GET({request}) {
+export async function GET() {
 
   const pollyClient = new PollyClient({
     region: 'us-west-2', // Replace with your preferred AWS region
@@ -14,21 +14,27 @@ export async function GET({request}) {
   const listVoices = async () => {
     try {
       const data = await pollyClient.send(new DescribeVoicesCommand({}))
-      console.log(data)
-      return {data}
+      return data
     } catch (err) {
       console.error('Error listing voices:', err)
-      return {err}
+
+      let outputErr = "Was not able to output the error"
+
+      try {
+        outputErr = JSON.stringify(err)
+      } catch (err) {
+      }
+
+      return new Response(outputErr, {
+        status: 400
+      })
     }
   }
 
-  const {data, err} = await listVoices()
+  const data = await listVoices()
 
   return new Response(
-    JSON.stringify({
-      data,
-      err,
-    }),
+    JSON.stringify(data),
     {
       headers: {
         'Content-Type': 'application/json',
