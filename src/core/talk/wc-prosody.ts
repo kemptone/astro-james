@@ -1,18 +1,11 @@
 import ProtoForm from '../../components/ProtoForm/ProtoForm'
-import {getAttributes, stripStrings} from './helpers'
+import {getAttributes, stripStrings, AddEvent} from './helpers'
 
 type FormType = {
   rate: string
   pitch: string
   volume: string
 }
-
-const AddEvent = (detail = {}, key = 'clicked_edit') =>
-  new CustomEvent(key, {
-    detail,
-    bubbles: true,
-    composed: true, // Allows the event to pass through the shadow DOM boundary
-  })
 
 if (typeof window != 'undefined')
   customElements.define(
@@ -67,7 +60,7 @@ if (typeof window != 'undefined')
           <label>
             <div>
               Volume
-              <output id="prosody_volume_output">${stripStrings(volume, 0)}</output>db
+              <output id="prosody_volume_output">${stripStrings(volume, 0)}</output>dB
             </div>
             <input 
               type="range" 
@@ -100,13 +93,28 @@ if (typeof window != 'undefined')
 
         ProtoForm<FormType>({
           e_form,
-          onChange({values}) {
-            values.pitch += 'st'
-            values.rate += '%'
-            values.volume += 'db'
-            for (const [key, value] of Object.entries(values)) {
-              that.setAttribute(key, value)
+          onChange({values, lastTouched = 'pitch'}) {
+            // that.setAttribute(lastTouched, values[lastTouched])
+
+            if (lastTouched === 'pitch') {
+              let value = Number(values[lastTouched])
+              that.setAttribute(lastTouched, (value > 0) ? `+${value}st` : `${value}st`)
             }
+            if (lastTouched === 'rate') {
+              let value = Number(values[lastTouched])
+              that.setAttribute(lastTouched, (value > 0) ? `+${value}%` : `${value}%`)
+            }
+            if (lastTouched === 'volume') {
+              let value = Number(values[lastTouched])
+              that.setAttribute(lastTouched, (value > 0) ? `+${value}dB` : `${value}dB`)
+            }
+
+            // values.pitch += 'st'
+            // values.rate += '%'
+            // values.volume += 'dB'
+            // for (const [key, value] of Object.entries(values)) {
+            //   that.setAttribute(key, value)
+            // }
           },
         })
       }

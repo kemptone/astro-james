@@ -9,7 +9,11 @@ import Layout from '../layouts/Layout.astro'
       <div class="buttons">
         <a href="/">back to site</a>
         <span class="line"></span>
-        <button class="add_tag" data-type="wc-prosody">Add Prosody</button>
+        <button class="add_tag" data-type="wc-voice">Voice</button>
+        <button class="add_tag" data-type="wc-say-as">Say As</button>
+        <button class="add_tag" data-type="wc-emphasis">Emphasis</button>
+        <button class="add_tag" data-type="wc-prosody">Prosody</button>
+        <button class="add_tag" data-type="wc-break">Break</button>
         <span class="line"></span>
         <button id="clear_all">Clear</button>
         <button id="play_all">Play</button>
@@ -20,7 +24,6 @@ import Layout from '../layouts/Layout.astro'
       <form class="right-column" id="input_area">
         <button id="hidden_button" type="submit">Fake Button</button>
         <div contenteditable id="main_input">
-          hello this is cool
         </div>
       </form>
     </main>
@@ -191,12 +194,30 @@ import Layout from '../layouts/Layout.astro'
     padding: 0.3rem;
     min-height: 4.5rem;
   }
+  wc-voice,
+  wc-say-as,
+  wc-break,
+  wc-emphasis,
   wc-prosody {
-    display: inline-block;
+    display: block;
     border: 1px solid rgba(0, 0, 255, 0.344);
     padding: 0 .4rem;
     margin: .2rem;
     cursor: pointer;
+  }
+
+  wc-empahsis {
+    border: 1px solid rgba(62, 175, 109, 0.344);
+  }
+
+  wc-say-as,
+  wc-break {
+    border: 1px solid rgba(0, 0, 0, 0.344);
+  }
+  wc-voice {
+    border: 1px solid rgb(255, 0, 0);
+    display: block;
+    padding: 1rem;
   }
 
   .sub_main_input {
@@ -204,6 +225,27 @@ import Layout from '../layouts/Layout.astro'
     background-color: white;
     min-height: 20rem;
     margin-top:2rem;
+  }
+
+  .sub_main_input > img {
+    display: none;
+  }
+
+  .voice_face > img {
+    max-width: 100px;
+  }
+
+  wc-voice {
+    position: relative;
+    padding-top:30px;
+    padding-left: 30px;
+  }
+
+  wc-voice > img {
+    max-width: 30px;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
 
