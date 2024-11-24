@@ -2,34 +2,40 @@
 import Layout from '../layouts/Layout.astro'
 ---
 
-<Layout title="talkers">
-  <div id="talkers" class="container">
+<Layout title="talk">
+  <div id="talk" class="container">
     <header class="banner">
-      <h1>The Talkers</h1>
+      <h1>Talk</h1>
       <div class="buttons">
         <a href="/">back to site</a>
-        <button id="remove_all">Remove All</button>
+        <span class="line"></span>
+        <button class="add_tag" data-type="wc-prosody">Add Prosody</button>
+        <span class="line"></span>
         <button id="clear_all">Clear</button>
-        <button id="play_all">Play All</button>
+        <button id="play_all">Play</button>
       </div>
     </header>
     <main class="content">
-      <aside class="left-column" id="list"></aside>
+      <aside class="left-column" id="edit_area"></aside>
       <form class="right-column" id="input_area">
         <button id="hidden_button" type="submit">Fake Button</button>
+        <div contenteditable id="main_input">
+          hello this is cool
+        </div>
       </form>
     </main>
   </div>
 </Layout>
 
-<script src="../core/talkers2/index.ts"></script>
+<script src="../core/talk/index.ts"></script>
 
 <style is:global>
-  html:has(#talkers) {
+
+  html:has(#talk) {
     background-color: white;
   }
 
-  html:has(#talkers) site-menu {
+  html:has(#talk) site-menu {
     display: none;
   }
 
@@ -39,6 +45,28 @@ import Layout from '../layouts/Layout.astro'
     grid-template-columns: 1fr;
     max-height: 100vh;
     overflow: hidden;
+    height:100vh;
+  }
+
+  .content {
+    display: grid;
+    grid-template-columns: 290px 1fr;
+    gap: 0.2rem;
+    padding: 0.2rem;
+  }
+
+  .left-column {
+    background-color: #f0f0f0;
+    padding: 1rem;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+  }
+
+  .right-column {
+    background-color: #efefef;
+    padding: 0;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
   }
 
   .banner {
@@ -53,6 +81,18 @@ import Layout from '../layouts/Layout.astro'
 
   .banner h1 {
     margin: 0;
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center;
+  }
+
+  .buttons span.line {
+    display: inline-block;
+    border-left:1px solid rgba(0, 0, 0, 0.309);
+    margin-left:.6rem;
+    height: 1.5rem;
   }
 
   .buttons button {
@@ -70,25 +110,11 @@ import Layout from '../layouts/Layout.astro'
     color: white;
   }
 
-  .content {
-    display: grid;
-    grid-template-columns: 210px 1fr;
-    gap: 0.2rem;
-    padding: 0.2rem;
-  }
 
-  .left-column {
-    background-color: #f0f0f0;
-    padding: 1rem;
-    max-height: calc(100vh - 3rem);
-    overflow-y: auto;
-  }
-
-  .right-column {
-    background-color: #efefef;
-    padding: 1rem;
-    max-height: calc(100vh - 3rem);
-    overflow-y: auto;
+  .right-column > div {
+    padding:1rem;
+    max-height: calc(100vh - 3.3rem);
+    height:100%;
   }
 
   #hidden_button {
@@ -165,4 +191,20 @@ import Layout from '../layouts/Layout.astro'
     padding: 0.3rem;
     min-height: 4.5rem;
   }
+  wc-prosody {
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 255, 0.344);
+    padding: 0 .4rem;
+    margin: .2rem;
+    cursor: pointer;
+  }
+
+  .sub_main_input {
+    padding:1rem;
+    background-color: white;
+    min-height: 20rem;
+    margin-top:2rem;
+  }
+
+
 </style>

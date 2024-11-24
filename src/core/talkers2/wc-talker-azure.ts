@@ -55,7 +55,6 @@ if (typeof window != 'undefined')
             ? `
           <div class="action">
               <span class="name">${info.LocalName}</span>
-              <button type="button" class="add_talker plus">⊕</button>
             </div>
           <div class="preview">
             <button type="button" class="play_sample">sample</button> 
@@ -93,12 +92,6 @@ if (typeof window != 'undefined')
             this.dispatchEvent(addEvent)
           })
         }
-
-        e_wrapper
-          .querySelector('button.add_talker')
-          ?.addEventListener('click', e => {
-            this.dispatchEvent(addEvent)
-          })
 
         e_wrapper
           .querySelector('button.remove_talker')
