@@ -1,5 +1,5 @@
 import ProtoForm from '../../components/ProtoForm/ProtoForm'
-import {getAttributes, stripStrings, AddEvent} from './helpers'
+import {getAttributes, AddEvent } from './helpers'
 
 type FormType = {
   time: string
@@ -9,7 +9,8 @@ if (typeof window !== 'undefined') {
   customElements.define(
     'wc-break',
     class WcBreak extends HTMLElement {
-      connectedCallback() {
+
+      async connectedCallback() {
         this.addEventListener('click', e => {
           e.stopImmediatePropagation()
           this.dispatchEvent(
@@ -18,27 +19,31 @@ if (typeof window !== 'undefined') {
             }),
           )
         })
+
+        // if (!this.closest('#edit_area')) {
+        //   this.innerHTML+= '𛲣'
+        // }
+
       }
 
       renderEdit(parent_element: Element) {
-        const {time} = getAttributes(this)
+        const {time, strength} = getAttributes(this)
 
         parent_element.innerHTML = `
         <form>
+          <button>delete</button>
           <label>
             <div>
-              Break Time (ms)
-              <output id="break_time_output">${stripStrings(time, 0)}</output>ms
+              Strength
+              <select name="strength">
+                <option value="none" ${strength === 'none' ? 'selected' : ''}>None</option>
+                <option value="x-weak" ${strength === 'x-weak' ? 'selected' : ''}>Extra Weak</option>
+                <option value="weak" ${strength === 'weak' ? 'selected' : ''}>Weak</option>
+                <option value="medium" ${strength === 'medium' ? 'selected' : ''}>Medium</option>
+                <option value="strong" ${strength === 'strong' ? 'selected' : ''}>Strong</option>
+                <option value="x-strong" ${strength === 'x-strong' ? 'selected' : ''}>Extra Strong</option>
+              </select>
             </div>
-            <input 
-              type="range" 
-              name="time" 
-              min="0" 
-              max="10000" 
-              step="50" 
-              value="${stripStrings(time, 0)}" 
-              oninput="break_time_output.value = this.value"
-            >
           </label>
           <label>
             <div class="sub_main_input" contenteditable>
@@ -51,6 +56,11 @@ if (typeof window !== 'undefined') {
         const e_form = parent_element.querySelector('form')
         const e_sub_main_input = parent_element.querySelector('.sub_main_input')
 
+        parent_element.querySelector('button')?.addEventListener('click', () => {
+          this.parentElement?.removeChild(this)
+          parent_element.innerHTML = ''
+        })
+
         e_sub_main_input?.addEventListener('input', () => {
           this.innerHTML = e_sub_main_input.innerHTML
         })
@@ -61,9 +71,8 @@ if (typeof window !== 'undefined') {
 
         ProtoForm<FormType>({
           e_form,
-          onChange({values}) {
-            values.time += 'ms'
-            that.setAttribute('time', values.time)
+          onChange({values, lastTouched}) {
+            if (lastTouched) that.setAttribute(lastTouched, values[lastTouched])
           },
         })
       }

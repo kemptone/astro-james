@@ -20,22 +20,18 @@ d.addEventListener('DOMContentLoaded', async e => {
   const voices = await getMicrosoftVoices()
 
   const updateCaretPosition = () => {
+    console.count("updateCaretPosition")
     const selection = window.getSelection()
     if (selection && selection.rangeCount > 0) {
       savedRange = selection.getRangeAt(0) // Save the current range
     }
   }
 
-  const initialVoice = voices[0]
-
-  e_main_input.innerHTML = `
-    <wc-voice name="${initialVoice.LocalName }">
-    <img src="${ initialVoice.Face }">
-    Turkey ate a salad</wc-voice>
-  `
+  e_main_input.innerHTML = `<wc-voice></wc-voice>`
 
   e_main_input.addEventListener('click', updateCaretPosition)
   e_main_input.addEventListener('keyup', updateCaretPosition)
+  e_main_input.addEventListener('clicked_edit', updateCaretPosition)
 
   e_main_input.addEventListener('click', e => {
     if (e_edit_area) e_edit_area.innerHTML = ''
@@ -55,7 +51,6 @@ d.addEventListener('DOMContentLoaded', async e => {
       .replaceAll('&nbsp;', ' ')
       .replaceAll('\n', '')
       .replaceAll('𛲣', '')
-      .replaceAll('</break>', '')
       .replaceAll(/<img[^>]*>/g, "")
 
       playSSMLAzure({ values : {
@@ -68,10 +63,14 @@ d.addEventListener('DOMContentLoaded', async e => {
       const target = e.target as HTMLButtonElement
       const {type = 'wc-prosody'} = target?.dataset || {}
       const element = d.createElement(type)
-      if (type === 'wc-break')
-        element.append('𛲣')
-      else
-        element.append(' turkey ')
+
+
+      if (type === 'wc-voice') {
+        e_main_input.appendChild(element)
+        element?.renderEdit?.(e_edit_area, voices)
+        return
+      }
+
 
       if (savedRange) {
         const selection = window.getSelection()
@@ -83,6 +82,8 @@ d.addEventListener('DOMContentLoaded', async e => {
 
         // Insert the text at the caret position
         savedRange.insertNode(element)
+
+        element?.renderEdit?.(e_edit_area, voices)
 
         // Add a space after the inserted element
         const spaceNode = document.createTextNode(' ')
@@ -98,7 +99,6 @@ d.addEventListener('DOMContentLoaded', async e => {
         alert('Click inside the editor to set a position first.')
       }
 
-      // e_main_input?.appendChild(element)
     })
   })
 

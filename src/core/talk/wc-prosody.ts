@@ -1,5 +1,5 @@
 import ProtoForm from '../../components/ProtoForm/ProtoForm'
-import {getAttributes, stripStrings, AddEvent} from './helpers'
+import {getAttributes, AddEvent} from './helpers'
 
 type FormType = {
   rate: string
@@ -7,7 +7,7 @@ type FormType = {
   volume: string
 }
 
-if (typeof window != 'undefined')
+if (typeof window !== 'undefined')
   customElements.define(
     'wc-prosody',
     class WcProsody extends HTMLElement {
@@ -20,6 +20,11 @@ if (typeof window != 'undefined')
             }),
           )
         })
+
+        if (!this.closest('#edit_area')) {
+          this.innerHTML+= 'prosody'
+        }
+
       }
 
       renderEdit(parent_element: Element) {
@@ -27,50 +32,43 @@ if (typeof window != 'undefined')
 
         parent_element.innerHTML = `
         <form>
+          <button>delete</button>
           <label>
             <div>
               Rate
-              <output id="prosody_rate_output">${stripStrings(rate, 100)}</output>%
+              <select name="rate">
+                <option value="x-slow" ${rate === 'x-slow' ? 'selected' : ''}>Extra Slow</option>
+                <option value="slow" ${rate === 'slow' ? 'selected' : ''}>Slow</option>
+                <option value="medium" ${rate === 'medium' ? 'selected' : ''}>Medium</option>
+                <option value="fast" ${rate === 'fast' ? 'selected' : ''}>Fast</option>
+                <option value="x-fast" ${rate === 'x-fast' ? 'selected' : ''}>Extra Fast</option>
+              </select>
             </div>
-            <input 
-              type="range" 
-              name="rate" 
-              min="-100" 
-              max="400" 
-              step=".1" 
-              value="${stripStrings(rate, 100)}" 
-              oninput="prosody_rate_output.value = this.value"
-            >
           </label>
           <label>
             <div>
               Pitch
-              <output id="prosody_range_output">${stripStrings(pitch, 0)}</output>st
+              <select name="pitch">
+                <option value="x-low" ${pitch === 'x-low' ? 'selected' : ''}>Extra Low</option>
+                <option value="low" ${pitch === 'low' ? 'selected' : ''}>Low</option>
+                <option value="medium" ${pitch === 'medium' ? 'selected' : ''}>Medium</option>
+                <option value="high" ${pitch === 'high' ? 'selected' : ''}>High</option>
+                <option value="x-high" ${pitch === 'x-high' ? 'selected' : ''}>Extra High</option>
+              </select>
             </div>
-            <input 
-              type="range" 
-              name="pitch" 
-              min="-24" 
-              max="24" 
-              step=".1" 
-              value="${stripStrings(pitch, 0)}" 
-              oninput="prosody_range_output.value = this.value"
-            >
           </label>
           <label>
             <div>
               Volume
-              <output id="prosody_volume_output">${stripStrings(volume, 0)}</output>dB
+              <select name="volume">
+                <option value="silent" ${volume === 'silent' ? 'selected' : ''}>Silent</option>
+                <option value="x-soft" ${volume === 'x-soft' ? 'selected' : ''}>Extra Soft</option>
+                <option value="soft" ${volume === 'soft' ? 'selected' : ''}>Soft</option>
+                <option value="medium" ${volume === 'medium' ? 'selected' : ''}>Medium</option>
+                <option value="loud" ${volume === 'loud' ? 'selected' : ''}>Loud</option>
+                <option value="x-loud" ${volume === 'x-loud' ? 'selected' : ''}>Extra Loud</option>
+              </select>
             </div>
-            <input 
-              type="range" 
-              name="volume" 
-              min="-96" 
-              max="96" 
-              step=".1" 
-              value="${stripStrings(volume, 0)}" 
-              oninput="prosody_volume_output.value = this.value"
-            >
           </label>
           <label>
             <div class="sub_main_input" contenteditable>
@@ -83,7 +81,12 @@ if (typeof window != 'undefined')
         const e_form = parent_element.querySelector('form')
         const e_sub_main_input = parent_element.querySelector('.sub_main_input')
 
-        e_sub_main_input?.addEventListener('input', e => {
+        parent_element.querySelector('button')?.addEventListener('click', () => {
+          this.parentElement?.removeChild(this)
+          parent_element.innerHTML = ''
+        })
+
+        e_sub_main_input?.addEventListener('input', () => {
           this.innerHTML = e_sub_main_input.innerHTML
         })
 
@@ -93,27 +96,18 @@ if (typeof window != 'undefined')
 
         ProtoForm<FormType>({
           e_form,
-          onChange({values, lastTouched = 'pitch'}) {
-            // that.setAttribute(lastTouched, values[lastTouched])
+          onChange({values, lastTouched}) {
 
-            if (lastTouched === 'pitch') {
-              let value = Number(values[lastTouched])
-              that.setAttribute(lastTouched, (value > 0) ? `+${value}st` : `${value}st`)
-            }
-            if (lastTouched === 'rate') {
-              let value = Number(values[lastTouched])
-              that.setAttribute(lastTouched, (value > 0) ? `+${value}%` : `${value}%`)
-            }
-            if (lastTouched === 'volume') {
-              let value = Number(values[lastTouched])
-              that.setAttribute(lastTouched, (value > 0) ? `+${value}dB` : `${value}dB`)
-            }
+            if (lastTouched) that.setAttribute(lastTouched, values[lastTouched])
 
-            // values.pitch += 'st'
-            // values.rate += '%'
-            // values.volume += 'dB'
-            // for (const [key, value] of Object.entries(values)) {
-            //   that.setAttribute(key, value)
+            // if (values.rate) {
+            //   that.setAttribute('rate', values.rate)
+            // }
+            // if (values.pitch) {
+            //   that.setAttribute('pitch', values.pitch)
+            // }
+            // if (values.volume) {
+            //   that.setAttribute('volume', values.volume)
             // }
           },
         })

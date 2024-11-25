@@ -1,5 +1,7 @@
 import {type AzureVoiceInfo} from './types'
 
+export const DEFAULT_VOICE = `en-AU-WilliamNeural`
+
 export function getAttributes(element: Element) {
   const attributes = element.attributes
   const result: {
@@ -14,6 +16,7 @@ export function getAttributes(element: Element) {
 }
 
 export const regStripStrings = /[^-\d.]/g
+
 export const stripStrings = (str: string | undefined, def: string | number) => {
   if (str) return str.replace(regStripStrings, '')
   else return def
@@ -26,9 +29,9 @@ export const AddEvent = (detail = {}, key = 'clicked_edit') =>
     composed: true, // Allows the event to pass through the shadow DOM boundary
   })
 
-const VOICES = 'get_ms_voices'
+export const VOICES = 'get_ms_voices'
 
-const dog = {
+export const dog = {
   [VOICES]: (function () {
     let _t = localStorage.getItem(VOICES)
     if (_t) return JSON.parse(_t) as AzureVoiceInfo[]
@@ -50,7 +53,7 @@ export async function getMicrosoftVoices() {
     })
 
   voices.forEach(item => {
-    item.Face = makeFace(item.Name)
+    item.Face = makeFace(item.LocalName)
     return item
   })
 

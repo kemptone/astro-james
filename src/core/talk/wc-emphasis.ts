@@ -18,6 +18,11 @@ if (typeof window !== 'undefined') {
             }),
           )
         })
+
+        if (!this.closest('#edit_area')) {
+          this.innerHTML+= 'emphasis'
+        }
+
       }
 
       renderEdit(parent_element: Element) {
@@ -25,6 +30,7 @@ if (typeof window !== 'undefined') {
 
         parent_element.innerHTML = `
         <form>
+          <button>delete</button>
           <label>
             <div>
               Emphasis Level
@@ -46,6 +52,11 @@ if (typeof window !== 'undefined') {
         const that = this
         const e_form = parent_element.querySelector('form')
         const e_sub_main_input = parent_element.querySelector('.sub_main_input')
+
+        parent_element.querySelector('button')?.addEventListener('click', () => {
+          this.parentElement?.removeChild(this)
+          parent_element.innerHTML = ''
+        })
 
         e_sub_main_input?.addEventListener('input', () => {
           this.innerHTML = e_sub_main_input.innerHTML
