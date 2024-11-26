@@ -57,34 +57,47 @@ d.addEventListener('DOMContentLoaded', async e => {
   const $ = (selectors: string) => d.querySelector(selectors)
   const $$ = (selectors: string) => d.querySelectorAll(selectors)
 
-  const e_button = $("button") as HTMLButtonElement
+  const e_button = $('button') as HTMLButtonElement
   const e_footer = $('footer') as HTMLElement
   const e_form = $('form') as HTMLFormElement
 
-  const response = await fetch('/api/grok/stream', {
-    method : 'POST',
-    body : '{ hello : true }'
-  });
+  const response = await fetch('/api/grok/grok_stream', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({hello: 123}),
+  })
 
   if (!response.body) {
-    console.error('Stream not supported.');
-    return;
+    console.error('Stream not supported.')
+    return
   }
 
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder('utf-8');
-  
-  let done = false;
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
 
-  while (!done) {
-    const { value, done: streamDone } = await reader.read();
-    done = streamDone;
-
-    if (value) {
-      const chunk = decoder.decode(value, { stream: true });
-      console.log('Received chunk:', chunk); // Process the chunk
-      e_footer.innerHTML += chunk
+  // Read the stream
+  while (true) {
+    let {done, value} = await reader.read()
+    if (done) {
+      break
     }
+    let chunk = decoder.decode(value, {stream: true})
+
+    chunk.split('\n\n').forEach((item, index) => {
+      let piece = item.substring(6)
+      if (!piece || piece === '[DONE]') return
+
+      try {
+        const json = JSON.parse(piece)
+        const content = json?.choices?.[0]?.delta?.content
+        e_footer.textContent += content || ''
+      } catch (error) {
+        console.error(error)
+      }
+
+    })
   }
 
   ProtoForm<{prompt: string}>({
@@ -93,11 +106,14 @@ d.addEventListener('DOMContentLoaded', async e => {
       const {prompt} = values
 
       e_button.innerHTML = 'thinking...'
-      e_button.setAttribute('disabled', "true")
+      e_button.setAttribute('disabled', 'true')
 
       try {
         const results = await fetch('/api/grok/grok', {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
             prompt,
           }),
@@ -108,7 +124,6 @@ d.addEventListener('DOMContentLoaded', async e => {
 
         e_button.innerHTML = 'Ask me'
         e_button.removeAttribute('disabled')
-
       } catch (error) {}
     },
   })

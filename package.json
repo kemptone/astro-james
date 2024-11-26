@@ -12,6 +12,7 @@
     "test:ms": "node microsoft.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
     "@astrojs/check": "^0.9.4",
     "@astrojs/mdx": "^3.1.9",
     "@astrojs/preact": "^3.5.3",
