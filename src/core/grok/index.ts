@@ -57,48 +57,17 @@ d.addEventListener('DOMContentLoaded', async e => {
   const $ = (selectors: string) => d.querySelector(selectors)
   const $$ = (selectors: string) => d.querySelectorAll(selectors)
 
-  const e_button = $('button') as HTMLButtonElement
+  const e_button = $('button[type="submit"]') as HTMLButtonElement
   const e_footer = $('footer') as HTMLElement
   const e_form = $('form') as HTMLFormElement
 
-  const response = await fetch('/api/grok/grok_stream', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({hello: 123}),
-  })
-
-  if (!response.body) {
-    console.error('Stream not supported.')
-    return
-  }
-
-  const reader = response.body.getReader()
-  const decoder = new TextDecoder()
-
-  // Read the stream
-  while (true) {
-    let {done, value} = await reader.read()
-    if (done) {
-      break
-    }
-    let chunk = decoder.decode(value, {stream: true})
-
-    chunk.split('\n\n').forEach((item, index) => {
-      let piece = item.substring(6)
-      if (!piece || piece === '[DONE]') return
-
-      try {
-        const json = JSON.parse(piece)
-        const content = json?.choices?.[0]?.delta?.content
-        e_footer.textContent += content || ''
-      } catch (error) {
-        console.error(error)
-      }
-
-    })
-  }
+  // const response = await fetch('/api/grok/grok_stream', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify({prompt: 'tell me a story about a man named Turkey'}),
+  // })
 
   ProtoForm<{prompt: string}>({
     e_form,
@@ -109,7 +78,7 @@ d.addEventListener('DOMContentLoaded', async e => {
       e_button.setAttribute('disabled', 'true')
 
       try {
-        const results = await fetch('/api/grok/grok', {
+        const response = await fetch('/api/grok/grok_stream', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -118,12 +87,42 @@ d.addEventListener('DOMContentLoaded', async e => {
             prompt,
           }),
         })
-        const data = (await results.json()) as ChatCompletion
-        const first = data?.choices[0]?.message?.content || ''
-        if (e_footer) e_footer.innerHTML += TinyMarkdownFormatter.format(first)
 
-        e_button.innerHTML = 'Ask me'
-        e_button.removeAttribute('disabled')
+        if (!response.body) {
+          console.error('Stream not supported.')
+          return
+        }
+
+        const reader = response.body.getReader()
+        const decoder = new TextDecoder()
+
+        // Read the stream
+        while (true) {
+          let {done, value} = await reader.read()
+          if (done) {
+            break
+          }
+          let chunk = decoder.decode(value, {stream: true})
+
+          chunk.split('\n\n').forEach((item, index) => {
+            let piece = item.replaceAll("data: ", "")
+
+            if (piece === '[DONE]') {
+              e_button.innerHTML = 'Ask me'
+              e_button.removeAttribute('disabled')
+            }
+
+            if (!piece || piece === '[DONE]') return
+
+            try {
+              const json = JSON.parse(piece)
+              const content = json?.choices?.[0]?.delta?.content
+              e_footer.textContent += content || ''
+            } catch (error) {
+              console.error(error)
+            }
+          })
+        }
       } catch (error) {}
     },
   })

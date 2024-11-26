@@ -12,7 +12,10 @@ import '../../pico.css'
         <label>
           <input type="checkbox" checked /> Read results
         </label>
-        <button>Ask me</button>
+        <div>
+          <button type="reset">clear</button>
+          <button type="submit">Ask me</button>
+        </div>
       </div>
     </header>
     <footer id="results"></footer>
@@ -26,6 +29,15 @@ import '../../pico.css'
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  .action > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap:10px
+  }
+  .action > div > button {
+    margin-bottom: 0;
   }
   form {
     max-width: 800px;
