@@ -1,0 +1,37 @@
+---
+import Empty from '../layouts/Empty.astro'
+import '../../pico.css'
+---
+
+<Empty title="Grok">
+  <form>
+    <header>
+      <h5>Ask Grok</h5>
+      <textarea placeholder="James, enter your question here" autofocus="true" name="prompt"></textarea>
+      <div class="action">
+        <label>
+          <input type="checkbox" checked /> Read results
+        </label>
+        <button>Ask me</button>
+      </div>
+    </header>
+    <footer id="results"></footer>
+  </form>
+</Empty>
+
+<script src="../core/grok/index.ts"></script>
+
+<style>
+  .action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  form {
+    max-width: 800px;
+    margin:2rem auto;
+  }
+  footer {
+    margin-top:1rem;
+  }
+</style>

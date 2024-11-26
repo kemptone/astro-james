@@ -22,8 +22,8 @@ import Layout from '../layouts/Layout.astro'
     <main class="content">
       <aside class="left-column" id="edit_area"></aside>
       <form class="right-column" id="input_area">
-        <button id="hidden_button" type="submit">Fake Button</button>
         <div contenteditable id="main_input">
+        <button id="hidden_button" type="submit">Fake Button</button>
         </div>
       </form>
     </main>
@@ -213,11 +213,6 @@ import Layout from '../layouts/Layout.astro'
   wc-say-as {
     border: 1px solid rgba(0, 0, 0, 0.344);
   }
-  wc-voice {
-    border: 1px dotted rgba(255, 0, 0, .3);
-    display: block;
-    padding: 1rem;
-  }
 
   .sub_main_input {
     padding:1rem;
@@ -232,12 +227,7 @@ import Layout from '../layouts/Layout.astro'
 
   .voice_face > img {
     max-width: 100px;
-  }
-
-  wc-voice {
-    position: relative;
-    padding-left: 120px;
-    min-height: 100px;
+    mix-blend-mode: multiply;
   }
 
   wc-break {
@@ -247,18 +237,37 @@ import Layout from '../layouts/Layout.astro'
     content:'𛲠';
   }
 
+  wc-voice {
+    border: none;
+    display: block;
+    padding: 1rem;
+    position: relative;
+    padding-left: 120px;
+    min-height: 100px;
+    background-color:white;
+    border-radius: 8px;
+    box-shadow: 0 0 13px rgba(0,0,0,.1);
+  }
+  wc-voice:not(:first-child) {
+    margin-top:1rem;
+  }
+
   wc-voice:before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100px;
-    height: 100px;
+    top: 10px;
+    left: 10px;
+    width: 80px;
+    height: 80px;
     background-image: var(--background-image);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     z-index: 1;
+  }
+
+  #main_input {
+    outline:none;
   }
 
 
