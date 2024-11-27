@@ -55,6 +55,7 @@ if (typeof window != 'undefined')
               <div class="subgroup">
               ${ info.StyleList && info.StyleList.length > 1 ? `
                 <select name="express_as">
+                <option value="">Emotion</option>
                 ${ info.StyleList.map( item => `<option>${ item }</option>`)}
                 </select>
               ` : '' }
