@@ -1,5 +1,11 @@
 import ProtoForm from '../../components/ProtoForm/ProtoForm'
-import {d, $, $$, playTextPromise, playAll} from './grok.helpers'
+import {
+  d,
+  $,
+  playTextPromise,
+  TinyMarkdownFormatter,
+  playAll,
+} from './grok.helpers'
 
 d.addEventListener('DOMContentLoaded', async e => {
   const e_button = $('button[type="submit"]') as HTMLButtonElement
@@ -48,7 +54,7 @@ d.addEventListener('DOMContentLoaded', async e => {
           let {done, value} = await reader.read()
 
           if (chunks.length && chunks.length % 15 === 0) {
-            let text = chunks.join("")
+            let text = chunks.join('')
             if (text) {
               audios.push(
                 playTextPromise({
@@ -66,7 +72,7 @@ d.addEventListener('DOMContentLoaded', async e => {
           }
 
           if (done) {
-            let text = chunks.join("")
+            let text = chunks.join('')
             if (text) {
               audios.push(
                 playTextPromise({
@@ -86,7 +92,7 @@ d.addEventListener('DOMContentLoaded', async e => {
             if (piece === '[DONE]') {
               e_button.innerHTML = 'Ask me'
               e_button.removeAttribute('disabled')
-              let text = chunks.join("")
+              let text = chunks.join('')
               if (text) {
                 audios.push(
                   playTextPromise({
@@ -97,6 +103,9 @@ d.addEventListener('DOMContentLoaded', async e => {
                 )
                 chunks.length = 0
               }
+              e_footer.innerHTML = TinyMarkdownFormatter.format(
+                e_footer.innerHTML
+              )
             }
 
             if (!piece || piece === '[DONE]') return
