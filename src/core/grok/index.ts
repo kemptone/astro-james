@@ -1,78 +1,27 @@
 import ProtoForm from '../../components/ProtoForm/ProtoForm'
-
-const d = document
-
-class TinyMarkdownFormatter {
-  static format(input: string): string {
-    return (
-      input
-        // Bold: **text** or __text__
-        .replace(/\*\*(.*?)\*\*|__(.*?)__/g, '<strong>$1$2</strong>')
-        // Italics: *text* or _text_
-        .replace(/\*(.*?)\*|_(.*?)_/g, '<em>$1$2</em>')
-        // Headings: # Heading
-        .replace(/^#{6}\s(.*$)/gm, '<h6>$1</h6>')
-        .replace(/^#{5}\s(.*$)/gm, '<h5>$1</h5>')
-        .replace(/^#{4}\s(.*$)/gm, '<h4>$1</h4>')
-        .replace(/^#{3}\s(.*$)/gm, '<h3>$1</h3>')
-        .replace(/^#{2}\s(.*$)/gm, '<h2>$1</h2>')
-        .replace(/^#\s(.*$)/gm, '<h1>$1</h1>')
-        // Links: [text](url)
-        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
-        // Line breaks: Two spaces at end of line
-        .replace(/  \n/g, '<br/>')
-    )
-  }
-}
-
-type ChatCompletion = {
-  id: string
-  object: string
-  created: number
-  model: string
-  choices: Array<{
-    index: number
-    message: {
-      role: string
-      content: string
-      refusal: string | null
-    }
-    finish_reason: string
-  }>
-  usage: {
-    prompt_tokens: number
-    completion_tokens: number
-    total_tokens: number
-    prompt_tokens_details: {
-      text_tokens: number
-      audio_tokens: number
-      image_tokens: number
-      cached_tokens: number
-    }
-  }
-  system_fingerprint: string
-}
+import {d, $, $$, playTextPromise, playAll} from './grok.helpers'
 
 d.addEventListener('DOMContentLoaded', async e => {
-  const $ = (selectors: string) => d.querySelector(selectors)
-  const $$ = (selectors: string) => d.querySelectorAll(selectors)
-
   const e_button = $('button[type="submit"]') as HTMLButtonElement
+  const e_reset = $('button[type="reset"]') as HTMLButtonElement
   const e_footer = $('footer') as HTMLElement
   const e_form = $('form') as HTMLFormElement
 
-  // const response = await fetch('/api/grok/grok_stream', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify({prompt: 'tell me a story about a man named Turkey'}),
-  // })
+  e_reset.addEventListener('click', () => {
+    e_footer.innerHTML = ''
+  })
+
+  let is_first = true
 
   ProtoForm<{prompt: string}>({
     e_form,
     async onSubmit({values}) {
       const {prompt} = values
+
+      const audios: Promise<Response>[] = []
+      const chunks: string[] = []
+
+      e_footer.innerHTML = ' '
 
       e_button.innerHTML = 'thinking...'
       e_button.setAttribute('disabled', 'true')
@@ -95,21 +44,62 @@ d.addEventListener('DOMContentLoaded', async e => {
 
         const reader = response.body.getReader()
         const decoder = new TextDecoder()
+        let count = 0
 
-        // Read the stream
         while (true) {
+          count++
           let {done, value} = await reader.read()
+
+          if (chunks.length && chunks.length % 15 === 0) {
+            let text = chunks.join("")
+            if (text) {
+              audios.push(
+                playTextPromise({
+                  text,
+                  voiceId: 'Matthew',
+                  engine: 'neural',
+                })
+              )
+            }
+            if (is_first) {
+              playAll(audios)
+              is_first = false
+            }
+            chunks.length = 0
+          }
+
           if (done) {
+            let text = chunks.join("")
+            if (text) {
+              audios.push(
+                playTextPromise({
+                  text,
+                  voiceId: 'Matthew',
+                  engine: 'neural',
+                })
+              )
+              chunks.length = 0
+            }
             break
           }
           let chunk = decoder.decode(value, {stream: true})
-
           chunk.split('\n\n').forEach((item, index) => {
-            let piece = item.replaceAll("data: ", "")
+            let piece = item.replaceAll('data: ', '')
 
             if (piece === '[DONE]') {
               e_button.innerHTML = 'Ask me'
               e_button.removeAttribute('disabled')
+              let text = chunks.join("")
+              if (text) {
+                audios.push(
+                  playTextPromise({
+                    text,
+                    voiceId: 'Matthew',
+                    engine: 'neural',
+                  })
+                )
+                chunks.length = 0
+              }
             }
 
             if (!piece || piece === '[DONE]') return
@@ -118,6 +108,7 @@ d.addEventListener('DOMContentLoaded', async e => {
               const json = JSON.parse(piece)
               const content = json?.choices?.[0]?.delta?.content
               e_footer.textContent += content || ''
+              chunks.push(content)
             } catch (error) {
               console.error(error)
             }

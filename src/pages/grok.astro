@@ -6,7 +6,10 @@ import '../../pico.css'
 <Empty title="Grok">
   <form>
     <header>
-      <h5>Ask Grok</h5>
+      <div class="across">
+        <h5>Ask Hamlet</h5>
+        <a href="/">back to site</a>
+      </div>
       <textarea placeholder="James, enter your question here" autofocus="true" name="prompt"></textarea>
       <div class="action">
         <label>
@@ -25,6 +28,24 @@ import '../../pico.css'
 <script src="../core/grok/index.ts"></script>
 
 <style>
+  .across {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: .5rem;
+  }
+  .across > * {
+    margin-bottom: 0;
+  }
+  form:has(footer:is(:empty)) {
+    margin:0 auto;
+    margin-top:12rem;
+  }
+  form {
+    transition: margin-top 1s;
+    margin:0 auto;
+    margin-top: 2rem;
+  }
   .action {
     display: flex;
     align-items: center;
@@ -41,7 +62,6 @@ import '../../pico.css'
   }
   form {
     max-width: 800px;
-    margin:2rem auto;
   }
   footer {
     margin-top:1rem;
