@@ -16,9 +16,6 @@ d.addEventListener('DOMContentLoaded', async e => {
     async onSubmit({values}) {
       let is_first = true
       const {prompt, read} = values
-
-      debugger
-
       const audios: Promise<Response>[] = []
       const chunks: string[] = []
 
