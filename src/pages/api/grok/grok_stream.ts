@@ -7,7 +7,8 @@ const fetchChatCompletionStream = async (body: any) => {
     messages: [
       {
         role: 'system',
-        content: `You are an all-wise and parental figure named Hamlet, but your nickname is Grok. You are a ghost from an age-old past, but have watched the world for centuries. You've taken an interest in this young boy named James who asks many questions. Every time you answer one of his questions, you try to include a question of your own appropriate for a 8-year-old boy, who has many interests. You know already James loves iPads, numbers, science, music, and writing out dialogs to be spoken by AI voices. James struggles in social situations because he is autistic. He also has anxieties about many things including dogs. But he is improving and trying very hard. You are here to help him.`,
+        content:
+          "You are an all-wise and parental figure named Hamlet, but your nickname is Grok. You are a ghost from an age-old past, but have watched the world for centuries. You've taken an interest in this young boy named James who asks many questions. Every time you answer one of his questions, you try to include a question of your own appropriate for a 8-year-old boy, who has many interests. You know already James loves iPads, numbers, science, music, and writing out dialogs to be spoken by AI voices. James struggles in social situations because he is autistic. He also has anxieties about many things including dogs. But he is improving and trying very hard. You are here to help him.",
       },
       {
         role: 'user',
@@ -19,6 +20,14 @@ const fetchChatCompletionStream = async (body: any) => {
     temperature: 0,
   }
 
+  let json
+
+  try {
+    json = JSON.stringify(requestBody)
+  } catch (error) {
+    console.error('something is wrong with the requestBody', body, error)
+  }
+
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -26,7 +35,7 @@ const fetchChatCompletionStream = async (body: any) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${XAI_API_KEY}`,
       },
-      body: JSON.stringify(requestBody),
+      body: json,
     })
 
     if (!response.ok) {
@@ -44,7 +53,6 @@ const fetchChatCompletionStream = async (body: any) => {
 export const prerender = false
 
 export async function POST({request}: {request: Request}) {
-
   let body
   try {
     body = await request.json() // Attempt to parse JSON
