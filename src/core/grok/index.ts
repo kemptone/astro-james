@@ -15,12 +15,12 @@ d.addEventListener('DOMContentLoaded', async e => {
     e_form,
     async onSubmit({values}) {
       let is_first = true
-      const {prompt} = values
+      const {prompt, read} = values
+
       const audios: Promise<Response>[] = []
       const chunks: string[] = []
 
       e_footer.innerHTML = ' '
-
       e_button.innerHTML = 'thinking...'
       e_button.setAttribute('disabled', 'true')
 
@@ -106,7 +106,9 @@ d.addEventListener('DOMContentLoaded', async e => {
               const json = JSON.parse(piece)
               const content = json?.choices?.[0]?.delta?.content
               e_footer.textContent += content || ''
-              chunks.push(content)
+              if (read) {
+                chunks.push(content)
+              }
             } catch (error) {
               console.error(error)
             }
