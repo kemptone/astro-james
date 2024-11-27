@@ -21,22 +21,13 @@ import '../../pico.css'
         </div>
       </div>
     </header>
-    <footer id="results"></footer>
+    <footer></footer>
   </form>
 </Empty>
 
 <script src="../core/grok/index.ts"></script>
 
 <style>
-  .across {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-block: .5rem;
-  }
-  .across > * {
-    margin-bottom: 0;
-  }
   form:has(footer:is(:empty)) {
     margin:0 auto;
     margin-top:12rem;
@@ -61,9 +52,22 @@ import '../../pico.css'
     margin-bottom: 0;
   }
   form {
-    max-width: 800px;
+    max-width: 840px;
+  }
+  header {
+    padding:1rem;
   }
   footer {
     margin-top:1rem;
+    padding:1rem;
+  }
+  .across {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: .5rem;
+  }
+  .across > * {
+    margin-bottom: 0;
   }
 </style>
