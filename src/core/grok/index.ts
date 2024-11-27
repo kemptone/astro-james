@@ -11,13 +11,11 @@ d.addEventListener('DOMContentLoaded', async e => {
     e_footer.innerHTML = ''
   })
 
-  let is_first = true
-
   ProtoForm<{prompt: string}>({
     e_form,
     async onSubmit({values}) {
+      let is_first = true
       const {prompt} = values
-
       const audios: Promise<Response>[] = []
       const chunks: string[] = []
 
