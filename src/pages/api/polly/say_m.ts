@@ -1,27 +1,18 @@
 const subscriptionKey = import.meta.env.AZURE_SPEECH_KEY // 'YourSubscriptionKey';
 const serviceRegion = import.meta.env.AZURE_SPEECH_REGION // 'YourServiceRegion';
 
-async function synthesizeSpeech(requestBody : any) {
+async function synthesizeSpeech(requestBody: any) {
+  const {ShortName, Gender, Locale, text, text_hidden, express_as} = requestBody
 
-  const { ShortName, Gender, Locale, text, text_hidden } = requestBody
-
-  // console.log("$$$$$$$$$$$$$")
-  // console.log("$$$$$$$$$$$$$")
-  // console.log("$$$$$$$$$$$$$")
-  // console.log("$$$$$$$$$$$$$")
-  // console.log("$$$$$$$$$$$$$")
-  // console.log({ requestBody })
-  // console.log("$$$$$$$$$$$$$")
-  // console.log("$$$$$$$$$$$$$")
-  // console.log("$$$$$$$$$$$$$")
-  // console.log("$$$$$$$$$$$$$")
-  // console.log("$$$$$$$$$$$$$")
-  // console.log("$$$$$$$$$$$$$")
+  const inner = `${text || text_hidden}`
+  const wrapped = express_as
+    ? `<mstts:express-as style='${express_as}'>${inner}</mstts:express-as>`
+    : inner
 
   const ssmlContent = `
-<speak version='1.0' xml:lang='en-US'>
-  <voice xml:lang='${ Locale }' xml:gender='${ Gender }' name='${ ShortName }'>
-  ${ text || text_hidden}
+<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='http://www.w3.org/2001/mstts' xml:lang='en-US'>
+  <voice xml:lang='${Locale}' xml:gender='${Gender}' name='${ShortName}'>
+  ${wrapped}
   </voice>
 </speak>
 `
@@ -62,18 +53,6 @@ export async function POST({
       status: 400,
     })
   }
-
-  // const text: string = requestBody.text
-  // const voiceName: string = requestBody.voiceName
-
-  // if (!text || !voiceName) {
-  //   return new Response(
-  //     JSON.stringify({error: 'Invalid voiceName or text', voiceName, text}),
-  //     {
-  //       status: 400,
-  //     }
-  //   )
-  // }
 
   try {
     const output = await synthesizeSpeech(requestBody)

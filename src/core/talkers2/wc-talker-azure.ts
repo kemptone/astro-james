@@ -1,21 +1,8 @@
-import {type Voice} from '@aws-sdk/client-polly'
-import {playText, playTextAzure} from './wc-talkers.helpers'
+import {playTextAzure} from './wc-talkers.helpers'
 import {type AzureVoiceInfo} from './types'
 
-// {
-//   "Name": "Microsoft Server Speech Text to Speech Voice (en-AU, NatashaNeural)",
-//   "DisplayName": "Natasha",
-//   "LocalName": "Natasha",
-//   "ShortName": "en-AU-NatashaNeural",
-//   "Gender": "Female",
-//   "Locale": "en-AU",
-//   "LocaleName": "English (Australia)",
-//   "SampleRateHertz": "48000",
-//   "VoiceType": "Neural",
-//   "Status": "GA",
-//   "WordsPerMinute": "139",
-//   "Face": "https://api.multiavatar.com/Microsoft Server Speech Text to Speech Voice (en-AU, NatashaNeural).png"
-// }
+const BuildValue = () => {
+}
 
 if (typeof window != 'undefined')
   customElements.define(
@@ -43,7 +30,7 @@ if (typeof window != 'undefined')
         <div class="group">
         ${
           is_preview
-            ? ``
+            ? ""
             : `
             <div class="sample">
                 <textarea name="text"></textarea>
@@ -54,7 +41,7 @@ if (typeof window != 'undefined')
           is_preview
             ? `
           <div class="action">
-              <span class="name">${info.LocalName}</span>
+            <span class="name">${info.LocalName}</span>
             </div>
           <div class="preview">
             <button type="button" class="play_sample">sample</button> 
@@ -62,14 +49,19 @@ if (typeof window != 'undefined')
           `
             : `
             <div class="action">
-                <div class="subgroup">
-                <span class="name">${info.LocalName}</span>
-                </div>
-                <div class="subgroup">
-                <button type="button" class="remove_talker">remove</button>
-                <button type="button" class="clear">clear</button> 
-                <button type="button" class="play_sample">play</button> 
-                </div>
+              <div class="subgroup">
+              <span class="name">${info.LocalName}</span>
+              </div>
+              <div class="subgroup">
+              ${ info.StyleList && info.StyleList.length > 1 ? `
+                <select name="express_as">
+                ${ info.StyleList.map( item => `<option>${ item }</option>`)}
+                </select>
+              ` : '' }
+              <button type="button" class="remove_talker">remove</button>
+              <button type="button" class="clear">clear</button> 
+              <button type="button" class="play_sample">play</button> 
+              </div>
             </div>
           `
         }

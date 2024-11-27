@@ -11,4 +11,6 @@ export type AzureVoiceInfo = {
   VoiceType: 'Neural' | 'Standard' // Assuming only these two values
   Status: 'GA' | 'Preview' | 'Deprecated' // Assuming possible statuses
   Face?: string
+  StyleList? : string[]
+  WordsPerMinute? : string
 }

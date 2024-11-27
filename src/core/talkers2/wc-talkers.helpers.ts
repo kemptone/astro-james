@@ -51,7 +51,7 @@ export const playText = async (form : {
 }
 
 export const playTextAzure = async (form : {
-  values : AzureVoiceInfo & { text? : string, text_hidden?: string }
+  values : AzureVoiceInfo & { text? : string, text_hidden?: string, express_as? : string }
 }, should_play : boolean) => {
   const response = await fetch('/api/polly/say_m', {
     method: 'POST',
