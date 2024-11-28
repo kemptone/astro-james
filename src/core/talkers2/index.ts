@@ -26,7 +26,8 @@ type VoiceDetails = {
 const VOICES = 'get_ms_voices'
 
 function makeFace(name: string) {
-  return `https://api.multiavatar.com/${name}.png`
+  // return `https://api.multiavatar.com/${name}.png`
+  return `https://api.dicebear.com/9.x/croodles-neutral/svg?seed=${ name }`
 }
 
 type FormType = {
@@ -59,7 +60,7 @@ async function getMicrosoftVoices() {
     })
 
   voices.forEach(item => {
-    item.Face = makeFace(item.Name)
+    item.Face = makeFace(item.ShortName)
     return item
   })
 
@@ -92,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async e => {
 
   e_list.append(e_fragment)
 
-  e_play_all?.addEventListener('click', () => {
+  e_play_all?.addEventListener('click', async () => {
     e_hidden_button?.click()
     const audios: HTMLAudioElement[] = []
     const all_talkers = e_input_area.querySelectorAll('wc-talker-azure')
@@ -110,7 +111,8 @@ document.addEventListener('DOMContentLoaded', async e => {
         })
     })
 
-    fields.forEach(async (field, index) => {
+    for (let x = 0; x < fields.length; x++) {
+      let field = fields[x]
       let audio = await playTextAzure(
         {
           values: {
@@ -124,8 +126,25 @@ document.addEventListener('DOMContentLoaded', async e => {
         false
       )
       audios.push(audio)
-      if (index === 0) playThenNext(audios)
-    })
+    }
+    playThenNext(audios)
+
+    // fields.forEach(async (field, index) => {
+    //   let audio = await playTextAzure(
+    //     {
+    //       values: {
+    //         text: field.text,
+    //         ShortName: field.ShortName,
+    //         Gender: field.Gender,
+    //         Locale: field.Locale,
+    //         express_as : field.express_as
+    //       },
+    //     },
+    //     false
+    //   )
+    //   audios.push(audio)
+    //   if (index === 0) playThenNext(audios)
+    // })
   })
 
   e_remove_all?.addEventListener('click', () => {
