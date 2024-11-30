@@ -1,0 +1,152 @@
+html:has(#talkers) {
+  background-color: white;
+}
+
+html:has(#talkers) site-menu {
+  display: none;
+}
+
+.container {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  color: #000000;
+  padding: 1rem;
+  height: 3rem;
+  border-bottom: 1px solid black;
+}
+
+.banner h1 {
+  margin: 0;
+}
+
+.buttons button {
+  margin-left: 10px;
+  padding: 0.5rem 1rem;
+  background-color: white;
+  /* color: #007acc; */
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.buttons button:hover {
+  background-color: #005f99;
+  color: white;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 0.2rem;
+}
+
+.left-column {
+  background-color: #fff;
+  padding: 1rem;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+  border-right: 1px solid black;
+}
+
+.right-column {
+  background-color: #fff;
+  padding: 1rem;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+}
+
+#hidden_button {
+  display: none;
+}
+
+.talker {
+  display: flex;
+  gap: 10px;
+  margin-top: 2rem;
+}
+.talker.preview {
+  margin-top: 1rem;
+  align-items: flex-start;
+}
+.talker button {
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  padding: 0.2rem 0.5rem;
+}
+.talker.preview button {
+  font-size: 0.8rem;
+  padding: 0;
+  text-decoration: underline;
+}
+.talker .group {
+  flex: 1;
+}
+.talker .name {
+  font-weight: 600;
+}
+.talker .face {
+}
+.talker .face img {
+  width: 80px;
+  height: 80px;
+  /* mix-blend-mode: multiply; */
+}
+.talker.preview .face img {
+  width: 50px;
+  height: 50px;
+  /* filter: grayscale(0.6) opacity(0.4); */
+}
+.talker .sample {
+}
+.talker .action {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.5rem;
+}
+.talker.preview .action {
+  padding-top: 0rem;
+}
+
+.talker .action > .subgroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.talker .action .plus {
+  font-size: 1.5rem;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+}
+.talker textarea {
+  display: block;
+  width: 100%;
+  min-height: 4rem;
+  box-sizing: border-box;
+  padding: 0.6rem;
+  min-height: 4.5rem;
+}
+#brand {
+  background-image: url(/talkers.jpeg);
+  height: 49px;
+  width: 198px;
+  background-size: 120%;
+  background-repeat: no-repeat;
+  background-position: 71% 47%;
+  mix-blend-mode: multiply;
+}

@@ -1,41 +1,11 @@
-import ProtoForm from '../../components/ProtoForm/ProtoForm'
+import {playTextAzure} from './wc-talkers.helpers'
+import type {AzureVoiceInfo, Talkers2VoiceDetails as VoiceDetails} from './types'
 import './wc-talker-azure'
-import {VoiceId, type DescribeVoicesCommandOutput} from '@aws-sdk/client-polly'
-import {playText, playTextAzure} from './wc-talkers.helpers'
-import {type AzureVoiceInfo} from './types'
-
-type VoiceDetails = {
-  Name?: string
-  DisplayName?: string
-  LocalName?: string
-  ShortName?: string
-  Gender?: 'Male' | 'Female'
-  Locale?: string
-  LocaleName?: string
-  StyleList?: string // Could be changed to a more specific type if the styles are fixed
-  SampleRateHertz?: string // Alternatively, use a union of valid sample rates if limited
-  VoiceType?: 'Neural' | 'Standard'
-  Status?: 'GA' | 'Preview' // Expand this union if there are more statuses
-  WordsPerMinute?: string | number // Depending on how it's consumed
-  Face?: string // URL
-  text_hidden?: string
-  text?: string
-  express_as?: string // Could also be a union if there are fixed expressions
-}
 
 const VOICES = 'get_ms_voices'
 
 function makeFace(name: string) {
-  // return `https://api.multiavatar.com/${name}.png`
   return `https://api.dicebear.com/9.x/croodles-neutral/svg?seed=${ name }`
-}
-
-type FormType = {
-  text: string[]
-  text_hidden?: string[]
-  ShortName: string[]
-  Gender: string[]
-  Locale: string[]
 }
 
 const dog = {
@@ -128,23 +98,6 @@ document.addEventListener('DOMContentLoaded', async e => {
       audios.push(audio)
     }
     playThenNext(audios)
-
-    // fields.forEach(async (field, index) => {
-    //   let audio = await playTextAzure(
-    //     {
-    //       values: {
-    //         text: field.text,
-    //         ShortName: field.ShortName,
-    //         Gender: field.Gender,
-    //         Locale: field.Locale,
-    //         express_as : field.express_as
-    //       },
-    //     },
-    //     false
-    //   )
-    //   audios.push(audio)
-    //   if (index === 0) playThenNext(audios)
-    // })
   })
 
   e_remove_all?.addEventListener('click', () => {
@@ -166,33 +119,6 @@ document.addEventListener('DOMContentLoaded', async e => {
     e_input_area.appendChild(element)
   })
 
-  // ProtoForm<FormType>({
-  //   e_form: e_input_area,
-  //   onIsInvalid: () => {},
-  //   onIsValid: () => {},
-  //   onSubmit: async form => {
-  //     const {values} = form
-  //     const {text, ShortName, Gender, Locale } = values // arrays
-  //     const audios: HTMLAudioElement[] = []
-
-  //     for (let x = 0; x < text.length; x++) {
-  //       let audio = await playTextAzure(
-  //         {
-  //           values: {
-  //             text: text[x],
-  //             ShortName: ShortName[x],
-  //             Gender: Gender[x],
-  //             Locale: Locale[x]
-  //           },
-  //         },
-  //         false
-  //       )
-  //       audios.push(audio)
-  //     }
-  //     playThenNext(audios)
-  //   },
-  //   allUniqueCheckboxKeys: ['ShortName', 'text', 'Gender', 'Locale'],
-  // })
 })
 
 function playThenNext(audios: HTMLAudioElement[]) {
