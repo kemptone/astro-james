@@ -24,13 +24,13 @@ if (typeof window != 'undefined')
         const item = (JSON.parse(_item || '{}') as MemeType) || {}
         let html = ''
         html += `<h4>${item.name}</h4>`
-        html += `<p></p>`
+        // html += `<p></p>`
 
-        html += `
-        <audio>
-          <source src="${item.audio}" type="audio/mpeg">
-        </audio>
-        `
+        // html += `
+        // <audio>
+        //   <source src="${item.audio}" type="audio/mpeg">
+        // </audio>
+        // `
 
         html += '<div>'
         html += `<button class="play">Play</button>`
@@ -39,16 +39,15 @@ if (typeof window != 'undefined')
 
         this.innerHTML += html
 
-        const audio = this.querySelector('audio')
-        const p = this.querySelector("p")
-
-        audio?.addEventListener('loadedmetadata', () => {
-          p.textContent = this.formatTime(audio.duration)
-        })
+        // const audio = this.querySelector('audio')
+        // const p = this.querySelector("p")
 
         this.querySelector('button.play')?.addEventListener('click', e => {
+          const audio = new Audio(item.audio)
           e.preventDefault()
-          audio?.play?.()
+          audio?.addEventListener('loadedmetadata', () => {
+            audio?.play?.()
+          })
         })
 
         this.querySelector('button.add')?.addEventListener('click', e => {
