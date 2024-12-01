@@ -64,7 +64,7 @@ export default () => {
                       caches.delete("my-cache");
 
                       setTimeout(() => {
-                        // location.reload();
+                        location.reload();
                       }, 1000);
 
                       navigator.serviceWorker.getRegistration()
@@ -72,7 +72,7 @@ export default () => {
                           (registration) => {
                             registration?.unregister().then(() => {
                               console.log("Service worker unregistered");
-                              // location.reload();
+                              location.reload();
                             });
                           },
                         );
