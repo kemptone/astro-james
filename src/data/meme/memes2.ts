@@ -1,4 +1,4 @@
-[
+export const memes2 = [
     {
         "name": "Meme",
         "audio": "/media/sounds/are-you-out-of-your-mind-greenscreen-change-quality-and-end-wont-cut-off_2.mp3"

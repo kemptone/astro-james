@@ -1,12 +1,16 @@
+import { memes2 } from '../../data/meme/memes2'
 import {reactions} from '../../data/meme/reactions'
 
 function clean(str: string) {
-  return str.replaceAll("'", '’').replaceAll('"', '”')
+  if (str) {
+    return str.replaceAll("'", '’').replaceAll('"', '”')
+  }
+  return ""
 }
 
 export const prerender = false
 export async function GET() {
-  const data = reactions.slice(0, 100).map(item => ({
+  const data = [ reactions, ...memes2 ].slice(0, 2000).map(item => ({
     name: clean(item.name),
     audio: 'https://www.myinstants.com' + clean(item.audio),
   }))
