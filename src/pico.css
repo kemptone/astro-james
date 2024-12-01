@@ -2313,7 +2313,7 @@ a[aria-busy=true] {
   --pico-scrollbar-width: 0px;
 }
 
-dialog {
+/* dialog {
   display: flex;
   z-index: 999;
   position: fixed;
@@ -2333,8 +2333,8 @@ dialog {
   backdrop-filter: var(--pico-modal-overlay-backdrop-filter);
   background-color: var(--pico-modal-overlay-background-color);
   color: var(--pico-color);
-}
-dialog article {
+} */
+/* dialog article {
   width: 100%;
   max-height: calc(100vh - var(--pico-spacing) * 2);
   margin: var(--pico-spacing);
@@ -2369,8 +2369,8 @@ dialog article > footer [role=button] {
 dialog article > footer button:not(:first-of-type),
 dialog article > footer [role=button]:not(:first-of-type) {
   margin-left: calc(var(--pico-spacing) * 0.5);
-}
-dialog article .close, dialog article :is(a, button)[rel=prev] {
+} */
+/* dialog article .close, dialog article :is(a, button)[rel=prev] {
   display: block;
   width: 1rem;
   height: 1rem;
@@ -2391,9 +2391,9 @@ dialog article .close:is([aria-current]:not([aria-current=false]), :hover, :acti
 }
 dialog:not([open]), dialog[open=false] {
   display: none;
-}
+} */
 
-.modal-is-open {
+/* .modal-is-open {
   padding-right: var(--pico-scrollbar-width, 0px);
   overflow: hidden;
   pointer-events: none;
@@ -2437,7 +2437,7 @@ dialog:not([open]), dialog[open=false] {
     transform: translateY(-100%);
     opacity: 0;
   }
-}
+} */
 /**
  * Nav
  */

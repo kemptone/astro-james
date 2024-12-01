@@ -19,8 +19,8 @@ export const getMemes = async () => {
     })
     try {
       const data = dog[SOUNDS] = await results.json()
-      const attempt = JSON.stringify(data)
-      const unattempt = JSON.parse(attempt)
+      // const attempt = JSON.stringify(data)
+      // const unattempt = JSON.parse(attempt)
       localStorage.setItem(SOUNDS, JSON.stringify(data))
       return data
     } catch (error) {
@@ -37,7 +37,7 @@ if (typeof window != 'undefined')
       async connectedCallback() {
         const data = await getMemes() as MemeType[]
         let html = ''
-        data.forEach( item => {
+        data.filter(item => item.name).forEach( item => {
             html += `<wc-meme-item data-item='${ JSON.stringify(item) }'></wc-meme-item>`
         })
         this.innerHTML = html

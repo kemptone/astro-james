@@ -2313,7 +2313,7 @@ a[aria-busy=true] {
   --pico-scrollbar-width: 0px;
 }
 
-dialog {
+/* dialog {
   display: flex;
   z-index: 999;
   position: fixed;
@@ -2437,7 +2437,7 @@ dialog:not([open]), dialog[open=false] {
     transform: translateY(-100%);
     opacity: 0;
   }
-}
+} */
 /**
  * Nav
  */

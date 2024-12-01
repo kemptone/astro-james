@@ -136,10 +136,6 @@ export const memes2 = [
         "audio": "/media/sounds/m-e-o-w.mp3"
     },
     {
-        "name": "Limit on talking",
-        "audio": "/media/sounds/limit-on-talking.mp3"
-    },
-    {
         "name": "POU ESTOURADO",
         "audio": "/media/sounds/pou-estourado_zIWCpMy.mp3"
     },
@@ -486,10 +482,6 @@ export const memes2 = [
     {
         "name": "ОБОЮДНО",
         "audio": "/media/sounds/oboiudno.mp3"
-    },
-    {
-        "name": "Joker Shitpost beatbox",
-        "audio": "/media/sounds/joker-shitpost-beatbox.mp3"
     },
     {
         "name": "Mouse Click",
@@ -914,10 +906,6 @@ export const memes2 = [
     {
         "name": "УБИВАТЬ УБИВАТЬ УБИВАТЬ",
         "audio": "/media/sounds/ubivat-ubivat-ubivat.mp3"
-    },
-    {
-        "name": "What the FUCK?",
-        "audio": "/media/sounds/what-the-fuck_CiZUehX.mp3"
     },
     {
         "name": "Бу испугался устал(",
@@ -4386,10 +4374,6 @@ export const memes2 = [
     {
         "name": "xue hua piao piao bei feng xiao xiao meme",
         "audio": "/media/sounds/xue-hua-piao-piao_FOynuVG.mp3"
-    },
-    {
-        "name": "GET SHIT ON",
-        "audio": "/media/sounds/trim_WZMQ9g3.mp3"
     },
     {
         "name": "rafonix na huj",

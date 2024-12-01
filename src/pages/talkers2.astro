@@ -1,11 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro'
+import Empty from '../layouts/Empty.astro'
 import WCDialogWrap from '../components/WCDialogWrap.astro'
+import '../../pico.css'
 import '../core/talkers2/style.css'
 ---
 
-<Layout title="talkers">
-  <div id="talkers" class="container">
+<Empty title="talkers">
+  <div id="talkers">
     <header class="banner">
       <div id="brand"></div>
       <div class="buttons">
@@ -28,7 +30,7 @@ import '../core/talkers2/style.css'
       </WCDialogWrap>
     </main>
   </div>
-</Layout>
+</Empty>
 
 <script src="../core/talkers2/index.ts"></script>
 <script src="../components/wc-meme-board.ts"></script>

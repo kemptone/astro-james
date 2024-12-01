@@ -424,10 +424,6 @@ export const reactions = [
         "audio": "/media/sounds/i_will_build_a_great_great_wall_on_our_southern_bo.mp3"
     },
     {
-        "name": "CS - Holy shit",
-        "audio": "/media/sounds/holy-shit.mp3"
-    },
-    {
         "name": "Finding nemo-Mine Mine Mine",
         "audio": "/media/sounds/mine-mine_Z6BwRzI.mp3"
     },
@@ -450,10 +446,6 @@ export const reactions = [
     {
         "name": "vsauce",
         "audio": "/media/sounds/jake-chudnow-edited_y1t8j5q.mp3"
-    },
-    {
-        "name": "CS - Holy shit",
-        "audio": "/media/sounds/holy-shit.mp3"
     },
     {
         "name": "Tun Tun Tuuun",
@@ -546,10 +538,6 @@ export const reactions = [
     {
         "name": "bomb has been defused",
         "audio": "/media/sounds/bomb-has-been-defused-csgo-sound-effect.mp3"
-    },
-    {
-        "name": "Alastor “Fuck you”",
-        "audio": "/media/sounds/alastor-fuck-you.mp3"
     },
     {
         "name": "cartoon-stream",
@@ -1256,10 +1244,6 @@ export const reactions = [
         "audio": "/media/sounds/bryan-lets-go.mp3"
     },
     {
-        "name": "Oh! Shit! Not good!!!!!!!!!",
-        "audio": "/media/sounds/oh-shit-not-good_ZUcKH4I.mp3"
-    },
-    {
         "name": "Euy - Kobo Kanaeru",
         "audio": "/media/sounds/euy-kobo-kanaeru.mp3"
     },
@@ -1364,20 +1348,12 @@ export const reactions = [
         "audio": "/media/sounds/ohh-no.mp3"
     },
     {
-        "name": "DrDisrespect Never playing this shit game again",
-        "audio": "/media/sounds/drdisrespect_neverplaythisshitgameagain_by_taihplays_on_twitch.mp3"
-    },
-    {
         "name": "Albert Einstein",
         "audio": "/media/sounds/albert-einstein.mp3"
     },
     {
         "name": "Jerma Terrified",
         "audio": "/media/sounds/jerma-terrified.mp3"
-    },
-    {
-        "name": "Oh! Shit! Not good!!!!!!!!!",
-        "audio": "/media/sounds/oh-shit-not-good_ZUcKH4I.mp3"
     },
     {
         "name": "Hatt Nishant jindal",
@@ -1584,10 +1560,6 @@ export const reactions = [
         "audio": "/media/sounds/risitas.mp3"
     },
     {
-        "name": "DrDisrespect Never playing this shit game again",
-        "audio": "/media/sounds/drdisrespect_neverplaythisshitgameagain_by_taihplays_on_twitch.mp3"
-    },
-    {
         "name": "Jigsaw Laugh",
         "audio": "/media/sounds/jigsaw-puppet-laugh.mp3"
     },
@@ -1752,20 +1724,12 @@ export const reactions = [
         "audio": "/media/sounds/who-the-hell-cares-family-guy-peter.mp3"
     },
     {
-        "name": "Shut yo b*tch ass up",
-        "audio": "/media/sounds/mlq2zjdtbdr_1.mp3"
-    },
-    {
         "name": "Ram rider scream",
         "audio": "/media/sounds/ram-rider-scream.mp3"
     },
     {
         "name": "يا مجنوووووووون - ابو عبير",
         "audio": "/media/sounds/y-mjnwwwwwwwwn-bw-byr.mp3"
-    },
-    {
-        "name": "DrDisrespect Never playing this shit game again",
-        "audio": "/media/sounds/drdisrespect_neverplaythisshitgameagain_by_taihplays_on_twitch.mp3"
     },
     {
         "name": "Cake At Stake theme",
