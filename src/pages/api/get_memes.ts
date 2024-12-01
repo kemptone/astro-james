@@ -10,7 +10,7 @@ function clean(str: string) {
 
 export const prerender = false
 export async function GET() {
-  const data = [ reactions, ...memes2 ].slice(0, 2000).map(item => ({
+  const data = [ reactions, ...memes2 ].slice(0, 300).map(item => ({
     name: clean(item.name),
     audio: 'https://www.myinstants.com' + clean(item.audio),
   }))
