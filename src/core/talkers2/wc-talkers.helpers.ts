@@ -1,16 +1,55 @@
 import {VoiceId} from '@aws-sdk/client-polly'
-import { type AzureVoiceInfo } from './types'
+import {type AzureVoiceInfo} from './types'
 
-export type FormType = {
-  voiceId : VoiceId
-  text : string
-  text_hidden? : string
-  engine : string
+const VOICES = 'get_ms_voices'
+
+const dog = {
+  [VOICES]: (function () {
+    let _t = localStorage.getItem(VOICES)
+    if (_t) return JSON.parse(_t) as AzureVoiceInfo[]
+    return null
+  })(),
 }
 
-export const playText = async (form : {
-  values : FormType
-}, should_play : boolean) => {
+export async function getMicrosoftVoices() {
+  if (dog[VOICES]) return dog[VOICES]
+  const response = await fetch('/api/polly/list_m')
+  const _voices: AzureVoiceInfo[] = await response.json()
+
+  const voices = _voices
+    .filter(item => {
+      return item.Locale.startsWith('en-')
+    })
+    .filter(item => {
+      return !item.Name.includes('Multilingual')
+    })
+
+  voices.forEach(item => {
+    item.Face = makeFace(item.ShortName)
+    return item
+  })
+
+  localStorage.setItem(VOICES, JSON.stringify(voices))
+  return (dog[VOICES] = voices)
+}
+
+function makeFace(name: string) {
+  return `https://api.dicebear.com/9.x/croodles-neutral/svg?seed=${name}`
+}
+
+export type FormType = {
+  voiceId: VoiceId
+  text: string
+  text_hidden?: string
+  engine: string
+}
+
+export const playText = async (
+  form: {
+    values: FormType
+  },
+  should_play: boolean
+) => {
   const response = await fetch('/api/polly/say', {
     method: 'POST',
     headers: {
@@ -19,7 +58,7 @@ export const playText = async (form : {
     body: JSON.stringify({
       text: form.values.text || form.values.text_hidden,
       voiceId: form.values.voiceId,
-      engine : form.values.engine,
+      engine: form.values.engine,
     }),
   })
 
@@ -50,9 +89,16 @@ export const playText = async (form : {
   return audio
 }
 
-export const playTextAzure = async (form : {
-  values : AzureVoiceInfo & { text? : string, text_hidden?: string, express_as? : string }
-}, should_play : boolean) => {
+export const playTextAzure = async (
+  form: {
+    values: AzureVoiceInfo & {
+      text?: string
+      text_hidden?: string
+      express_as?: string
+    }
+  },
+  should_play: boolean
+) => {
   const response = await fetch('/api/polly/say_m', {
     method: 'POST',
     headers: {
@@ -91,10 +137,12 @@ export const playTextAzure = async (form : {
   return audio
 }
 
-
-export const playSSMLAzure = async (form : {
-  values : { ssml : string }
-}, should_play : boolean) => {
+export const playSSMLAzure = async (
+  form: {
+    values: {ssml: string}
+  },
+  should_play: boolean
+) => {
   const response = await fetch('/api/polly/say_m2', {
     method: 'POST',
     headers: {
@@ -129,3 +177,17 @@ export const playSSMLAzure = async (form : {
   }
   return audio
 }
+
+// export function waitForAudioReady(audio : HTMLAudioElement) {
+//   return new Promise((resolve, reject) => {
+//     // Resolve when the audio can play through
+//     audio.addEventListener('canplaythrough', () => resolve(audio), {once: true})
+
+//     // Reject if an error occurs
+//     audio.addEventListener(
+//       'error',
+//       () => reject(new Error('Failed to load audio')),
+//       {once: true}
+//     )
+//   })
+// }

@@ -29,6 +29,19 @@ html:has(#talkers) site-menu {
   margin: 0;
 }
 
+.spacer {
+  display: inline-block;
+  width: 1px;
+  height: 2rem;
+  border-left: 1px solid black;
+  margin-left: 1rem;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+}
+
 .buttons button {
   margin-left: 10px;
   padding: 0.5rem 1rem;
@@ -149,4 +162,35 @@ html:has(#talkers) site-menu {
   background-repeat: no-repeat;
   background-position: 71% 47%;
   mix-blend-mode: multiply;
+}
+
+dialog#sounds {
+  width: 100vw;
+  height: 100vh;
+  max-width: 1100px;
+  max-height: 900px;
+}
+
+.right-column wc-meme-item {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  justify-content: center;
+  gap: 1rem;
+}
+
+dialog wc-meme-board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-evenly;
+}
+
+wc-meme-item div {
+  display: flex;
+  gap: .4rem;
+}
+
+dialog wc-meme-board wc-meme-item audio {
+  max-width: 180px;
 }

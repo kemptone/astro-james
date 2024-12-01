@@ -70,11 +70,6 @@ if (typeof window != 'undefined')
           }
         })
 
-        // learncode.astro:75 Uncaught TypeError: Illegal invocation at HTMLButtonElement.<anonymous> (learncode.astro:75:17)
-        // Object.setPrototypeOf(this, HTMLDialogElement.prototype);
       }
     }
   )
-
-// if (typeof window != 'undefined')
-//   customElements.define('wc-dialog-wrap', WCDialogWrap)
