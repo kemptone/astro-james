@@ -39,19 +39,35 @@ if (typeof window != 'undefined')
 
         this.innerHTML += html
 
-        // const audio = this.querySelector('audio')
-        // const p = this.querySelector("p")
+        this.querySelector('button.play')?.addEventListener(
+          'click',
+          async e => {
+            e.preventDefault()
+            try {
+              const response = await fetch('/api/get_meme', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body : JSON.stringify(item)
+              })
+              if (!response.ok) throw new Error('Failed to fetch MP3')
+              const blob = await response.blob()
+              const url = URL.createObjectURL(blob)
+              const audio = new Audio(url)
+              audio.play()
+              // Clean up the blob URL after the audio ends
+              audio.addEventListener('ended', () => {
+                URL.revokeObjectURL(url)
+              })
+            } catch (error) {
+              debugger
+            }
 
-        this.querySelector('button.play')?.addEventListener('click', e => {
-          const audio = new Audio(item.audio)
-          e.preventDefault()
-          audio?.addEventListener('loadedmetadata', () => {
-            audio?.play?.()
-          })
-        })
+          }
+        )
 
         this.querySelector('button.add')?.addEventListener('click', e => {
-          debugger
           if (is_display) {
             return this.parentElement?.removeChild(this)
           }

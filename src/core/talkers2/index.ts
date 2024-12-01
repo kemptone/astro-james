@@ -1,6 +1,7 @@
 import {
   playTextAzure,
   getMicrosoftVoices,
+  playMeme,
 } from './wc-talkers.helpers'
 import type {Talkers2VoiceDetails as VoiceDetails} from './types'
 import './wc-talker-azure'
@@ -54,8 +55,8 @@ d.addEventListener('DOMContentLoaded', async e => {
       if (item.tagName === 'WC-MEME-ITEM') {
         try {
           let obj = JSON.parse(item?.dataset?.item || '{}')
-          let audio = new Audio(obj.audio)
-          let fakeField: VoiceDetails = {is_meme: true, audio}
+          // let audio = new Audio(obj.audio)
+          let fakeField: VoiceDetails = {is_meme: true, ...obj}
           fields.push(fakeField)
           return
         } catch (error) {
@@ -77,7 +78,9 @@ d.addEventListener('DOMContentLoaded', async e => {
       let field = fields[x]
 
       if (field.is_meme) {
-        audios.push(field.audio)
+        let audio = await playMeme(field)
+        audios.push(audio)
+        // audios.push(field.audio)
       } else {
         let audio = await playTextAzure(
           {

@@ -89,6 +89,20 @@ export const playText = async (
   return audio
 }
 
+export const playMeme = async ({audio}: {audio: string}) => {
+  const response = await fetch('/api/get_meme', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ audio }),
+  })
+  if (!response.ok) throw new Error('Failed to fetch MP3')
+  const blob = await response.blob()
+  const url = URL.createObjectURL(blob)
+  return new Audio(url)
+}
+
 export const playTextAzure = async (
   form: {
     values: AzureVoiceInfo & {
