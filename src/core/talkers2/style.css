@@ -18,11 +18,15 @@ html:has(#talkers) site-menu {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* background-color: #ffffff; */
-  /* color: #000000; */
   padding: 1rem;
-  height: 3rem;
+  height: 5rem;
   border-bottom: 1px solid black;
+}
+
+@media only screen and (prefers-color-scheme: dark) {
+.banner {
+  border-bottom: 1px solid white;
+}
 }
 
 .banner h1 {
@@ -35,6 +39,12 @@ html:has(#talkers) site-menu {
   height: 2rem;
   border-left: 1px solid black;
   margin-left: 1rem;
+  margin-right:.4rem;
+}
+@media only screen and (prefers-color-scheme: dark) {
+  .spacer {
+    border-left: 1px solid white;
+  }
 }
 
 .buttons {
@@ -57,6 +67,12 @@ html:has(#talkers) site-menu {
   /* color: white; */
 }
 
+@media only screen and (prefers-color-scheme: dark) {
+  .buttons button {
+    filter: saturate(0.4);
+  }
+}
+
 .content {
   display: grid;
   grid-template-columns: 210px 1fr;
@@ -69,6 +85,11 @@ html:has(#talkers) site-menu {
   max-height: calc(100vh - 3rem);
   overflow-y: auto;
   border-right: 1px solid black;
+}
+@media only screen and (prefers-color-scheme: dark) {
+.left-column {
+  border-right: 1px solid white;
+}
 }
 
 .right-column {
@@ -104,6 +125,11 @@ html:has(#talkers) site-menu {
   /* padding: 3px; */
   /* text-decoration: underline; */
 }
+@media only screen and (prefers-color-scheme: dark) {
+  .talker button {
+    filter: saturate(0.4);
+  }
+}
 .talker .group {
   flex: 1;
 }
@@ -117,6 +143,15 @@ html:has(#talkers) site-menu {
   height: 80px;
   /* mix-blend-mode: multiply; */
 }
+
+@media only screen and (prefers-color-scheme: dark) {
+  .talker .face img {
+    background-color: white;
+    filter: invert(1);
+    mix-blend-mode: lighten;
+  }
+}
+
 .talker.preview .face img {
   width: 50px;
   height: 50px;
@@ -139,6 +174,9 @@ html:has(#talkers) site-menu {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+.talker .action > .subgroup select {
+  padding: 0.3rem;
 }
 .talker .action .plus {
   font-size: 1.5rem;
@@ -163,12 +201,25 @@ html:has(#talkers) site-menu {
   background-position: 71% 47%;
   mix-blend-mode: multiply;
 }
+@media only screen and (prefers-color-scheme: dark) {
+  #brand {
+    filter: invert(1);
+    mix-blend-mode:lighten;
+  }
+}
 
 dialog#sounds {
   width: 100vw;
-  height: 100vh;
+  /* height: 100vh; */
   max-width: 1100px;
   max-height: 900px;
+}
+
+dialog#sounds wc-meme-board {
+  display: none;
+}
+dialog#sounds[open] wc-meme-board {
+  display: flex;
 }
 
 .right-column wc-meme-item {

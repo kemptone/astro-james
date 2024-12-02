@@ -33,8 +33,8 @@ if (typeof window != 'undefined')
         // `
 
         html += '<div>'
-        html += `<button class="play">Play</button>`
-        html += `<button class="add">${is_display ? 'remove' : 'add'}</button>`
+        html += `<button type="button" class="play">Play</button>`
+        html += `<button type="button" class="add">${is_display ? 'remove' : 'add'}</button>`
         html += '</div>'
 
         this.innerHTML += html
@@ -42,7 +42,7 @@ if (typeof window != 'undefined')
         this.querySelector('button.play')?.addEventListener(
           'click',
           async e => {
-            e.preventDefault()
+            // e.preventDefault()
             try {
               const response = await fetch('/api/get_meme', {
                 method: 'POST',
