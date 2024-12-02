@@ -1,20 +1,36 @@
-html:has(#talkers) {
-  /* background-color: white; */
-}
-
-html:has(#talkers) site-menu {
-  display: none;
-}
-
-.container {
+.container2 {
   display: grid;
+  grid-template-areas:
+    "header header"
+    "left right";
   grid-template-rows: auto 1fr;
-  grid-template-columns: 1fr;
-  max-height: 100vh;
+  grid-template-columns: auto 4fr;
+  height: 100vh;
   overflow: hidden;
 }
 
-.banner {
+.header {
+  grid-area: header;
+  padding: 1rem;
+}
+
+.leftColumn, .rightColumn {
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.leftColumn {
+  grid-area: left;
+  border-right:1px solid gray;
+  max-width: 230px;
+  min-width: 100px;
+}
+
+.rightColumn {
+  grid-area: right;
+}
+
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -60,11 +76,6 @@ html:has(#talkers) site-menu {
   border: none;
   cursor: pointer;
   border-radius: 5px;
-}
-
-.buttons button:hover {
-  /* background-color: #005f99; */
-  /* color: white; */
 }
 
 @media only screen and (prefers-color-scheme: dark) {
@@ -246,6 +257,38 @@ dialog wc-meme-board wc-meme-item {
   width: 20%;
   min-width: 180px;
 }
+dialog wc-meme-board wc-meme-item h5 {
+  font-size: 16px;
+}
 dialog wc-meme-board wc-meme-item button {
   font-size: 18px;
+}
+
+@media (max-width: 500px) {
+  .talker.preview .face {
+    display: none;
+  }
+  .leftColumn, .rightColumn {
+    padding:.4rem;
+  }
+
+  .spacer,
+  #remove_all,
+  #clear_all {
+    display: none;
+  }
+  wc-talker-azure {
+    width: fit-content;
+  }
+  .talker {
+    gap:4px;
+  }
+  .leftColumn {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    max-width: 100px;
+  }
+
 }

@@ -21,12 +21,7 @@ const getVoicesRest = async () => {
 
 export const prerender = false
 export async function GET() {
-  console.log('*** HELLO *** HELLO ***')
-
   const voices = await getVoicesRest()
-
-  console.log({voices})
-
   return new Response(JSON.stringify(voices), {
     headers: {
       'Content-Type': 'application/json',

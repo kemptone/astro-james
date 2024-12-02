@@ -7,8 +7,8 @@ import '../core/talkers2/style.css'
 ---
 
 <Empty title="talkers">
-  <div id="talkers">
-    <header class="banner">
+  <div id="talkers" class="container2">
+    <header class="header">
       <div id="brand"></div>
       <div class="buttons">
         <button id="back_to_site">back to site</button>
@@ -20,15 +20,14 @@ import '../core/talkers2/style.css'
         <button id="play_all">Play All</button>
       </div>
     </header>
-    <main class="content">
-      <aside class="left-column" id="list"></aside>
-      <form class="right-column" id="input_area"></form>
+    <aside class="leftColumn" id="list">
       <WCDialogWrap id="sounds">
         <div>
           <wc-meme-board></wc-meme-board>
         </div>
       </WCDialogWrap>
-    </main>
+    </aside>
+    <form class="rightColumn" id="input_area"></form>
   </div>
 </Empty>
 

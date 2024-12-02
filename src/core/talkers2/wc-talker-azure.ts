@@ -84,6 +84,9 @@ if (typeof window != 'undefined')
           e_wrapper.querySelector('.face img')?.addEventListener('click', e => {
             this.dispatchEvent(addEvent)
           })
+          e_wrapper.querySelector('.name')?.addEventListener('click', e => {
+            this.dispatchEvent(addEvent)
+          })
         }
 
         e_wrapper

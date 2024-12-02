@@ -84,13 +84,13 @@ const filteredRoutes = routes
           caches.delete('my-cache')
 
           setTimeout(() => {
-            // location.reload()
+            location.reload()
           }, 1000)
 
           navigator.serviceWorker.getRegistration().then(registration => {
             registration?.unregister().then(() => {
               console.log('Service worker unregistered')
-              // location.reload()
+              location.reload()
             })
           })
         })

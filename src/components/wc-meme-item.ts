@@ -23,7 +23,7 @@ if (typeof window != 'undefined')
 
         const item = (JSON.parse(_item || '{}') as MemeType) || {}
         let html = ''
-        html += `<h4>${item.name}</h4>`
+        html += `<h5>${item.name}</h5>`
         // html += `<p></p>`
 
         // html += `
