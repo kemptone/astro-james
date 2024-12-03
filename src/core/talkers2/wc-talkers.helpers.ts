@@ -44,6 +44,55 @@ export type FormType = {
   engine: string
 }
 
+export type GrokStoryType = {
+  voiceId: VoiceId
+  name: string
+  engine: string
+}
+
+export const playGrokStory = async (
+  values: GrokStoryType,
+  should_play: boolean
+) => {
+  const response = await fetch('/api/polly/say_story', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name : values.name,
+      voiceId: values.voiceId,
+      engine: values.engine,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch audio')
+  }
+
+  // Read the response body as a ReadableStream
+  const reader = response.body?.getReader()
+  const chunks = []
+
+  // Read chunks of data from the stream
+  while (true) {
+    const {done, value} = await reader?.read?.()
+    if (done) break
+    chunks.push(value)
+  }
+
+  // Convert chunks to a Blob
+  const audioBlob = new Blob(chunks, {type: 'audio/mpeg'})
+  const audioUrl = URL.createObjectURL(audioBlob)
+
+  // Create and play an audio element
+  const audio = new Audio(audioUrl)
+  if (should_play) {
+    audio.play()
+  }
+  return audio
+}
+
 export const playText = async (
   form: {
     values: FormType
