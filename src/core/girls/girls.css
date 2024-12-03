@@ -1,0 +1,40 @@
+main {
+  padding: 2rem;
+}
+#filters {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+#filters * {
+  flex: 1;
+  width: fit-content;
+}
+
+#filters input[name='name_filter'] {
+  flex: auto;
+}
+
+#filters input[name='limit'] {
+  max-width: 200px;
+  text-align: right;
+}
+
+#girls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+#girls article {
+  width: 30%;
+  text-transform: capitalize;
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+}
