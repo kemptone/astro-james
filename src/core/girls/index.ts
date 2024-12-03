@@ -1,6 +1,6 @@
 import {girls_names} from '../../data/girls_names'
 import {d, $, $$} from '../grok/grok.helpers'
-import {playTextPromise} from '../grok/grok.helpers'
+import {playText} from '../talkers2/wc-talkers.helpers'
 
 function buildGirl(name: string) {
   const e_article = document.createElement('article')
@@ -21,40 +21,56 @@ function buildGirl(name: string) {
     const json = await results.json()
     const text = json?.choices?.[0]?.message?.content || ''
 
-    const response = await fetch('/api/polly/say', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const audio = await playText(
+      {
+        values: {
+          voiceId: 'Matthew',
+          engine: 'generative',
+          text,
+        },
       },
-      body: JSON.stringify({
-        voiceId: 'Matthew',
-        engine: 'generative',
-        text,
-      }),
-    })
+      false
+    )
 
-    // Read the response body as a ReadableStream
-    const reader = response.body?.getReader()
-    const chunks = []
-
-    // Read chunks of data from the stream
-    while (true) {
-      const {done, value} = await reader?.read?.()
-      if (done) break
-      chunks.push(value)
-    }
-
-    // Convert chunks to a Blob
-    const audioBlob = new Blob(chunks, {type: 'audio/mpeg'})
-    const audioUrl = URL.createObjectURL(audioBlob)
-
-    // Create and play an audio element
-    const audio = new Audio(audioUrl)
-
-    audio.play()
-    audio.addEventListener('ended', () => {
+    audio?.play?.()
+    audio?.addEventListener('ended', () => {
       e_article.removeChild(e_progress)
     })
+
+    // const response = await fetch('/api/polly/say', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     voiceId: 'Matthew',
+    //     engine: 'generative',
+    //     text,
+    //   }),
+    // })
+
+    // // Read the response body as a ReadableStream
+    // const reader = response.body?.getReader()
+    // const chunks = []
+
+    // // Read chunks of data from the stream
+    // while (true) {
+    //   const {done, value} = await reader?.read?.()
+    //   if (done) break
+    //   chunks.push(value)
+    // }
+
+    // // Convert chunks to a Blob
+    // const audioBlob = new Blob(chunks, {type: 'audio/mpeg'})
+    // const audioUrl = URL.createObjectURL(audioBlob)
+
+    // // Create and play an audio element
+    // const audio = new Audio(audioUrl)
+
+    // audio.play()
+    // audio.addEventListener('ended', () => {
+    //   e_article.removeChild(e_progress)
+    // })
   })
 
   return e_article
