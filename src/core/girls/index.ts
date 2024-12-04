@@ -3,10 +3,18 @@ import {d, $, $$} from '../grok/grok.helpers'
 import {playGrokStory, playText} from '../talkers2/wc-talkers.helpers'
 
 function buildGirl(name: string) {
-  const e_article = document.createElement('article')
-  e_article.innerText = name
+  const e_article = d.createElement('article')
+  const e_button = d.createElement('button')
+  const e_span = d.createElement('span')
 
-  e_article.addEventListener('click', async e => {
+  e_span.innerText = name
+  e_button.innerText = '▶'
+  e_button.type = 'button'
+
+  e_article.appendChild(e_span)
+  e_article.appendChild(e_button)
+
+  e_button.addEventListener('click', async e => {
     const e_progress = document.createElement('progress')
     e_article.appendChild(e_progress)
 
