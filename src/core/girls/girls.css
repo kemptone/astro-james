@@ -27,14 +27,6 @@ main {
   justify-content: space-between;
 }
 
-#girls article {
-  display: flex;
-  width: 100%;
-  max-width: 200px;
-  text-transform: capitalize;
-  justify-content: center;
-  align-items: center;
-}
 
 header {
   display: flex;
@@ -48,7 +40,34 @@ header {
   margin: 0 0 0 1rem;
 }
 
+#girls article {
+  display: flex;
+  width: 100%;
+  max-width: 200px;
+  text-transform: capitalize;
+  justify-content:space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+#girls article b {
+  font-weight: normal;
+  display: inline-block;
+  margin-right:1rem;
+}
+
+@media screen {
+  #girls article b {
+    display: none;
+  }
+}
+
 @media print {
+  #girls article {
+    background: white;
+    box-shadow: none;
+  justify-content:flex-start;
+  }
 #girls button,
 input,
   header {

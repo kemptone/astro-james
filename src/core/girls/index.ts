@@ -2,45 +2,75 @@ import {girls_names} from '../../data/girls_names'
 import {d, $, $$} from '../grok/grok.helpers'
 import {playGrokStory, playText} from '../talkers2/wc-talkers.helpers'
 
-function buildGirl(name: string) {
-  const e_article = d.createElement('article')
-  const e_button = d.createElement('button')
-  const e_span = d.createElement('span')
+async function playStory(e: MouseEvent) {
+  const target = e.target as HTMLElement
+  const e_parent = target.parentElement as HTMLElement
 
-  e_span.innerText = name
-  e_button.innerText = '▶'
-  e_button.type = 'button'
+  const {name = ''} = target.dataset
 
-  e_article.appendChild(e_span)
-  e_article.appendChild(e_button)
+  const e_progress = document.createElement('progress')
+  e_parent.appendChild(e_progress)
 
-  e_button.addEventListener('click', async e => {
-    const e_progress = document.createElement('progress')
-    e_article.appendChild(e_progress)
-
+  if (name) {
     const audio = await playGrokStory(
       {
         voiceId: 'Matthew',
         engine: 'generative',
         name,
       },
-      false
+      true
     )
 
-    audio?.play?.()
     audio?.addEventListener('ended', () => {
-      e_article.removeChild(e_progress)
+      e_parent.removeChild(e_progress)
     })
+  }
+}
 
-  })
+function buildGirl(name: string, index = 1) {
+  const e_article = d.createElement('article')
+  const e_button = d.createElement('button')
+  const e_span = d.createElement('span')
+  const e_num = d.createElement('b')
+
+  e_num.innerText = String(index + 1)
+  e_span.innerText = name
+  e_button.innerText = '▶'
+  e_button.setAttribute("data-name", name)
+  // e_button.type = 'button'
+
+  e_article.appendChild(e_num)
+  e_article.appendChild(e_span)
+  e_article.appendChild(e_button)
+
+  e_button.addEventListener('click', playStory)
+
+  // e_button.addEventListener('click', async e => {
+  //   const e_progress = document.createElement('progress')
+  //   e_article.appendChild(e_progress)
+
+  //   const audio = await playGrokStory(
+  //     {
+  //       voiceId: 'Matthew',
+  //       engine: 'generative',
+  //       name,
+  //     },
+  //     false
+  //   )
+
+  //   audio?.play?.()
+  //   audio?.addEventListener('ended', () => {
+  //     e_article.removeChild(e_progress)
+  //   })
+  // })
 
   return e_article
 }
 
 function buildGirls(names: string[]) {
   const e_fragment = d.createDocumentFragment()
-  names.forEach(name => {
-    let element = buildGirl(name)
+  names.forEach((name, index) => {
+    let element = buildGirl(name, index)
     e_fragment.appendChild(element)
   })
   return e_fragment
