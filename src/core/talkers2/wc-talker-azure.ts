@@ -1,5 +1,6 @@
 import {playTextAzure} from './wc-talkers.helpers'
 import {type AzureVoiceInfo} from './types'
+import '../../components/wc-texarea-sizer'
 
 const BuildValue = () => {
 }
@@ -33,7 +34,9 @@ if (typeof window != 'undefined')
             ? ""
             : `
             <div class="sample">
-                <textarea name="text"></textarea>
+              <wc-textarea-sizer data-min="20" data-max="500">
+                <textarea name="text" rows="1"></textarea>
+              </wc-textarea-sizer>
             </div>
           `
         }
