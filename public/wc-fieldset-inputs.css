@@ -3,6 +3,7 @@
 }
 
 wc-fieldset-inputs {
+  margin-block: 1.2rem;
 }
 
 wc-fieldset-inputs .fieldset-inputs {
@@ -16,12 +17,13 @@ wc-fieldset-inputs .fieldset-inputs > label {
   display: flex;
   flex-direction: row;
   gap: .3rem;
+  align-items: center;
 }
 
 /* These groupings can expand as we go */
 wc-fieldset-inputs .error {
   display: none;
-  color: var(--chakra-colors-red-500);
+  color: var(--chakra-colors-red-500, red);
   font-weight: bold;
 }
 

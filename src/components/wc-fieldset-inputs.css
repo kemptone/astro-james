@@ -3,6 +3,7 @@
 }
 
 wc-fieldset-inputs {
+  margin-block: 1.2rem;
 }
 
 wc-fieldset-inputs .fieldset-inputs {
@@ -16,6 +17,7 @@ wc-fieldset-inputs .fieldset-inputs > label {
   display: flex;
   flex-direction: row;
   gap: .3rem;
+  align-items: center;
 }
 
 /* These groupings can expand as we go */

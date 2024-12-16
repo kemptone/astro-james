@@ -74,3 +74,24 @@ input,
     display: none !important;
   }
 }
+
+dialog#d_story {
+  min-width: 400px;
+  width: 100%;
+  max-width: 90%;
+}
+
+wc-floating-label-input {
+  margin-block: 0;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+footer * {
+  margin:0;
+}

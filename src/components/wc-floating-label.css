@@ -5,6 +5,12 @@ fieldset:has(wc-floating-label-input) {
   background-color: white;
 }
 
+@media only screen and (prefers-color-scheme: dark) {
+  fieldset:has(wc-floating-label-input) {
+    background-color: black;
+  }
+}
+
 wc-floating-label-input {
   --height: 2.5rem;
   display: block;
@@ -12,11 +18,17 @@ wc-floating-label-input {
   min-height: var(--height);
   background-color: transparent;
   border-radius: 0.2rem;
-  margin-block: 1.2rem;
+  /* margin-block: 1.2rem; */
 }
 
 wc-floating-label-input input {
   background-color: white;
+}
+@media only screen and (prefers-color-scheme: dark) {
+  wc-floating-label-input input {
+    background-color: black;
+    outline: 1px solid rgba(255,255,255,.2);
+  }
 }
 
 /* has input with content */
@@ -24,6 +36,7 @@ wc-floating-label-input:has(input:not(:placeholder-shown)) .clear,
 wc-floating-label-input:has(textarea:not(:placeholder-shown)) .clear {
   display: block;
 }
+
 
 wc-floating-label-input .clear {
   display: none;
@@ -36,6 +49,11 @@ wc-floating-label-input .clear {
   transition: color 0.1s;
   font-size: 1rem;
   line-height: 1.5rem;
+}
+
+wc-floating-label-input:has(datalist) .clear {
+  top:.1rem;
+  right:.1rem;
 }
 
 wc-floating-label-input textarea::placeholder,
@@ -96,6 +114,15 @@ wc-floating-label-input:has(input[type='text']) label {
   user-select: none;
 }
 
+@media only screen and (prefers-color-scheme: dark) {
+  wc-floating-label-input:has(select) label,
+  wc-floating-label-input:has(textarea) label,
+  wc-floating-label-input:has(input[type='email']) label,
+  wc-floating-label-input:has(input[type='text']) label {
+    background-color: black;
+  }
+}
+
 wc-floating-label-input:has(select) label {
   top: -0.7rem;
 }
@@ -113,7 +140,7 @@ wc-floating-label-input:has(input[type='text']:focus) label {
 /* These groupings can expand as we go */
 wc-floating-label-input .error {
   display: none;
-  color: var(--chakra-colors-red-500);
+  color: var(--chakra-colors-red-500, red);
   font-weight: bold;
 }
 

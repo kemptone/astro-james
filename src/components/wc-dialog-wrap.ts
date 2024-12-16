@@ -71,5 +71,13 @@ if (typeof window != 'undefined')
         })
 
       }
+
+      connectedCallback() {
+        const e_dialog = this.querySelector('dialog')
+        this.querySelector('.close-dialog')?.addEventListener('click', () => {
+          e_dialog?.close?.()
+        })
+      }
+
     }
   )

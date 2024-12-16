@@ -1,6 +1,6 @@
 const XAI_API_KEY = import.meta.env.XAI_API_KEY // 'grok key';
 
-const bad_stuff = [
+export const bad_stuff = [
   'passing notes in class',
   'lighting a girls hair on fire',
   'disrupting the school play',

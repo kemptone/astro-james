@@ -1,5 +1,5 @@
 dialog.wc-dialog {
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   margin: auto;
@@ -17,17 +17,24 @@ dialog.wc-dialog {
   height: -webkit-fit-content;
   height: fit-content;
 }
+@media only screen and (prefers-color-scheme: dark) {
+  dialog.wc-dialog {
+    background: black;
+    color: white;
+  }
+}
 
 
 dialog.wc-dialog,
 dialog.wc-dialog[open]::backdrop {
   visibility: hidden;
   opacity: 0;
-  transition: visibility 0s linear 0.3s, opacity 0.3s linear;
+  transition: all 0s linear 0.3s, opacity 0.3s linear;
 }
 
 dialog.wc-dialog::backdrop {
   background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(13px);
 }
 
 dialog.wc-dialog[open].in,
