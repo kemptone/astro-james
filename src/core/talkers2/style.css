@@ -153,22 +153,22 @@
 .talker .face {
 }
 .talker .face img {
-  width: 70px;
-  height: 70px;
+  width: calc(300px * .5);
+  height: calc(200px * .5);
   /* mix-blend-mode: multiply; */
 }
 
 @media only screen and (prefers-color-scheme: dark) {
   .talker .face img {
     background-color: white;
-    filter: invert(1);
+    /* filter: invert(1); */
     mix-blend-mode: lighten;
   }
 }
 
 .talker.preview .face img {
-  width: 50px;
-  height: 50px;
+  width: calc(300px * .3);
+  height: calc(200px * .3);
   /* filter: grayscale(0.6) opacity(0.4); */
 }
 .talker .sample {

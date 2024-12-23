@@ -3,9 +3,23 @@ import './wc-floating-label.css'
 class WCFloatingLabel extends HTMLElement {
   connectedCallback() {
     const {addclear, label, adderror} = this.dataset
-    const e_input = this.querySelector('input, select, textarea') as HTMLInputElement | null
+    const e_input = this.querySelector(
+      'input, select, textarea'
+    ) as HTMLInputElement | null
 
     if (!e_input) return
+
+    e_input.addEventListener('input', e => {
+      if (e?.currentTarget?.value?.length) {
+        e_input.classList.add('has-value')
+      } else {
+        e_input.classList.remove('has-value')
+      }
+    })
+
+    if (e_input?.value?.length) {
+      e_input.classList.add('has-value')
+    }
 
     if (addclear) {
       const e_clear = document.createElement('span')
@@ -16,6 +30,7 @@ class WCFloatingLabel extends HTMLElement {
         e_input.focus()
         e_input.blur()
         e_input.focus()
+        e_input.classList.remove('has-value')
       })
       this.appendChild(e_clear)
     }

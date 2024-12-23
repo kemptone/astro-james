@@ -26,7 +26,7 @@ if (typeof window != 'undefined')
         }" />
         <input type="hidden" name="Name" value="${info.Name}" />
         <div class="face">
-            <img src="${info.Face}">
+            <img src="/talkers2_faces/${info.DisplayName}.webp">
         </div>
         <div class="group">
         ${

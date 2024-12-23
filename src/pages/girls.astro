@@ -6,7 +6,13 @@ import '../../pico.css'
 import WCFloatingLabel from '../components/WCFloatingLabel.astro'
 import WCFieldsetInputs from '../components/WCFieldsetInputs.astro'
 import {girls_names} from '@data/girls_names'
-import {bad_stuff, ways_to_get_caught, behavior_cards, behavior_score, randomFromArray} from '@data/bad_stuff'
+import {
+  bad_stuff,
+  ways_to_get_caught,
+  behavior_cards,
+  behavior_score,
+  randomFromArray,
+} from '@data/bad_stuff'
 import '../components/wc-texarea-sizer'
 ---
 
@@ -30,44 +36,53 @@ import '../components/wc-texarea-sizer'
         <div class="grid">
           <WCFloatingLabel addclear="1">
             <label>girls name</label>
-            <input list="girls_list" name="girl" value={randomFromArray(girls_names)} />
+            <input
+              list="girls_list"
+              name="girl"
+              value={randomFromArray(girls_names)}
+            />
             <datalist id="girls_list">
               {girls_names.map(name => <option value={name} />)}
             </datalist>
           </WCFloatingLabel>
 
+
+          <WCFloatingLabel addclear="1">
+            <label>behavior</label>
+            <input
+              list="bad_things"
+              name="bad_thing"
+              value={randomFromArray(bad_stuff)}
+              placeholder="What did she do?"
+            />
+            <datalist id="bad_things">
+              {bad_stuff.map(name => <option value={name} />)}
+            </datalist>
+          </WCFloatingLabel>
+
+        </div>
+
+        <div class="grid">
+
           <WCFloatingLabel addclear="1">
             <label>behavior score</label>
-            <input list="behavior_scores" name="behavior_score" value={randomFromArray(behavior_score)} />
+            <input
+              list="behavior_scores"
+              name="behavior_score"
+              placeholder="pick a score of behavior"
+              value={randomFromArray(behavior_score)}
+            />
             <datalist id="behavior_scores">
               {behavior_score.map(v => <option value={v} />)}
             </datalist>
           </WCFloatingLabel>
 
           <WCFloatingLabel addclear="1">
-            <label>Bad behavior</label>
-            <input list="bad_things" name="bad_thing" value={randomFromArray(bad_stuff)} />
-            <datalist id="bad_things">
-              {bad_stuff.map(name => <option value={name} />)}
-            </datalist>
-          </WCFloatingLabel>
-        </div>
-
-        <div class="grid">
-          <WCFloatingLabel addclear="1">
-            <label>behavior</label>
-            <input list="bad_things" name="bad_thing" value={randomFromArray(bad_stuff)} />
-            <datalist id="bad_things">
-              {bad_stuff.map(name => <option value={name} />)}
-            </datalist>
-          </WCFloatingLabel>
-
-
-          <WCFloatingLabel addclear="1">
-            <label>got caught</label>
+            <label>how she got caught</label>
             <input
               list="got_caught"
               name="got_caught"
+              placeholder="How did she get caught?"
               value={randomFromArray(ways_to_get_caught)}
             />
             <datalist id="got_caught">
@@ -75,7 +90,7 @@ import '../components/wc-texarea-sizer'
             </datalist>
           </WCFloatingLabel>
 
-          <WCFloatingLabel addclear='1'>
+          <WCFloatingLabel addclear="1">
             <label for="punishment_card">behavior card</label>
             <input
               name="punishment_card"
@@ -94,7 +109,9 @@ import '../components/wc-texarea-sizer'
         </wc-textarea-sizer>
         <footer>
           <button type="reset" class="outline close-dialog">close</button>
-          <button type="button" id="speak_selection" class="outline secondary">Speak</button>
+          <button type="button" id="speak_selection" class="outline secondary"
+            >Speak</button
+          >
           <button type="submit">Generate main story</button>
         </footer>
       </form>

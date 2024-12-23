@@ -32,8 +32,11 @@ wc-floating-label-input input {
 }
 
 /* has input with content */
-wc-floating-label-input:has(input:not(:placeholder-shown)) .clear,
+/* wc-floating-label-input:has(input:not(:placeholder-shown)) .clear,
 wc-floating-label-input:has(textarea:not(:placeholder-shown)) .clear {
+  display: block;
+} */
+wc-floating-label-input:has(.has-value) .clear {
   display: block;
 }
 

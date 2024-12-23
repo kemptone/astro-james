@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro'
+const arr = new Array(309).fill(true)
+---
+
+<main>
+  {arr.map((item, index) => <div>{index + 1}</div>)}
+</main>
+<style>
+  html,
+  body {
+    background-color: white;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+  }
+  main {
+    max-width: 650px;
+    margin: 0 auto;
+  }
+  main > div {
+    margin: .5rem;
+    padding: 0.3rem 1rem 0.7rem;
+    border-bottom: 1px dotted black;
+  }
+</style>
