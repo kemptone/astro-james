@@ -260,6 +260,23 @@ wc-meme-item div {
   gap: .4rem;
 }
 
+dialog wc-meme-board {
+  display: flex;
+  flex-direction: column;
+  height: 100vh !important;
+}
+
+dialog wc-meme-board > fieldset {
+  flex: 0 0 auto !important;
+  padding: 1rem;
+  box-shadow: none !important;
+}
+
+dialog wc-meme-board > .list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
 dialog wc-meme-board wc-meme-item {
   width: 20%;
   min-width: 180px;
@@ -268,7 +285,8 @@ dialog wc-meme-board wc-meme-item h5 {
   font-size: 16px;
 }
 dialog wc-meme-board wc-meme-item button {
-  font-size: 18px;
+  font-size: 16px !important;
+  padding: 0.6rem !important;
 }
 
 @media (max-width: 500px) {
