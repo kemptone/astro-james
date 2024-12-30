@@ -1,5 +1,4 @@
 ---
-import Layout from '../layouts/Layout.astro'
 import Empty from '../layouts/Empty.astro'
 import WCDialogWrap from '../components/WCDialogWrap.astro'
 import '../../pico.css'
@@ -23,7 +22,12 @@ import '../core/talkers2/style.css'
     <aside class="leftColumn" id="list">
       <WCDialogWrap id="sounds">
         <div>
-          <wc-meme-board></wc-meme-board>
+          <wc-meme-board>
+            <fieldset role="group">
+              <input type="search" placeholder="filter" name="filter" />
+            </fieldset>
+            <div class="list"></div>
+          </wc-meme-board>
         </div>
       </WCDialogWrap>
     </aside>

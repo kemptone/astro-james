@@ -233,12 +233,12 @@ dialog#sounds {
   max-height: 900px;
 }
 
-dialog#sounds wc-meme-board {
+/* dialog#sounds wc-meme-board {
   display: none;
 }
 dialog#sounds[open] wc-meme-board {
   display: flex;
-}
+} */
 
 .right-column wc-meme-item {
   display: flex;
@@ -248,7 +248,7 @@ dialog#sounds[open] wc-meme-board {
   gap: 1rem;
 }
 
-dialog wc-meme-board {
+dialog wc-meme-board .list {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;

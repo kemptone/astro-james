@@ -34,6 +34,19 @@ export async function GET() {
   //   audio: 'https://www.myinstants.com' + clean(item.audio),
   // }))
 
+
+  /* This is is what I used to scrape it, using a browser
+
+  const data = []
+  document.querySelectorAll('.instants .instant').forEach( item => {
+    const name = item.querySelector("a").innerText
+    const audio = item.querySelector("button").getAttribute("onClick").replace("play(", "").replace(")", "").replaceAll("'", "").split(", ")[0]
+    data.push({ name, audio })
+  })
+  console.log(data)
+
+  */
+
   return new Response(JSON.stringify(ret), {
     headers: {
       'Content-Type': 'application/json',

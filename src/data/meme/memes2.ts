@@ -4028,10 +4028,6 @@ export const memes2 = [
         "audio": "/media/sounds/pew-pew-vo-tay.mp3"
     },
     {
-        "name": "very sus",
-        "audio": "/media/sounds/very-sus.mp3"
-    },
-    {
         "name": "Belgen zijn geen ras",
         "audio": "/media/sounds/belgen-zijn-geen-ras.mp3"
     },
