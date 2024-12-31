@@ -1,4 +1,5 @@
 import './wc-audio'
+import './wc-meme-image'
 
 export type MemeType = {
   name: string
@@ -14,23 +15,31 @@ if (typeof window != 'undefined')
         if (!_item) return
 
         const item = (JSON.parse(_item || '{}') as MemeType) || {}
-        let html = ''
-        html += `<h5>${item.name}</h5>`
 
-        html += '<div>'
-        html += `<button type="button" class="play">Play</button>`
-        html += `<button type="button" class="add">${
-          is_display ? 'remove' : 'add'
-        }</button>`
-        html += '</div>'
+        let html = `
+  <h5>${item.name}</h5>
+  <wc-meme-image data-name="${item.name}"></wc-meme-image>
+  <div>
+    <button type="button" class="play">Play</button>
+    <button type="button" class="add">${is_display ? 'remove' : 'add'}</button>
+  </div>
+`
+
+        // let html = ''
+        // html += `<h5>${item.name}</h5>`
+        // html += '<div>'
+        // html += `<button type="button" class="play">Play</button>`
+        // html += `<button type="button" class="add">${
+        //   is_display ? 'remove' : 'add'
+        // }</button>`
+        // html += '</div>'
 
         this.innerHTML += html
 
         let response: Response | undefined
         let audio: HTMLAudioElement | undefined
 
-        async function loadAudioCached(e : Event) {
-
+        async function loadAudioCached(e: Event) {
           const target = e.target as HTMLButtonElement
 
           if (audio) return audio
@@ -58,7 +67,7 @@ if (typeof window != 'undefined')
           return audio
         }
 
-        function onPlayResume (e : Event) {
+        function onPlayResume(e: Event) {
           const target = e.target as HTMLButtonElement
           audio?.play?.()
           target.innerText = 'Playing'
@@ -66,7 +75,7 @@ if (typeof window != 'undefined')
           target.addEventListener('click', onPlayPause)
         }
 
-        function onPlayPause (e : Event) {
+        function onPlayPause(e: Event) {
           const target = e.target as HTMLButtonElement
           audio?.pause?.()
           target.innerText = 'paused'

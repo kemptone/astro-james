@@ -3962,10 +3962,6 @@ export const pranks = [
     audio: '/media/sounds/game-boy-freakout.mp3',
   },
   {
-    name: 'i_like_to_suck_cocks',
-    audio: '/media/sounds/i-like-to-suck-cocks.mp3',
-  },
-  {
     name: 'Dr Evil Laugh',
     audio: '/media/sounds/evil-laugh_P09y72y.mp3',
   },

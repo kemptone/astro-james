@@ -944,10 +944,6 @@ export const memes2 = [
         "audio": "/media/sounds/clown-horn-sound-effect_1.mp3"
     },
     {
-        "name": "BIG D RANDY",
-        "audio": "/media/sounds/big-d-randy_VnopRXZ.mp3"
-    },
-    {
         "name": "Что? Почему я чë рный?!!!!",
         "audio": "/media/sounds/chto-pochemu-ia-che-rnyi.mp3"
     },
@@ -1070,10 +1066,6 @@ export const memes2 = [
     {
         "name": "УХ ТЫ БЛЯ°•°",
         "audio": "/media/sounds/ukh-ty-bliadeg-deg.mp3"
-    },
-    {
-        "name": "BIG D RANDY",
-        "audio": "/media/sounds/big-d-randy_VnopRXZ.mp3"
     },
     {
         "name": "Olha a mensagem !b",
@@ -2136,10 +2128,6 @@ export const memes2 = [
         "audio": "/media/sounds/para-tira.mp3"
     },
     {
-        "name": "im a lion pizza chicken",
-        "audio": "/media/sounds/im-a-lion-pizza-chicken.mp3"
-    },
-    {
         "name": "Astaghfirullah kamu ini berdosa banget",
         "audio": "/media/sounds/astaghfirullah-kamu-ini-berdosa-banget.mp3"
     },
@@ -2202,10 +2190,6 @@ export const memes2 = [
     {
         "name": "Steh jetzt auf",
         "audio": "/media/sounds/steh-jetzt-auf.mp3"
-    },
-    {
-        "name": "im a lion pizza chicken",
-        "audio": "/media/sounds/im-a-lion-pizza-chicken.mp3"
     },
     {
         "name": "ALLUHAKBAAAR THIJMEN",
