@@ -100,10 +100,6 @@ export const memes2 = [
         "audio": "/media/sounds/snore-mimimimimimi.mp3"
     },
     {
-        "name": "English or Spanish Song",
-        "audio": "/media/sounds/english-or-spanish-song.mp3"
-    },
-    {
         "name": "Wow Anime meme",
         "audio": "/media/sounds/anime-wow-sound-effect-mp3cut.mp3"
     },
@@ -1006,10 +1002,6 @@ export const memes2 = [
     {
         "name": "enderpel",
         "audio": "/media/sounds/enderpel.mp3"
-    },
-    {
-        "name": "English or spanish ?",
-        "audio": "/media/sounds/english-or-spanish_YRFEwaM.mp3"
     },
     {
         "name": "bomboclat",
@@ -3174,10 +3166,6 @@ export const memes2 = [
     {
         "name": "AA AAA AAAA",
         "audio": "/media/sounds/aa-aaa-aaaa.mp3"
-    },
-    {
-        "name": "why you bully me",
-        "audio": "/media/sounds/why-you-bully-me-every-line.mp3"
     },
     {
         "name": "тап тап тап по хомяку",

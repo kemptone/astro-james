@@ -4608,10 +4608,6 @@ export const pranks = [
     audio: '/media/sounds/dfbdf_xKGIb5C.mp3',
   },
   {
-    name: 'tense your mother is call you',
-    audio: '/media/sounds/1583442859779.mp3',
-  },
-  {
     name: 'Caillou Tiles YouTube Poop Record',
     audio: '/media/sounds/caillou-tiles-youtube-poop-record.mp3',
   },
@@ -5053,10 +5049,6 @@ export const pranks = [
     audio: '/media/sounds/vincent-er-feit.mp3',
   },
   {
-    name: 'tense your mother is call you',
-    audio: '/media/sounds/1583442859779.mp3',
-  },
-  {
     name: 'Dania',
     audio: '/media/sounds/dania_Gu4wdE5.mp3',
   },
@@ -5133,10 +5125,6 @@ export const pranks = [
     audio: '/media/sounds/daisy-bell-for-gtag.mp3',
   },
   {
-    name: 'tense your mother is call you',
-    audio: '/media/sounds/1583442859779.mp3',
-  },
-  {
     name: 'Fittå di e liiten',
     audio: '/media/sounds/fitta-di-e-liiten.mp3',
   },
@@ -5172,10 +5160,6 @@ export const pranks = [
   {
     name: 'mimimimi snakes',
     audio: '/media/sounds/mimimimi-snakes.mp3',
-  },
-  {
-    name: 'Gift your mother number',
-    audio: '/media/sounds/gift-your-mother-number.mp3',
   },
   {
     name: 'бум метрополітену робить його бумом',
@@ -5262,10 +5246,6 @@ export const pranks = [
   {
     name: 'merguez',
     audio: '/media/sounds/merguez.mp3',
-  },
-  {
-    name: 'tense your mother is call you',
-    audio: '/media/sounds/1583442859779.mp3',
   },
   {
     name: 'Pbbv og audio',
@@ -5892,10 +5872,6 @@ export const pranks = [
   {
     name: 'Get yo black ass in the line',
     audio: '/media/sounds/video0_Knn06Ay.mp3',
-  },
-  {
-    name: 'Gift your mother number',
-    audio: '/media/sounds/gift-your-mother-number.mp3',
   },
   {
     name: 'Kolnese',

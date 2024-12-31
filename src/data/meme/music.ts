@@ -77,10 +77,6 @@ export const music = [
     audio: '/media/sounds/calma-calabreso.mp3',
   },
   {
-    name: 'Merry Christmas MotherF´s',
-    audio: '/media/sounds/record-27-11-2018_16-41-34.mp3',
-  },
-  {
     name: 'Fein x nokia',
     audio: '/media/sounds/fein-x-nokia.mp3',
   },
