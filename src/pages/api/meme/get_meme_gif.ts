@@ -14,7 +14,6 @@ export async function POST({request}: {request: Request}) {
   }
   const { name } = requestBody
   const url = `https://tenor.googleapis.com/v2/search?q=${name}&key=${apiKey}&client_key=${clientKey}&limit=${limit}&contentfilter=medium`
-  // const body = await getMemeGif(name)
   const response = await fetch(url)
   const json = await response.text()
   return new Response(json, { status : 200})
