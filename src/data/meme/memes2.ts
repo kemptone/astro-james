@@ -4039,10 +4039,10 @@ export const memes2 = [
         "name": "Cartoon bonk",
         "audio": "/media/sounds/cartoon-bonk.mp3"
     },
-    {
-        "name": "loud shitpost fart",
-        "audio": "/media/sounds/loud-shitpost-fart.mp3"
-    },
+    // {
+    //     "name": "loud shitpost fart",
+    //     "audio": "/media/sounds/loud-shitpost-fart.mp3"
+    // },
     {
         "name": "Angry Birds Bass Boosted",
         "audio": "/media/sounds/angry-birds-theme-song-audiotrimmer-1.mp3"

@@ -421,10 +421,10 @@ export const music = [
     name: 'Drachenlord Sirene',
     audio: '/media/sounds/drachenlord-sirene.mp3',
   },
-  {
-    name: 'Ah Shit, Here We Go Again.',
-    audio: '/media/sounds/gta-san-andreas-ah-shit-here-we-go-again_PHjnAqj.mp3',
-  },
+  // {
+  //   name: 'Ah Shit, Here We Go Again.',
+  //   audio: '/media/sounds/gta-san-andreas-ah-shit-here-we-go-again_PHjnAqj.mp3',
+  // },
   {
     name: 'I love you, i love you',
     audio: '/media/sounds/i-love-you_1.mp3',
@@ -521,10 +521,10 @@ export const music = [
     name: 'Real punch',
     audio: '/media/sounds/punch-notification_sound-493565.mp3',
   },
-  {
-    name: "Oh shit, I'm sorry",
-    audio: '/media/sounds/oh-shit-im-sorry_0001.mp3',
-  },
+  // {
+  //   name: "Oh shit, I'm sorry",
+  //   audio: '/media/sounds/oh-shit-im-sorry_0001.mp3',
+  // },
   {
     name: 'Dun dun duuun',
     audio: '/media/sounds/dun_dun_dun.mp3',

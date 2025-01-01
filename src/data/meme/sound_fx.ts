@@ -207,10 +207,10 @@ export const sound_effects = [
         "name": "YouTube UWUUUUU",
         "audio": "/media/sounds/youtube-uwuuuuu.mp3"
     },
-    {
-        "name": "oh shit not good",
-        "audio": "/media/sounds/wcgertcz074.mp3"
-    },
+    // {
+    //     "name": "oh shit not good",
+    //     "audio": "/media/sounds/wcgertcz074.mp3"
+    // },
     {
         "name": "the rock sound effect",
         "audio": "/media/sounds/the-rock-sound-effect.mp3"
@@ -2523,10 +2523,10 @@ export const sound_effects = [
         "name": "Japanese EAS alarm",
         "audio": "/media/sounds/japanese-eas-alarm.mp3"
     },
-    {
-        "name": "No.1 bullshit guy",
-        "audio": "/media/sounds/no-1-bullshit-guy.mp3"
-    },
+    // {
+    //     "name": "No.1 bullshit guy",
+    //     "audio": "/media/sounds/no-1-bullshit-guy.mp3"
+    // },
     {
         "name": "vineboom (long)",
         "audio": "/media/sounds/vineboom-long.mp3"

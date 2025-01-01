@@ -579,10 +579,10 @@ export const pranks = [
     name: "enjoy mario's agony",
     audio: '/media/sounds/tmpcoj3v_01_0TBRB2b.mp3',
   },
-  {
-    name: 'OOOh shit a rat',
-    audio: '/media/sounds/a-rat.mp3',
-  },
+  // {
+  //   name: 'OOOh shit a rat',
+  //   audio: '/media/sounds/a-rat.mp3',
+  // },
   {
     name: 'Chicken',
     audio: '/media/sounds/chicken_1.mp3',
@@ -610,10 +610,6 @@ export const pranks = [
   {
     name: 'Wer wird Millionär - Showstart',
     audio: '/media/sounds/wer-wird-millionar-soundtracks-soundstart.mp3',
-  },
-  {
-    name: 'OOOh shit a rat',
-    audio: '/media/sounds/a-rat.mp3',
   },
   {
     name: 'New Follower - @Aymplify',
@@ -716,10 +712,10 @@ export const pranks = [
     name: 'soco',
     audio: '/media/sounds/efeito-de-socos.mp3',
   },
-  {
-    name: "I Don't Give A Shit | Gilbert Gottfried",
-    audio: '/media/sounds/penguingilbertgottfriedbuttonsound.mp3',
-  },
+  // {
+  //   name: "I Don't Give A Shit | Gilbert Gottfried",
+  //   audio: '/media/sounds/penguingilbertgottfriedbuttonsound.mp3',
+  // },
   {
     name: 'FNaF BooP',
     audio: '/media/sounds/partyfavorraspypart_ac01_3_5HTQ8CW.mp3',
@@ -5464,10 +5460,10 @@ export const pranks = [
     name: 'Jumpscare SFX (music and vocal)',
     audio: '/media/sounds/jumpscare-sfx-music-and-vocal.mp3',
   },
-  {
-    name: 'Baldi Shits Himself',
-    audio: '/media/sounds/baldi-shits-himself.mp3',
-  },
+  // {
+  //   name: 'Baldi Shits Himself',
+  //   audio: '/media/sounds/baldi-shits-himself.mp3',
+  // },
   {
     name: 'Bomb Defused CT Wins',
     audio:
