@@ -4222,18 +4222,18 @@ export const pranks = [
     name: 'Да толстая',
     audio: '/media/sounds/da-tolstaia.mp3',
   },
-  {
-    name: 'run for cover you dirty slut',
-    audio: '/media/sounds/run-for-cover-you-dirty-slut.mp3',
-  },
+  // {
+  //   name: 'run for cover you dirty slut',
+  //   audio: '/media/sounds/run-for-cover-you-dirty-slut.mp3',
+  // },
   {
     name: 'Vixennn',
     audio: '/media/sounds/vixennn.mp3',
   },
-  {
-    name: 'Metal as Fuck, Apparently',
-    audio: '/media/sounds/metal-as-fuck-apparently.mp3',
-  },
+  // {
+  //   name: 'Metal as Fuck, Apparently',
+  //   audio: '/media/sounds/metal-as-fuck-apparently.mp3',
+  // },
   {
     name: 'alphavictor',
     audio: '/media/sounds/tomou_RMsWkod.mp3',

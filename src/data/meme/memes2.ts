@@ -2287,10 +2287,10 @@ export const memes2 = [
         "name": "moai",
         "audio": "/media/sounds/moai.mp3"
     },
-    {
-        "name": "Käften sluta babbla",
-        "audio": "/media/sounds/kek_3.mp3"
-    },
+    // {
+    //     "name": "Käften sluta babbla",
+    //     "audio": "/media/sounds/kek_3.mp3"
+    // },
     {
         "name": "FNAF 4 Jumpscare",
         "audio": "/media/sounds/jumpscare-sound-fnaf-4.mp3"

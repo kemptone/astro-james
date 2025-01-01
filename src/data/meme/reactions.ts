@@ -499,10 +499,10 @@ export const reactions = [
         "name": "DIRIRI",
         "audio": "/media/sounds/diriri.mp3"
     },
-    {
-        "name": "Okay Jaja Igennem en fkn stair",
-        "audio": "/media/sounds/okay-jaja-igennem-en-fkn-stair.mp3"
-    },
+    // {
+    //     "name": "Okay Jaja Igennem en fkn stair",
+    //     "audio": "/media/sounds/okay-jaja-igennem-en-fkn-stair.mp3"
+    // },
     {
         "name": "pam pam pammm",
         "audio": "/media/sounds/pam-pam-pammm.mp3"

@@ -2026,10 +2026,10 @@ export const music = [
     name: 'Bakit Papa',
     audio: '/media/sounds/bakit-papa.mp3',
   },
-  {
-    name: 'Puss-chant',
-    audio: '/media/sounds/puss-chant.mp3',
-  },
+  // {
+  //   name: 'Puss-chant',
+  //   audio: '/media/sounds/puss-chant.mp3',
+  // },
   {
     name: 'Подлая музыка',
     audio: '/media/sounds/podlaia-muzyka.mp3',
