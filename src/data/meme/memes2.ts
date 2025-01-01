@@ -2503,10 +2503,10 @@ export const memes2 = [
         "name": "Juego",
         "audio": "/media/sounds/juego-audiotrimmer.mp3"
     },
-    {
-        "name": "Yes yes no no",
-        "audio": "/media/sounds/ksi-yes-yes-yes-yes-no-no-no-no.mp3"
-    },
+    // {
+    //     "name": "Yes yes no no",
+    //     "audio": "/media/sounds/ksi-yes-yes-yes-yes-no-no-no-no.mp3"
+    // },
     {
         "name": "Among us imposter",
         "audio": "/media/sounds/you-are-impostor-sound.mp3"
@@ -2663,10 +2663,10 @@ export const memes2 = [
         "name": "screaming emoji meme",
         "audio": "/media/sounds/screaming-emoji-meme.mp3"
     },
-    {
-        "name": "Who invited this kid?",
-        "audio": "/media/sounds/video0-1-online-audio-converter_2i1mcmV.mp3"
-    },
+    // {
+    //     "name": "Who invited this kid?",
+    //     "audio": "/media/sounds/video0-1-online-audio-converter_2i1mcmV.mp3"
+    // },
     {
         "name": "Cave Ambience 2",
         "audio": "/media/sounds/cave21.mp3"
@@ -2959,10 +2959,10 @@ export const memes2 = [
         "name": "จ๊ะเอ๋ตัวเอง",
         "audio": "/media/sounds/m_fixed_bBp6dW2.mp3"
     },
-    {
-        "name": "Who invited this kid?",
-        "audio": "/media/sounds/video0-1-online-audio-converter_2i1mcmV.mp3"
-    },
+    // {
+    //     "name": "Who invited this kid?",
+    //     "audio": "/media/sounds/video0-1-online-audio-converter_2i1mcmV.mp3"
+    // },
     {
         "name": "лягушка",
         "audio": "/media/sounds/m_fixed_V6KM8Vr.mp3"

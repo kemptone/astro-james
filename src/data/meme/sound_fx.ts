@@ -1703,10 +1703,10 @@ export const sound_effects = [
         "name": "Siren Head Sound",
         "audio": "/media/sounds/siren-head-sound.mp3"
     },
-    {
-        "name": "who invited this kid",
-        "audio": "/media/sounds/9convert_JMEQrwL.mp3"
-    },
+    // {
+    //     "name": "who invited this kid",
+    //     "audio": "/media/sounds/9convert_JMEQrwL.mp3"
+    // },
     {
         "name": "MMM (Rap)",
         "audio": "/media/sounds/mmm-6.mp3"
@@ -2031,10 +2031,10 @@ export const sound_effects = [
         "name": "sinterklaasjournaal earrape",
         "audio": "/media/sounds/sinterklaasjournaal-earrape.mp3"
     },
-    {
-        "name": "KSI-YES YES YES NO NO NO FULL",
-        "audio": "/media/sounds/ksi-yes-yes-yes-no-no-no-full.mp3"
-    },
+    // {
+    //     "name": "KSI-YES YES YES NO NO NO FULL",
+    //     "audio": "/media/sounds/ksi-yes-yes-yes-no-no-no-full.mp3"
+    // },
     {
         "name": "Cano de metal caindo",
         "audio": "/media/sounds/cano-de-metal-caindo.mp3"
