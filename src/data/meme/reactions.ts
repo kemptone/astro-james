@@ -1191,10 +1191,10 @@ export const reactions = [
         "name": "Correct bell",
         "audio": "/media/sounds/correct.swf.mp3"
     },
-    {
-        "name": "hell nahhhh",
-        "audio": "/media/sounds/hell-nahhhh.mp3"
-    },
+    // {
+    //     "name": "hell nahhhh",
+    //     "audio": "/media/sounds/hell-nahhhh.mp3"
+    // },
     {
         "name": "crowd cheer",
         "audio": "/media/sounds/crowd-cheer.mp3"
@@ -1367,10 +1367,10 @@ export const reactions = [
         "name": "Magic-coins",
         "audio": "/media/sounds/magic-coins.mp3"
     },
-    {
-        "name": "hell nahhhh",
-        "audio": "/media/sounds/hell-nahhhh.mp3"
-    },
+    // {
+    //     "name": "hell nahhhh",
+    //     "audio": "/media/sounds/hell-nahhhh.mp3"
+    // },
     {
         "name": "CSGO  INHUMAN REACTIONS",
         "audio": "/media/sounds/inhuman-reactions_1.mp3"

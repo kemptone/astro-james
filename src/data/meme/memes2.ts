@@ -1611,10 +1611,10 @@ export const memes2 = [
         "name": "MIAUUUUUUUU",
         "audio": "/media/sounds/miauuuuuuuu.mp3"
     },
-    {
-        "name": "AW HELL NAH MAN",
-        "audio": "/media/sounds/aw-hell-nah-man.mp3"
-    },
+    // {
+    //     "name": "AW HELL NAH MAN",
+    //     "audio": "/media/sounds/aw-hell-nah-man.mp3"
+    // },
     {
         "name": "Baba Booey",
         "audio": "/media/sounds/bababooey-sound-effect.mp3"
