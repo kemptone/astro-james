@@ -1448,10 +1448,10 @@ export const pranks = [
     name: 'Oh Yesss~',
     audio: '/media/sounds/mettaton_oh_yes_1.mp3',
   },
-  {
-    name: 'Scammer wtf are you doing joker',
-    audio: '/media/sounds/scammer-wtf-are-you-doing-joker.mp3',
-  },
+  // {
+  //   name: 'Scammer wtf are you doing joker',
+  //   audio: '/media/sounds/scammer-wtf-are-you-doing-joker.mp3',
+  // },
   {
     name: 'KNOCKOUT!',
     audio:

@@ -1027,10 +1027,10 @@ export const memes2 = [
         "name": "El Primo Sound Effect",
         "audio": "/media/sounds/elprimosoundeffectmp3.mp3"
     },
-    {
-        "name": "JonTron - What? WTF",
-        "audio": "/media/sounds/jontron-what_K9mOgXd.mp3"
-    },
+    // {
+    //     "name": "JonTron - What? WTF",
+    //     "audio": "/media/sounds/jontron-what_K9mOgXd.mp3"
+    // },
     {
         "name": "My Name Is Jeff",
         "audio": "/media/sounds/ringtone_20.mp3"
