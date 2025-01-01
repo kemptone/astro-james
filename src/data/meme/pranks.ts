@@ -6381,10 +6381,10 @@ export const pranks = [
     name: 'Yayayden2',
     audio: '/media/sounds/yayayden2.mp3',
   },
-  {
-    name: 'This mf cheating',
-    audio: '/media/sounds/this-mf-cheating.mp3',
-  },
+  // {
+  //   name: 'This mf cheating',
+  //   audio: '/media/sounds/this-mf-cheating.mp3',
+  // },
   {
     name: 'Neveeva',
     audio: '/media/sounds/neveeva.mp3',

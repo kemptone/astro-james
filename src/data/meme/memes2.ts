@@ -2719,10 +2719,10 @@ export const memes2 = [
         "name": "welll well well well",
         "audio": "/media/sounds/welll-well-well-well.mp3"
     },
-    {
-        "name": "KNOCK KNOCK MF ITS UNITED STATES OF AMERICA",
-        "audio": "/media/sounds/knock-knock-mf-its-united-states-of-america.mp3"
-    },
+    // {
+    //     "name": "KNOCK KNOCK MF ITS UNITED STATES OF AMERICA",
+    //     "audio": "/media/sounds/knock-knock-mf-its-united-states-of-america.mp3"
+    // },
     {
         "name": "kyu nahi ho rahi padhai",
         "audio": "/media/sounds/kyu-nahi-ho-rahi-padhai.mp3"
