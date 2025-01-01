@@ -3249,10 +3249,10 @@ export const pranks = [
     name: 'LEVÁNTENSE (nuevo)',
     audio: '/media/sounds/levantense-nuevo.mp3',
   },
-  {
-    name: 'Whaaat the Fuuuccckk?',
-    audio: '/media/sounds/dfbdf_xKGIb5C.mp3',
-  },
+  // {
+  //   name: 'Whaaat the Fuuuccckk?',
+  //   audio: '/media/sounds/dfbdf_xKGIb5C.mp3',
+  // },
   {
     name: 'Slammed',
     audio: '/media/sounds/slammed.mp3',
@@ -3424,10 +3424,6 @@ export const pranks = [
   {
     name: 'Moaific',
     audio: '/media/sounds/moaific.mp3',
-  },
-  {
-    name: 'Whaaat the Fuuuccckk?',
-    audio: '/media/sounds/dfbdf_xKGIb5C.mp3',
   },
   {
     name: 'imbouttoblow',
@@ -4223,10 +4219,6 @@ export const pranks = [
     audio: '/media/sounds/scammer-voice-many-customers.mp3',
   },
   {
-    name: 'Whaaat the Fuuuccckk?',
-    audio: '/media/sounds/dfbdf_xKGIb5C.mp3',
-  },
-  {
     name: 'Да толстая',
     audio: '/media/sounds/da-tolstaia.mp3',
   },
@@ -4604,10 +4596,6 @@ export const pranks = [
     audio: '/media/sounds/elderly-miku-fart.mp3',
   },
   {
-    name: 'Whaaat the Fuuuccckk?',
-    audio: '/media/sounds/dfbdf_xKGIb5C.mp3',
-  },
-  {
     name: 'Caillou Tiles YouTube Poop Record',
     audio: '/media/sounds/caillou-tiles-youtube-poop-record.mp3',
   },
@@ -4769,10 +4757,6 @@ export const pranks = [
     audio: '/media/sounds/mr-lobon-2-bathroom.mp3',
   },
   {
-    name: 'Whaaat the Fuuuccckk?',
-    audio: '/media/sounds/dfbdf_xKGIb5C.mp3',
-  },
-  {
     name: 'Taco Tuesday',
     audio: '/media/sounds/taco-tuesday.mp3',
   },
@@ -4887,10 +4871,6 @@ export const pranks = [
     audio: '/media/sounds/plecati-unpic.mp3',
   },
   {
-    name: 'Whaaat the Fuuuccckk?',
-    audio: '/media/sounds/dfbdf_xKGIb5C.mp3',
-  },
-  {
     name: 'EDP4599',
     audio: '/media/sounds/edp4599.mp3',
   },
@@ -4946,10 +4926,6 @@ export const pranks = [
   {
     name: 'Baldi roasts badsum original template',
     audio: '/media/sounds/baldi-roasts-badsum-original-template.mp3',
-  },
-  {
-    name: 'Whaaat the Fuuuccckk?',
-    audio: '/media/sounds/dfbdf_xKGIb5C.mp3',
   },
   {
     name: 'EPIC FACE JUMPSCARE',
