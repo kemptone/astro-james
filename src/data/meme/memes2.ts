@@ -2827,10 +2827,10 @@ export const memes2 = [
         "name": "Double chunk chocolate cookie",
         "audio": "/media/sounds/double-chunk-chocolate-cookie.mp3"
     },
-    {
-        "name": "Gotcha Bit** by Dave Chapelle",
-        "audio": "/media/sounds/gotcha-bit-by-dave-chapelle.mp3"
-    },
+    // {
+    //     "name": "Gotcha Bit** by Dave Chapelle",
+    //     "audio": "/media/sounds/gotcha-bit-by-dave-chapelle.mp3"
+    // },
     {
         "name": "Пасхалко 1488 джокер",
         "audio": "/media/sounds/paskhalko-1488-dzhoker.mp3"
@@ -3183,10 +3183,10 @@ export const memes2 = [
         "name": "Oh ta grand mere",
         "audio": "/media/sounds/oh-ta-grand-mere.mp3"
     },
-    {
-        "name": "Gotcha Bit** by Dave Chapelle",
-        "audio": "/media/sounds/gotcha-bit-by-dave-chapelle.mp3"
-    },
+    // {
+    //     "name": "Gotcha Bit** by Dave Chapelle",
+    //     "audio": "/media/sounds/gotcha-bit-by-dave-chapelle.mp3"
+    // },
     {
         "name": "Ryan gosling burp",
         "audio": "/media/sounds/ryan-gosling-burp.mp3"
