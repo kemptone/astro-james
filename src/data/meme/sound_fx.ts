@@ -1223,10 +1223,10 @@ export const sound_effects = [
         "name": "Michael jackson WOOOW",
         "audio": "/media/sounds/wow_8.mp3"
     },
-    {
-        "name": "Oh Hell No",
-        "audio": "/media/sounds/ringtone_7.mp3"
-    },
+    // {
+    //     "name": "Oh Hell No",
+    //     "audio": "/media/sounds/ringtone_7.mp3"
+    // },
     {
         "name": "Pharaoh's Curse",
         "audio": "/media/sounds/pharaohs-curse.mp3"

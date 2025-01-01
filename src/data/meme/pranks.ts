@@ -5841,10 +5841,10 @@ export const pranks = [
     name: 'Shut up. (10 yr old girl)',
     audio: '/media/sounds/shut-up-10-yr-old-girl.mp3',
   },
-  {
-    name: 'Get yo black ass in the line',
-    audio: '/media/sounds/video0_Knn06Ay.mp3',
-  },
+  // {
+  //   name: 'Get yo black ass in the line',
+  //   audio: '/media/sounds/video0_Knn06Ay.mp3',
+  // },
   {
     name: 'Kolnese',
     audio: '/media/sounds/kolnese.mp3',

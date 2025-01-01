@@ -1487,10 +1487,10 @@ export const memes2 = [
         "name": "иван курапов пранк",
         "audio": "/media/sounds/ivan-kurapov-prank.mp3"
     },
-    {
-        "name": "Oh Hell No (Vine)",
-        "audio": "/media/sounds/oh-hell-no-sound-effect-free-download.mp3"
-    },
+    // {
+    //     "name": "Oh Hell No (Vine)",
+    //     "audio": "/media/sounds/oh-hell-no-sound-effect-free-download.mp3"
+    // },
     {
         "name": "me chama de lord",
         "audio": "/media/sounds/me-chama-de-lord.mp3"

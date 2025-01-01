@@ -1807,10 +1807,10 @@ export const reactions = [
         "name": "Ai que Deliciaaan (Pablo Vittar)",
         "audio": "/media/sounds/pabllo-vittar-aiin-q-deliciaann-uarroinn-original.mp3"
     },
-    {
-        "name": "YOUR BROKE andrew tate",
-        "audio": "/media/sounds/your-broke-andrew-tate_fQJoCVt.mp3"
-    },
+    // {
+    //     "name": "YOUR BROKE andrew tate",
+    //     "audio": "/media/sounds/your-broke-andrew-tate_fQJoCVt.mp3"
+    // },
     {
         "name": "سافل تبا لك ياصعلوك",
         "audio": "/media/sounds/sfl-tb-lk-ys-lwk.mp3"
