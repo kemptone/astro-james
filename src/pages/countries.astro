@@ -1,0 +1,46 @@
+---
+import Layout from '../layouts/Layout.astro'
+import {DogCountries, CountriesByContinent} from '@data/countries/Countries'
+import '../pico.css'
+---
+
+<Layout title="Calculator">
+  {
+    Object.keys(CountriesByContinent).map((continent, index) => (
+      <article>
+        <h1 data-index={index + 1}>{continent}</h1>
+        <section>
+          {CountriesByContinent[continent].map((country, index) => (
+            <div data-index={index + 1}>{country}</div>
+          ))}
+        </section>
+      </article>
+    ))
+  }
+</Layout>
+
+<style>
+  html,
+  body {
+    background-color: white;
+  }
+
+  article {
+    /* page-break-after: always; */
+    page-break-inside: avoid;
+    box-shadow: none;
+  }
+
+  article section div::before,
+  article h1::before {
+    content: attr(data-index);
+    display: inline-block;
+    padding-right: 1rem;
+    font-size: 80%;
+    opacity: 0.6;
+  }
+
+  article section {
+    column-count: 2;
+  }
+</style>

@@ -1,5 +1,6 @@
 ---
 const routes = `
+countries.astro
 decibel.astro     music2.astro      talkers.astro
 ampm.astro        dictionary.astro  nightnight.astro  
 heatergame.astro  tide.astro
@@ -9,13 +10,14 @@ brownthing.astro  timer4.astro talk.astro
 calculator.astro  lasko.astro       speedup.astro     voicemaker.astro
 characters.astro  learncode.astro   spin.astro        wordsearch.astro
 colorfinder.astro live.astro        spinners.astro talkers2.astro grok.astro girls.astro
-colorthing.astro`.split(/[ \n]/g)
- .filter( item => !!item)
- .sort()
+colorthing.astro`
+  .split(/[ \n]/g)
+  .filter(item => !!item)
+  .sort()
 
 // const routes = await fs.readdir(url)
 const filteredRoutes = routes
-  .map(item => item.replace("../../pages/", ""))
+  .map(item => item.replace('../../pages/', ''))
   .filter(item => item !== 'recordergame.astro' && item !== 'index.astro')
   .filter(item => item !== 'api')
 ---
