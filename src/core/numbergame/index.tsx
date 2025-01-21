@@ -1,12 +1,12 @@
-import { Problem } from "../../components/Problem.tsx";
+import {Problem} from '../../components/Problem.tsx'
 import {
   CurrentMathProblem,
   // MenuOpen,
   Number1MultiplyBy,
   Number2MultiplyBy,
   Step,
-} from "../../data/State.ts";
-import { Logo, LogoBottom } from "../../components/Logos.jsx";
+} from '../../data/State.ts'
+import {Logo, LogoBottom} from '../../components/Logos.jsx'
 
 export default function NumberGame() {
   return (
@@ -24,12 +24,10 @@ export default function NumberGame() {
             step={Step.value}
             onSubmit={() => {
               // debugger;
-              Step.value += 1;
+              Step.value += 1
             }}
             act="÷"
-            onFocus={(e) => {
-              //   MenuOpen.value = false
-            }}
+            onFocus={e => {}}
           />
         </section>
         <span id="divisible">
@@ -37,5 +35,5 @@ export default function NumberGame() {
         </span>
       </div>
     </div>
-  );
+  )
 }

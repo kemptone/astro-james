@@ -1,5 +1,6 @@
 ---
 const routes = `
+exam.astro
 countries.astro
 decibel.astro     music2.astro      talkers.astro
 ampm.astro        dictionary.astro  nightnight.astro  
@@ -74,10 +75,9 @@ const filteredRoutes = routes
           e_dialog?.showModal?.()
         })
 
-        // e_dialog.addEventListener('click', () => {
-        //   debugger
-        //   e_dialog?.close?.()
-        // })
+        e_dialog.addEventListener('click', () => {
+          e_dialog?.close?.()
+        })
 
         if (!e_reinstall) return
 
@@ -106,8 +106,12 @@ const filteredRoutes = routes
     overflow: hidden;
   }
 
+  site-menu {
+    font-size: 16px;
+  }
+
   site-menu dialog ol {
-    font-size: 1.9rem;
+    font-size: 28px;
     max-height: 95vh;
     overflow: auto;
     width: 50vw;
@@ -117,6 +121,26 @@ const filteredRoutes = routes
     gap: 1.5vw;
     text-transform: capitalize;
     list-style: none;
+    opacity: 1;
+  }
+
+  site-menu ol li {
+    margin-bottom: 0;
+  }
+
+  site-menu ol a {
+    font-size: inherit;
+    line-height: 33px;
+  }
+
+  site-menu a {
+    color: var(--color3);
+    text-decoration: none;
+    opacity: 1;
+  }
+
+  site-menu a:hover {
+    color: var(--color3);
   }
 
   site-menu dialog {

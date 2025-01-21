@@ -49,23 +49,23 @@ a:hover {
     color: var(--color3);
 }
 
-button {
+/* button {
     /* background-color: var(--color2); */
     background-color: transparent;
     border: 2px solid var(--color3);
     user-select: none;
     cursor: pointer;
     touch-action: manipulation;
-}
+} */
 
-button:active {
+/* button:active {
     background-color: var(--color3);
     color: var(--color4);
-}
+} */
 
-button.icon {
+/* button.icon {
     border: none;
-}
+} */
 
 .main,
 .math-problems {

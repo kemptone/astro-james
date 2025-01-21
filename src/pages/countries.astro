@@ -6,16 +6,20 @@ import '../pico.css'
 
 <Layout title="Calculator">
   {
-    Object.keys(CountriesByContinent).map((continent, index) => (
-      <article>
-        <h1 data-index={index + 1}>{continent}</h1>
-        <section>
-          {CountriesByContinent[continent].map((country, index) => (
-            <div data-index={index + 1}>{country}</div>
-          ))}
-        </section>
-      </article>
-    ))
+    Object.keys(CountriesByContinent).map((continent, index) => {
+      return (
+        <article>
+          <h1 data-index={index + 1}>{continent}</h1>
+          <section>
+            {CountriesByContinent[continent].map(({name, flag}, index) => (
+              <div data-flag={flag} data-index={index + 1}>
+                {name}
+              </div>
+            ))}
+          </section>
+        </article>
+      )
+    })
   }
 </Layout>
 
@@ -31,13 +35,34 @@ import '../pico.css'
     box-shadow: none;
   }
 
-  article section div::before,
+  article section div {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
   article h1::before {
     content: attr(data-index);
     display: inline-block;
     padding-right: 1rem;
     font-size: 80%;
     opacity: 0.6;
+  }
+
+  article section div::after {
+    content: attr(data-index);
+    display: inline-block;
+    padding-left: 1rem;
+    font-size: 80%;
+    opacity: 0.6;
+  }
+
+  article section div::before {
+    content: attr(data-flag);
+    display: inline-block;
+    font-size: 300%;
+    padding-right: 1rem;
+    line-height: 2rem;
   }
 
   article section {

@@ -1,8 +1,8 @@
 .container2 {
   display: grid;
   grid-template-areas:
-    "header header"
-    "left right";
+    'header header'
+    'left right';
   grid-template-rows: auto 1fr;
   grid-template-columns: auto 4fr;
   height: 100vh;
@@ -14,14 +14,15 @@
   padding: 1rem;
 }
 
-.leftColumn, .rightColumn {
+.leftColumn,
+.rightColumn {
   overflow-y: auto;
   padding: 1rem;
 }
 
 .leftColumn {
   grid-area: left;
-  border-right:1px solid gray;
+  border-right: 1px solid gray;
   max-width: 230px;
   min-width: 100px;
 }
@@ -35,7 +36,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  height: 5rem;
+  height: 3.8rem;
+  padding-right: 5rem;
   border-bottom: 1px solid black;
 }
 
@@ -44,9 +46,9 @@
 }
 
 @media only screen and (prefers-color-scheme: dark) {
-.banner {
-  border-bottom: 1px solid white;
-}
+  .banner {
+    border-bottom: 1px solid white;
+  }
 }
 
 .banner h1 {
@@ -59,7 +61,7 @@
   height: 2rem;
   border-left: 1px solid black;
   margin-left: 1rem;
-  margin-right:.4rem;
+  margin-right: 0.4rem;
 }
 @media only screen and (prefers-color-scheme: dark) {
   .spacer {
@@ -102,9 +104,9 @@
   border-right: 1px solid black;
 }
 @media only screen and (prefers-color-scheme: dark) {
-.left-column {
-  border-right: 1px solid white;
-}
+  .left-column {
+    border-right: 1px solid white;
+  }
 }
 
 .right-column {
@@ -121,7 +123,7 @@
 .talker {
   display: flex;
   gap: 10px;
-  margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 .talker.preview {
   margin-top: 1rem;
@@ -131,7 +133,7 @@
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  font-size: .8rem;
+  font-size: 0.8rem;
   padding: 0.2rem 0.5rem;
 }
 .talker.preview button {
@@ -153,8 +155,8 @@
 .talker .face {
 }
 .talker .face img {
-  width: calc(300px * .5);
-  height: calc(200px * .5);
+  width: calc(300px * 0.5);
+  height: calc(200px * 0.5);
   /* mix-blend-mode: multiply; */
 }
 
@@ -167,8 +169,8 @@
 }
 
 .talker.preview .face img {
-  width: calc(300px * .3);
-  height: calc(200px * .3);
+  width: calc(300px * 0.3);
+  height: calc(200px * 0.3);
   /* filter: grayscale(0.6) opacity(0.4); */
 }
 .talker .sample {
@@ -202,7 +204,7 @@
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding: 0.1rem .4rem;
+  padding: 0.1rem 0.4rem;
   height: auto;
   margin-bottom: 0;
 }
@@ -222,7 +224,7 @@
 @media only screen and (prefers-color-scheme: dark) {
   #brand {
     filter: invert(1);
-    mix-blend-mode:lighten;
+    mix-blend-mode: lighten;
   }
 }
 
@@ -257,7 +259,7 @@ dialog wc-meme-board .list {
 
 wc-meme-item div {
   display: flex;
-  gap: .4rem;
+  gap: 0.4rem;
 }
 
 dialog wc-meme-board {
@@ -293,8 +295,9 @@ dialog wc-meme-board wc-meme-item button {
   .talker.preview .face {
     display: none;
   }
-  .leftColumn, .rightColumn {
-    padding:.4rem;
+  .leftColumn,
+  .rightColumn {
+    padding: 0.4rem;
   }
 
   .spacer,
@@ -306,7 +309,7 @@ dialog wc-meme-board wc-meme-item button {
     width: fit-content;
   }
   .talker {
-    gap:4px;
+    gap: 4px;
   }
   .leftColumn {
     align-items: center;
@@ -314,5 +317,4 @@ dialog wc-meme-board wc-meme-item button {
     flex-direction: column;
     max-width: 100px;
   }
-
 }

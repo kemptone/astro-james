@@ -1,4 +1,4 @@
-export const CountriesByContinent = {
+export const CountriesByContinent2 = {
   Africa: [
     {name: 'Algeria', flag: '🇩🇿'},
     {name: 'Angola', flag: '🇦🇴'},

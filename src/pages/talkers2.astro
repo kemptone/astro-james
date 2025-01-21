@@ -1,6 +1,7 @@
 ---
 import Empty from '../layouts/Empty.astro'
 import WCDialogWrap from '../components/WCDialogWrap.astro'
+import Menu2 from '@components/Menu/Menu2.astro'
 import '../../pico.css'
 import '../core/talkers2/style.css'
 ---
@@ -10,13 +11,12 @@ import '../core/talkers2/style.css'
     <header class="header">
       <div id="brand"></div>
       <div class="buttons">
-        <button id="back_to_site">to site</button>
-        <span class="spacer"></span>
         <button id="add_sound">Sounds</button>
         <span class="spacer"></span>
         <button id="remove_all">Remove All</button>
         <button id="clear_all">Clear</button>
         <button id="play_all">Play</button>
+        <Menu2 />
       </div>
     </header>
     <aside class="leftColumn" id="list">

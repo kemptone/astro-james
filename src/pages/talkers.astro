@@ -7,7 +7,6 @@ import Layout from '../layouts/Layout.astro'
     <header class="banner">
       <h1>The Talkers</h1>
       <div class="buttons">
-        <a href="/">back to site</a>
         <button id="remove_all">Remove All</button>
         <button id="clear_all">Clear</button>
         <button id="play_all">Play All</button>
@@ -29,9 +28,9 @@ import Layout from '../layouts/Layout.astro'
     background-color: white;
   }
 
-  html:has(#talkers) site-menu {
+  /* html:has(#talkers) site-menu {
     display: none;
-  }
+  } */
 
   .container {
     display: grid;
@@ -48,7 +47,8 @@ import Layout from '../layouts/Layout.astro'
     background-color: #e0e0e0;
     color: #9b9b9b;
     padding: 1rem;
-    height: 3rem;
+    height: 4.3rem;
+    padding-right: 6rem;
   }
 
   .banner h1 {
@@ -110,7 +110,7 @@ import Layout from '../layouts/Layout.astro'
     cursor: pointer;
     border-radius: 5px;
     font-size: 1.1rem;
-    padding: 0.2rem .5rem;
+    padding: 0.2rem 0.5rem;
   }
   .talker.preview button {
     font-size: 0.8rem;
