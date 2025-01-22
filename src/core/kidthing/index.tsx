@@ -1,14 +1,16 @@
-import { useEffect, useState } from "preact/hooks";
-import Dialog from "../../components/Dialog";
-import './style.css';
+import {useEffect, useState} from 'preact/hooks'
+import Dialog from '../../components/Dialog'
+import './style.css'
 
 const Primary =
-  "Abby  Adaliz  Aiden  Angelo  Anthony  Bailey  Benny  Briana  Chase  Cierra  Cruz  Gustavo  Hudson  Iker  James  Leilani  Lindsey  Merryck  Michael  Sophia C  Sofia V  Kenia  Melanie  the swamps of sadness"
-    .split("  ");
+  'Abby  Adaliz  Aiden  Angelo  Anthony  Bailey  Benny  Briana  Chase  Cierra  Cruz  Gustavo  Hudson  Iker  James  Leilani  Lindsey  Merryck  Michael  Sophia C  Sofia V  Kenia  Melanie  Mrs. Kobylka'.split(
+    '  '
+  )
 
 const Secondary =
-  "Beau, Gianna, Makenzie, Blake, Merlin, Santa Claus, Tooth Fairy, Audry, Braxton, Adley, Crista, Jake, Makayla, Atticus, Presly P, Alexis, Sophie, Mikey, Davey Jack, Hazel, Oliver, Lucas, Presly, Jackson, Aubrey, Elliot, Dumpy, Kevin, dave, Dorothy, Scarecrow, Tin Man, lion, Auntie M, Wizard of Oz, stephanie, Easter Bunny, Dave, Ava, Atreyu, Moonchild, Bastian, Emerson, Ellie, Danial, Carmen, Zander, Lita, Linnie"
-    .split(", ");
+  'Beau, Gianna, Makenzie, Blake, Merlin, Santa Claus, Tooth Fairy, Audry, Braxton, Adley, Crista, Jake, Makayla, Atticus, Presly P, Alexis, Sophie, Mikey, Davey Jack, Hazel, Oliver, Lucas, Presly, Jackson, Aubrey, Elliot, Dumpy, Kevin, Glinda, Dorothy, Scarecrow, Tin Man, lion, Auntie M, Wizard of Oz, Nixon, Easter Bunny, Dave, Ava, Atreyu, Moonchild, Bastian, Emerson, Ellie, Danial, Carmen, Zander, Lita, Linnie, Jill, Carol Anne, Claire Crosby, Darla'.split(
+    ', '
+  )
 
 // const Primary = [
 //   "FF0000", // red
@@ -31,26 +33,26 @@ const Secondary =
 // );
 
 console.log(
-  [...Primary, ...Secondary].join(" is here.\n"),
+  [...Primary, ...Secondary].join(' is here.\n')
   // Secondary.join(" is here... "),
-);
+)
 
 console.log(
-  [...Primary, ...Secondary].join(" is absent.\n"),
+  [...Primary, ...Secondary].join(' is absent.\n')
   // Secondary.join(" is here... "),
-);
+)
 
 export default () => {
-  const [chosenNames, setChosenNames] = useState([]);
-  const [showingMissing, setShowingMissing] = useState(false);
+  const [chosenNames, setChosenNames] = useState([])
+  const [showingMissing, setShowingMissing] = useState(false)
 
   // console.log({ chosenNames });
 
   return (
     <Dialog>
-      {(D2) => (
+      {D2 => (
         <Dialog>
-          {(D) => (
+          {D => (
             <main class="colorthing">
               <section class="readout">
                 {chosenNames.map((name, index) => (
@@ -63,50 +65,50 @@ export default () => {
                   <button
                     children={index + 1}
                     key={item + index}
-                    onClick={(e) => {
-                      setChosenNames(
-                        [...chosenNames, item],
-                      );
+                    onClick={e => {
+                      setChosenNames([...chosenNames, item])
                     }}
                   />
                 ))}
 
                 <button
                   children="⟵"
-                  onClick={(e) => {
+                  onClick={e => {
                     setChosenNames(
-                      [...chosenNames].slice(0, chosenNames.length - 1),
-                    );
+                      [...chosenNames].slice(0, chosenNames.length - 1)
+                    )
                   }}
                 />
 
                 <button
                   children="⏲"
-                  onClick={(e) => {
-                    D2.openDialog();
+                  onClick={e => {
+                    D2.openDialog()
                   }}
                 />
 
                 <button
                   children="🌗"
-                  onClick={(e) => {
-                    D.openDialog();
+                  onClick={e => {
+                    D.openDialog()
                   }}
                 />
 
                 <button
                   children="♺"
-                  onClick={(e) => {
-                    setChosenNames([]);
+                  onClick={e => {
+                    setChosenNames([])
                   }}
                 />
               </section>
               <D2.Dialog ref={D2.ref}>
                 <main className="colorthing">
                   <div className="readout">
-                    {Primary.filter((name) =>
-                      chosenNames.join("::").indexOf(name) === -1
-                    ).map((name) => <span className="chosen">{name}</span>)}
+                    {Primary.filter(
+                      name => chosenNames.join('::').indexOf(name) === -1
+                    ).map(name => (
+                      <span className="chosen">{name}</span>
+                    ))}
                   </div>
                 </main>
               </D2.Dialog>
@@ -116,26 +118,22 @@ export default () => {
                   <section className="inner-readout">
                     {showingMissing
                       ? chosenNames.map((name, index) => (
-                        // <span class="chosen" key={index} children={{ name }} />
-                        <span class="chosen" children={name} />
-                      ))
+                          // <span class="chosen" key={index} children={{ name }} />
+                          <span class="chosen" children={name} />
+                        ))
                       : null}
                   </section>
 
                   <div class="colors">
-                    <button
-                      onClick={(e) => setShowingMissing(!showingMissing)}
-                    >
+                    <button onClick={e => setShowingMissing(!showingMissing)}>
                       ?
                     </button>
                     {Secondary.map((item, index) => (
                       <button
                         children={index + 1}
                         key={item + index}
-                        onClick={(e) => {
-                          setChosenNames(
-                            [...chosenNames, item],
-                          );
+                        onClick={e => {
+                          setChosenNames([...chosenNames, item])
                         }}
                       />
                     ))}
@@ -147,5 +145,5 @@ export default () => {
         </Dialog>
       )}
     </Dialog>
-  );
-};
+  )
+}
