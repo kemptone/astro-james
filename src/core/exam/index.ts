@@ -122,9 +122,6 @@ d.addEventListener('DOMContentLoaded', async e => {
                 )
                 chunks.length = 0
               }
-              e_response.innerHTML = TinyMarkdownFormatter.format(
-                e_response.innerHTML
-              )
             }
 
             if (!piece || piece === '[DONE]') return
