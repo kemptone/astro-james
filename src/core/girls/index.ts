@@ -5,7 +5,6 @@ import {
   TinyMarkdownFormatter,
 } from '../exam/grok.helpers'
 import {d, $, $$} from '../grok/grok.helpers'
-import {playGrokStory, playText} from '../talkers2/wc-talkers.helpers'
 import ProtoForm from '@components/ProtoForm/ProtoForm'
 import {
   bad_stuff,
@@ -79,6 +78,8 @@ d.addEventListener('DOMContentLoaded', async e => {
     onSubmit: async form => {
       const {values} = form
 
+      e_story.value = ''
+
       e_dialog.querySelectorAll('button')?.forEach?.(item => {
         item.setAttribute('disabled', 'true')
       })
@@ -95,7 +96,6 @@ d.addEventListener('DOMContentLoaded', async e => {
 
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
-      let count = 0
 
       while (true) {
         let {done, value} = await reader.read()
@@ -141,9 +141,7 @@ d.addEventListener('DOMContentLoaded', async e => {
         engine: 'neural',
       })
 
-      handleAudioPromise(thing, () => {
-        debugger
-      })
+      handleAudioPromise(thing, () => {})
     },
   })
 
