@@ -31,10 +31,7 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
 
   if (props.noValidate) e_form.noValidate = true
 
-  function dispatchWraper<Z = {}>(
-    name: string,
-    Event: ReturnValues<T> & Z
-  ) {
+  function dispatchWraper<Z = {}>(name: string, Event: ReturnValues<T> & Z) {
     e_form.dispatchEvent(
       new CustomEvent(name, {
         detail: Event,
@@ -85,6 +82,8 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
 
   function onSubmit(e: Event) {
     e.preventDefault()
+    e.stopImmediatePropagation()
+    e.stopPropagation()
 
     for (const field of e_form.elements) {
       field.removeAttribute('aria-invalid')
@@ -92,7 +91,6 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
 
     const {values} = whenItChanges(e)
     if (checkValidity(false)) {
-
       let r = dispatchWraper('proto-submit', {
         values: values as T,
         blurredKeys,
@@ -162,7 +160,7 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
     if (!target) return
 
     blurredKeys.add(target.name)
-    let r = dispatchWraper<{ name : string }>('proto-blur', {
+    let r = dispatchWraper<{name: string}>('proto-blur', {
       // @ts-ignore, since it always has a name
       name: e.name || e.target.name,
       blurredKeys,
@@ -218,19 +216,18 @@ export default function ProtoForm<T>(props: ProtoFormProps<T>) {
   e_form.addEventListener('submit', onSubmit)
 
   for (const field of e_form.elements) {
-
     field.removeAttribute('aria-invalid')
     // const e_error = e_form?.querySelector( `#${field.dataset.validationid}` ) as HTMLElement | null
 
     field.addEventListener('invalid', function handleInvalidField(event) {
-      if (!blurredKeys.has(field?.name || "BBBBBB")) return
+      if (!blurredKeys.has(field?.name || 'BBBBBB')) return
       field.setAttribute('aria-invalid', 'true')
       if (field?.dataset) {
         const e_error = e_form?.querySelector(
           `#${field.dataset.validationid}`
         ) as HTMLElement | null
         if (!e_error) return
-        e_error.innerHTML = field?.validationMessage || ""
+        e_error.innerHTML = field?.validationMessage || ''
       }
     })
   }

@@ -69,7 +69,6 @@ if (typeof window != 'undefined')
             e_dialog.close()
           }
         })
-
       }
 
       connectedCallback() {
@@ -78,6 +77,5 @@ if (typeof window != 'undefined')
           e_dialog?.close?.()
         })
       }
-
     }
   )

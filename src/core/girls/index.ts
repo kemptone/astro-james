@@ -1,4 +1,9 @@
 import {girls_names} from '../../data/girls_names'
+import {
+  handleAudioPromise,
+  playTextPromise,
+  TinyMarkdownFormatter,
+} from '../exam/grok.helpers'
 import {d, $, $$} from '../grok/grok.helpers'
 import {playGrokStory, playText} from '../talkers2/wc-talkers.helpers'
 import ProtoForm from '@components/ProtoForm/ProtoForm'
@@ -61,12 +66,84 @@ d.addEventListener('DOMContentLoaded', async e => {
   const e_name_filter = $('input[name="name_filter"]') as HTMLInputElement
   const e_limit = $('input[name="limit"]') as HTMLInputElement
   const e_dialog = d.querySelector('dialog#d_story') as HTMLDialogElement
-  const e_form = e_dialog.querySelector('form') as HTMLFormElement
+  const e_story = d.querySelector(
+    'textarea[name="text"]'
+  ) as HTMLTextAreaElement
+  const e_form = e_dialog.querySelector(
+    'form#generate_story'
+  ) as HTMLFormElement
+  const e_form_2 = e_dialog.querySelector('form#speak') as HTMLFormElement
 
   ProtoForm<FormType>({
     e_form,
+    onSubmit: async form => {
+      const {values} = form
+
+      e_dialog.querySelectorAll('button')?.forEach?.(item => {
+        item.setAttribute('disabled', 'true')
+      })
+
+      const response = await fetch('/api/grok/grok_girls_stream', {
+        method: 'POST',
+        body: JSON.stringify(values),
+      })
+
+      if (!response.body) {
+        console.error('Stream not supported.')
+        return
+      }
+
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      let count = 0
+
+      while (true) {
+        let {done, value} = await reader.read()
+
+        let chunk = decoder.decode(value, {stream: true})
+
+        chunk.split('\n\n').forEach((item, index) => {
+          let piece = item.replaceAll('data: ', '')
+
+          if (piece === '[DONE]') {
+            e_story.innerHTML = TinyMarkdownFormatter.format(e_story.innerHTML)
+          }
+
+          if (!piece || piece === '[DONE]') return
+
+          try {
+            const json = JSON.parse(piece)
+            const content = json?.choices?.[0]?.delta?.content
+            e_story.value += content || ''
+          } catch (error) {
+            console.error(error)
+          }
+        })
+
+        if (done) {
+          break
+        }
+      }
+
+      e_dialog.querySelectorAll('button')?.forEach?.(item => {
+        item.removeAttribute('disabled')
+      })
+    },
+  })
+
+  ProtoForm<{text: string}>({
+    e_form: e_form_2,
     onSubmit: form => {
-      debugger
+      const {text} = form.values
+      const thing = playTextPromise({
+        text,
+        voiceId: 'Matthew',
+        engine: 'neural',
+      })
+
+      handleAudioPromise(thing, () => {
+        debugger
+      })
     },
   })
 
