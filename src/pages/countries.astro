@@ -1,7 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import {DogCountries, CountriesByContinent} from '@data/countries/Countries'
+import {CountriesByContinent} from '@data/countries/Countries'
 import '../pico.css'
+const decimalFormatter = new Intl.NumberFormat('en-US')
 ---
 
 <Layout title="Calculator">
@@ -11,11 +12,21 @@ import '../pico.css'
         <article>
           <h1 data-index={index + 1}>{continent}</h1>
           <section>
-            {CountriesByContinent[continent].map(({name, flag}, index) => (
-              <div data-flag={flag} data-index={index + 1}>
-                {name}
-              </div>
-            ))}
+            {CountriesByContinent[continent].map(
+              ({name, capital, population, flag}, index) => {
+                const pop = decimalFormatter.format(population)
+                return (
+                  <section>
+                    <div class="flag">{flag}</div>
+                    <main>
+                      <div class="country">{name}</div>
+                      <div class="capital">{capital}</div>
+                      <div class="population">{pop}</div>
+                    </main>
+                  </section>
+                )
+              }
+            )}
           </section>
         </article>
       )
@@ -31,14 +42,43 @@ import '../pico.css'
 
   article {
     /* page-break-after: always; */
-    page-break-inside: avoid;
+    /* page-break-inside: avoid; */
     box-shadow: none;
   }
 
-  article section div {
+  article > section {
+    /* page-break-inside: avoid; */
+  }
+
+  article section section {
     display: flex;
     align-items: center;
     position: relative;
+  }
+
+  article section div.country {
+    font-weight: 900;
+    font-size: 14px;
+  }
+  article section div.capital {
+  }
+
+  article section div:before {
+    display: inline-block;
+    font-size: 70%;
+    opacity: 0.5;
+    width: 2.5em;
+  }
+
+  article section div.country:before {
+  }
+  article section div.capital:before {
+    content: 'cap: ';
+  }
+  article section div.population:before {
+    content: 'pop: ';
+  }
+  article section div.population {
   }
 
   article h1::before {
@@ -49,18 +89,10 @@ import '../pico.css'
     opacity: 0.6;
   }
 
-  article section div::after {
-    content: attr(data-index);
-    display: inline-block;
-    padding-left: 1rem;
-    font-size: 80%;
-    opacity: 0.6;
-  }
-
-  article section div::before {
+  article section div.flag {
     content: attr(data-flag);
     display: inline-block;
-    font-size: 300%;
+    font-size: 100px;
     padding-right: 1rem;
     line-height: 2rem;
   }
