@@ -1,5 +1,123 @@
 ---
-import Layout from '../layouts/Layout.astro'
+import Empty from '../layouts/Empty.astro'
+import '../components/wc-dialog.css'
+import '../core/punishments/punishments.css'
+import '../../pico.css'
+import WCFloatingLabel from '../components/WCFloatingLabel.astro'
+import {top1000BabyNames} from '@data/kids_names'
+import {
+  bad_stuff,
+  ways_to_get_caught,
+  behavior_cards,
+  behavior_score,
+  randomFromArray,
+} from '@data/bad_stuff'
+import '../components/wc-texarea-sizer'
 ---
 
-<Layout />
+<Empty title="punishments">
+  <main id="punishment_main">
+    <details open>
+      <summary>Generate story</summary>
+      <form id="generate_story">
+        <div class="grid">
+          <WCFloatingLabel addclear="1">
+            <label>kids name</label>
+            <input
+              list="kid_list"
+              name="kid"
+              value={randomFromArray(top1000BabyNames)}
+            />
+            <datalist id="kid_list">
+              {top1000BabyNames.map(name => <option value={name} />)}
+            </datalist>
+          </WCFloatingLabel>
+
+          <WCFloatingLabel addclear="1">
+            <label>bad behavior</label>
+            <input
+              list="bad_things"
+              name="bad_thing"
+              value={randomFromArray(bad_stuff)}
+              placeholder="What did she do?"
+            />
+            <datalist id="bad_things">
+              {bad_stuff.map(name => <option value={name} />)}
+            </datalist>
+          </WCFloatingLabel>
+        </div>
+
+        <div class="grid">
+          <WCFloatingLabel addclear="1">
+            <label>behavior score</label>
+            <input
+              list="behavior_scores"
+              name="behavior_score"
+              placeholder="pick a score of behavior"
+              value={randomFromArray(behavior_score)}
+            />
+            <datalist id="behavior_scores">
+              {behavior_score.map(v => <option value={v} />)}
+            </datalist>
+          </WCFloatingLabel>
+
+          <WCFloatingLabel addclear="1">
+            <label>how they got caught</label>
+            <input
+              list="got_caught"
+              name="got_caught"
+              placeholder="How did she get caught?"
+              value={randomFromArray(ways_to_get_caught)}
+            />
+            <datalist id="got_caught">
+              {ways_to_get_caught.map(name => <option value={name} />)}
+            </datalist>
+          </WCFloatingLabel>
+
+          <WCFloatingLabel addclear="1">
+            <label for="punishment_card">punishment card</label>
+            <input
+              name="punishment_card"
+              list="punishment_card"
+              value={randomFromArray(behavior_cards)}
+            />
+            <datalist id="punishment_card">
+              {behavior_cards.map(name => <option value={name} />)}
+            </datalist>
+          </WCFloatingLabel>
+          <WCFloatingLabel addclear="1">
+            <label for="number_punishment">number of punishments</label>
+            <input
+              name="number_punishment"
+              list="number_punishment"
+              value={randomFromArray(behavior_score)}
+            />
+            <datalist id="number_punishment">
+              {behavior_score.map(name => <option value={name} />)}
+            </datalist>
+          </WCFloatingLabel>
+        </div>
+        <footer>
+          <button type="submit" class="outline secondary"
+            >Generate main story</button
+          >
+        </footer>
+      </form>
+    </details>
+    <form id="speak">
+      <details open>
+        <summary>main story</summary>
+        <wc-textarea-sizer data-min="20" data-max="500">
+          <textarea rows="9" name="text" rows="4"></textarea>
+        </wc-textarea-sizer>
+      </details>
+      <footer>
+        <button type="reset" class="outline">reset</button>
+        <button type="submit" id="speak_selection" class="">Speak</button>
+      </footer>
+    </form>
+  </main>
+</Empty>
+
+<script src="../core/punishments/index.ts"></script>
+<script src="../components/wc-dialog-wrap.ts"></script>
