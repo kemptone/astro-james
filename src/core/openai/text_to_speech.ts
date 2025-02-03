@@ -17,43 +17,30 @@ async function getOpenAISpeech(props: OpenAITalker) {
   })
 }
 
-type PromiseAndAudio = {
-  promise: Promise<Response>
-  audio?: HTMLAudioElement
-}
-
 async function playVoices(formProps: OpenAITalker[]) {
-  const list: PromiseAndAudio[] = []
-  let currentIndex = 0
+  // Get all the OpenAISpeech responses concurrently.
+  const responses = await Promise.all(formProps.map(getOpenAISpeech))
 
-  async function playNext() {
-    const next = list[currentIndex]
-    next?.audio?.addEventListener('ended', () => {
-      if (currentIndex <= list.length) {
-        playNext()
-      }
-    })
-    next?.audio?.play?.()
-    currentIndex++
-  }
-
-  formProps.forEach(talk => {
-    list.push({promise: getOpenAISpeech(talk)})
-  })
-
-  Promise.all(list.map(item => item.promise)).then(async responses => {
-    let x = 0
-
-    while (x < responses.length) {
-      const response = responses[x]
+  // Convert responses into audio elements concurrently.
+  const audios = await Promise.all(
+    responses.map(async response => {
       const audioBlob = await response.blob()
       const audioUrl = URL.createObjectURL(audioBlob)
-      const audio = new Audio(audioUrl)
-      list[x].audio = audio
-      x++
-    }
-    playNext()
-  })
+      return new Audio(audioUrl)
+    })
+  )
+
+  // Helper: Returns a promise that resolves when the audio ends.
+  const playAudio = (audio: HTMLAudioElement) =>
+    new Promise<void>(resolve => {
+      audio.addEventListener('ended', resolve, {once: true})
+      audio.play()
+    })
+
+  // Play all audios sequentially.
+  for (const audio of audios) {
+    await playAudio(audio)
+  }
 }
 
 d.addEventListener('DOMContentLoaded', async e => {
