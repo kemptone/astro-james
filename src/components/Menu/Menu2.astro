@@ -1,5 +1,6 @@
 ---
 const routes = `
+texttospeech.astro
 punishments.astro
 polkis.astro
 exam.astro
@@ -163,7 +164,7 @@ const filteredRoutes = routes
 
   site-menu dialog::backdrop {
     /* background-color:rgba(255,255,255,0.5); */
-    background-color: #fed469a4;
+    background-color: var(--pico-background-color, #fed469a4);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
   }
@@ -276,6 +277,12 @@ const filteredRoutes = routes
   @media (max-width: 700px) {
     site-menu dialog ol {
       font-size: 1.5rem;
+    }
+  }
+
+  @media only screen and (prefers-color-scheme: dark) {
+    site-menu .hamburgermenu span {
+      background: white;
     }
   }
 </style>

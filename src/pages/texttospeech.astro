@@ -1,0 +1,50 @@
+---
+import Empty from '../layouts/Empty.astro'
+import Menu2 from '@components/Menu/Menu2.astro'
+import '../components/wc-dialog.css'
+import '../core/punishments/punishments.css'
+import '../../pico.css'
+
+const voices =
+  'alloy, ash, coral, echo, fable, onyx, nova, sage, shimmer'.split(', ')
+---
+
+<template id="openai_talker">
+  <article>
+    <wc-textarea-sizer data-min="30" data-max="500">
+      <textarea rows="1" name="text" placeholder="your text here"></textarea>
+    </wc-textarea-sizer>
+    <select name="voice">
+      {voices.map(name => <option>{name}</option>)}
+    </select>
+  </article>
+</template>
+
+<Empty title="punishments">
+  <main id="punishment_main">
+    <form id="speak">
+      <div id="insert_here"></div>
+      <footer>
+        <button type="reset" class="outline">reset</button>
+        <button type="button" class="outline" id="add_talker">add</button>
+        <button type="submit" id="speak_selection" class="">Speak</button>
+      </footer>
+    </form>
+  </main>
+  <Menu2 />
+</Empty>
+
+<script src="../core/openai/text_to_speech.ts"></script>
+<script src="../components/wc-dialog-wrap.ts"></script>
+
+<style>
+  main {
+    max-width: 1200px;
+    margin-inline: auto;
+  }
+  article {
+  }
+  article select {
+    margin-bottom: 0;
+  }
+</style>
