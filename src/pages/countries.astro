@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import {CountriesByContinent} from '@data/countries/Countries'
+import {CountriesByContinent} from '@data/countries/Countries3'
 import '../pico.css'
 const decimalFormatter = new Intl.NumberFormat('en-US')
 ---
@@ -13,14 +13,17 @@ const decimalFormatter = new Intl.NumberFormat('en-US')
           <h1 data-index={index + 1}>{continent}</h1>
           <section>
             {CountriesByContinent[continent].map(
-              ({name, capital, population, flag}, index) => {
+              ({name, capital, population, flag, lat, lng}, index) => {
                 const pop = decimalFormatter.format(population)
+                const ll = `https://maps.apple.com/?ll=${lat},${lng}`
                 return (
                   <section>
                     <div class="flag">{flag}</div>
                     <main>
                       <div class="country">{name}</div>
-                      <div class="capital">{capital}</div>
+                      <div class="capital">
+                        <a href={ll}>{capital}</a>
+                      </div>
                       <div class="population">{pop}</div>
                     </main>
                   </section>
@@ -61,6 +64,9 @@ const decimalFormatter = new Intl.NumberFormat('en-US')
     font-size: 14px;
   }
   article section div.capital {
+  }
+  article section div.capital a {
+    color: darkblue;
   }
 
   article section div:before {
