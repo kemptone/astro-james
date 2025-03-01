@@ -1,0 +1,213 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Asteroids Game</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+        background: black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+      const canvas = document.getElementById('gameCanvas')
+      const ctx = canvas.getContext('2d')
+
+      // Player ship
+      const ship = {
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        r: 20,
+        angle: Math.PI / 2,
+        rotation: 0,
+        thrust: {x: 0, y: 0},
+        speed: 0.1,
+        friction: 0.97,
+      }
+
+      let asteroids = []
+      let bullets = []
+      const ASTEROID_NUM = 5
+      const ASTEROID_SIZE = 50
+      const BULLET_SPEED = 10
+
+      let keys = {}
+
+      document.addEventListener('keydown', e => (keys[e.key] = true))
+      document.addEventListener('keyup', e => (keys[e.key] = false))
+
+      function createAsteroid(x, y, r) {
+        const vertices = Math.floor(Math.random() * 6) + 6
+        const points = []
+        for (let i = 0; i < vertices; i++) {
+          const angle = (i / vertices) * Math.PI * 2
+          const radius = r * (0.8 + Math.random() * 0.4)
+          points.push({
+            x: Math.cos(angle) * radius,
+            y: Math.sin(angle) * radius,
+          })
+        }
+        return {
+          x: x,
+          y: y,
+          r: r,
+          vel: {
+            x: (Math.random() - 0.5) * 2,
+            y: (Math.random() - 0.5) * 2,
+          },
+          angle: 0,
+          rotSpeed: (Math.random() - 0.5) * 0.05,
+          points: points,
+        }
+      }
+
+      function createAsteroids() {
+        asteroids = []
+        for (let i = 0; i < ASTEROID_NUM; i++) {
+          asteroids.push(
+            createAsteroid(
+              Math.random() * canvas.width,
+              Math.random() * canvas.height,
+              ASTEROID_SIZE
+            )
+          )
+        }
+      }
+
+      function checkCollision(x1, y1, r1, x2, y2, r2) {
+        const dx = x1 - x2
+        const dy = y1 - y2
+        const distance = Math.sqrt(dx * dx + dy * dy)
+        return distance < r1 + r2
+      }
+
+      function update() {
+        // Ship rotation
+        if (keys['ArrowLeft']) ship.rotation = -0.1
+        else if (keys['ArrowRight']) ship.rotation = 0.1
+        else ship.rotation = 0
+        ship.angle += ship.rotation
+
+        // Ship thrust
+        if (keys['ArrowUp']) {
+          ship.thrust.x += Math.cos(ship.angle) * ship.speed
+          ship.thrust.y += Math.sin(ship.angle) * ship.speed
+        }
+
+        // Move ship
+        ship.x += ship.thrust.x
+        ship.y += ship.thrust.y
+        ship.thrust.x *= ship.friction
+        ship.thrust.y *= ship.friction
+
+        // Wrap ship
+        if (ship.x < 0) ship.x = canvas.width
+        if (ship.x > canvas.width) ship.x = 0
+        if (ship.y < 0) ship.y = canvas.height
+        if (ship.y > canvas.height) ship.y = 0
+
+        // Shooting
+        if (keys[' '] && (!keys.lastShot || Date.now() - keys.lastShot > 200)) {
+          bullets.push({
+            x: ship.x + Math.cos(ship.angle) * ship.r,
+            y: ship.y + Math.sin(ship.angle) * ship.r,
+            velX: Math.cos(ship.angle) * BULLET_SPEED,
+            velY: Math.sin(ship.angle) * BULLET_SPEED,
+            life: 60,
+          })
+          keys.lastShot = Date.now()
+        }
+
+        // Update bullets
+        bullets = bullets.filter(b => b.life > 0)
+        bullets.forEach(b => {
+          b.x += b.velX
+          b.y += b.velY
+          b.life--
+        })
+
+        // Update asteroids
+        let newAsteroids = []
+        asteroids.forEach(a => {
+          a.x += a.vel.x
+          a.y += a.vel.y
+          a.angle += a.rotSpeed
+
+          // Wrap asteroids
+          if (a.x < 0) a.x = canvas.width
+          if (a.x > canvas.width) a.x = 0
+          if (a.y < 0) a.y = canvas.height
+          if (a.y > canvas.height) a.y = 0
+
+          // Check bullet collisions
+          bullets.forEach((b, bIndex) => {
+            if (checkCollision(a.x, a.y, a.r, b.x, b.y, 2)) {
+              bullets.splice(bIndex, 1)
+              if (a.r > 15) {
+                newAsteroids.push(createAsteroid(a.x, a.y, a.r / 2))
+                newAsteroids.push(createAsteroid(a.x, a.y, a.r / 2))
+              }
+            }
+          })
+        })
+
+        asteroids = asteroids.filter(a => {
+          return !bullets.some(b => checkCollision(a.x, a.y, a.r, b.x, b.y, 2))
+        })
+        asteroids = asteroids.concat(newAsteroids)
+      }
+
+      function draw() {
+        ctx.fillStyle = 'black'
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+        // Draw ship
+        ctx.save()
+        ctx.translate(ship.x, ship.y)
+        ctx.rotate(ship.angle)
+        ctx.beginPath()
+        ctx.moveTo(ship.r, 0)
+        ctx.lineTo(-ship.r, ship.r / 2)
+        ctx.lineTo(-ship.r, -ship.r / 2)
+        ctx.closePath()
+        ctx.fillStyle = 'white'
+        ctx.fill()
+        ctx.restore()
+
+        // Draw asteroids with fixed vertices
+        asteroids.forEach(a => {
+          ctx.save()
+          ctx.translate(a.x, a.y)
+          ctx.rotate(a.angle)
+          ctx.beginPath()
+          a.points.forEach((p, i) => {
+            ctx[i === 0 ? 'moveTo' : 'lineTo'](p.x, p.y)
+          })
+          ctx.closePath()
+          ctx.strokeStyle = 'white'
+          ctx.stroke()
+          ctx.restore()
+        })
+
+        // Draw bullets
+        bullets.forEach(b => {
+          ctx.beginPath()
+          ctx.arc(b.x, b.y, 2, 0, Math.PI * 2)
+          ctx.fillStyle = 'white'
+          ctx.fill()
+        })
+      }
+
+      function gameLoop() {
+        update()
+        draw()
+        requestAnimationFrame(gameLoop)
+      }
+
+      createAsteroids()
+      gameLoop()
+    </script>
+  </body>
+</html>

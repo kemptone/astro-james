@@ -1,13 +1,9 @@
-import {
-  playTextAzure,
-  getMicrosoftVoices,
-  playMeme,
-} from './wc-talkers.helpers'
+import {playTextAzure, getMicrosoftVoices, playMeme} from './wc-talkers.helpers'
 import type {Talkers2VoiceDetails as VoiceDetails} from './types'
 import './wc-talker-azure'
 import '../../components/wc-meme-item'
 import {$, $$, d} from '../grok/grok.helpers'
-import type {MemeType} from '@components/wc-meme-item'
+import type {MemeType} from '@/components/wc-meme-item'
 
 d.addEventListener('DOMContentLoaded', async e => {
   const data = await getMicrosoftVoices()

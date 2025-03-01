@@ -1,6 +1,6 @@
-import ProtoForm from '@components/ProtoForm/ProtoForm'
-import {d, $, $$} from '../grok/grok.helpers'
-import '../../components/wc-texarea-sizer'
+import ProtoForm from '@/components/ProtoForm/ProtoForm'
+import {d, $, $$} from '@/core/grok/grok.helpers'
+import '@/components/wc-texarea-sizer'
 
 type OpenAITalker = {
   text: string
@@ -19,6 +19,7 @@ async function getOpenAISpeech(props: OpenAITalker) {
 
 async function playVoices(formProps: OpenAITalker[]) {
   // Get all the OpenAISpeech responses concurrently.
+  debugger
   const responses = await Promise.all(formProps.map(getOpenAISpeech))
 
   // Convert responses into audio elements concurrently.

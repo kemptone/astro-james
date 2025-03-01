@@ -1,18 +1,18 @@
-import {top1000BabyNames} from '@data/kids_names'
+import {top1000BabyNames} from '@/data/kids_names'
 import {
   handleAudioPromise,
   playTextPromise,
   TinyMarkdownFormatter,
 } from '../exam/grok.helpers'
 import {d, $, $$} from '../grok/grok.helpers'
-import ProtoForm from '@components/ProtoForm/ProtoForm'
+import ProtoForm from '@/components/ProtoForm/ProtoForm'
 import {
   bad_stuff,
   ways_to_get_caught,
   behavior_cards,
   behavior_score,
   randomFromArray,
-} from '@data/bad_stuff'
+} from '@/data/bad_stuff'
 
 type FormType = {
   kid: string

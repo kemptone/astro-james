@@ -14,12 +14,7 @@
     "lib": ["DOM", "ESNext", "DOM.Iterable"],
     "baseUrl": "./",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@islands/*": ["src/islands/*"],
-      "@data/*": ["src/data/*"],
-      "@effects/*": ["src/effects/*"],
-      "@helpers*": ["src/helpers/*"],
-      "@hooks*": ["src/hooks/*"],
+      "@/*": ["./src/*"]
     }
   },
   "extends": "astro/tsconfigs/strict"
