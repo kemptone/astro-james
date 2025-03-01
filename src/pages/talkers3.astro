@@ -7,18 +7,8 @@ import '../../pico.css'
 ---
 
 <Empty title="talkers">
-  <div id="talkers" class="container2">
-    <header class="header">
-      <div id="brand"></div>
-      <div class="buttons">
-        <button id="add_sound">Sounds</button>
-        <span class="spacer"></span>
-        <button id="remove_all">Remove All</button>
-        <button id="clear_all">Clear</button>
-        <button id="play_all">Play</button>
-        <Menu2 />
-      </div>
-    </header>
+  <div id="talkers3">
+    <Menu2 />
     <wc-universal-talkers-list></wc-universal-talkers-list>
   </div>
 </Empty>
@@ -26,21 +16,17 @@ import '../../pico.css'
 <script src="../core/talkers3/wc-universal-talkers-list.ts"></script>
 
 <style is:global>
-  .container2 {
-  }
-
-  .header {
-    padding: 1rem;
-  }
-
   wc-universal-talkers-list {
     display: block;
     max-width: 1200px;
     width: 100%;
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     margin-inline: auto;
   }
   wc-universal-talker {
+    border-top: 1px solid #00000052;
+    display: block;
+    padding-top: 1rem;
   }
 
   wc-universal-talker .flex {
@@ -61,5 +47,8 @@ import '../../pico.css'
   }
   wc-universal-talker .nowrap {
     white-space: nowrap;
+  }
+  .list-action {
+    text-align: center;
   }
 </style>

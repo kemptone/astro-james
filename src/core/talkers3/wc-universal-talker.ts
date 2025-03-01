@@ -22,7 +22,7 @@ if (typeof window != 'undefined')
 
         const e_voice_type = this.querySelector('select[name="voice_type"]')
         const e_preview_btn = this.querySelector('button.preview')
-        const e_clear_btn = this.querySelector('button[type="reset"]')
+        const e_remove_btn = this.querySelector('button.delete')
         const e_controls = this.querySelector('.controls')
         const e_text = this.querySelector(
           'textarea[name="text"]'
@@ -30,25 +30,30 @@ if (typeof window != 'undefined')
 
         if (!e_voice_type || !e_preview_btn || !e_controls || !e_text) return
 
-        e_clear_btn?.addEventListener?.('click', e => {
-          e_text.value = ''
+        e_remove_btn?.addEventListener?.('click', e => {
+          this.parentElement?.removeChild(this)
         })
 
-        this.addEventListener('speak', e => {
-          const parent = this.parentNode
-          if (!parent) return
-          const index = Array.from(parent.children).indexOf(this)
-          const text = e_text.value
-          const event = new CustomEvent('talker_speak', {
-            detail: {text, index},
-            bubbles: true,
-            composed: true,
-          })
-          e_controls.querySelector(':nth-child(1)')?.dispatchEvent(event)
-        })
+        const SpeakFunction =
+          (action_type: string = 'talker_speak') =>
+          () => {
+            const parent = this.parentNode
+            if (!parent) return
+            const index = Array.from(parent.children).indexOf(this)
+            const text = e_text.value
+            const event = new CustomEvent(action_type, {
+              detail: {text, index},
+              bubbles: true,
+              composed: true,
+            })
+            e_controls.querySelector(':nth-child(1)')?.dispatchEvent(event)
+          }
+
+        this.addEventListener('speak', SpeakFunction('talker_speak'))
+        this.addEventListener('preview', SpeakFunction('talker_preview'))
 
         e_preview_btn.addEventListener('click', e => {
-          const event = new CustomEvent('speak', {})
+          const event = new CustomEvent('preview', {})
           this.dispatchEvent(event)
         })
 

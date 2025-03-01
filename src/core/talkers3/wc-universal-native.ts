@@ -22,6 +22,14 @@ if (typeof window != 'undefined') {
           .map(item => `<option>${item.name}</option>`)
           .join('')
 
+        this.addEventListener('talker_preview', async listener => {
+          // @ts-ignore
+          const text = listener?.detail?.text
+          // @ts-ignore
+          const voice = e_select.value
+          await speak(text, voice)
+        })
+
         this.addEventListener('talker_speak', async listener => {
           // @ts-ignore
           const text = listener?.detail?.text

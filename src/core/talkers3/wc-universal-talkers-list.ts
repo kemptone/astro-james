@@ -9,10 +9,27 @@ if (typeof window != 'undefined')
         this.innerHTML = HTML
 
         const e_list = this.querySelector('#list') as HTMLDivElement
-        const e_button = this.querySelector(
+        const e_add = this.querySelector(
           'button.add_talker'
         ) as HTMLButtonElement
-        e_button?.addEventListener('click', e => {
+        const e_play_all = this.querySelector('#play_all') as HTMLButtonElement
+        const e_remove_all = this.querySelector(
+          '#remove_all'
+        ) as HTMLButtonElement
+        const e_add_sound = this.querySelector(
+          '#add_sound'
+        ) as HTMLButtonElement
+
+        e_play_all?.addEventListener('click', e => {
+          const event = new CustomEvent('speak', {})
+          e_list.querySelector(':nth-child(1)')?.dispatchEvent(event)
+        })
+
+        e_remove_all?.addEventListener('click', e => {
+          e_list.innerHTML = ''
+        })
+
+        e_add?.addEventListener('click', e => {
           const component = document.createElement('wc-universal-talker')
           e_list.appendChild(component)
         })
