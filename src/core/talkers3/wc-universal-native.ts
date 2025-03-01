@@ -22,11 +22,20 @@ if (typeof window != 'undefined') {
           .map(item => `<option>${item.name}</option>`)
           .join('')
 
-        this.addEventListener('speak', listener => {
+        this.addEventListener('talker_speak', async listener => {
           // @ts-ignore
           const text = listener?.detail?.text
+          // @ts-ignore
+          const index = listener?.detail?.index
           const voice = e_select.value
-          speak(text, voice)
+          await speak(text, voice)
+
+          const event = new CustomEvent('speak_ended', {
+            detail: {text, voice, index},
+            bubbles: true,
+            composed: true,
+          })
+          this.dispatchEvent(event)
         })
       }
     }

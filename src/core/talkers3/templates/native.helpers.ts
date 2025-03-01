@@ -18,31 +18,33 @@ const Voices: MetaVoice[] = []
 const synth = window.speechSynthesis
 
 export function speak(read = '', voice_name = '') {
-  if (synth?.speaking) {
-    console.error('speechSynthesis.speaking')
-    return
-  }
+  return new Promise((resolve, reject) => {
+    if (synth?.speaking) {
+      console.error('speechSynthesis.speaking')
+      return
+    }
 
-  if (!read) {
-    return
-  }
+    if (!read) {
+      return
+    }
 
-  const utterThis = new SpeechSynthesisUtterance(read)
+    const utterThis = new SpeechSynthesisUtterance(read)
 
-  utterThis.onend = function () {
-    console.log('SpeechSynthesisUtterance.onend')
-  }
+    utterThis.onend = function () {
+      resolve({read, voice_name})
+    }
 
-  utterThis.onerror = function () {
-    console.error('SpeechSynthesisUtterance.onerror')
-  }
+    utterThis.onerror = function () {
+      reject({read, voice_name})
+    }
 
-  const selected_voice = Voices.find(item => item.name === voice_name)
+    const selected_voice = Voices.find(item => item.name === voice_name)
 
-  if (selected_voice) {
-    utterThis.voice = selected_voice.voice
-    synth?.speak(utterThis)
-  }
+    if (selected_voice) {
+      utterThis.voice = selected_voice.voice
+      synth?.speak(utterThis)
+    }
+  })
 }
 
 export async function loadAllVoiceList() {
