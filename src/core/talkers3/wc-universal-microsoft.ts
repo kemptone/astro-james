@@ -68,7 +68,7 @@ if (typeof window != 'undefined') {
           const voice = e_voice_name.value
           const engine = e_engine.value
 
-          playVoices([{voice, text, engine}], postSpeech)
+          await playVoices([{voice, text, engine}], postSpeech)
         })
 
         this.addEventListener('talker_speak', async listener => {
@@ -78,7 +78,7 @@ if (typeof window != 'undefined') {
           const index = listener?.detail?.index
           const voice = e_voice_name.value
           const engine = e_engine.value
-          playVoices([{voice, text, engine}], postSpeech)
+          await playVoices([{voice, text, engine}], postSpeech)
 
           const event = new CustomEvent('speak_ended', {
             detail: {text, voice, engine, index},

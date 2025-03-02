@@ -36,6 +36,9 @@ if (typeof window != 'undefined')
 
         this.addEventListener('speak_ended', listener => {
           // @ts-ignore
+
+          console.log({listener})
+
           const index = listener?.detail?.index
           const children = Array.from(e_list.children)
           const event = new CustomEvent('speak', {})

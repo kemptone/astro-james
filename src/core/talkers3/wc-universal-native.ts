@@ -22,6 +22,14 @@ if (typeof window != 'undefined') {
           .map(item => `<option>${item.name}</option>`)
           .join('')
 
+        e_english_only.addEventListener('input', async e => {
+          const sortedVoices = await getSortedVoices(e_english_only?.checked)
+
+          e_select.innerHTML = sortedVoices
+            .map(item => `<option>${item.name}</option>`)
+            .join('')
+        })
+
         this.addEventListener('talker_preview', async listener => {
           // @ts-ignore
           const text = listener?.detail?.text

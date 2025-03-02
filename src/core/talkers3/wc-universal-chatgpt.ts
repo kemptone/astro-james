@@ -64,7 +64,7 @@ if (typeof window != 'undefined') {
           // @ts-ignore
           const voice = e_select.value
 
-          playVoices([{voice, text}])
+          await playVoices([{voice, text}])
         })
 
         this.addEventListener('talker_speak', async listener => {
@@ -73,7 +73,7 @@ if (typeof window != 'undefined') {
           // @ts-ignore
           const index = listener?.detail?.index
           const voice = e_select.value
-          playVoices([{voice, text}])
+          await playVoices([{voice, text}])
 
           const event = new CustomEvent('speak_ended', {
             detail: {text, voice, index},
