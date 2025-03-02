@@ -1,4 +1,5 @@
 import HTML from './templates/chatgpt.html?raw'
+import {playVoices} from './wc-talkers.helpers'
 
 type OpenAITalker = {
   text: string
@@ -8,7 +9,7 @@ type OpenAITalker = {
 const sortedVoices =
   'alloy, ash, coral, echo, fable, onyx, nova, sage, shimmer'.split(', ')
 
-async function getOpenAISpeech(props: OpenAITalker) {
+async function postOpenAISpeech(props: OpenAITalker) {
   return fetch('/api/openai/openai_texttospeech', {
     method: 'POST',
     headers: {
@@ -16,32 +17,6 @@ async function getOpenAISpeech(props: OpenAITalker) {
     },
     body: JSON.stringify(props),
   })
-}
-
-async function playVoices(formProps: OpenAITalker[]) {
-  // Get all the OpenAISpeech responses concurrently.
-  const responses = await Promise.all(formProps.map(getOpenAISpeech))
-
-  // Convert responses into audio elements concurrently.
-  const audios = await Promise.all(
-    responses.map(async response => {
-      const audioBlob = await response.blob()
-      const audioUrl = URL.createObjectURL(audioBlob)
-      return new Audio(audioUrl)
-    })
-  )
-
-  // Helper: Returns a promise that resolves when the audio ends.
-  const playAudio = (audio: HTMLAudioElement) =>
-    new Promise<void>(resolve => {
-      audio.addEventListener('ended', resolve, {once: true})
-      audio.play()
-    })
-
-  // Play all audios sequentially.
-  for (const audio of audios) {
-    await playAudio(audio)
-  }
 }
 
 if (typeof window != 'undefined') {
@@ -64,7 +39,7 @@ if (typeof window != 'undefined') {
           // @ts-ignore
           const voice = e_select.value
 
-          await playVoices([{voice, text}])
+          await playVoices([{voice, text}], postOpenAISpeech)
         })
 
         this.addEventListener('talker_speak', async listener => {
@@ -73,7 +48,7 @@ if (typeof window != 'undefined') {
           // @ts-ignore
           const index = listener?.detail?.index
           const voice = e_select.value
-          await playVoices([{voice, text}])
+          await playVoices([{voice, text}], postOpenAISpeech)
 
           const event = new CustomEvent('speak_ended', {
             detail: {text, voice, index},

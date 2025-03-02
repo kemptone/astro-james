@@ -31,7 +31,7 @@ export async function getAmazonVoices() {
     return item
   })
 
-  localStorage.setItem(VOICES, JSON.stringify(json))
+  localStorage.setItem(AMAZON_VOICES, JSON.stringify(json))
   return (dog[AMAZON_VOICES] = json)
 }
 
