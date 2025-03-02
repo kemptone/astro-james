@@ -1,6 +1,7 @@
 import HTML from './templates/wrap.html?raw'
 import './wc-universal-native'
 import './wc-universal-chatgpt'
+import './wc-universal-microsoft'
 
 const Options = {
   Native: {
@@ -9,7 +10,9 @@ const Options = {
   ChatGPT: {
     element: 'wc-universal-chatgpt',
   },
-  Microsoft: {},
+  Microsoft: {
+    element: 'wc-universal-microsoft',
+  },
   Amazon: {},
 }
 

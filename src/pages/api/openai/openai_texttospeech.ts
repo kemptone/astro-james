@@ -20,8 +20,6 @@ export async function POST({request}: {request: Request}) {
     // Parse JSON body for the text we want to convert
     const {text, voice} = await body
 
-    console.log({text})
-
     if (!text) {
       return new Response('Missing "text" parameter in request body.', {
         status: 400,
@@ -56,8 +54,6 @@ export async function POST({request}: {request: Request}) {
         status: openaiResponse.status,
       })
     }
-
-    console.log(openaiResponse)
 
     // Return a streamed response back to the client
     // Astro’s Response can accept a ReadableStream directly

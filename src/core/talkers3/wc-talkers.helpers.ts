@@ -1,4 +1,3 @@
-import {VoiceId} from '@aws-sdk/client-polly'
 import {type AzureVoiceInfo} from './types'
 
 const VOICES = 'get_ms_voices'
@@ -37,220 +36,37 @@ function makeFace(name: string) {
   return `https://api.dicebear.com/9.x/croodles-neutral/svg?seed=${name}`
 }
 
-export type FormType = {
-  voiceId: VoiceId
+export type AITalker = {
   text: string
-  text_hidden?: string
-  engine: string
+  voice: string
+  engine?: string
 }
 
-export type GrokStoryType = {
-  voiceId: VoiceId
-  name: string
-  engine: string
+export async function playVoices(
+  formProps: AITalker[],
+  postSpeech: (props: AITalker) => Promise<Response>
+) {
+  // Get all the OpenAISpeech responses concurrently.
+  const responses = await Promise.all(formProps.map(postSpeech))
+
+  // Convert responses into audio elements concurrently.
+  const audios = await Promise.all(
+    responses.map(async response => {
+      const audioBlob = await response.blob()
+      const audioUrl = URL.createObjectURL(audioBlob)
+      return new Audio(audioUrl)
+    })
+  )
+
+  // Helper: Returns a promise that resolves when the audio ends.
+  const playAudio = (audio: HTMLAudioElement) =>
+    new Promise<void>(resolve => {
+      audio.addEventListener('ended', resolve, {once: true})
+      audio.play()
+    })
+
+  // Play all audios sequentially.
+  for (const audio of audios) {
+    await playAudio(audio)
+  }
 }
-
-export const playGrokStory = async (
-  values: GrokStoryType,
-  should_play: boolean
-) => {
-  const response = await fetch('/api/polly/say_story', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: values.name,
-      voiceId: values.voiceId,
-      engine: values.engine,
-    }),
-  })
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch audio')
-  }
-
-  // Read the response body as a ReadableStream
-  const reader = response.body?.getReader()
-  const chunks = []
-
-  // Read chunks of data from the stream
-  while (true) {
-    const {done, value} = await reader?.read?.()
-    if (done) break
-    chunks.push(value)
-  }
-
-  // Convert chunks to a Blob
-  const audioBlob = new Blob(chunks, {type: 'audio/mpeg'})
-  const audioUrl = URL.createObjectURL(audioBlob)
-
-  // Create and play an audio element
-  const audio = new Audio(audioUrl)
-  if (should_play) {
-    audio.play()
-  }
-  return audio
-}
-
-export const playText = async (
-  form: {
-    values: FormType
-  },
-  should_play: boolean
-) => {
-  const response = await fetch('/api/polly/say', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      text: form.values.text || form.values.text_hidden,
-      voiceId: form.values.voiceId,
-      engine: form.values.engine,
-    }),
-  })
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch audio')
-  }
-
-  // Read the response body as a ReadableStream
-  const reader = response.body?.getReader()
-  const chunks = []
-
-  // Read chunks of data from the stream
-  while (true) {
-    const {done, value} = await reader?.read?.()
-    if (done) break
-    chunks.push(value)
-  }
-
-  // Convert chunks to a Blob
-  const audioBlob = new Blob(chunks, {type: 'audio/mpeg'})
-  const audioUrl = URL.createObjectURL(audioBlob)
-
-  // Create and play an audio element
-  const audio = new Audio(audioUrl)
-  if (should_play) {
-    audio.play()
-  }
-  return audio
-}
-
-export const playMeme = async ({audio}: {audio: string}) => {
-  const response = await fetch('/api/get_meme', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({audio}),
-  })
-  if (!response.ok) throw new Error('Failed to fetch MP3')
-  const blob = await response.blob()
-  const url = URL.createObjectURL(blob)
-  return new Audio(url)
-}
-
-export const playTextAzure = async (
-  form: {
-    values: AzureVoiceInfo & {
-      text?: string
-      text_hidden?: string
-      express_as?: string
-    }
-  },
-  should_play: boolean
-) => {
-  const response = await fetch('/api/polly/say_m', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      ...form.values,
-      text: form.values.text || form.values.text_hidden,
-    }),
-  })
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch audio')
-  }
-
-  // Read the response body as a ReadableStream
-  const reader = response.body?.getReader()
-  const chunks = []
-
-  // Read chunks of data from the stream
-  while (true) {
-    const {done, value} = await reader?.read?.()
-    if (done) break
-    chunks.push(value)
-  }
-
-  // Convert chunks to a Blob
-  const audioBlob = new Blob(chunks, {type: 'audio/mpeg'})
-  const audioUrl = URL.createObjectURL(audioBlob)
-
-  // Create and play an audio element
-  const audio = new Audio(audioUrl)
-  if (should_play) {
-    audio.play()
-  }
-  return audio
-}
-
-export const playSSMLAzure = async (
-  form: {
-    values: {ssml: string}
-  },
-  should_play: boolean
-) => {
-  const response = await fetch('/api/polly/say_m2', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(form.values),
-  })
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch audio')
-  }
-
-  // Read the response body as a ReadableStream
-  const reader = response.body?.getReader()
-  const chunks = []
-
-  // Read chunks of data from the stream
-  while (true) {
-    const {done, value} = await reader?.read?.()
-    if (done) break
-    chunks.push(value)
-  }
-
-  // Convert chunks to a Blob
-  const audioBlob = new Blob(chunks, {type: 'audio/mpeg'})
-  const audioUrl = URL.createObjectURL(audioBlob)
-
-  // Create and play an audio element
-  const audio = new Audio(audioUrl)
-  if (should_play) {
-    audio.play()
-  }
-  return audio
-}
-
-// export function waitForAudioReady(audio : HTMLAudioElement) {
-//   return new Promise((resolve, reject) => {
-//     // Resolve when the audio can play through
-//     audio.addEventListener('canplaythrough', () => resolve(audio), {once: true})
-
-//     // Reject if an error occurs
-//     audio.addEventListener(
-//       'error',
-//       () => reject(new Error('Failed to load audio')),
-//       {once: true}
-//     )
-//   })
-// }

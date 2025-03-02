@@ -1,4 +1,4 @@
-import HTML from './templates/native.html?raw'
+import HTML from './templates/chatgpt.html?raw'
 
 type OpenAITalker = {
   text: string
@@ -65,7 +65,6 @@ if (typeof window != 'undefined') {
           const voice = e_select.value
 
           playVoices([{voice, text}])
-          // await speak(text, voice)
         })
 
         this.addEventListener('talker_speak', async listener => {
@@ -75,7 +74,6 @@ if (typeof window != 'undefined') {
           const index = listener?.detail?.index
           const voice = e_select.value
           playVoices([{voice, text}])
-          // await speak(text, voice)
 
           const event = new CustomEvent('speak_ended', {
             detail: {text, voice, index},
