@@ -1,6 +1,8 @@
 import {type AzureVoiceInfo} from './types'
+import {VoiceId, type DescribeVoicesCommandOutput} from '@aws-sdk/client-polly'
 
 const VOICES = 'get_ms_voices'
+const AMAZON_VOICES = 'get_voices'
 
 const dog = {
   [VOICES]: (function () {
@@ -8,6 +10,29 @@ const dog = {
     if (_t) return JSON.parse(_t) as AzureVoiceInfo[]
     return null
   })(),
+  [AMAZON_VOICES]: (function () {
+    let _t = localStorage.getItem(AMAZON_VOICES)
+    if (_t) return JSON.parse(_t) as DescribeVoicesCommandOutput
+    return null
+  })(),
+}
+
+export async function getAmazonVoices() {
+  if (dog[AMAZON_VOICES]) return dog[AMAZON_VOICES]
+  const response = await fetch('/api/polly/list')
+  const json = (await response.json()) as DescribeVoicesCommandOutput
+
+  json.Voices = json.Voices?.filter?.(item => {
+    return item.LanguageCode?.startsWith('en')
+  })
+
+  json.Voices?.forEach(item => {
+    item.Face = makeFace(item.Name || '')
+    return item
+  })
+
+  localStorage.setItem(VOICES, JSON.stringify(json))
+  return (dog[AMAZON_VOICES] = json)
 }
 
 export async function getMicrosoftVoices() {

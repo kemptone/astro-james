@@ -10,6 +10,7 @@ import {
 type RequestBody = {
   text: string
   voiceId: string
+  voice?: string
 }
 
 export const prerender = false
@@ -38,7 +39,7 @@ export async function POST({
   })
 
   const text: string = requestBody.text
-  const voiceId: VoiceId = requestBody.voiceId as VoiceId
+  const voiceId: VoiceId = (requestBody.voiceId || requestBody.voice) as VoiceId
   const engine: Engine = requestBody.engine as Engine
   const textType: TextType = requestBody.textType as TextType
 
@@ -61,7 +62,7 @@ export async function POST({
     Text: text,
     VoiceId: voiceId,
     Engine: engine,
-    TextType : textType || 'text', // Change to 'ssml' if using SSML input
+    TextType: textType || 'text', // Change to 'ssml' if using SSML input
   }
 
   try {
@@ -87,8 +88,11 @@ export async function POST({
     }
   } catch (error) {
     console.error('Error synthesizing speech:', error)
-    return new Response(JSON.stringify({ error: 'Failed to synthesize speech' }), {
-      status: 500,
-    })
+    return new Response(
+      JSON.stringify({error: 'Failed to synthesize speech'}),
+      {
+        status: 500,
+      }
+    )
   }
 }

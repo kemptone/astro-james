@@ -2,6 +2,7 @@ import HTML from './templates/wrap.html?raw'
 import './wc-universal-native'
 import './wc-universal-chatgpt'
 import './wc-universal-microsoft'
+import './wc-universal-amazon'
 
 const Options = {
   Native: {
@@ -13,7 +14,9 @@ const Options = {
   Microsoft: {
     element: 'wc-universal-microsoft',
   },
-  Amazon: {},
+  Amazon: {
+    element: 'wc-universal-amazon',
+  },
 }
 
 if (typeof window != 'undefined')
