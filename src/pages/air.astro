@@ -78,6 +78,14 @@ function getRandomValue(min: number, max: number): number {
   <div class="container">
     <h1>Air Quality Management Game</h1>
 
+    <div id="game-goal" style="margin-bottom: 20px; padding: 10px; border: 1px solid #007bff; border-radius: 4px; background-color: #e7f3ff;">
+      <p><strong>Goal:</strong> Get the air quality for all entities (Wrockley, Kufty, Mormage, Parad) to 'Good' (50 or less).</p>
+    </div>
+
+    <div id="win-message" style="display: none; margin-bottom: 20px; padding: 15px; border: 1px solid #28a745; border-radius: 4px; background-color: #d4edda; color: #155724; text-align: center; font-size: 1.2em;">
+      <p>Congratulations! You've achieved the goal and improved everyone's air quality!</p>
+    </div>
+
     {entities.map(entity => (
       <div class="entity-controls" id={`entity-${entity.id}-controls`}>
         <label for={`${entity.id}-slider`}>{entity.name}'s Air Quality: <span id={`${entity.id}-value`} class="value-display"></span></label>
