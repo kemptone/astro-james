@@ -1,0 +1,171 @@
+---
+// src/pages/air.astro
+const entities = [
+  { name: 'Wrockley', id: 'wrockley' },
+  { name: 'Kufty', id: 'kufty' },
+  { name: 'Mormage', id: 'mormage' },
+  { name: 'Parad', id: 'parad' },
+];
+
+// Helper function to generate a random number within a range
+function getRandomValue(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+---
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Air Quality Management Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    .entity-controls {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #fafafa;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="range"] {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .value-display {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #007bff;
+    }
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Air Quality Management Game</h1>
+
+    {entities.map(entity => (
+      <div class="entity-controls" id={`entity-${entity.id}-controls`}>
+        <label for={`${entity.id}-slider`}>{entity.name}'s Air Quality: <span id={`${entity.id}-value`} class="value-display"></span></label>
+        <input type="range" id={`${entity.id}-slider`} name={`${entity.id}-slider`} min="1" max="500">
+      </div>
+    ))}
+
+    <div id="actions">
+      <h2>Take Action:</h2>
+      <button id="action-usa">USA</button>
+      <button id="action-india">India</button>
+      <button id="action-china">China</button>
+      <button id="action-skorea">South Korea</button>
+      <button id="action-singapore">Singapore</button>
+    </div>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const entities = [
+        { name: 'Wrockley', id: 'wrockley' },
+        { name: 'Kufty', id: 'kufty' },
+        { name: 'Mormage', id: 'mormage' },
+        { name: 'Parad', id: 'parad' },
+      ];
+
+      type CountryId = 'usa' | 'india' | 'china' | 'skorea' | 'singapore';
+
+      const countryActions: Record<CountryId, Record<string, number>> = {
+        usa: { wrockley: 10, kufty: -5, mormage: 0, parad: 5 }, // Placeholder values
+        india: { wrockley: -10, kufty: 15, mormage: 5, parad: -5 },
+        china: { wrockley: -15, kufty: -10, mormage: 20, parad: 10 },
+        skorea: { wrockley: 5, kufty: 10, mormage: -5, parad: -10 },
+        singapore: { wrockley: 0, kufty: 5, mormage: 10, parad: 15 },
+      };
+
+      function getRandomValue(min: number, max: number): number {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      entities.forEach(entity => {
+        const slider = document.getElementById(`${entity.id}-slider`) as HTMLInputElement;
+        const valueDisplay = document.getElementById(`${entity.id}-value`);
+        if (slider && valueDisplay) {
+          const randomValue = getRandomValue(1, 500);
+          slider.value = String(randomValue);
+          valueDisplay.textContent = String(randomValue);
+
+          // Add event listener to update display when slider changes
+          slider.addEventListener('input', (event) => {
+            if (event.target instanceof HTMLInputElement) {
+              valueDisplay.textContent = event.target.value;
+            }
+          });
+        }
+      });
+
+      function applyCountryAction(countryId: CountryId) {
+        const effects = countryActions[countryId];
+        if (!effects) return;
+
+        entities.forEach(entity => {
+          const slider = document.getElementById(`${entity.id}-slider`) as HTMLInputElement;
+          const valueDisplay = document.getElementById(`${entity.id}-value`);
+
+          if (slider && valueDisplay) {
+            let currentValue = parseInt(slider.value, 10);
+            const change = effects[entity.id] || 0;
+            let newValue = currentValue + change;
+
+            // Clamp value between 1 and 500
+            newValue = Math.max(1, Math.min(500, newValue));
+
+            slider.value = String(newValue);
+            valueDisplay.textContent = String(newValue);
+          }
+        });
+        console.log(`Action by ${countryId} applied. New values set.`);
+      }
+
+      document.getElementById('action-usa')?.addEventListener('click', () => applyCountryAction('usa'));
+      document.getElementById('action-india')?.addEventListener('click', () => applyCountryAction('india'));
+      document.getElementById('action-china')?.addEventListener('click', () => applyCountryAction('china'));
+      document.getElementById('action-skorea')?.addEventListener('click', () => applyCountryAction('skorea'));
+      document.getElementById('action-singapore')?.addEventListener('click', () => applyCountryAction('singapore'));
+
+    });
+  </script>
+</body>
+</html>
