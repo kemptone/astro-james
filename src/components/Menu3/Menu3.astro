@@ -1,0 +1,52 @@
+---
+// Example: src/pages/index.astro
+import HamburgerMenu from './Hamburger.astro';
+
+const { inverted = false } = Astro.props;
+
+const routes = `
+air
+texttospeech
+punishments
+polkis
+exam
+countries
+decibel
+music2
+ampm
+dictionary
+nightnight
+heatergame
+tide
+bignumbers
+reinstall
+timer2
+kidthing
+timer3
+brownthing
+timer4
+calculator
+lasko
+speedup
+voicemaker
+characters
+learncode
+spin
+wordsearch
+colorfinder
+live
+spinners
+talkers2
+grok
+girls
+colorthing`
+  .split(/[ \n]/g)
+  .filter(item => !!item)
+  .sort()
+  .map(item => ({
+    name: item,
+    url: `/${item}`,
+  }))
+---
+
+<HamburgerMenu pages={routes} inverted={inverted} />

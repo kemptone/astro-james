@@ -1,0 +1,180 @@
+---
+// HamburgerMenu.astro
+export interface Props {
+  pages: Array<{
+    name: string;
+    url: string;
+  }>;
+  inverted?: boolean;
+}
+
+const { pages, inverted = false } = Astro.props;
+---
+
+<nav class={`hamburger-nav ${inverted ? 'inverted' : ''}`}>
+  <button class="hamburger-btn" aria-label="Toggle menu">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+  </button>
+  
+  <div class="menu-overlay">
+    <ul class="menu-list">
+      {pages.map((page) => (
+        <li class="menu-item">
+          <a href={page.url} class="menu-link">{page.name}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .hamburger-nav {
+    position: fixed;
+    z-index: 1000;
+    right: 20px;
+    top: 20px;
+  }
+
+  .hamburger-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+    position: relative;
+  }
+
+  .hamburger-line {
+    width: 100%;
+    height: 3px;
+    background-color: #333;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+
+  .hamburger-btn:hover .hamburger-line {
+    background-color: #555;
+  }
+
+  /* Inverted styles for dark backgrounds */
+  .hamburger-nav.inverted .hamburger-line {
+    background-color: #fff;
+  }
+
+  .hamburger-nav.inverted .hamburger-btn:hover .hamburger-line {
+    background-color: #ccc;
+  }
+
+  /* Menu overlay */
+  .menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.95);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+
+  .menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    display: flex
+;
+    flex-wrap: wrap;
+    padding: 1rem;
+  }
+
+  .menu-item {
+    margin: 0;
+  }
+
+  .menu-link {
+    color: white;
+    text-decoration: none;
+    font-size: 2rem;
+    font-weight: 300;
+    transition: color 0.3s ease;
+    display: block;
+    padding: 0.5rem 1rem;
+  }
+
+  .menu-link:hover {
+    color: #ccc;
+  }
+
+  /* Active states */
+  .hamburger-nav.active .menu-overlay {
+    transform: translateX(0);
+  }
+
+  .hamburger-nav.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+
+  .hamburger-nav.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger-nav.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .menu-link {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const hamburgerNav = document.querySelector('.hamburger-nav');
+    const hamburgerBtn = document.querySelector('.hamburger-btn');
+    const menuOverlay = document.querySelector('.menu-overlay');
+    const menuLinks = document.querySelectorAll('.menu-link');
+
+    if (hamburgerBtn && hamburgerNav) {
+      hamburgerBtn.addEventListener('click', () => {
+        hamburgerNav.classList.toggle('active');
+      });
+
+      // Close menu when clicking on overlay
+      menuOverlay?.addEventListener('click', (e) => {
+        if (e.target === menuOverlay) {
+          hamburgerNav.classList.remove('active');
+        }
+      });
+
+      // Close menu when clicking on a link
+      menuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          hamburgerNav.classList.remove('active');
+        });
+      });
+
+      // Close menu with Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && hamburgerNav.classList.contains('active')) {
+          hamburgerNav.classList.remove('active');
+        }
+      });
+    }
+  });
+</script>
