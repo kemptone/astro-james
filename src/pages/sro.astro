@@ -1,39 +1,41 @@
 ---
-import Menu3 from '../components/Menu3/Menu3.astro';
+import Menu3 from '../components/Menu3/Menu3.astro'
 ---
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRO - String Reverse Operation</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-        }
-    </style>
-</head>
-<body>
-    <Menu3 inverted />
-    <sro-reversal></sro-reversal>
-
-    <script>
-        class SROReversalComponent extends HTMLElement {
-            constructor() {
-                super();
-                this.attachShadow({ mode: 'open' });
-                this.reversalHistory = [];
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SRO - String Reverse Operation</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                    Roboto, Arial, sans-serif;
             }
+        </style>
+    </head>
+    <body>
+        <Menu3 inverted />
+        <sro-reversal></sro-reversal>
 
-            connectedCallback() {
-                this.render();
-                this.setupEventListeners();
-            }
+        <script>
+            class SROReversalComponent extends HTMLElement {
+                constructor() {
+                    super()
+                    this.attachShadow({mode: 'open'})
+                    this.reversalHistory = []
+                }
 
-            render() {
-                this.shadowRoot.innerHTML = `
+                connectedCallback() {
+                    this.render()
+                    this.setupEventListeners()
+                }
+
+                render() {
+                    this.shadowRoot.innerHTML = `
                     <style>
                         ${this.getStyles()}
                     </style>
@@ -46,7 +48,6 @@ import Menu3 from '../components/Menu3/Menu3.astro';
                                 <div class="powered">Powered by Astro James Technology ✨</div>
                             </div>
 
-                            <div class="panels">
                                 <div class="panel">
                                     <div class="panel-header">
                                         <span class="icon">↻</span> Word Reversal Engine
@@ -58,32 +59,25 @@ import Menu3 from '../components/Menu3/Menu3.astro';
                                     </button>
                                 </div>
 
+
                                 <div class="panel">
                                     <div class="panel-header">
                                         <span class="icon">✦</span> Reversed Output
                                     </div>
                                     <p class="panel-subtitle">Your transformed text appears here</p>
                                     <div class="output" id="output"></div>
-                                    <button class="copy-btn" id="copyBtn">Copy to Clipboard</button>
                                 </div>
-                            </div>
-
-                            <div class="history-panel">
-                                <div class="panel-header">Recent Reversals</div>
-                                <p class="panel-subtitle">Your last few operations</p>
-                                <div class="history-list" id="historyList"></div>
-                            </div>
 
                             <div class="footer">
                                 Built with ❤️ by Astro James | SRO v1.0
                             </div>
                         </div>
                     </div>
-                `;
-            }
+                `
+                }
 
-            getStyles() {
-                return `
+                getStyles() {
+                    return `
                     :host {
                         display: block;
                         min-height: 100vh;
@@ -360,77 +354,95 @@ import Menu3 from '../components/Menu3/Menu3.astro';
                     .history-list::-webkit-scrollbar-thumb:hover {
                         background: rgba(255, 255, 255, 0.3);
                     }
-                `;
-            }
-
-            setupEventListeners() {
-                const input = this.shadowRoot.getElementById('textInput');
-                const reverseBtn = this.shadowRoot.getElementById('reverseBtn');
-                const copyBtn = this.shadowRoot.getElementById('copyBtn');
-
-                reverseBtn.addEventListener('click', () => this.reverseText());
-                copyBtn.addEventListener('click', () => this.copyToClipboard());
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        this.reverseText();
-                    }
-                });
-            }
-
-            reverseText() {
-                const input = this.shadowRoot.getElementById('textInput');
-                const output = this.shadowRoot.getElementById('output');
-                const text = input.value.trim();
-
-                if (text) {
-                    const reversed = text.split('').reverse().join('');
-                    output.textContent = reversed;
-
-                    // Add to history
-                    this.reversalHistory.unshift({ original: text, reversed: reversed });
-                    if (this.reversalHistory.length > 5) {
-                        this.reversalHistory = this.reversalHistory.slice(0, 5);
-                    }
-                    this.updateHistory();
+                `
                 }
-            }
 
-            updateHistory() {
-                const historyList = this.shadowRoot.getElementById('historyList');
-                historyList.innerHTML = this.reversalHistory.map(item => `
+                setupEventListeners() {
+                    const input = this.shadowRoot.getElementById('textInput')
+                    const reverseBtn =
+                        this.shadowRoot.getElementById('reverseBtn')
+                    const copyBtn = this.shadowRoot.getElementById('copyBtn')
+
+                    reverseBtn.addEventListener('click', () =>
+                        this.reverseText(),
+                    )
+                    copyBtn.addEventListener('click', () =>
+                        this.copyToClipboard(),
+                    )
+                    input.addEventListener('keypress', e => {
+                        if (e.key === 'Enter') {
+                            this.reverseText()
+                        }
+                    })
+                }
+
+                reverseText() {
+                    const input = this.shadowRoot.getElementById('textInput')
+                    const output = this.shadowRoot.getElementById('output')
+                    const text = input.value.trim()
+
+                    if (text) {
+                        const reversed = text.split('').reverse().join('')
+                        output.textContent = reversed
+
+                        // Add to history
+                        this.reversalHistory.unshift({
+                            original: text,
+                            reversed: reversed,
+                        })
+                        if (this.reversalHistory.length > 5) {
+                            this.reversalHistory = this.reversalHistory.slice(
+                                0,
+                                5,
+                            )
+                        }
+                        this.updateHistory()
+                    }
+                }
+
+                updateHistory() {
+                    const historyList =
+                        this.shadowRoot.getElementById('historyList')
+                    historyList.innerHTML = this.reversalHistory
+                        .map(
+                            item => `
                     <div class="history-item">
                         <div class="history-label">Original:</div>
                         <div class="history-text">${item.original}</div>
                         <div class="history-label" style="margin-top: 10px;">Reversed:</div>
                         <div class="history-text">${item.reversed}</div>
                     </div>
-                `).join('');
-            }
+                `,
+                        )
+                        .join('')
+                }
 
-            copyToClipboard() {
-                const output = this.shadowRoot.getElementById('output');
-                const text = output.textContent;
-                
-                if (text && navigator.clipboard) {
-                    navigator.clipboard.writeText(text).then(() => {
-                        const copyBtn = this.shadowRoot.getElementById('copyBtn');
-                        const originalText = copyBtn.textContent;
-                        copyBtn.textContent = 'Copied!';
-                        setTimeout(() => {
-                            copyBtn.textContent = originalText;
-                        }, 2000);
-                    });
+                copyToClipboard() {
+                    const output = this.shadowRoot.getElementById('output')
+                    const text = output.textContent
+
+                    if (text && navigator.clipboard) {
+                        navigator.clipboard.writeText(text).then(() => {
+                            const copyBtn =
+                                this.shadowRoot.getElementById('copyBtn')
+                            const originalText = copyBtn.textContent
+                            copyBtn.textContent = 'Copied!'
+                            setTimeout(() => {
+                                copyBtn.textContent = originalText
+                            }, 2000)
+                        })
+                    }
                 }
             }
-        }
 
-        customElements.define('sro-reversal', SROReversalComponent);
-    </script>
-    <style is:global>
-body > header, body > main, body > footer {
-    padding-block: 0;
-}
-    </style>
-</body>
+            customElements.define('sro-reversal', SROReversalComponent)
+        </script>
+        <style is:global>
+            body > header,
+            body > main,
+            body > footer {
+                padding-block: 0;
+            }
+        </style>
+    </body>
 </html>
-
