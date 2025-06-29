@@ -19,6 +19,9 @@ const {pages, inverted = false} = Astro.props
   </button>
 
   <div class="menu-overlay">
+    <button data-as="reinstall" class="reinstall" type="button"
+      >Reinstall app</button
+    >
     <ul class="menu-list">
       {
         pages.map(page => (
@@ -34,6 +37,17 @@ const {pages, inverted = false} = Astro.props
 </nav>
 
 <style>
+
+  button.reinstall {
+    position: fixed;
+    top: 14px;
+    left: 10px;
+    padding: 2px 10px;
+    font-size: 21px;
+    cursor: pointer;
+    margin: 10px;
+  }
+
   .hamburger-nav {
     position: fixed;
     z-index: 1000;
@@ -162,6 +176,7 @@ const {pages, inverted = false} = Astro.props
     const hamburgerBtn = document.querySelector('.hamburger-btn')
     const menuOverlay = document.querySelector('.menu-overlay')
     const menuLinks = document.querySelectorAll('.menu-link')
+    const menuReinstall = document.querySelector('.reinstall')
 
     if (hamburgerBtn && hamburgerNav) {
       hamburgerBtn.addEventListener('click', () => {
@@ -188,6 +203,16 @@ const {pages, inverted = false} = Astro.props
           hamburgerNav.classList.remove('active')
         }
       })
+
+      if (menuReinstall) {
+        menuReinstall.addEventListener('click', () => {
+          localStorage.clear()
+          caches.delete('my-cache')
+          setTimeout(() => {
+            window.location.href = '/'
+          }, 1000)
+        })
+      }
     }
   })
 </script>
