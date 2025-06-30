@@ -15,421 +15,302 @@ import Menu3 from '../components/Menu3/Menu3.astro'
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
                     Roboto, Arial, sans-serif;
             }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            .sro-container {
+                min-height: 100vh;
+                background: linear-gradient(
+                    135deg,
+                    #1a1a3e 0%,
+                    #3d1e6d 50%,
+                    #8b1874 100%
+                );
+                position: relative;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+
+            .stars {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+            }
+
+            .stars::before,
+            .stars::after {
+                content: '';
+                position: absolute;
+                width: 2px;
+                height: 2px;
+                background: white;
+                box-shadow:
+                    50px 50px white,
+                    100px 80px white,
+                    150px 120px white,
+                    200px 20px white,
+                    250px 130px white,
+                    300px 70px white,
+                    350px 180px white,
+                    400px 110px white,
+                    450px 40px white,
+                    500px 170px white,
+                    550px 90px white,
+                    600px 150px white,
+                    650px 60px white,
+                    700px 140px white,
+                    750px 30px white,
+                    80px 200px white,
+                    130px 250px white,
+                    180px 300px white,
+                    230px 350px white,
+                    280px 400px white,
+                    330px 450px white,
+                    380px 250px white,
+                    430px 320px white,
+                    480px 380px white,
+                    530px 280px white,
+                    580px 340px white,
+                    630px 290px white;
+                opacity: 0.8;
+                animation: twinkle 3s infinite;
+            }
+
+            .stars::after {
+                animation-delay: 1.5s;
+            }
+
+            @keyframes twinkle {
+                0%,
+                100% {
+                    opacity: 0.8;
+                }
+                50% {
+                    opacity: 0.3;
+                }
+            }
+
+            .content {
+                width: 100%;
+                max-width: 900px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .logo {
+                font-size: 72px;
+                font-weight: bold;
+                color: #ff6ec7;
+                text-shadow: 0 0 30px rgba(255, 110, 199, 0.5);
+                margin-bottom: 10px;
+                letter-spacing: 8px;
+            }
+
+            .subtitle {
+                font-size: 24px;
+                color: white;
+                margin-bottom: 5px;
+            }
+
+            .powered {
+                font-size: 14px;
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .panel {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                border-radius: 20px;
+                padding: 30px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                margin-block: 5px;
+            }
+
+            .panel-header {
+                font-size: 20px;
+                font-weight: bold;
+                color: white;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .icon {
+                font-size: 24px;
+            }
+
+            .panel-subtitle {
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+
+            .input {
+                width: 100%;
+                padding: 15px 20px;
+                border: none;
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                font-size: 16px;
+                margin-bottom: 20px;
+                transition: all 0.3s ease;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .input::placeholder {
+                color: rgba(255, 255, 255, 0.5);
+            }
+
+            .input:focus {
+                outline: none;
+                background: rgba(255, 255, 255, 0.15);
+                border-color: #ff6ec7;
+                box-shadow: 0 0 20px rgba(255, 110, 199, 0.3);
+            }
+
+            .reverse-btn {
+                width: 100%;
+                padding: 15px;
+                border: none;
+                border-radius: 10px;
+                background: linear-gradient(135deg, #ff6ec7 0%, #8b1874 100%);
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .reverse-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(255, 110, 199, 0.4);
+            }
+
+            .btn-icon {
+                font-size: 20px;
+            }
+
+            .output {
+                width: 100%;
+                min-height: 53px;
+                padding: 15px 20px;
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                font-size: 16px;
+                margin-bottom: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                word-break: break-all;
+                display: flex;
+                align-items: center;
+            }
+
+            .footer {
+                text-align: center;
+                color: rgba(255, 255, 255, 0.6);
+                font-size: 14px;
+                margin-top: 40px;
+            }
         </style>
     </head>
     <body>
         <Menu3 inverted />
-        <sro-reversal></sro-reversal>
+
+        <div class="sro-container">
+            <div class="stars"></div>
+            <div class="content">
+                <div class="header">
+                    <div class="logo">✦ SRO ✦</div>
+                    <div class="subtitle">String Reverse Operation</div>
+                    <div class="powered">
+                        Powered by Astro James Technology ✨
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="icon">↻</span> Word Reversal Engine
+                    </div>
+                    <p class="panel-subtitle">
+                        Enter your text and watch the magic happen
+                    </p>
+                    <input
+                        type="text"
+                        autofocus="true"
+                        class="input"
+                        id="textInput"
+                        placeholder="Enter text..."
+                    />
+                    <button class="reverse-btn" id="reverseBtn">
+                        <span class="btn-icon">↻</span> Reverse Words
+                    </button>
+                    <p class="panel-subtitle">
+                        Your transformed text appears here
+                    </p>
+                    <div class="output" id="output"></div>
+                </div>
+
+                <div class="footer">
+                    Built with ❤️ by Astro James | SRO v1.0
+                </div>
+            </div>
+        </div>
 
         <script>
-            class SROReversalComponent extends HTMLElement {
-                constructor() {
-                    super()
-                    this.attachShadow({mode: 'open'})
-                    this.reversalHistory = []
-                }
+            // let reversalHistory = [];
 
-                connectedCallback() {
-                    this.render()
-                    this.setupEventListeners()
-                }
+            function setupEventListeners() {
+                const input = document.getElementById(
+                    'textInput',
+                ) as HTMLInputElement
+                const reverseBtn = document.getElementById(
+                    'reverseBtn',
+                ) as HTMLButtonElement
 
-                render() {
-                    this.shadowRoot.innerHTML = `
-                    <style>
-                        ${this.getStyles()}
-                    </style>
-                    <div class="container">
-                        <div class="stars"></div>
-                        <div class="content">
-                            <div class="header">
-                                <div class="logo">✦ SRO ✦</div>
-                                <div class="subtitle">String Reverse Operation</div>
-                                <div class="powered">Powered by Astro James Technology ✨</div>
-                            </div>
-
-                                <div class="panel">
-                                    <div class="panel-header">
-                                        <span class="icon">↻</span> Word Reversal Engine
-                                    </div>
-                                    <p class="panel-subtitle">Enter your text and watch the magic happen</p>
-                                    <input type="text" autofocus="true" class="input" id="textInput" placeholder="Enter text...">
-                                    <button class="reverse-btn" id="reverseBtn">
-                                        <span class="btn-icon">↻</span> Reverse Words
-                                    </button>
-                                    <p class="panel-subtitle">Your transformed text appears here</p>
-                                    <div class="output" id="output"></div>
-                                </div>
-
-                            <div class="footer">
-                                Built with ❤️ by Astro James | SRO v1.0
-                            </div>
-                        </div>
-                    </div>
-                `
-                }
-
-                getStyles() {
-                    return `
-                    :host {
-                        display: block;
-                        min-height: 100vh;
-                        margin: 0;
-                        padding: 0;
+                reverseBtn.addEventListener('click', () => reverseText())
+                input.addEventListener('keypress', e => {
+                    if (e.key === 'Enter') {
+                        reverseText()
                     }
+                })
+            }
 
-                    * {
-                        box-sizing: border-box;
-                    }
+            function reverseText() {
+                const input = document.getElementById(
+                    'textInput',
+                ) as HTMLInputElement
+                const output = document.getElementById(
+                    'output',
+                ) as HTMLDivElement
+                const text = input.value.trim()
 
-                    .container {
-                        min-height: 100vh;
-                        background: linear-gradient(135deg, #1a1a3e 0%, #3d1e6d 50%, #8b1874 100%);
-                        position: relative;
-                        overflow: hidden;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        padding: 20px;
-                    }
-
-                    .stars {
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        pointer-events: none;
-                    }
-
-                    .stars::before,
-                    .stars::after {
-                        content: '';
-                        position: absolute;
-                        width: 2px;
-                        height: 2px;
-                        background: white;
-                        box-shadow: 
-                            50px 50px white, 100px 80px white, 150px 120px white,
-                            200px 20px white, 250px 130px white, 300px 70px white,
-                            350px 180px white, 400px 110px white, 450px 40px white,
-                            500px 170px white, 550px 90px white, 600px 150px white,
-                            650px 60px white, 700px 140px white, 750px 30px white,
-                            80px 200px white, 130px 250px white, 180px 300px white,
-                            230px 350px white, 280px 400px white, 330px 450px white,
-                            380px 250px white, 430px 320px white, 480px 380px white,
-                            530px 280px white, 580px 340px white, 630px 290px white;
-                        opacity: 0.8;
-                        animation: twinkle 3s infinite;
-                    }
-
-                    .stars::after {
-                        animation-delay: 1.5s;
-                    }
-
-                    @keyframes twinkle {
-                        0%, 100% { opacity: 0.8; }
-                        50% { opacity: 0.3; }
-                    }
-
-                    .content {
-                        width: 100%;
-                        max-width: 900px;
-                        position: relative;
-                        z-index: 1;
-                    }
-
-                    .header {
-                        text-align: center;
-                        margin-bottom: 40px;
-                    }
-
-                    .logo {
-                        font-size: 72px;
-                        font-weight: bold;
-                        color: #ff6ec7;
-                        text-shadow: 0 0 30px rgba(255, 110, 199, 0.5);
-                        margin-bottom: 10px;
-                        letter-spacing: 8px;
-                    }
-
-                    .subtitle {
-                        font-size: 24px;
-                        color: white;
-                        margin-bottom: 5px;
-                    }
-
-                    .powered {
-                        font-size: 14px;
-                        color: rgba(255, 255, 255, 0.7);
-                    }
-
-                    .panels {
-                        display: grid;
-                        grid-template-columns: 1fr 1fr;
-                        gap: 20px;
-                        margin-bottom: 30px;
-                    }
-
-                    @media (max-width: 768px) {
-                        .panels {
-                            grid-template-columns: 1fr;
-                        }
-                    }
-
-                    .panel {
-                        background: rgba(255, 255, 255, 0.1);
-                        backdrop-filter: blur(10px);
-                        border-radius: 20px;
-                        padding: 30px;
-                        border: 1px solid rgba(255, 255, 255, 0.2);
-                        margin-block: 5px;
-                    }
-
-                    .panel-header {
-                        font-size: 20px;
-                        font-weight: bold;
-                        color: white;
-                        margin-bottom: 10px;
-                        display: flex;
-                        align-items: center;
-                        gap: 10px;
-                    }
-
-                    .icon {
-                        font-size: 24px;
-                    }
-
-                    .panel-subtitle {
-                        color: rgba(255, 255, 255, 0.7);
-                        font-size: 14px;
-                        margin-bottom: 20px;
-                    }
-
-                    .input {
-                        width: 100%;
-                        padding: 15px 20px;
-                        border: none;
-                        border-radius: 10px;
-                        background: rgba(255, 255, 255, 0.1);
-                        color: white;
-                        font-size: 16px;
-                        margin-bottom: 20px;
-                        transition: all 0.3s ease;
-                        border: 1px solid rgba(255, 255, 255, 0.2);
-                    }
-
-                    .input::placeholder {
-                        color: rgba(255, 255, 255, 0.5);
-                    }
-
-                    .input:focus {
-                        outline: none;
-                        background: rgba(255, 255, 255, 0.15);
-                        border-color: #ff6ec7;
-                        box-shadow: 0 0 20px rgba(255, 110, 199, 0.3);
-                    }
-
-                    .reverse-btn {
-                        width: 100%;
-                        padding: 15px;
-                        border: none;
-                        border-radius: 10px;
-                        background: linear-gradient(135deg, #ff6ec7 0%, #8b1874 100%);
-                        color: white;
-                        font-size: 16px;
-                        font-weight: bold;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        gap: 10px;
-                    }
-
-                    .reverse-btn:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 0 10px 30px rgba(255, 110, 199, 0.4);
-                    }
-
-                    .btn-icon {
-                        font-size: 20px;
-                    }
-
-                    .output {
-                        width: 100%;
-                        min-height: 53px;
-                        padding: 15px 20px;
-                        border-radius: 10px;
-                        background: rgba(255, 255, 255, 0.1);
-                        color: white;
-                        font-size: 16px;
-                        margin-bottom: 20px;
-                        border: 1px solid rgba(255, 255, 255, 0.2);
-                        word-break: break-all;
-                        display: flex;
-                        align-items: center;
-                    }
-
-                    .copy-btn {
-                        width: 100%;
-                        padding: 15px;
-                        border: none;
-                        border-radius: 10px;
-                        background: rgba(255, 255, 255, 0.2);
-                        color: white;
-                        font-size: 16px;
-                        font-weight: bold;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                    }
-
-                    .copy-btn:hover {
-                        background: rgba(255, 255, 255, 0.3);
-                    }
-
-                    .history-panel {
-                        background: rgba(255, 255, 255, 0.1);
-                        backdrop-filter: blur(10px);
-                        border-radius: 20px;
-                        padding: 30px;
-                        border: 1px solid rgba(255, 255, 255, 0.2);
-                    }
-
-                    .history-list {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 15px;
-                        max-height: 300px;
-                        overflow-y: auto;
-                    }
-
-                    .history-item {
-                        background: rgba(255, 255, 255, 0.05);
-                        padding: 15px;
-                        border-radius: 10px;
-                        border: 1px solid rgba(255, 255, 255, 0.1);
-                    }
-
-                    .history-label {
-                        color: rgba(255, 255, 255, 0.6);
-                        font-size: 12px;
-                        margin-bottom: 5px;
-                    }
-
-                    .history-text {
-                        color: white;
-                        font-size: 14px;
-                        word-break: break-all;
-                    }
-
-                    .footer {
-                        text-align: center;
-                        color: rgba(255, 255, 255, 0.6);
-                        font-size: 14px;
-                        margin-top: 40px;
-                    }
-
-                    /* Scrollbar styling */
-                    .history-list::-webkit-scrollbar {
-                        width: 8px;
-                    }
-
-                    .history-list::-webkit-scrollbar-track {
-                        background: rgba(255, 255, 255, 0.05);
-                        border-radius: 4px;
-                    }
-
-                    .history-list::-webkit-scrollbar-thumb {
-                        background: rgba(255, 255, 255, 0.2);
-                        border-radius: 4px;
-                    }
-
-                    .history-list::-webkit-scrollbar-thumb:hover {
-                        background: rgba(255, 255, 255, 0.3);
-                    }
-                `
-                }
-
-                setupEventListeners() {
-                    const input = this.shadowRoot.getElementById('textInput')
-                    const reverseBtn =
-                        this.shadowRoot.getElementById('reverseBtn')
-                    const copyBtn = this.shadowRoot.getElementById('copyBtn')
-
-                    reverseBtn.addEventListener('click', () =>
-                        this.reverseText(),
-                    )
-                    copyBtn.addEventListener('click', () =>
-                        this.copyToClipboard(),
-                    )
-                    input.addEventListener('keypress', e => {
-                        if (e.key === 'Enter') {
-                            this.reverseText()
-                        }
-                    })
-                }
-
-                reverseText() {
-                    const input = this.shadowRoot.getElementById('textInput')
-                    const output = this.shadowRoot.getElementById('output')
-                    const text = input.value.trim()
-
-                    if (text) {
-                        const reversed = text.split('').reverse().join('')
-                        output.textContent = reversed
-
-                        // Add to history
-                        this.reversalHistory.unshift({
-                            original: text,
-                            reversed: reversed,
-                        })
-                        if (this.reversalHistory.length > 5) {
-                            this.reversalHistory = this.reversalHistory.slice(
-                                0,
-                                5,
-                            )
-                        }
-                        this.updateHistory()
-                    }
-                }
-
-                updateHistory() {
-                    const historyList =
-                        this.shadowRoot.getElementById('historyList')
-                    historyList.innerHTML = this.reversalHistory
-                        .map(
-                            item => `
-                    <div class="history-item">
-                        <div class="history-label">Original:</div>
-                        <div class="history-text">${item.original}</div>
-                        <div class="history-label" style="margin-top: 10px;">Reversed:</div>
-                        <div class="history-text">${item.reversed}</div>
-                    </div>
-                `,
-                        )
-                        .join('')
-                }
-
-                copyToClipboard() {
-                    const output = this.shadowRoot.getElementById('output')
-                    const text = output.textContent
-
-                    if (text && navigator.clipboard) {
-                        navigator.clipboard.writeText(text).then(() => {
-                            const copyBtn =
-                                this.shadowRoot.getElementById('copyBtn')
-                            const originalText = copyBtn.textContent
-                            copyBtn.textContent = 'Copied!'
-                            setTimeout(() => {
-                                copyBtn.textContent = originalText
-                            }, 2000)
-                        })
-                    }
+                if (text) {
+                    const reversed = text.split('').reverse().join('')
+                    output.textContent = reversed
                 }
             }
 
-            customElements.define('sro-reversal', SROReversalComponent)
+            // Initialize when DOM is loaded
+            document.addEventListener('DOMContentLoaded', setupEventListeners)
         </script>
         <style is:global>
             body > header,
