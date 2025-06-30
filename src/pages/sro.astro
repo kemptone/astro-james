@@ -53,17 +53,10 @@ import Menu3 from '../components/Menu3/Menu3.astro'
                                         <span class="icon">↻</span> Word Reversal Engine
                                     </div>
                                     <p class="panel-subtitle">Enter your text and watch the magic happen</p>
-                                    <input type="text" class="input" id="textInput" placeholder="Enter text...">
+                                    <input type="text" autofocus="true" class="input" id="textInput" placeholder="Enter text...">
                                     <button class="reverse-btn" id="reverseBtn">
                                         <span class="btn-icon">↻</span> Reverse Words
                                     </button>
-                                </div>
-
-
-                                <div class="panel">
-                                    <div class="panel-header">
-                                        <span class="icon">✦</span> Reversed Output
-                                    </div>
                                     <p class="panel-subtitle">Your transformed text appears here</p>
                                     <div class="output" id="output"></div>
                                 </div>
@@ -190,6 +183,7 @@ import Menu3 from '../components/Menu3/Menu3.astro'
                         border-radius: 20px;
                         padding: 30px;
                         border: 1px solid rgba(255, 255, 255, 0.2);
+                        margin-block: 5px;
                     }
 
                     .panel-header {
