@@ -37,7 +37,6 @@ const {pages, inverted = false} = Astro.props
 </nav>
 
 <style>
-
   button.reinstall {
     position: fixed;
     top: 14px;
@@ -67,6 +66,7 @@ const {pages, inverted = false} = Astro.props
     padding: 0;
     z-index: 1001;
     position: relative;
+    box-shadow: none;
   }
 
   .hamburger-line {
@@ -145,7 +145,7 @@ const {pages, inverted = false} = Astro.props
 
   .hamburger-nav.active .hamburger-line:nth-child(1) {
     /* transform: rotate(45deg) translate(17px, 18px); */
-    transform: rotate(45deg) translate(15px,15px);
+    transform: rotate(45deg) translate(15px, 15px);
   }
 
   .hamburger-nav.active .hamburger-line:nth-child(2) {
@@ -154,7 +154,7 @@ const {pages, inverted = false} = Astro.props
 
   .hamburger-nav.active .hamburger-line:nth-child(3) {
     /* transform: rotate(-45deg) translate(6px, -6px); */
-    transform: rotate(-45deg) translate(7px,-9px);
+    transform: rotate(-45deg) translate(7px, -9px);
   }
 
   /* Responsive adjustments */
