@@ -12,14 +12,15 @@ import {
   behavior_score,
   randomFromArray,
 } from '@/data/bad_stuff'
+import Menu3 from '@/components/Menu3/Menu3.astro'
 import '../components/wc-texarea-sizer'
 ---
 
 <Empty title="girls">
+  <Menu3 />
   <main>
     <header>
       <h1>Girl names</h1>
-      <a href="/">Back to site</a>
     </header>
     <div id="filters" class="group">
       <input type="search" name="name_filter" placeholder="Filter names" />
