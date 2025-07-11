@@ -70,6 +70,24 @@ d.addEventListener('DOMContentLoaded', async e => {
         })
     })
 
+    if (!fields.length) {
+      alert("No text to play")
+      return
+    }
+
+    const moderation = await fetch('/api/openai/openai_moderation', {
+        method: 'POST',
+        body: JSON.stringify({text: fields.map(item => item.text).join('. ')}),
+    })
+
+    const moderationData = await moderation.json()
+
+    if (moderationData.results[0].flagged) {
+      alert("Text contains flagged language, please stop doing this!")
+      location.reload()
+      return
+    }
+
     for (let x = 0; x < fields.length; x++) {
       let field = fields[x]
 
