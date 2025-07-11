@@ -8,6 +8,7 @@ import Layout from "../layouts/Layout.astro";
 
 <script>
     localStorage.clear()
+    caches.delete('my-cache')
     setTimeout(() => {
         window.location.href = '/'
     }, 1000)

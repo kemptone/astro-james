@@ -1,0 +1,323 @@
+---
+import Menu3 from '../components/Menu3/Menu3.astro'
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SRO - String Reverse Operation</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                    Roboto, Arial, sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            .sro-container {
+                min-height: 100vh;
+                background: linear-gradient(
+                    135deg,
+                    #1a1a3e 0%,
+                    #3d1e6d 50%,
+                    #8b1874 100%
+                );
+                position: relative;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+
+            .stars {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+            }
+
+            .stars::before,
+            .stars::after {
+                content: '';
+                position: absolute;
+                width: 2px;
+                height: 2px;
+                background: white;
+                box-shadow:
+                    50px 50px white,
+                    100px 80px white,
+                    150px 120px white,
+                    200px 20px white,
+                    250px 130px white,
+                    300px 70px white,
+                    350px 180px white,
+                    400px 110px white,
+                    450px 40px white,
+                    500px 170px white,
+                    550px 90px white,
+                    600px 150px white,
+                    650px 60px white,
+                    700px 140px white,
+                    750px 30px white,
+                    80px 200px white,
+                    130px 250px white,
+                    180px 300px white,
+                    230px 350px white,
+                    280px 400px white,
+                    330px 450px white,
+                    380px 250px white,
+                    430px 320px white,
+                    480px 380px white,
+                    530px 280px white,
+                    580px 340px white,
+                    630px 290px white;
+                opacity: 0.8;
+                animation: twinkle 3s infinite;
+            }
+
+            .stars::after {
+                animation-delay: 1.5s;
+            }
+
+            @keyframes twinkle {
+                0%,
+                100% {
+                    opacity: 0.8;
+                }
+                50% {
+                    opacity: 0.3;
+                }
+            }
+
+            .content {
+                width: 100%;
+                max-width: 900px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .logo {
+                font-size: 72px;
+                font-weight: bold;
+                color: #ff6ec7;
+                text-shadow: 0 0 30px rgba(255, 110, 199, 0.5);
+                margin-bottom: 10px;
+                letter-spacing: 8px;
+            }
+
+            .subtitle {
+                font-size: 24px;
+                color: white;
+                margin-bottom: 5px;
+            }
+
+            .powered {
+                font-size: 14px;
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .panel {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                border-radius: 20px;
+                padding: 30px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                margin-block: 5px;
+            }
+
+            .panel-header {
+                font-size: 20px;
+                font-weight: bold;
+                color: white;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .icon {
+                font-size: 24px;
+            }
+
+            .panel-subtitle {
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+
+            .input {
+                width: 100%;
+                padding: 15px 20px;
+                border: none;
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                font-size: 16px;
+                margin-bottom: 20px;
+                transition: all 0.3s ease;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .input::placeholder {
+                color: rgba(255, 255, 255, 0.5);
+            }
+
+            .input:focus {
+                outline: none;
+                background: rgba(255, 255, 255, 0.15);
+                border-color: #ff6ec7;
+                box-shadow: 0 0 20px rgba(255, 110, 199, 0.3);
+            }
+
+            .reverse-btn {
+                width: 100%;
+                padding: 15px;
+                border: none;
+                border-radius: 10px;
+                background: linear-gradient(135deg, #ff6ec7 0%, #8b1874 100%);
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .reverse-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(255, 110, 199, 0.4);
+            }
+
+            .btn-icon {
+                font-size: 20px;
+            }
+
+            .output {
+                width: 100%;
+                min-height: 53px;
+                padding: 15px 20px;
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                font-size: 16px;
+                margin-bottom: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                word-break: break-all;
+                display: flex;
+                align-items: center;
+            }
+
+            .footer {
+                text-align: center;
+                color: rgba(255, 255, 255, 0.6);
+                font-size: 14px;
+                margin-top: 40px;
+            }
+        </style>
+    </head>
+    <body>
+        <Menu3 inverted />
+
+        <div class="sro-container">
+            <div class="stars"></div>
+            <div class="content">
+                <div class="header">
+                    <div class="logo">✦ SRO ✦</div>
+                    <div class="subtitle">String Reverse Operation</div>
+                    <div class="powered">
+                        Powered by Astro James Technology ✨
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="icon">↻</span> Word Reversal Engine
+                    </div>
+                    <p class="panel-subtitle">
+                        Enter your text and watch the magic happen
+                    </p>
+                    <input
+                        type="text"
+                        autofocus="true"
+                        class="input"
+                        id="textInput"
+                        placeholder="Enter text..."
+                    />
+                    <button class="reverse-btn" id="reverseBtn">
+                        <span class="btn-icon">↻</span> Reverse Words
+                    </button>
+                    <p class="panel-subtitle">
+                        Your transformed text appears here
+                    </p>
+                    <div class="output" id="output"></div>
+                </div>
+
+                <div class="footer">
+                    Built with ❤️ by Astro James | SRO v1.0
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // let reversalHistory = [];
+
+            function setupEventListeners() {
+                const input = document.getElementById(
+                    'textInput',
+                ) as HTMLInputElement
+                const reverseBtn = document.getElementById(
+                    'reverseBtn',
+                ) as HTMLButtonElement
+
+                reverseBtn.addEventListener('click', () => reverseText())
+                input.addEventListener('keypress', e => {
+                    if (e.key === 'Enter') {
+                        reverseText()
+                    }
+                })
+            }
+
+            function reverseText() {
+                const input = document.getElementById(
+                    'textInput',
+                ) as HTMLInputElement
+                const output = document.getElementById(
+                    'output',
+                ) as HTMLDivElement
+                const text = input.value.trim()
+
+                if (text) {
+                    const reversed = text.split('').reverse().join('')
+                    output.textContent = reversed
+                }
+            }
+
+            // Initialize when DOM is loaded
+            document.addEventListener('DOMContentLoaded', setupEventListeners)
+        </script>
+        <style is:global>
+            body > header,
+            body > main,
+            body > footer {
+                padding-block: 0;
+            }
+        </style>
+    </body>
+</html>

@@ -1,4 +1,5 @@
 ---
+import Menu3 from '@/components/Menu3/Menu3.astro'
 // src/pages/air.astro
 const entities = [
   { name: 'Wrockley', id: 'wrockley' },
@@ -75,6 +76,7 @@ function getRandomValue(min: number, max: number): number {
   </style>
 </head>
 <body>
+  <Menu3 />
   <div class="container">
     <h1>Air Quality Management Game</h1>
 

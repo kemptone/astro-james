@@ -3,7 +3,7 @@ export interface Props {
   title: string
 }
 
-import Menu from '../components/Menu/Menu2.astro'
+import Menu3 from '../components/Menu3/Menu3.astro'
 import './style.css'
 
 const {title} = Astro.props
@@ -27,7 +27,7 @@ const {title} = Astro.props
   </head>
   <body>
     <slot />
-    <Menu />
+    <Menu3 />
   </body>
 </html>
 <script is:raw src="/loadserviceworker.js"></script>
