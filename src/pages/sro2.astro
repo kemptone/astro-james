@@ -1,6 +1,4 @@
 ---
-// Import the script for client-side execution
-import musicAppScript from '../core/sro2/MusicApp.js?url';
 import Menu3 from '@/components/Menu3/Menu3.astro'
 ---
 
@@ -13,7 +11,8 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
 	</head>
 	<body>
         <Menu3 />
-		<script type="module" src={musicAppScript}></script>
+		<!-- <script type="module" src={musicAppScript}></script> -->
+		<script src="../core/sro2/MusicApp.js"></script>
 		<music-app></music-app>
 	</body>
 </html>
