@@ -1,0 +1,55 @@
+---
+import { biblicalData } from '../data/biblicalData.ts';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bible Lineage Prototype - Expanded</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+      #map { height: 600px; }
+      body { font-family: Arial, sans-serif; }
+      .family-tree { white-space: pre; font-family: monospace; }
+    </style>
+  </head>
+  <body>
+    <h1>Bible Lineage Prototype: Expanded - Adam to Noah and Table of Nations</h1>
+    <p>Click markers for details on lineages, locations, and KJV verses. Pre-flood (blue markers), post-flood (green).</p>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script define:vars={{ biblicalData }}>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Initialize map
+        const map = L.map('map').setView([35, 45], 4); // Centered on Middle East
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add markers with colors
+        biblicalData.forEach(person => {
+          const marker = L.circleMarker([person.lat, person.lng], {
+            color: person.color,
+            radius: 8
+          }).addTo(map);
+          const popupContent = `
+            <h2>${person.name}</h2>
+            <p><b>Location:</b> Approx. lat ${person.lat}, lng ${person.lng} (Mini-map: zoomed view would appear here in full app)</p>
+            <p><b>Ancestors:</b> ${person.ancestors}</p>
+            <p><b>Progenitors:</b> ${person.progenitors}</p>
+            <p><b>Details:</b> ${person.details}${person.age ? ` Lived ${person.age} years.` : ''}</p>
+            <p><b>Family Tree:</b><br><span class="family-tree">${person.familyTree}</span></p>
+            <p><b>Verses:</b></p>
+            <ul>
+              ${person.verses.map(verse => `<li><a href="https://www.biblegateway.com/passage/?search=${encodeURIComponent(verse)}&version=KJV" target="_blank">${verse}</a> (Names link back in full app)</li>`).join('')}
+            </ul>
+          `;
+          marker.bindPopup(popupContent);
+        });
+      });
+    </script>
+  </body>
+</html>
