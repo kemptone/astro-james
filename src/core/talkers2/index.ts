@@ -84,8 +84,8 @@ d.addEventListener('DOMContentLoaded', async e => {
 
     if (moderationData.results[0].flagged) {
       alert("Text contains flagged language, please stop doing this!")
-      location.reload()
-      return
+      // location.reload()
+      // return
     }
 
     for (let x = 0; x < fields.length; x++) {
