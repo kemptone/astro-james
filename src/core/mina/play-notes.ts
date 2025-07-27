@@ -60,7 +60,7 @@ function noteToFrequency(note: string): number {
     B: 2,
   }
 
-  const semitonesFromA4 = noteOffsets[noteName] + (octave - 4) * 12
+  const semitonesFromA4 = noteOffsets[noteName] + (octave - 3) * 12
   return 440 * Math.pow(2, semitonesFromA4 / 12)
 }
 
