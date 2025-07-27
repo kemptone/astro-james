@@ -4,7 +4,9 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="mina">
   <h1>Mina Game</h1>
-  <grid-game></grid-game>
+  <div class="container">
+    <grid-game></grid-game>
+  </div>
 </Layout>
 
 <script>
@@ -16,6 +18,10 @@ import Layout from "../layouts/Layout.astro";
     text-align: left;
     margin-top: 1rem;
     margin-bottom: 1rem;
+  }
+  .container {
+    max-width: 414px;
+    margin: 0 auto;
   }
   grid-game {
     margin-top: 2rem;
