@@ -7,6 +7,7 @@ class GridGame extends HTMLElement {
   private buttonEl: HTMLButtonElement
   private errorEl: HTMLDivElement
   private cursorEl: HTMLDivElement
+  private shapes: number[] = []
 
   constructor() {
     super()
@@ -19,6 +20,11 @@ class GridGame extends HTMLElement {
     this.setupStyles()
     this.setupElements()
     this.updateCursorDisplay()
+  }
+
+  // Public method to access the shapes array
+  getShapes(): number[] {
+    return [...this.shapes] // Return a copy to prevent external modification
   }
 
   private setupStyles() {
@@ -78,7 +84,7 @@ class GridGame extends HTMLElement {
     this.errorEl = document.createElement('div')
     this.errorEl.classList.add('error')
 
-    const form = document.createElement('div')
+    const form = document.createElement('form')
     form.appendChild(this.inputEl)
     form.appendChild(this.buttonEl)
     form.appendChild(this.errorEl)
@@ -90,7 +96,11 @@ class GridGame extends HTMLElement {
     this.cursorEl.classList.add('cursor')
     this.gridEl.appendChild(this.cursorEl)
 
-    this.buttonEl.addEventListener('click', this.handleSubmit.bind(this))
+    form.addEventListener('submit', e => {
+      e.preventDefault()
+      this.handleSubmit()
+    })
+    // this.buttonEl.addEventListener('click', this.handleSubmit.bind(this))
   }
 
   private handleSubmit() {
@@ -100,6 +110,7 @@ class GridGame extends HTMLElement {
       if (isNaN(value) || value < 1 || value > 64) {
         throw new Error('Invalid number. Must be between 1 and 64.')
       }
+      this.shapes.push(value)
       this.placeShape(value)
       this.inputEl.value = ''
     } catch (e) {

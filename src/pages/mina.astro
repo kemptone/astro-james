@@ -1,4 +1,5 @@
 ---
+import { playNotes } from "@/core/mina/play-notes";
 import Layout from "../layouts/Layout.astro";
 ---
 
@@ -6,16 +7,28 @@ import Layout from "../layouts/Layout.astro";
   <h1>Mina Game</h1>
   <div class="container">
     <grid-game></grid-game>
+    <button class="play-button" type="button">Play</button>
   </div>
 </Layout>
 
 <script>
   import "../core/mina/wc-mina.ts";
+  import { playNotes } from "@/core/mina/play-notes";
+
+  const notes : number[] = []
   
   const gridGame = document.querySelector("grid-game") as GridGame;
 
   gridGame.addEventListener("game-over", () => {
-    alert("Game Over!");
+    const shapesArray = gridGame?.getShapes?.()
+    notes.push(...shapesArray)
+    playNotes(notes)
+
+    document.querySelector(".play-button")?.addEventListener("click", () => {
+      playNotes(notes)
+    })
+
+    // alert("Game Over!");
   });
 
 </script>
