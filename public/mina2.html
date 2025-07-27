@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+</head>
+<body>
+<script>
+let blocks = [];
+let blockSize = 80;
+let gridSize = 5;
+let offsetX = 50;
+let offsetY = 50;
+let gridOccupied = Array(gridSize).fill().map(() => Array(gridSize).fill(null));
+let input;
+let button;
+let cursorRow = 1;
+let cursorCol = 1;
+
+function setup() {
+  createCanvas(500, 500);
+  input = createInput('');
+  input.position(10, 10);
+  button = createButton('Create Block');
+  button.position(150, 10);
+  button.mousePressed(createNewBlock);
+}
+
+function draw() {
+  background(220);
+  // Draw grid lines
+  stroke(0);
+  for (let i = 0; i <= gridSize; i++) {
+    line(offsetX + i * blockSize, offsetY, offsetX + i * blockSize, offsetY + gridSize * blockSize);
+    line(offsetX, offsetY + i * blockSize, offsetX + gridSize * blockSize, offsetY + i * blockSize);
+  }
+  // Draw cursor highlight if exists
+  if (cursorRow !== null) {
+    fill(255, 255, 0, 100); // semi-transparent yellow
+    noStroke();
+    rect(offsetX + (cursorCol - 1) * blockSize, offsetY + (cursorRow - 1) * blockSize, blockSize, blockSize);
+  }
+  // Draw blocks
+  for (let block of blocks) {
+    fill(150, 200, 150);
+    rect(block.x, block.y, block.cellWidth * blockSize, block.cellHeight * blockSize);
+    fill(0);
+    textAlign(CENTER, CENTER);
+    textSize(20);
+    text(block.id, block.x + (block.cellWidth * blockSize) / 2, block.y + (block.cellHeight * blockSize) / 2);
+  }
+}
+
+function createNewBlock() {
+  let n = parseInt(input.value());
+  if (isNaN(n) || n < 1 || n > 25) {
+    alert('Please enter a number between 1 and 25.');
+    return;
+  }
+  let cellWidth = ((n - 1) % 5) + 1;
+  let cellHeight = Math.ceil(n / 5);
+  if (cursorRow === null) {
+    alert('No empty squares left.');
+    return;
+  }
+  let newBlock = {
+    id: n,
+    cellWidth: cellWidth,
+    cellHeight: cellHeight,
+    dragged: false,
+    dragOffsetX: 0,
+    dragOffsetY: 0
+  };
+  if (placeBlock(newBlock, cursorRow, cursorCol)) {
+    blocks.push(newBlock);
+    newBlock.x = offsetX + (newBlock.col - 1) * blockSize;
+    newBlock.y = offsetY + (newBlock.row - 1) * blockSize;
+    // Move cursor to next empty
+    let next = findNextEmpty(cursorRow, cursorCol);
+    cursorRow = next ? next.row : null;
+    cursorCol = next ? next.col : null;
+  } else {
+    alert('Cannot place block here: out of bounds or overlap.');
+  }
+  input.value('');
+}
+
+function findNextEmpty(row, col) {
+  // Check same row, next columns
+  for (let c = col + 1; c <= gridSize; c++) {
+    if (gridOccupied[row - 1][c - 1] === null) {
+      return { row: row, col: c };
+    }
+  }
+  // Check subsequent rows
+  for (let r = row + 1; r <= gridSize; r++) {
+    for (let c = 1; c <= gridSize; c++) {
+      if (gridOccupied[r - 1][c - 1] === null) {
+        return { row: r, col: c };
+      }
+    }
+  }
+  return null;
+}
+
+function mousePressed() {
+  for (let block of blocks) {
+    if (mouseX > block.x && mouseX < block.x + block.cellWidth * blockSize &&
+        mouseY > block.y && mouseY < block.y + block.cellHeight * blockSize) {
+      block.dragged = true;
+      block.dragOffsetX = mouseX - block.x;
+      block.dragOffsetY = mouseY - block.y;
+      return; // Only drag one block at a time
+    }
+  }
+}
+
+function mouseDragged() {
+  for (let block of blocks) {
+    if (block.dragged) {
+      block.x = mouseX - block.dragOffsetX;
+      block.y = mouseY - block.dragOffsetY;
+    }
+  }
+}
+
+function mouseReleased() {
+  for (let block of blocks) {
+    if (block.dragged) {
+      block.dragged = false;
+      let oldRow = block.row;
+      let oldCol = block.col;
+      clearBlock(block);
+      // Snap to nearest grid position for top-left
+      let snapCol = Math.round((block.x - offsetX) / blockSize) + 1;
+      let snapRow = Math.round((block.y - offsetY) / blockSize) + 1;
+      // Constrain to possible positions
+      snapCol = Math.max(1, Math.min(snapCol, gridSize - block.cellWidth + 1));
+      snapRow = Math.max(1, Math.min(snapRow, gridSize - block.cellHeight + 1));
+      if (placeBlock(block, snapRow, snapCol)) {
+        block.x = offsetX + (block.col - 1) * blockSize;
+        block.y = offsetY + (block.row - 1) * blockSize;
+      } else {
+        // Revert to old position
+        placeBlock(block, oldRow, oldCol);
+        block.x = offsetX + (block.col - 1) * blockSize;
+        block.y = offsetY + (block.row - 1) * blockSize;
+      }
+    }
+  }
+}
+
+function placeBlock(block, newRow, newCol) {
+  // Check bounds
+  if (newRow < 1 || newRow + block.cellHeight - 1 > gridSize ||
+      newCol < 1 || newCol + block.cellWidth - 1 > gridSize) {
+    return false;
+  }
+  // Check for overlap
+  for (let r = 0; r < block.cellHeight; r++) {
+    for (let c = 0; c < block.cellWidth; c++) {
+      if (gridOccupied[newRow - 1 + r][newCol - 1 + c] !== null) {
+        return false;
+      }
+    }
+  }
+  // Place the block
+  for (let r = 0; r < block.cellHeight; r++) {
+    for (let c = 0; c < block.cellWidth; c++) {
+      gridOccupied[newRow - 1 + r][newCol - 1 + c] = block;
+    }
+  }
+  block.row = newRow;
+  block.col = newCol;
+  return true;
+}
+
+function clearBlock(block) {
+  if (!block.row || !block.col) return;
+  for (let r = 0; r < block.cellHeight; r++) {
+    for (let c = 0; c < block.cellWidth; c++) {
+      gridOccupied[block.row - 1 + r][block.col - 1 + c] = null;
+    }
+  }
+}
+</script>
+</body>
+</html>

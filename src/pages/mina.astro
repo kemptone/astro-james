@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="mina">
+  <h1>Mina Game</h1>
+  <grid-game></grid-game>
+</Layout>
+
+<script>
+  import "../core/mina/wc-mina.ts";
+</script>
+
+<style is:inline>
+  h1 {
+    text-align: left;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  grid-game {
+    margin-top: 2rem;
+  }
+</style>
