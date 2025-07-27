@@ -11,6 +11,13 @@ import Layout from "../layouts/Layout.astro";
 
 <script>
   import "../core/mina/wc-mina.ts";
+  
+  const gridGame = document.querySelector("grid-game") as GridGame;
+
+  gridGame.addEventListener("game-over", () => {
+    alert("Game Over!");
+  });
+
 </script>
 
 <style is:inline>

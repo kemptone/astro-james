@@ -149,7 +149,8 @@ class GridGame extends HTMLElement {
 
     // Check if full
     if (!this.cursor) {
-      alert('Grid is fully filled!')
+      // alert('Grid is fully filled!')
+      this.dispatchEvent(new CustomEvent('game-over'))
     }
   }
 
