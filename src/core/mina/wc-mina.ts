@@ -1,5 +1,4 @@
 class GridGame extends HTMLElement {
-  private shadow: ShadowRoot
   private occupied: boolean[][]
   private cursor: {r: number; c: number} | null
   private gridEl: HTMLDivElement
@@ -11,13 +10,12 @@ class GridGame extends HTMLElement {
 
   constructor() {
     super()
-    this.shadow = this.attachShadow({mode: 'open'})
     this.occupied = Array.from({length: 8}, () => Array(8).fill(false))
     this.cursor = {r: 0, c: 0}
   }
 
   connectedCallback() {
-    this.setupStyles()
+    this.setupTemplate()
     this.setupElements()
     this.updateCursorDisplay()
   }
@@ -27,9 +25,9 @@ class GridGame extends HTMLElement {
     return [...this.shapes] // Return a copy to prevent external modification
   }
 
-  private setupStyles() {
-    const style = document.createElement('style')
-    style.textContent = `
+  private setupTemplate() {
+    this.innerHTML = `
+      <style>
         .grid {
           display: grid;
           grid-template-columns: repeat(8, 50px);
@@ -64,43 +62,30 @@ class GridGame extends HTMLElement {
         button {
           padding: 5px;
         }
-      `
-    this.shadow.appendChild(style)
+      </style>
+      <div class="grid">
+        <div class="cursor"></div>
+      </div>
+      <form>
+        <input type="number" min="1" max="64" placeholder="Enter number 1-64">
+        <button type="submit">Submit</button>
+        <div class="error"></div>
+      </form>
+    `
   }
 
   private setupElements() {
-    this.gridEl = document.createElement('div')
-    this.gridEl.classList.add('grid')
+    this.gridEl = this.querySelector('.grid') as HTMLDivElement
+    this.inputEl = this.querySelector('input') as HTMLInputElement
+    this.buttonEl = this.querySelector('button') as HTMLButtonElement
+    this.errorEl = this.querySelector('.error') as HTMLDivElement
+    this.cursorEl = this.querySelector('.cursor') as HTMLDivElement
 
-    this.inputEl = document.createElement('input')
-    this.inputEl.type = 'number'
-    this.inputEl.min = '1'
-    this.inputEl.max = '64'
-    this.inputEl.placeholder = 'Enter number 1-64'
-
-    this.buttonEl = document.createElement('button')
-    this.buttonEl.textContent = 'Submit'
-
-    this.errorEl = document.createElement('div')
-    this.errorEl.classList.add('error')
-
-    const form = document.createElement('form')
-    form.appendChild(this.inputEl)
-    form.appendChild(this.buttonEl)
-    form.appendChild(this.errorEl)
-
-    this.shadow.appendChild(this.gridEl)
-    this.shadow.appendChild(form)
-
-    this.cursorEl = document.createElement('div')
-    this.cursorEl.classList.add('cursor')
-    this.gridEl.appendChild(this.cursorEl)
-
+    const form = this.querySelector('form') as HTMLFormElement
     form.addEventListener('submit', e => {
       e.preventDefault()
       this.handleSubmit()
     })
-    // this.buttonEl.addEventListener('click', this.handleSubmit.bind(this))
   }
 
   private handleSubmit() {
