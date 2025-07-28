@@ -1,3 +1,5 @@
+const html = String.raw
+
 class GridGame extends HTMLElement {
   private occupied: boolean[][]
   private cursor: {r: number; c: number} | null
@@ -27,7 +29,7 @@ class GridGame extends HTMLElement {
 
   private setupTemplate() {
     this.innerHTML = `
-      <style>
+        <style>
         .grid {
           display: grid;
           grid-template-columns: repeat(8, 50px);
@@ -37,7 +39,7 @@ class GridGame extends HTMLElement {
           margin-bottom: 10px;
         }
         .shape {
-          background-color: #4CAF50;
+          background-color: #4caf50;
           color: white;
           display: flex;
           align-items: center;
