@@ -1,30 +1,59 @@
-// Musical notes in chromatic scale starting from C
-const chromaticScale = [
-  'C',
-  'C#',
-  'D',
-  'D#',
-  'E',
-  'F',
-  'F#',
-  'G',
-  'G#',
-  'A',
-  'A#',
-  'B',
-]
+// Define different musical scales
+const scales = {
+  'C Major': ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
+  'C Minor': ['C', 'D', 'Eb', 'F', 'G', 'Ab', 'Bb'],
+  'D Major': ['D', 'E', 'F#', 'G', 'A', 'B', 'C#'],
+  'D Minor': ['D', 'E', 'F', 'G', 'A', 'Bb', 'C'],
+  'E Minor': ['E', 'F#', 'G', 'A', 'B', 'C', 'D'],
+  'F Major': ['F', 'G', 'A', 'Bb', 'C', 'D', 'E'],
+  'G Major': ['G', 'A', 'B', 'C', 'D', 'E', 'F#'],
+  'A Minor': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+} as const
+
+type ScaleName = keyof typeof scales
+
+// Current scale (configurable)
+let currentScale: ScaleName = 'C Major'
 
 /**
- * Converts a number to a musical note
- * @param num - Number to convert (1 = C2, 2 = C#2, etc.)
- * @returns Musical note string (e.g., "C2", "D#3")
+ * Sets the current musical scale
+ * @param scaleName - Name of the scale to use
+ */
+export function setScale(scaleName: ScaleName): void {
+  currentScale = scaleName
+  console.log(`Scale changed to: ${scaleName}`)
+}
+
+/**
+ * Gets the current scale name
+ * @returns Current scale name
+ */
+export function getCurrentScale(): ScaleName {
+  return currentScale
+}
+
+/**
+ * Gets all available scale names
+ * @returns Array of available scale names
+ */
+export function getAvailableScales(): ScaleName[] {
+  return Object.keys(scales) as ScaleName[]
+}
+
+/**
+ * Converts a number to a musical note within the current scale
+ * @param num - Number to convert (1 = first degree, 8 = octave, etc.)
+ * @returns Musical note string (e.g., "C2", "D3")
  */
 function numberToNote(num: number): string {
-  // Calculate octave and note within octave
-  // 1-12 = octave 2, 13-24 = octave 3, etc.
-  const octave = Math.floor((num - 1) / 12) + 2
-  const noteIndex = (num - 1) % 12
-  const noteName = chromaticScale[noteIndex]
+  const scale = scales[currentScale]
+  const scaleLength = scale.length
+  
+  // Calculate octave and scale degree
+  // 1-7 = octave 2, 8-14 = octave 3, etc.
+  const octave = Math.floor((num - 1) / scaleLength) + 2
+  const scaleDegree = (num - 1) % scaleLength
+  const noteName = scale[scaleDegree]
 
   return `${noteName}${octave}`
 }
@@ -174,5 +203,9 @@ export function getNotesFromNumbers(numbers: number[]): string[] {
 }
 
 // Example usage:
-// playNotes([1, 5, 8]) // Plays C2, E2, G#2 (C major triad)
-// playNotes([1, 3, 5, 8, 10, 12]) // Plays C major pentatonic scale
+// setScale('C Major')
+// playNotes([1, 3, 5]) // Plays C2, E2, G2 (C major triad)
+// playNotes([1, 2, 3, 4, 5, 6, 7, 8]) // Plays C major scale (C2-C3)
+// 
+// setScale('A Minor') 
+// playNotes([1, 3, 5]) // Plays A2, C3, E3 (A minor triad)
