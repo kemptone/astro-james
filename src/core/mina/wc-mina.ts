@@ -51,7 +51,6 @@ class GridGame extends HTMLElement {
           grid-template-columns: repeat(${ NUM_ACROSS }, ${ GRID_WIDTH }px);
           grid-template-rows: repeat(${ NUM_DOWN }, ${ GRID_WIDTH }px);
           gap: 2px;
-          margin-bottom: 10px;
           background-color:var(--background-color, #eee);
         }
         .shape {

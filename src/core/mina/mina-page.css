@@ -12,12 +12,12 @@ h1 {
   margin: 0 auto;
 }
 .controls {
-  margin-bottom: 1rem;
+  margin-top: .4rem;
 }
 .scale-controls {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: .5rem;
   flex-wrap: wrap;
   justify-items: stretch;
   justify-content: space-between;
@@ -63,7 +63,8 @@ grid-game {
 form.mina-form {
   display: flex;
   justify-items: stretch;
-  padding: .3rem 0;
+  padding: .4rem 0;
+  gap:.4rem;
 }
 form.mina-form input {
   flex:1;

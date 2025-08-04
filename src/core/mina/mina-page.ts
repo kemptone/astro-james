@@ -78,8 +78,12 @@ gridGame?.addEventListener('game-over', () => {
 
 playButton?.addEventListener('click', () => {
   playCurrentNotes()
+  stopButton.style.display = 'inline-block'
+  playButton.style.display = 'none'
 })
 
 stopButton?.addEventListener('click', () => {
   stopLoop()
+  playButton.style.display = 'inline-block'
+  stopButton.style.display = 'none'
 })
