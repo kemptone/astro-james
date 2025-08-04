@@ -100,10 +100,14 @@ class GridGame extends HTMLElement {
       e.preventDefault()
       this.handleSubmit()
     })
+
+    // Clear custom validity when user starts typing
+    this.inputEl.addEventListener('input', () => {
+      this.inputEl.setCustomValidity('')
+    })
   }
 
   private handleSubmit() {
-    this.inputEl.setCustomValidity('')
     try {
       const value = parseInt(this.inputEl.value, 10)
       if (isNaN(value) || value < 1 || value > 64) {
@@ -111,7 +115,9 @@ class GridGame extends HTMLElement {
       }
       this.shapes.push(value)
       this.placeShape(value)
+      this.inputEl.setCustomValidity('')
       this.inputEl.value = ''
+      console.log({ value })
     } catch (e) {
       this.inputEl.setCustomValidity((e as Error).message)
       this.inputEl.reportValidity()
