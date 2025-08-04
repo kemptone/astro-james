@@ -1,56 +1,123 @@
-// Define different musical scales
-const scales = {
-  'C Major': ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
-  'C Minor': ['C', 'D', 'Eb', 'F', 'G', 'Ab', 'Bb'],
-  'D Major': ['D', 'E', 'F#', 'G', 'A', 'B', 'C#'],
-  'D Minor': ['D', 'E', 'F', 'G', 'A', 'Bb', 'C'],
-  'E Minor': ['E', 'F#', 'G', 'A', 'B', 'C', 'D'],
-  'F Major': ['F', 'G', 'A', 'Bb', 'C', 'D', 'E'],
-  'G Major': ['G', 'A', 'B', 'C', 'D', 'E', 'F#'],
-  'A Minor': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+// Define available keys
+const keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'] as const
+export type Key = typeof keys[number]
+
+// Define scale types with their interval patterns (in semitones)
+const scaleTypes = {
+  'Major': [0, 2, 4, 5, 7, 9, 11],
+  'Natural Minor': [0, 2, 3, 5, 7, 8, 10],
+  'Harmonic Minor': [0, 2, 3, 5, 7, 8, 11],
+  'Melodic Minor': [0, 2, 3, 5, 7, 9, 11],
+  'Dorian': [0, 2, 3, 5, 7, 9, 10],
+  'Phrygian': [0, 1, 3, 5, 7, 8, 10],
+  'Lydian': [0, 2, 4, 6, 7, 9, 11],
+  'Mixolydian': [0, 2, 4, 5, 7, 9, 10],
+  'Locrian': [0, 1, 3, 5, 6, 8, 10],
+  'Blues': [0, 3, 5, 6, 7, 10],
+  'Pentatonic Major': [0, 2, 4, 7, 9],
+  'Pentatonic Minor': [0, 3, 5, 7, 10],
+  'Whole Tone': [0, 2, 4, 6, 8, 10],
 } as const
 
-type ScaleName = keyof typeof scales
+export type ScaleType = keyof typeof scaleTypes
 
-// Current scale (configurable)
-let currentScale: ScaleName = 'C Major'
+// Current key and scale type (configurable)
+let currentKey: Key = 'C'
+let currentScaleType: ScaleType = 'Major'
 
 /**
- * Sets the current musical scale
- * @param scaleName - Name of the scale to use
+ * Helper function to convert semitone offset to note name
  */
-export function setScale(scaleName: ScaleName): void {
-  currentScale = scaleName
-  console.log(`Scale changed to: ${scaleName}`)
+function semitonesToNoteName(keyStartIndex: number, semitones: number): string {
+  const noteIndex = (keyStartIndex + semitones) % 12
+  return keys[noteIndex]
 }
 
 /**
- * Gets the current scale name
- * @returns Current scale name
+ * Generates a scale in a specific key
  */
-export function getCurrentScale(): ScaleName {
-  return currentScale
+function buildScale(key: Key, scaleType: ScaleType): string[] {
+  const keyIndex = keys.indexOf(key)
+  const intervals = scaleTypes[scaleType]
+  
+  return intervals.map(semitone => semitonesToNoteName(keyIndex, semitone))
 }
 
 /**
- * Gets all available scale names
- * @returns Array of available scale names
+ * Sets the current musical key
+ * @param key - The key to use (C, D, E, etc.)
  */
-export function getAvailableScales(): ScaleName[] {
-  return Object.keys(scales) as ScaleName[]
+export function setKey(key: Key): void {
+  currentKey = key
+  console.log(`Key changed to: ${key}`)
 }
 
 /**
- * Converts a number to a musical note within the current scale
+ * Sets the current scale type
+ * @param scaleType - The scale type to use (Major, Minor, etc.)
+ */
+export function setScaleType(scaleType: ScaleType): void {
+  currentScaleType = scaleType
+  console.log(`Scale type changed to: ${scaleType}`)
+}
+
+/**
+ * Sets both key and scale type at once
+ * @param key - The key to use
+ * @param scaleType - The scale type to use
+ */
+export function setKeyAndScale(key: Key, scaleType: ScaleType): void {
+  currentKey = key
+  currentScaleType = scaleType
+  console.log(`Scale changed to: ${key} ${scaleType}`)
+}
+
+/**
+ * Gets the current key
+ * @returns Current key
+ */
+export function getCurrentKey(): Key {
+  return currentKey
+}
+
+/**
+ * Gets the current scale type
+ * @returns Current scale type
+ */
+export function getCurrentScaleType(): ScaleType {
+  return currentScaleType
+}
+
+/**
+ * Gets all available keys
+ * @returns Array of available keys
+ */
+export function getAvailableKeys(): readonly Key[] {
+  return keys
+}
+
+/**
+ * Gets all available scale types
+ * @returns Array of available scale types
+ */
+export function getAvailableScaleTypes(): readonly ScaleType[] {
+  return Object.keys(scaleTypes) as ScaleType[]
+}
+
+/**
+ * Converts a number to a musical note within the specified or current scale
  * @param num - Number to convert (1 = first degree, 8 = octave, etc.)
+ * @param key - Optional key override
+ * @param scaleType - Optional scale type override
  * @returns Musical note string (e.g., "C2", "D3")
  */
-function numberToNote(num: number): string {
-  const scale = scales[currentScale]
+function numberToNote(num: number, key?: Key, scaleType?: ScaleType): string {
+  const useKey = key || currentKey
+  const useScaleType = scaleType || currentScaleType
+  const scale = buildScale(useKey, useScaleType)
   const scaleLength = scale.length
   
   // Calculate octave and scale degree
-  // 1-7 = octave 2, 8-14 = octave 3, etc.
   const octave = Math.floor((num - 1) / scaleLength) + 2
   const scaleDegree = (num - 1) % scaleLength
   const noteName = scale[scaleDegree]
@@ -140,15 +207,24 @@ function delay(ms: number): Promise<void> {
 /**
  * Plays an array of numbers as musical notes
  * @param numbers - Array of numbers to convert to notes and play
- * @param noteDuration - Duration of each note in seconds (default: 0.5)
- * @param gapDuration - Gap between notes in milliseconds (default: 100)
+ * @param options - Optional configuration object
  * @returns Promise that resolves when all notes have been played
  */
 export async function playNotes(
   numbers: number[],
-  noteDuration: number = 0.5,
-  gapDuration: number = 100,
+  options?: {
+    key?: Key
+    scaleType?: ScaleType
+    noteDuration?: number
+    gapDuration?: number
+  }
 ): Promise<void> {
+  const {
+    key,
+    scaleType,
+    noteDuration = 0.5,
+    gapDuration = 100
+  } = options || {}
   if (numbers.length === 0) {
     console.warn('No numbers provided to play')
     return
@@ -168,7 +244,7 @@ export async function playNotes(
         continue
       }
 
-      const note = numberToNote(num)
+      const note = numberToNote(num, key, scaleType)
       const frequency = noteToFrequency(note)
 
       console.log(`Playing: ${num} → ${note} (${frequency.toFixed(2)}Hz)`)
@@ -190,22 +266,29 @@ export async function playNotes(
 /**
  * Gets the note names for an array of numbers without playing them
  * @param numbers - Array of numbers to convert
+ * @param key - Optional key override
+ * @param scaleType - Optional scale type override
  * @returns Array of note names
  */
-export function getNotesFromNumbers(numbers: number[]): string[] {
+export function getNotesFromNumbers(
+  numbers: number[], 
+  key?: Key, 
+  scaleType?: ScaleType
+): string[] {
   return numbers.map(num => {
     if (num < 1) {
       console.warn(`Invalid number: ${num}. Numbers must be positive.`)
       return 'Invalid'
     }
-    return numberToNote(num)
+    return numberToNote(num, key, scaleType)
   })
 }
 
 // Example usage:
-// setScale('C Major')
+// setKeyAndScale('C', 'Major')
 // playNotes([1, 3, 5]) // Plays C2, E2, G2 (C major triad)
 // playNotes([1, 2, 3, 4, 5, 6, 7, 8]) // Plays C major scale (C2-C3)
 // 
-// setScale('A Minor') 
-// playNotes([1, 3, 5]) // Plays A2, C3, E3 (A minor triad)
+// Or specify directly in the function call:
+// playNotes([1, 3, 5], { key: 'A', scaleType: 'Natural Minor' }) // A minor triad
+// playNotes([1, 2, 3, 4, 5, 6, 7], { key: 'D', scaleType: 'Dorian' }) // D Dorian scale

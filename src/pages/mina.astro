@@ -1,11 +1,32 @@
 ---
-import { playNotes } from "@/core/mina/play-notes";
+import { getAvailableKeys, getAvailableScaleTypes } from "@/core/mina/play-notes";
 import Layout from "../layouts/Layout.astro";
+
+const keys = getAvailableKeys();
+const scaleTypes = getAvailableScaleTypes();
 ---
 
 <Layout title="mina">
   <h1>Mina Game</h1>
   <div class="container">
+    <div class="controls">
+      <div class="scale-controls">
+        <label for="key-select">Key:</label>
+        <select id="key-select">
+          {keys.map(key => (
+            <option value={key} selected={key === 'C'}>{key}</option>
+          ))}
+        </select>
+        
+        <label for="scale-select">Scale:</label>
+        <select id="scale-select">
+          {scaleTypes.map(scaleType => (
+            <option value={scaleType} selected={scaleType === 'Major'}>{scaleType}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+    
     <grid-game></grid-game>
     <button class="play-button" type="button">Play</button>
   </div>
@@ -13,23 +34,38 @@ import Layout from "../layouts/Layout.astro";
 
 <script>
   import "../core/mina/wc-mina.ts";
-  import { playNotes } from "@/core/mina/play-notes";
+  import { playNotes, type Key, type ScaleType } from "@/core/mina/play-notes";
 
-  const notes : number[] = []
+  const notes: number[] = []
   
-  const gridGame = document.querySelector("grid-game") as GridGame;
+  const gridGame = document.querySelector("grid-game") as any;
+  const keySelect = document.getElementById("key-select") as HTMLSelectElement;
+  const scaleSelect = document.getElementById("scale-select") as HTMLSelectElement;
+  const playButton = document.querySelector(".play-button") as HTMLButtonElement;
 
-  gridGame.addEventListener("game-over", () => {
+  function getCurrentSettings() {
+    return {
+      key: keySelect.value as Key,
+      scaleType: scaleSelect.value as ScaleType
+    }
+  }
+
+  function playCurrentNotes() {
+    const { key, scaleType } = getCurrentSettings();
+    playNotes(notes, { key, scaleType });
+  }
+
+  gridGame?.addEventListener("game-over", () => {
     const shapesArray = gridGame?.getShapes?.()
-    notes.push(...shapesArray)
-    playNotes(notes)
-
-    document.querySelector(".play-button")?.addEventListener("click", () => {
-      playNotes(notes)
-    })
-
-    // alert("Game Over!");
+    if (shapesArray) {
+      notes.push(...shapesArray)
+      playCurrentNotes()
+    }
   });
+
+  playButton?.addEventListener("click", () => {
+    playCurrentNotes()
+  })
 
 </script>
 
@@ -43,7 +79,40 @@ import Layout from "../layouts/Layout.astro";
     max-width: 414px;
     margin: 0 auto;
   }
+  .controls {
+    margin-bottom: 1rem;
+  }
+  .scale-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .scale-controls label {
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  .scale-controls select {
+    padding: 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    font-size: 0.9rem;
+  }
   grid-game {
-    margin-top: 2rem;
+    margin-top: 1rem;
+  }
+  .play-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .play-button:hover {
+    background: #0056b3;
   }
 </style>
