@@ -204,6 +204,33 @@ function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+// Global state for looping
+let isLooping = false
+let currentLoopController: AbortController | null = null
+let playbackFinishedCallback: (() => void) | null = null
+
+/**
+ * Sets a callback to be called when playback finishes
+ */
+export function setPlaybackFinishedCallback(callback: () => void): void {
+  playbackFinishedCallback = callback
+}
+
+/**
+ * Stops any currently playing loop
+ */
+export function stopLoop(): void {
+  isLooping = false
+  if (currentLoopController) {
+    currentLoopController.abort()
+    currentLoopController = null
+  }
+  // Call the finished callback when stopped
+  if (playbackFinishedCallback) {
+    playbackFinishedCallback()
+  }
+}
+
 /**
  * Plays an array of numbers as musical notes
  * @param numbers - Array of numbers to convert to notes and play
@@ -217,17 +244,28 @@ export async function playNotes(
     scaleType?: ScaleType
     noteDuration?: number
     gapDuration?: number
+    loop?: boolean
   }
 ): Promise<void> {
   const {
     key,
     scaleType,
     noteDuration = 0.5,
-    gapDuration = 100
+    gapDuration = 100,
+    loop = false
   } = options || {}
+  
   if (numbers.length === 0) {
     console.warn('No numbers provided to play')
     return
+  }
+
+  // Stop any existing loop
+  stopLoop()
+
+  if (loop) {
+    isLooping = true
+    currentLoopController = new AbortController()
   }
 
   try {
@@ -235,31 +273,53 @@ export async function playNotes(
     const audioContext = new (window.AudioContext ||
       (window as any).webkitAudioContext)()
 
-    // Convert numbers to notes and play them sequentially
-    for (const num of numbers) {
-      if (num < 1) {
-        console.warn(
-          `Skipping invalid number: ${num}. Numbers must be positive.`,
-        )
-        continue
+    do {
+      // Convert numbers to notes and play them sequentially
+      for (const num of numbers) {
+        // Check if loop was cancelled
+        if (loop && (!isLooping || currentLoopController?.signal.aborted)) {
+          console.log('Loop stopped')
+          return
+        }
+
+        if (num < 1) {
+          console.warn(
+            `Skipping invalid number: ${num}. Numbers must be positive.`,
+          )
+          continue
+        }
+
+        const note = numberToNote(num, key, scaleType)
+        const frequency = noteToFrequency(note)
+
+        console.log(`Playing: ${num} → ${note} (${frequency.toFixed(2)}Hz)`)
+
+        await playTone(audioContext, frequency, noteDuration)
+
+        if (gapDuration > 0) {
+          await delay(gapDuration)
+        }
       }
 
-      const note = numberToNote(num, key, scaleType)
-      const frequency = noteToFrequency(note)
-
-      console.log(`Playing: ${num} → ${note} (${frequency.toFixed(2)}Hz)`)
-
-      await playTone(audioContext, frequency, noteDuration)
-
-      if (gapDuration > 0) {
-        await delay(gapDuration)
+      // Add a pause between loops if looping
+      if (loop && isLooping) {
+        await delay(500)
       }
-    }
+    } while (loop && isLooping && !currentLoopController?.signal.aborted)
 
     console.log('Finished playing notes')
   } catch (error) {
     console.error('Error playing notes:', error)
-    throw new Error('Audio playback not supported in this browser')
+    throw new Error('Audio playbook not supported in this browser')
+  } finally {
+    if (loop) {
+      isLooping = false
+      currentLoopController = null
+    }
+    // Call the finished callback when playback ends naturally
+    if (playbackFinishedCallback) {
+      playbackFinishedCallback()
+    }
   }
 }
 
