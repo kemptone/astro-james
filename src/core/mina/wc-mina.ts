@@ -1,5 +1,10 @@
 const html = String.raw
 
+const GRID_WIDTH = 40
+const NUM_ACROSS = 12
+const NUM_DOWN = 12
+const NOTE_FUN = 8
+
 class GridGame extends HTMLElement {
   private occupied: boolean[][]
   private cursor: {r: number; c: number} | null
@@ -12,7 +17,7 @@ class GridGame extends HTMLElement {
 
   constructor() {
     super()
-    this.occupied = Array.from({length: 8}, () => Array(8).fill(false))
+    this.occupied = Array.from({length: NUM_ACROSS}, () => Array(NUM_DOWN).fill(false))
     this.cursor = {r: 0, c: 0}
   }
 
@@ -29,15 +34,52 @@ class GridGame extends HTMLElement {
 
   private setupTemplate() {
     this.innerHTML = `
-        
-      <div class="grid">
-        <div class="cursor"></div>
-      </div>
-      <form>
+      <style>
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(${ NUM_ACROSS }, 40px);
+          grid-template-rows: repeat(${ NUM_DOWN }, 40px);
+          gap: 2px;
+          margin-bottom: 10px;
+          background-color:var(--background-color, #eee);
+        }
+        .shape {
+          /* background-color: #4caf50; */
+          background-color: var(--shape-color, #000);
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+        }
+        .cursor {
+          border: 2px solid var(--cursor-color, pink);
+          pointer-events: none;
+          z-index: 10;
+        }
+        .error {
+          color: red;
+          margin-top: 5px;
+        }
+        input {
+          padding: 5px;
+          margin-right: 5px;
+          min-width: 200px;
+        }
+        button {
+          padding: 5px;
+        }
+        form.mina-form {
+        }
+      </style>
+      <form class="mina-form">
         <input type="number" min="1" max="64" placeholder="Enter number 1-64">
         <button type="submit">Submit</button>
         <div class="error"></div>
       </form>
+      <div class="grid">
+        <div class="cursor"></div>
+      </div>
     `
   }
 
@@ -78,7 +120,7 @@ class GridGame extends HTMLElement {
     const {r, c} = this.cursor
 
     // Check bounds
-    if (r + h > 8 || c + w > 8) {
+    if (r + h > NUM_DOWN || c + w > NUM_ACROSS) {
       throw new Error('Shape falls outside the grid.')
     }
 
@@ -118,14 +160,14 @@ class GridGame extends HTMLElement {
   }
 
   private getSize(n: number): {width: number; height: number} {
-    const height = Math.ceil(n / 8)
-    const width = ((n - 1) % 8) + 1
+    const height = Math.ceil(n / NOTE_FUN)
+    const width = ((n - 1) % NOTE_FUN) + 1
     return {width, height}
   }
 
   private findNextCursor() {
-    for (let rr = 0; rr < 8; rr++) {
-      for (let cc = 0; cc < 8; cc++) {
+    for (let rr = 0; rr < NUM_ACROSS; rr++) {
+      for (let cc = 0; cc < NUM_DOWN; cc++) {
         if (!this.occupied[rr][cc]) {
           this.cursor = {r: rr, c: cc}
           return
