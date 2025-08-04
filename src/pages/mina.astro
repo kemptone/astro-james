@@ -1,9 +1,9 @@
 ---
-import { getAvailableKeys, getAvailableScaleTypes } from "@/core/mina/play-notes";
-import Layout from "../layouts/Layout.astro";
+import {getAvailableKeys, getAvailableScaleTypes} from '@/core/mina/play-notes'
+import Layout from '../layouts/Layout.astro'
 
-const keys = getAvailableKeys();
-const scaleTypes = getAvailableScaleTypes();
+const keys = getAvailableKeys()
+const scaleTypes = getAvailableScaleTypes()
 ---
 
 <Layout title="mina">
@@ -11,62 +11,75 @@ const scaleTypes = getAvailableScaleTypes();
   <div class="container">
     <div class="controls">
       <div class="scale-controls">
-        <label for="key-select">Key:</label>
-        <select id="key-select">
-          {keys.map(key => (
-            <option value={key} selected={key === 'C'}>{key}</option>
-          ))}
-        </select>
-        
-        <label for="scale-select">Scale:</label>
-        <select id="scale-select">
-          {scaleTypes.map(scaleType => (
-            <option value={scaleType} selected={scaleType === 'Major'}>{scaleType}</option>
-          ))}
-        </select>
+        <label for="key-select"
+          >Key:
+          <select id="key-select">
+            {
+              keys.map(key => (
+                <option value={key} selected={key === 'C'}>
+                  {key}
+                </option>
+              ))
+            }
+          </select>
+        </label>
+
+        <label for="scale-select"
+          >Scale:
+          <select id="scale-select">
+            {
+              scaleTypes.map(scaleType => (
+                <option value={scaleType} selected={scaleType === 'Major'}>
+                  {scaleType}
+                </option>
+              ))
+            }
+          </select>
+        </label>
+        <button class="play-button" type="button">Play</button>
       </div>
     </div>
-    
+
     <grid-game></grid-game>
-    <button class="play-button" type="button">Play</button>
   </div>
 </Layout>
 
 <script>
-  import "../core/mina/wc-mina.ts";
-  import { playNotes, type Key, type ScaleType } from "@/core/mina/play-notes";
+  import '../core/mina/wc-mina.ts'
+  import {playNotes, type Key, type ScaleType} from '@/core/mina/play-notes'
 
   const notes: number[] = []
-  
-  const gridGame = document.querySelector("grid-game") as any;
-  const keySelect = document.getElementById("key-select") as HTMLSelectElement;
-  const scaleSelect = document.getElementById("scale-select") as HTMLSelectElement;
-  const playButton = document.querySelector(".play-button") as HTMLButtonElement;
+
+  const gridGame = document.querySelector('grid-game') as any
+  const keySelect = document.getElementById('key-select') as HTMLSelectElement
+  const scaleSelect = document.getElementById(
+    'scale-select',
+  ) as HTMLSelectElement
+  const playButton = document.querySelector('.play-button') as HTMLButtonElement
 
   function getCurrentSettings() {
     return {
       key: keySelect.value as Key,
-      scaleType: scaleSelect.value as ScaleType
+      scaleType: scaleSelect.value as ScaleType,
     }
   }
 
   function playCurrentNotes() {
-    const { key, scaleType } = getCurrentSettings();
-    playNotes(notes, { key, scaleType });
+    const {key, scaleType} = getCurrentSettings()
+    playNotes(notes, {key, scaleType})
   }
 
-  gridGame?.addEventListener("game-over", () => {
+  gridGame?.addEventListener('game-over', () => {
     const shapesArray = gridGame?.getShapes?.()
     if (shapesArray) {
       notes.push(...shapesArray)
       playCurrentNotes()
     }
-  });
-
-  playButton?.addEventListener("click", () => {
-    playCurrentNotes()
   })
 
+  playButton?.addEventListener('click', () => {
+    playCurrentNotes()
+  })
 </script>
 
 <style is:inline>
@@ -87,6 +100,8 @@ const scaleTypes = getAvailableScaleTypes();
     align-items: center;
     gap: 1rem;
     flex-wrap: wrap;
+    justify-items: stretch;
+    justify-content: space-between;
   }
   .scale-controls label {
     font-weight: bold;
@@ -103,8 +118,7 @@ const scaleTypes = getAvailableScaleTypes();
     margin-top: 1rem;
   }
   .play-button {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
+    padding: 0.2rem 1rem;
     font-size: 1rem;
     background: #007bff;
     color: white;
