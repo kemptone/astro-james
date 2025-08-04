@@ -46,10 +46,11 @@ const scaleTypes = getAvailableScaleTypes()
 <script>
   import '../core/mina/wc-mina.ts'
   import {playNotes, type Key, type ScaleType} from '@/core/mina/play-notes'
+  import type {GridGameElement} from '@/core/mina/wc-mina'
 
   const notes: number[] = []
 
-  const gridGame = document.querySelector('grid-game') as any
+  const gridGame = document.querySelector('grid-game') as GridGameElement
   const keySelect = document.getElementById('key-select') as HTMLSelectElement
   const scaleSelect = document.getElementById(
     'scale-select',

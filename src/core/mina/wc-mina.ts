@@ -1,16 +1,20 @@
-const html = String.raw
-
 const GRID_WIDTH = 40
 const NUM_ACROSS = 12
 const NUM_DOWN = 12
 const NOTE_FUN = 8
+
+type SettingsType = {
+  grid_width : number
+  num_accross : number
+  num_down : number
+  note_fun : number
+}
 
 class GridGame extends HTMLElement {
   private occupied: boolean[][]
   private cursor: {r: number; c: number} | null
   private gridEl: HTMLDivElement
   private inputEl: HTMLInputElement
-  private buttonEl: HTMLButtonElement
   private errorEl: HTMLDivElement
   private cursorEl: HTMLDivElement
   private shapes: number[] = []
@@ -19,6 +23,17 @@ class GridGame extends HTMLElement {
     super()
     this.occupied = Array.from({length: NUM_ACROSS}, () => Array(NUM_DOWN).fill(false))
     this.cursor = {r: 0, c: 0}
+
+    const defaultElement = document.createElement("div")
+    this.gridEl = defaultElement
+    this.inputEl = document.createElement('input')
+    this.errorEl = defaultElement
+    this.cursorEl = defaultElement
+  }
+
+  setSettings (settings : SettingsType) {
+    this
+    debugger
   }
 
   connectedCallback() {
@@ -37,14 +52,13 @@ class GridGame extends HTMLElement {
       <style>
         .grid {
           display: grid;
-          grid-template-columns: repeat(${ NUM_ACROSS }, 40px);
-          grid-template-rows: repeat(${ NUM_DOWN }, 40px);
+          grid-template-columns: repeat(${ NUM_ACROSS }, ${ GRID_WIDTH }px);
+          grid-template-rows: repeat(${ NUM_DOWN }, ${ GRID_WIDTH }px);
           gap: 2px;
           margin-bottom: 10px;
           background-color:var(--background-color, #eee);
         }
         .shape {
-          /* background-color: #4caf50; */
           background-color: var(--shape-color, #000);
           color: white;
           display: flex;
@@ -86,7 +100,6 @@ class GridGame extends HTMLElement {
   private setupElements() {
     this.gridEl = this.querySelector('.grid') as HTMLDivElement
     this.inputEl = this.querySelector('input') as HTMLInputElement
-    this.buttonEl = this.querySelector('button') as HTMLButtonElement
     this.errorEl = this.querySelector('.error') as HTMLDivElement
     this.cursorEl = this.querySelector('.cursor') as HTMLDivElement
 
@@ -189,3 +202,7 @@ class GridGame extends HTMLElement {
 }
 
 customElements.define('grid-game', GridGame)
+
+// Export the class type for use by other components
+export type GridGameElement = GridGame
+export { GridGame }
