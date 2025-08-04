@@ -49,4 +49,10 @@ grid-game {
   background: #0056b3;
 }
 form.mina-form {
+  display: flex;
+  justify-items: stretch;
+  padding: .3rem 0;
+}
+form.mina-form input {
+  flex:1;
 }
