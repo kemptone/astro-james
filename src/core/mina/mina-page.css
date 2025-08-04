@@ -1,0 +1,52 @@
+html, body {
+  background-color: white;
+}
+
+h1 {
+  text-align: left;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.container {
+  max-width: 503px;
+  margin: 0 auto;
+}
+.controls {
+  margin-bottom: 1rem;
+}
+.scale-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-items: stretch;
+  justify-content: space-between;
+}
+.scale-controls label {
+  font-weight: bold;
+  white-space: nowrap;
+}
+.scale-controls select {
+  padding: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  font-size: 0.9rem;
+}
+grid-game {
+  margin-top: 1rem;
+}
+.play-button {
+  padding: 0.2rem 1rem;
+  font-size: 1rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.play-button:hover {
+  background: #0056b3;
+}
+form.mina-form {
+}
