@@ -15,7 +15,6 @@ class GridGame extends HTMLElement {
   private cursor: {r: number; c: number} | null
   private gridEl: HTMLDivElement
   private inputEl: HTMLInputElement
-  private errorEl: HTMLDivElement
   private cursorEl: HTMLDivElement
   private shapes: number[] = []
 
@@ -27,7 +26,6 @@ class GridGame extends HTMLElement {
     const defaultElement = document.createElement("div")
     this.gridEl = defaultElement
     this.inputEl = document.createElement('input')
-    this.errorEl = defaultElement
     this.cursorEl = defaultElement
   }
 
@@ -71,10 +69,6 @@ class GridGame extends HTMLElement {
           pointer-events: none;
           z-index: 10;
         }
-        .error {
-          color: red;
-          margin-top: 5px;
-        }
         input {
           padding: 5px;
           margin-right: 5px;
@@ -89,7 +83,6 @@ class GridGame extends HTMLElement {
       <form class="mina-form">
         <input type="number" min="1" max="64" placeholder="Enter number 1-64">
         <button type="submit">Submit</button>
-        <div class="error"></div>
       </form>
       <div class="grid">
         <div class="cursor"></div>
@@ -100,7 +93,6 @@ class GridGame extends HTMLElement {
   private setupElements() {
     this.gridEl = this.querySelector('.grid') as HTMLDivElement
     this.inputEl = this.querySelector('input') as HTMLInputElement
-    this.errorEl = this.querySelector('.error') as HTMLDivElement
     this.cursorEl = this.querySelector('.cursor') as HTMLDivElement
 
     const form = this.querySelector('form') as HTMLFormElement
@@ -111,7 +103,7 @@ class GridGame extends HTMLElement {
   }
 
   private handleSubmit() {
-    this.errorEl.textContent = ''
+    this.inputEl.setCustomValidity('')
     try {
       const value = parseInt(this.inputEl.value, 10)
       if (isNaN(value) || value < 1 || value > 64) {
@@ -121,7 +113,8 @@ class GridGame extends HTMLElement {
       this.placeShape(value)
       this.inputEl.value = ''
     } catch (e) {
-      this.errorEl.textContent = (e as Error).message
+      this.inputEl.setCustomValidity((e as Error).message)
+      this.inputEl.reportValidity()
     }
   }
 
