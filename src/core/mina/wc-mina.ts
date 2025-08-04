@@ -29,42 +29,7 @@ class GridGame extends HTMLElement {
 
   private setupTemplate() {
     this.innerHTML = `
-        <style>
-        .grid {
-          display: grid;
-          grid-template-columns: repeat(8, 50px);
-          grid-template-rows: repeat(8, 50px);
-          gap: 2px;
-          background-color: #f0f0f0;
-          margin-bottom: 10px;
-        }
-        .shape {
-          background-color: #4caf50;
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 12px;
-          border: 1px solid #333;
-        }
-        .cursor {
-          border: 2px solid red;
-          pointer-events: none;
-          z-index: 10;
-        }
-        .error {
-          color: red;
-          margin-top: 5px;
-        }
-        input {
-          padding: 5px;
-          margin-right: 5px;
-          min-width: 200px;
-        }
-        button {
-          padding: 5px;
-        }
-      </style>
+        
       <div class="grid">
         <div class="cursor"></div>
       </div>
