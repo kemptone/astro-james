@@ -14,7 +14,6 @@ class GridGame extends HTMLElement {
   private occupied: boolean[][]
   private cursor: {r: number; c: number} | null
   private gridEl: HTMLDivElement
-  private inputEl: HTMLInputElement
   private cursorEl: HTMLDivElement
   private shapes: number[] = []
 
@@ -25,7 +24,6 @@ class GridGame extends HTMLElement {
 
     const defaultElement = document.createElement("div")
     this.gridEl = defaultElement
-    this.inputEl = document.createElement('input')
     this.cursorEl = defaultElement
   }
 
@@ -69,21 +67,7 @@ class GridGame extends HTMLElement {
           pointer-events: none;
           z-index: 10;
         }
-        input {
-          padding: 5px;
-          margin-right: 5px;
-          min-width: 200px;
-        }
-        button {
-          padding: 5px;
-        }
-        form.mina-form {
-        }
       </style>
-      <form class="mina-form">
-        <input type="number" min="1" max="64" placeholder="Enter number 1-64">
-        <button type="submit">Submit</button>
-      </form>
       <div class="grid">
         <div class="cursor"></div>
       </div>
@@ -92,35 +76,31 @@ class GridGame extends HTMLElement {
 
   private setupElements() {
     this.gridEl = this.querySelector('.grid') as HTMLDivElement
-    this.inputEl = this.querySelector('input') as HTMLInputElement
     this.cursorEl = this.querySelector('.cursor') as HTMLDivElement
-
-    const form = this.querySelector('form') as HTMLFormElement
-    form.addEventListener('submit', e => {
-      e.preventDefault()
-      this.handleSubmit()
-    })
-
-    // Clear custom validity when user starts typing
-    this.inputEl.addEventListener('input', () => {
-      this.inputEl.setCustomValidity('')
-    })
   }
 
-  private handleSubmit() {
+  // Public method to submit a value from external form
+  submitValue(value: number, inputEl?: HTMLInputElement): boolean {
     try {
-      const value = parseInt(this.inputEl.value, 10)
       if (isNaN(value) || value < 1 || value > 64) {
         throw new Error('Invalid number. Must be between 1 and 64.')
       }
       this.shapes.push(value)
       this.placeShape(value)
-      this.inputEl.setCustomValidity('')
-      this.inputEl.value = ''
+      if (inputEl) {
+        inputEl.setCustomValidity('')
+        inputEl.value = ''
+      }
       console.log({ value })
+      return true
     } catch (e) {
-      this.inputEl.setCustomValidity((e as Error).message)
-      this.inputEl.reportValidity()
+      if (inputEl) {
+        inputEl.setCustomValidity((e as Error).message)
+        inputEl.reportValidity()
+      } else {
+        throw e
+      }
+      return false
     }
   }
 
