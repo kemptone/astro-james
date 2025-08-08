@@ -6,6 +6,10 @@ class Sro5 extends HTMLElement {
   private isRecording: boolean = false
   private recordedVideos: Array<{id: string, originalBlob: Blob, reversedBlob: Blob | null, name: string}> = []
 
+  private reverseWorker: Worker | null = null
+private supportsWebCodecs: boolean = 'VideoDecoder' in window && 'OffscreenCanvas' in window
+
+
   constructor() {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
@@ -15,6 +19,12 @@ class Sro5 extends HTMLElement {
     this.render()
     this.attachEventListeners()
     this.loadStoredVideos()
+
+    if (this.supportsWebCodecs) {
+  // Build worker from a URL; adjust path as needed
+  this.reverseWorker = new Worker(new URL('./reverse-worker.js', import.meta.url), { type: 'module' })
+}
+
   }
 
   disconnectedCallback() {
@@ -341,7 +351,18 @@ class Sro5 extends HTMLElement {
     if (!this.stream) return
 
     this.recordedChunks = []
-    this.mediaRecorder = new MediaRecorder(this.stream)
+
+    const mimeCandidates = [
+    'video/mp4', // Safari/iOS
+    'video/webm;codecs=vp9,opus',
+    'video/webm;codecs=vp8,opus',
+    'video/webm'
+  ]
+  const mimeType = mimeCandidates.find(t => MediaRecorder.isTypeSupported(t)) || ''
+
+
+    // this.mediaRecorder = new MediaRecorder(this.stream)
+    this.mediaRecorder = new MediaRecorder(this.stream, mimeType ? { mimeType } : undefined)
     
     this.mediaRecorder.ondataavailable = (event) => {
       if (event.data.size > 0) {
@@ -395,46 +416,138 @@ class Sro5 extends HTMLElement {
     reverseBtn.dataset.videoId = videoId
   }
 
-  private async reverseVideo() {
-    const reverseBtn = this.shadow.querySelector('#reverseBtn') as HTMLButtonElement
-    const videoId = reverseBtn.dataset.videoId
-    
-    if (!videoId) return
-    
-    const video = this.recordedVideos.find(v => v.id === videoId)
-    if (!video) return
-    
-    this.showStatus('Reversing video... This might take a moment!', 'info')
-    reverseBtn.disabled = true
-    
+private async reverseVideo() {
+  const reverseBtn = this.shadow.querySelector('#reverseBtn') as HTMLButtonElement
+  const videoId = reverseBtn.dataset.videoId
+  if (!videoId) return
+  const video = this.recordedVideos.find(v => v.id === videoId)
+  if (!video) return
+
+  this.showStatus('Reversing video...', 'info')
+  reverseBtn.disabled = true
+
+  try {
+    let reversedBlob: Blob
     try {
-      const reversedBlob = await this.processVideoReversal(video.originalBlob)
-      video.reversedBlob = reversedBlob
-      
-      const reversedVideo = this.shadow.querySelector('#reversedVideo') as HTMLVideoElement
-      const placeholder = this.shadow.querySelector('#reversedPlaceholder')
-      const saveBtn = this.shadow.querySelector('#saveBtn') as HTMLButtonElement
-      
-      if (reversedVideo && placeholder) {
-        reversedVideo.src = URL.createObjectURL(reversedBlob)
-        reversedVideo.style.display = 'block'
-        placeholder.style.display = 'none'
-        
-        saveBtn.disabled = false
-        saveBtn.dataset.videoId = videoId
-      }
-      
-      this.saveToLocalStorage()
-      this.updateVideoLibrary()
-      this.showStatus('Video reversed successfully! 🎉', 'success')
-      
-    } catch (error) {
-      this.showStatus('Failed to reverse video. Try recording a new one!', 'error')
-      console.error('Video reversal error:', error)
+      reversedBlob = await this.processVideoReversalFast(video.originalBlob)
+    } catch {
+      // fallback to your existing canvas/seek method
+      reversedBlob = await this.processVideoReversal(video.originalBlob)
     }
-    
+
+    video.reversedBlob = reversedBlob
+
+    const reversedVideo = this.shadow.querySelector('#reversedVideo') as HTMLVideoElement
+    const placeholder = this.shadow.querySelector('#reversedPlaceholder')
+    const saveBtn = this.shadow.querySelector('#saveBtn') as HTMLButtonElement
+
+    if (reversedVideo && placeholder) {
+      reversedVideo.src = URL.createObjectURL(reversedBlob)
+      reversedVideo.style.display = 'block'
+      placeholder.style.display = 'none'
+      saveBtn.disabled = false
+      saveBtn.dataset.videoId = videoId
+    }
+
+    this.saveToLocalStorage()
+    this.updateVideoLibrary()
+    this.showStatus('Video reversed successfully! 🎉', 'success')
+  } catch (err) {
+    console.error(err)
+    this.showStatus('Failed to reverse video. Try recording a new one!', 'error')
+  } finally {
     reverseBtn.disabled = false
   }
+}
+
+
+  private async processVideoReversalFast(blob: Blob): Promise<Blob> {
+  if (!this.supportsWebCodecs || !this.reverseWorker) {
+    throw new Error('No WebCodecs path')
+  }
+
+  // Hidden canvas that we’ll record from
+  const canvas = document.createElement('canvas')
+  // Decide target dims (same logic you had, but we’ll compute once)
+  const dims = await this.getVideoDims(blob, 640, 480)
+  canvas.width = dims.width
+  canvas.height = dims.height
+
+  // Start recording the canvas stream
+  const fps = 24
+  const stream = canvas.captureStream(fps)
+  const mimeCandidates = [
+    'video/mp4', // Safari/iOS
+    'video/webm;codecs=vp9,opus',
+    'video/webm;codecs=vp8,opus',
+    'video/webm'
+  ]
+  const mimeType = mimeCandidates.find(t => MediaRecorder.isTypeSupported(t)) || ''
+  const mr = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 2_000_000 })
+  const chunks: Blob[] = []
+  mr.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data) }
+
+  const offscreen = canvas.transferControlToOffscreen()
+  const done = new Promise<void>((resolve, reject) => {
+    const onMsg = (ev: MessageEvent) => {
+      const { type, message } = ev.data || {}
+      if (type === 'done') {
+        this.reverseWorker?.removeEventListener('message', onMsg)
+        setTimeout(() => mr.stop(), 100) // small tail to flush
+        resolve()
+      } else if (type === 'fallback') {
+        this.reverseWorker?.removeEventListener('message', onMsg)
+        mr.stop()
+        reject(new Error('fallback'))
+      } else if (type === 'error') {
+        this.reverseWorker?.removeEventListener('message', onMsg)
+        mr.stop()
+        reject(new Error(message || 'worker error'))
+      }
+    }
+    this.reverseWorker?.addEventListener('message', onMsg)
+  })
+
+  mr.start()
+
+  // init worker with canvas
+  this.reverseWorker.postMessage({ type: 'init', canvas: offscreen }, [offscreen])
+
+  // send reversal job
+  const maxSeconds = 8
+  const bytes = new Uint8Array(await blob.arrayBuffer())
+  this.reverseWorker.postMessage({
+    type: 'reverse',
+    blob: bytes.buffer,
+    fps,
+    maxSeconds,
+    width: dims.width,
+    height: dims.height,
+  }, [bytes.buffer])
+
+  await done
+
+  await new Promise(r => { mr.onstop = () => r(null) })
+  const out = new Blob(chunks, { type: mimeType || 'video/webm' })
+  return out
+}
+
+private async getVideoDims(blob: Blob, maxWidth: number, maxHeight: number) {
+  const video = document.createElement('video')
+  video.src = URL.createObjectURL(blob)
+  await video.play().catch(() => {}) // kick metadata on some UAs
+  await new Promise<void>(r => {
+    if (video.readyState >= 1) r()
+    else video.onloadedmetadata = () => r()
+  })
+  const ar = video.videoWidth / video.videoHeight
+  let w = video.videoWidth, h = video.videoHeight
+  if (w > maxWidth) { w = maxWidth; h = Math.round(maxWidth / ar) }
+  if (h > maxHeight) { h = maxHeight; w = Math.round(maxHeight * ar) }
+  URL.revokeObjectURL(video.src)
+  return { width: w, height: h }
+}
+
 
   private async processVideoReversal(blob: Blob): Promise<Blob> {
     return new Promise((resolve, reject) => {
@@ -468,9 +581,9 @@ class Sro5 extends HTMLElement {
         }
         
         // Limit frame rate and duration to prevent memory overflow
-        const frameRate = 15 // Reduced from 30
-        const maxDuration = Math.min(video.duration, 10) // Max 10 seconds
-        const totalFrames = Math.min(Math.floor(maxDuration * frameRate), 150) // Max 150 frames
+        const frameRate = 24 // Increased for smoother playback
+        const maxDuration = Math.min(video.duration, 8) // Max 8 seconds
+        const totalFrames = Math.min(Math.floor(maxDuration * frameRate), 192) // Max 192 frames
         
         this.processVideoInChunks(video, canvas, ctx, totalFrames, frameRate, maxDuration)
           .then(resolve)
@@ -492,7 +605,7 @@ class Sro5 extends HTMLElement {
     const stream = canvas.captureStream(frameRate)
     const mediaRecorder = new MediaRecorder(stream, { 
       mimeType: 'video/webm',
-      videoBitsPerSecond: 1000000 // 1 Mbps
+      videoBitsPerSecond: 2000000 // 2 Mbps for better quality
     })
     const chunks: Blob[] = []
     
@@ -508,17 +621,18 @@ class Sro5 extends HTMLElement {
       
       mediaRecorder.start()
       
-      // Process frames in reverse order directly
+      // Process frames in reverse order with proper timing
       let currentFrame = totalFrames - 1
+      const frameInterval = 1000 / frameRate // Correct timing interval
       
       const renderNextFrame = () => {
         if (currentFrame < 0) {
-          setTimeout(() => mediaRecorder.stop(), 100)
+          setTimeout(() => mediaRecorder.stop(), 200)
           return
         }
         
-        const timeStamp = (currentFrame / frameRate) * (duration / totalFrames * frameRate)
-        video.currentTime = Math.min(timeStamp, duration - 0.1)
+        const timeStamp = (currentFrame / totalFrames) * duration
+        video.currentTime = Math.min(timeStamp, duration - 0.033) // 33ms buffer
         
         const onSeeked = () => {
           video.removeEventListener('seeked', onSeeked)
@@ -527,8 +641,8 @@ class Sro5 extends HTMLElement {
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
             currentFrame--
             
-            // Add small delay to prevent overwhelming the browser
-            setTimeout(renderNextFrame, 50)
+            // Use proper frame timing for smooth playback
+            setTimeout(renderNextFrame, frameInterval)
           } catch (error) {
             reject(new Error('Frame processing failed: ' + error))
           }
@@ -542,24 +656,37 @@ class Sro5 extends HTMLElement {
   }
 
 
-  private saveToPhotos() {
-    const saveBtn = this.shadow.querySelector('#saveBtn') as HTMLButtonElement
-    const videoId = saveBtn.dataset.videoId
-    
-    if (!videoId) return
-    
-    const video = this.recordedVideos.find(v => v.id === videoId)
-    if (!video || !video.reversedBlob) return
-    
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(video.reversedBlob)
-    link.download = `${video.name}_reversed.webm`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    
-    this.showStatus('Video saved to downloads! 💾', 'success')
+private async saveToPhotos() {
+  const saveBtn = this.shadow.querySelector('#saveBtn') as HTMLButtonElement
+  const videoId = saveBtn?.dataset.videoId
+  if (!videoId) return
+  const video = this.recordedVideos.find(v => v.id === videoId)
+  if (!video?.reversedBlob) return
+
+  // Prefer a Photos-friendly extension (mp4 on iOS if we got it)
+  const ext = video.reversedBlob.type.includes('mp4') ? 'mp4' : 'webm'
+  const file = new File([video.reversedBlob], `${video.name}_reversed.${ext}`, { type: video.reversedBlob.type })
+
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: 'Reversed Video' })
+      this.showStatus('Shared — use “Save Video” to put it in Photos 📱', 'success')
+      return
+    }
+  } catch (err) {
+    // fall through to download
   }
+
+  // Fallback: download
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(file)
+  link.download = file.name
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  this.showStatus('Video saved to downloads! 💾', 'success')
+}
+
 
   private updateVideoLibrary() {
     const library = this.shadow.querySelector('#videoLibrary')
