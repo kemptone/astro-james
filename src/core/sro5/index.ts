@@ -473,8 +473,19 @@ private async reverseVideo() {
   canvas.width = dims.width
   canvas.height = dims.height
 
-  // Start recording the canvas stream
-  const fps = 24
+  // Detect source frame rate and use it for output
+  const tempVideo = document.createElement('video')
+  tempVideo.src = URL.createObjectURL(blob)
+  tempVideo.muted = true
+  await tempVideo.play().catch(() => {})
+  await new Promise<void>(r => {
+    if (tempVideo.readyState >= 1) r()
+    else tempVideo.onloadedmetadata = () => r()
+  })
+  
+  const fps = await this.detectVideoFrameRate(tempVideo) || 30
+  URL.revokeObjectURL(tempVideo.src)
+  
   const stream = canvas.captureStream(fps)
   const mimeCandidates = [
     'video/mp4', // Safari/iOS
@@ -513,14 +524,12 @@ private async reverseVideo() {
   // init worker with canvas
   this.reverseWorker.postMessage({ type: 'init', canvas: offscreen }, [offscreen])
 
-  // send reversal job
-  const maxSeconds = 8
+  // send reversal job - no length limit
   const bytes = new Uint8Array(await blob.arrayBuffer())
   this.reverseWorker.postMessage({
     type: 'reverse',
     blob: bytes.buffer,
     fps,
-    maxSeconds,
     width: dims.width,
     height: dims.height,
   }, [bytes.buffer])
@@ -563,7 +572,7 @@ private async getVideoDims(blob: Blob, maxWidth: number, maxHeight: number) {
       video.src = URL.createObjectURL(blob)
       video.muted = true
       
-      video.onloadedmetadata = () => {
+      video.onloadedmetadata = async () => {
         // Limit canvas size to prevent memory issues
         const maxWidth = 640
         const maxHeight = 480
@@ -580,12 +589,12 @@ private async getVideoDims(blob: Blob, maxWidth: number, maxHeight: number) {
           canvas.height = video.videoHeight
         }
         
-        // Limit frame rate and duration to prevent memory overflow
-        const frameRate = 24 // Increased for smoother playback
-        const maxDuration = Math.min(video.duration, 8) // Max 8 seconds
-        const totalFrames = Math.min(Math.floor(maxDuration * frameRate), 192) // Max 192 frames
+        // Detect source video frame rate
+        const frameRate = await this.detectVideoFrameRate(video) || 30 // Fallback to 30fps
+        const duration = video.duration
+        const totalFrames = Math.floor(duration * frameRate)
         
-        this.processVideoInChunks(video, canvas, ctx, totalFrames, frameRate, maxDuration)
+        this.processVideoInChunks(video, canvas, ctx, totalFrames, frameRate, duration)
           .then(resolve)
           .catch(reject)
       }
@@ -621,18 +630,19 @@ private async getVideoDims(blob: Blob, maxWidth: number, maxHeight: number) {
       
       mediaRecorder.start()
       
-      // Process frames in reverse order with proper timing
+      // Process frames in reverse order at correct speed
       let currentFrame = totalFrames - 1
-      const frameInterval = 1000 / frameRate // Correct timing interval
+      const frameInterval = 1000 / frameRate // Target output timing
       
       const renderNextFrame = () => {
         if (currentFrame < 0) {
-          setTimeout(() => mediaRecorder.stop(), 200)
+          setTimeout(() => mediaRecorder.stop(), 100)
           return
         }
         
-        const timeStamp = (currentFrame / totalFrames) * duration
-        video.currentTime = Math.min(timeStamp, duration - 0.033) // 33ms buffer
+        // Calculate exact timestamp for this frame
+        const timeStamp = Math.max(0, Math.min((currentFrame / totalFrames) * duration, duration - 0.01))
+        video.currentTime = timeStamp
         
         const onSeeked = () => {
           video.removeEventListener('seeked', onSeeked)
@@ -641,8 +651,8 @@ private async getVideoDims(blob: Blob, maxWidth: number, maxHeight: number) {
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
             currentFrame--
             
-            // Use proper frame timing for smooth playback
-            setTimeout(renderNextFrame, frameInterval)
+            // Immediate processing for correct timing - let MediaRecorder handle the frame rate
+            requestAnimationFrame(renderNextFrame)
           } catch (error) {
             reject(new Error('Frame processing failed: ' + error))
           }
@@ -655,6 +665,59 @@ private async getVideoDims(blob: Blob, maxWidth: number, maxHeight: number) {
     })
   }
 
+  private async detectVideoFrameRate(video: HTMLVideoElement): Promise<number | null> {
+    return new Promise((resolve) => {
+      try {
+        // Try to detect frame rate by measuring frame times
+        const startTime = performance.now()
+        let frameCount = 0
+        const maxSamples = 10
+        const sampleDuration = 0.5 // Sample for 0.5 seconds
+        
+        const checkFrame = () => {
+          frameCount++
+          
+          if (frameCount >= maxSamples || (performance.now() - startTime) > sampleDuration * 1000) {
+            const elapsed = (performance.now() - startTime) / 1000
+            const estimatedFps = frameCount / elapsed
+            
+            // Round to common frame rates
+            const commonRates = [24, 25, 30, 50, 60]
+            const closest = commonRates.reduce((prev, curr) => 
+              Math.abs(curr - estimatedFps) < Math.abs(prev - estimatedFps) ? curr : prev
+            )
+            
+            resolve(closest)
+          } else {
+            requestAnimationFrame(checkFrame)
+          }
+        }
+        
+        // Start sampling when video plays
+        video.currentTime = 1 // Start from 1 second to avoid initial loading
+        video.play().then(() => {
+          requestAnimationFrame(checkFrame)
+        }).catch(() => {
+          // If play fails, fallback to common frame rates based on duration heuristics
+          if (video.duration) {
+            // Most mobile recordings are 30fps, most cinema is 24fps
+            resolve(30)
+          } else {
+            resolve(null)
+          }
+        })
+        
+        // Timeout after 2 seconds
+        setTimeout(() => {
+          video.pause()
+          resolve(30) // Default fallback
+        }, 2000)
+        
+      } catch (error) {
+        resolve(null)
+      }
+    })
+  }
 
 private async saveToPhotos() {
   const saveBtn = this.shadow.querySelector('#saveBtn') as HTMLButtonElement
