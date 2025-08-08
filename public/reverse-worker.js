@@ -1,120 +1,145 @@
 // reverse-worker.js
-// Receives: { blob:ArrayBuffer, fps:number, maxSeconds:number, width:number, height:number }
-// Also receives: an OffscreenCanvas via transfer list
-// Draws reversed frames onto the OffscreenCanvas (owned by main thread canvas)
-// Main thread captures the canvas stream to MediaRecorder and stops when worker posts "done"
+// Contract (from main thread):
+//  1) postMessage({ type: 'init', canvas: OffscreenCanvas }, [offscreen])
+//  2) postMessage({ type: 'reverse', blob: ArrayBuffer, fps, maxSeconds, width, height }, [blob])
+//
+// Behavior:
+//  - If input looks like MP4/WebM (i.e., in a container), we post {type:'fallback'} immediately.
+//  - If (rare) raw elementary H.264/VP8/VP9 is detected, we try WebCodecs decode → draw reversed.
+//  - Draw is paced to ~fps; memory is cleaned aggressively.
+//  - On success: {type:'done'}; on error: {type:'error', message}.
 
-let canvas, ctx;
+let canvas = null;
+let ctx = null;
 
 self.onmessage = async (e) => {
-  const { type } = e.data || {};
+  const msg = e.data || {};
+  const { type } = msg;
+
   try {
     if (type === 'init') {
-      canvas = e.data.canvas; // OffscreenCanvas
+      canvas = msg.canvas;
       ctx = canvas.getContext('2d', { desynchronized: true, alpha: false });
       return;
     }
 
     if (type === 'reverse') {
-      const { blob, fps, maxSeconds, width, height } = e.data;
       if (!canvas || !ctx) throw new Error('Worker canvas not initialized');
 
-      // Resize the OffscreenCanvas to target dims
+      const { blob, fps = 24, maxSeconds = 12, width, height } = msg;
       canvas.width = width;
       canvas.height = height;
 
-      const bytes = new Uint8Array(blob);
-      const src = new Blob([bytes], { type: 'video/*' }); // container type doesn't matter, decoder sniffs by content
-      const arrayBuffer = await src.arrayBuffer();
-
-      // -- Decode to frames with WebCodecs --
-      const chunks = [];
-      // Use a simple demux via a MediaSource + HTMLVideoElement? Nope (not available).
-      // Let WebCodecs sniff by using a built-in demuxer through createImageBitmap? Not valid for video.
-      // We rely on VideoDecoder handling common containers it supports on the platform.
-
-      // Helper to enqueue and await decoded frames
-      const decodedFrames = [];
-
-      const decoder = new VideoDecoder({
-        output: (frame) => decodedFrames.push(frame),
-        error: (err) => postMessage({ type: 'error', message: String(err) }),
-      });
-
-      // Configure decoder; we can omit codec to let UA choose, but some require it.
-      // Most camera/MediaRecorder outputs will be h264 or vp8. Try h264 first; fall back if needed.
-      const tryConfigs = [
-        { codec: 'avc1.42E01E' }, // h264 baseline-ish
-        { codec: 'vp8' },
-        { codec: 'vp09.00.10.08' }, // vp9
-      ];
-
-      let configured = false;
-      for (const cfg of tryConfigs) {
-        try {
-          decoder.configure(cfg);
-          configured = true;
-          break;
-        } catch (_) { /* try next */ }
-      }
-      if (!configured) {
+      // Quick format sniff
+      const u8 = new Uint8Array(blob);
+      if (looksLikeMP4(u8) || looksLikeWebM(u8)) {
+        // No demuxer here; tell main thread to run fallback path
         postMessage({ type: 'fallback' });
         return;
       }
 
-      // Feed the decoder with a single EncodedVideoChunk container.
-      // In practice you’d parse container → samples. For simplicity, many UAs accept whole file chunks.
-      // If the platform doesn't accept, we’ll signal fallback.
-      try {
-        const chunk = new EncodedVideoChunk({
-          type: 'key', // best effort
-          timestamp: 0,
-          data: new Uint8Array(arrayBuffer),
-        });
-        decoder.decode(chunk);
-        await decoder.flush();
-      } catch {
-        // If demuxing is required on this UA, punt to fallback
-        postMessage({ type: 'fallback' });
-        return;
-      }
-
-      // Limit frames for memory, keep highest perf
-      const targetFps = fps || 24;
-      const maxFrames = Math.max(1, Math.floor((maxSeconds || 8) * targetFps));
-      const frames = decodedFrames.slice(0, maxFrames);
-
-      // Draw frames in reverse at ~targetFps
-      const frameIntervalMs = 1000 / targetFps;
-
-      // Scale draw to fit canvas while preserving aspect
-      const draw = (vf) => {
-        // fast path to bitmap; many UAs can draw VideoFrame directly
-        // Center-fit
-        const scale = Math.min(canvas.width / vf.displayWidth, canvas.height / vf.displayHeight);
-        const dw = Math.round(vf.displayWidth * scale);
-        const dh = Math.round(vf.displayHeight * scale);
-        const dx = Math.floor((canvas.width - dw) / 2);
-        const dy = Math.floor((canvas.height - dh) / 2);
-        // Clear frame
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // Draw
-        // @ts-ignore drawImage supports VideoFrame in modern browsers
-        ctx.drawImage(vf, dx, dy, dw, dh);
-      };
-
-      const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-      for (let i = frames.length - 1; i >= 0; i--) {
-        draw(frames[i]);
-        await sleep(frameIntervalMs);
-        frames[i].close();
-      }
+      // Attempt raw elementary stream decode (Annex B H.264 or raw VP8/9).
+      // This path is niche but fast when available.
+      await decodeElementaryAndDrawReversed(u8, { fps, maxSeconds, width, height });
 
       postMessage({ type: 'done' });
     }
   } catch (err) {
-    postMessage({ type: 'error', message: String(err) });
+    postMessage({ type: 'error', message: String(err && err.message || err) });
   }
 };
+
+// ---------- format sniffers ----------
+function looksLikeMP4(u8) {
+  // ISO BMFF: bytes 4-7 'ftyp' in the first box
+  // e.g., 00000018 66747970 69736F6D ...
+  if (u8.length < 12) return false;
+  return u8[4] === 0x66 && u8[5] === 0x74 && u8[6] === 0x79 && u8[7] === 0x70;
+}
+
+function looksLikeWebM(u8) {
+  // EBML header: 0x1A 0x45 0xDF 0xA3
+  if (u8.length < 4) return false;
+  return u8[0] === 0x1A && u8[1] === 0x45 && u8[2] === 0xDF && u8[3] === 0xA3;
+}
+
+function isAnnexB(u8) {
+  // Very light check: look for repeating 00 00 00 01 start codes
+  // Not bulletproof, but good enough to decide if we’ll even *try*.
+  let hits = 0;
+  for (let i = 0; i < u8.length - 4 && hits < 3; i++) {
+    if (u8[i] === 0x00 && u8[i+1] === 0x00 && u8[i+2] === 0x00 && u8[i+3] === 0x01) hits++;
+  }
+  return hits >= 2;
+}
+
+// ---------- decode + draw (elementary streams only) ----------
+async function decodeElementaryAndDrawReversed(u8, { fps, maxSeconds, width, height }) {
+  // Try H.264 Annex B first
+  const canH264 = isAnnexB(u8) && typeof VideoDecoder !== 'undefined';
+  if (!canH264) throw new Error('Not a raw elementary stream (need demux).');
+
+  const frames = [];
+  const decoder = new VideoDecoder({
+    output: (vf) => frames.push(vf),
+    error: (e) => { throw e; }
+  });
+
+  // Prefer baseline profile to maximize support
+  const h264Cfg = { codec: 'avc1.42E01E' };
+  try {
+    const { supported } = await VideoDecoder.isConfigSupported(h264Cfg);
+    if (!supported) throw new Error('H.264 not supported in this context');
+    decoder.configure(h264Cfg);
+  } catch (e) {
+    // Try a couple more common IDs
+    const fallbacks = [{ codec: 'avc1.4D401E' }, { codec: 'avc1.64001E' }];
+    let ok = false;
+    for (const cfg of fallbacks) {
+      try {
+        const { supported } = await VideoDecoder.isConfigSupported(cfg);
+        if (supported) { decoder.configure(cfg); ok = true; break; }
+      } catch {}
+    }
+    if (!ok) throw e;
+  }
+
+  // Extremely naive chunker: feed the whole buffer as one key chunk and hope
+  // NOTE: Realistically, you need a demuxer to extract encoded samples.
+  // This will work only for very specific raw streams.
+  const chunk = new EncodedVideoChunk({
+    type: 'key',
+    timestamp: 0,
+    data: u8
+  });
+
+  decoder.decode(chunk);
+  await decoder.flush();
+
+  // Trim frame count to memory-friendly bounds
+  const maxFrames = Math.max(1, Math.floor(maxSeconds * fps));
+  const useFrames = frames.slice(0, maxFrames);
+
+  // Draw reversed with pacing
+  const frameInterval = 1000 / fps;
+  for (let i = useFrames.length - 1; i >= 0; i--) {
+    drawFrameFit(useFrames[i], width, height);
+    await sleep(frameInterval);
+    useFrames[i].close();
+  }
+}
+
+function drawFrameFit(vf, W, H) {
+  const scale = Math.min(W / vf.displayWidth, H / vf.displayHeight);
+  const dw = Math.round(vf.displayWidth * scale);
+  const dh = Math.round(vf.displayHeight * scale);
+  const dx = (W - dw) >> 1;
+  const dy = (H - dh) >> 1;
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+  // drawImage supports VideoFrame in modern browsers
+  // @ts-ignore
+  ctx.drawImage(vf, dx, dy, dw, dh);
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }

@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, viewport-fit=cover"
+		/>
+		<title>ReverseCam</title>
+		<style>
+			:root {
+				--bar-h: 64px;
+				--fab-size: 64px;
+			}
+
+			html,
+			body {
+				height: 100%;
+				margin: 0;
+				background: #000;
+				color: #fff;
+				font-family:
+					-apple-system,
+					system-ui,
+					Segoe UI,
+					Roboto,
+					Helvetica,
+					Arial,
+					sans-serif;
+			}
+
+			.app {
+				position: fixed;
+				inset: 0;
+				/* fullscreen */
+				display: grid;
+				grid-template-rows: 1fr auto;
+				background: #000;
+				padding-bottom: env(safe-area-inset-bottom);
+			}
+
+			.stage {
+				position: relative;
+				overflow: hidden;
+				background: #000;
+			}
+
+			video {
+				position: absolute;
+				inset: 0;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				/* fill fullscreen nicely */
+				background: #000;
+				display: none;
+				/* toggled on when used */
+			}
+
+			#live {
+				display: block;
+			}
+
+			.overlay {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				padding: 16px calc(16px + env(safe-area-inset-right))
+					calc(8px + env(safe-area-inset-bottom))
+					calc(16px + env(safe-area-inset-left));
+				display: flex;
+				gap: 12px;
+				justify-content: center;
+				flex-wrap: wrap;
+				background: linear-gradient(
+					180deg,
+					rgba(0, 0, 0, 0.6),
+					rgba(0, 0, 0, 0)
+				);
+			}
+
+			.btn {
+				-webkit-tap-highlight-color: transparent;
+				appearance: none;
+				border: 0;
+				border-radius: 999px;
+				padding: 12px 18px;
+				font-size: 16px;
+				font-weight: 600;
+				color: #fff;
+				background: rgba(255, 255, 255, 0.15);
+				backdrop-filter: blur(6px);
+				cursor: pointer;
+			}
+
+			.btn[disabled] {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+
+			.rec {
+				background: #e74c3c;
+			}
+
+			.good {
+				background: #27ae60;
+			}
+
+			.accent {
+				background: #3498db;
+			}
+
+			.topbar {
+				height: var(--bar-h);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0 12px calc(env(safe-area-inset-top));
+				background: rgba(0, 0, 0, 0.6);
+				backdrop-filter: blur(6px);
+				border-top: 1px solid rgba(255, 255, 255, 0.08);
+			}
+
+			.title {
+				font-weight: 700;
+				letter-spacing: 0.3px;
+			}
+
+			/* Floating action button (menu) */
+			.fab {
+				position: fixed;
+				right: 16px;
+				top: calc(16px + env(safe-area-inset-bottom));
+				width: var(--fab-size);
+				height: var(--fab-size);
+				border-radius: 50%;
+				display: grid;
+				place-items: center;
+				background: #111;
+				color: #fff;
+				border: 1px solid rgba(255, 255, 255, 0.15);
+				box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+				cursor: pointer;
+				z-index: 40;
+			}
+
+			.sheet {
+				position: fixed;
+				inset: auto 0 0 0;
+				transform: translateY(100%);
+				background: rgba(16, 16, 16, 0.96);
+				color: #fff;
+				border-top-left-radius: 16px;
+				border-top-right-radius: 16px;
+				box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4);
+				transition: transform 0.25s ease;
+				z-index: 50;
+				padding: 12px 12px calc(16px + env(safe-area-inset-bottom));
+			}
+
+			.sheet.open {
+				transform: translateY(0%);
+			}
+
+			.sheet h3 {
+				margin: 4px 8px 12px;
+				font-size: 18px;
+			}
+
+			.row {
+				display: flex;
+				gap: 8px;
+				flex-wrap: wrap;
+			}
+
+			.toast {
+				position: fixed;
+				left: 50%;
+				bottom: calc(96px + env(safe-area-inset-bottom));
+				transform: translateX(-50%);
+				background: rgba(0, 0, 0, 0.8);
+				color: #fff;
+				padding: 10px 14px;
+				border-radius: 999px;
+				font-size: 14px;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.2s ease;
+			}
+
+			.toast.show {
+				opacity: 1;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="app">
+			<div class="stage" id="stage">
+				<video id="live" autoplay muted playsinline></video>
+				<video id="playback" controls playsinline></video>
+
+				<div class="overlay">
+					<button class="btn accent" id="startCamBtn"
+						>Start Camera</button
+					>
+					<button class="btn rec" id="recBtn" disabled>Record</button>
+					<button class="btn good" id="revBtn" disabled
+						>Reverse</button
+					>
+				</div>
+			</div>
+
+			<div class="topbar">
+				<div class="title">ReverseCam</div>
+				<div style="opacity:.7;font-size:13px" id="info">Ready</div>
+			</div>
+		</div>
+
+		<button class="fab" id="fab" aria-label="Open menu">⋮</button>
+		<div
+			class="sheet"
+			id="sheet"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="menuTitle"
+		>
+			<h3 id="menuTitle">Menu</h3>
+			<div class="row">
+				<button class="btn" id="downloadBtn" disabled>Download</button>
+				<button class="btn" id="shareBtn" disabled>Share</button>
+				<button class="btn" id="resetBtn">Reset</button>
+			</div>
+		</div>
+
+		<div class="toast" id="toast"></div>
+
+		<script type="module">
+			const ui = {
+				live: document.getElementById('live'),
+				playback: document.getElementById('playback'),
+				startCamBtn: document.getElementById('startCamBtn'),
+				recBtn: document.getElementById('recBtn'),
+				revBtn: document.getElementById('revBtn'),
+				info: document.getElementById('info'),
+				fab: document.getElementById('fab'),
+				sheet: document.getElementById('sheet'),
+				downloadBtn: document.getElementById('downloadBtn'),
+				shareBtn: document.getElementById('shareBtn'),
+				resetBtn: document.getElementById('resetBtn'),
+				toast: document.getElementById('toast'),
+			}
+
+			// State
+			let stream = null
+			let mediaRecorder = null
+			let chunks = []
+			let recordingBlob = null // original
+			let reversedBlob = null // output
+
+			// Worker (you said you already have reverse-worker.js)
+			const supportsWebCodecs =
+				'VideoDecoder' in window && 'OffscreenCanvas' in window
+			const worker = supportsWebCodecs
+				? new Worker(new URL('./reverse-worker.js', import.meta.url), {
+						type: 'module',
+					})
+				: null
+
+			function setInfo(text) {
+				ui.info.textContent = text
+			}
+			function toast(text, ms = 1800) {
+				ui.toast.textContent = text
+				ui.toast.classList.add('show')
+				setTimeout(() => ui.toast.classList.remove('show'), ms)
+			}
+
+			ui.fab.addEventListener('click', () =>
+				ui.sheet.classList.toggle('open'),
+			)
+			ui.resetBtn.addEventListener('click', () => {
+				location.reload()
+			})
+
+			// Camera
+			ui.startCamBtn.addEventListener('click', async () => {
+				try {
+					setInfo('Requesting camera…')
+					stream = await navigator.mediaDevices.getUserMedia({
+						video: {facingMode: 'user'},
+						audio: true,
+					})
+					ui.live.srcObject = stream
+					ui.live.style.display = 'block'
+					ui.playback.style.display = 'none'
+					ui.recBtn.disabled = false
+					setInfo('Camera ready')
+				} catch (e) {
+					console.error(e)
+					setInfo('Camera failed')
+					toast('Camera permission denied')
+				}
+			})
+
+			// Recording
+			ui.recBtn.addEventListener('click', () => {
+				if (!mediaRecorder) startRec()
+				else stopRec()
+			})
+
+			//////////////////// START
+
+			// --- helpers ---
+			function pickMime() {
+				const m = [
+					'video/mp4', // Safari/iPadOS
+					'video/webm;codecs=vp9,opus',
+					'video/webm;codecs=vp8,opus',
+					'video/webm',
+				]
+				return m.find(t => MediaRecorder.isTypeSupported(t))
+			}
+
+			// --- start recording ---
+			function startRec() {
+				if (!stream) return
+				chunks = []
+
+				const mimeType = pickMime()
+				mediaRecorder = new MediaRecorder(
+					stream,
+					mimeType ? {mimeType} : undefined,
+				)
+
+				// Capture the mime in a local var so we don't depend on mediaRecorder later.
+				const recMime =
+					mediaRecorder.mimeType || (mimeType ?? 'video/webm')
+
+				mediaRecorder.ondataavailable = e => {
+					if (e.data && e.data.size) chunks.push(e.data)
+				}
+
+				mediaRecorder.onstop = () => {
+					// mediaRecorder may already be nulled later; use the captured recMime
+					recordingBlob = new Blob(chunks, {type: recMime})
+					setInfo(
+						'Recorded ' +
+							Math.round(recordingBlob.size / 1024) +
+							' KB',
+					)
+					ui.revBtn.disabled = false // ✅ enable Reverse here
+					mediaRecorder = null // now it’s safe to null it
+				}
+
+				// Use a timeslice so Safari reliably emits dataavailable
+				mediaRecorder.start(250) // 250ms chunks
+				ui.recBtn.textContent = 'Stop'
+				ui.revBtn.disabled = true
+				setInfo('Recording…')
+			}
+
+			// --- stop recording ---
+			function stopRec() {
+				if (!mediaRecorder) return
+				// Don’t null it here; let onstop handle cleanup
+				mediaRecorder.requestData() // flush final chunk (helps Safari)
+				mediaRecorder.stop()
+				ui.recBtn.textContent = 'Record'
+				setInfo('Recording stopped')
+			}
+
+			//////////////////// END
+
+			// Reverse logic: try fast path (worker + WebCodecs), else fallback (seek/draw)
+			ui.revBtn.addEventListener('click', async () => {
+				if (!recordingBlob) return
+				ui.revBtn.disabled = true
+				setInfo('Reversing…')
+				try {
+					try {
+						reversedBlob = await reverseFast(recordingBlob)
+					} catch (err) {
+						console.warn('Fast reverse failed, fallback:', err)
+						reversedBlob = await reverseFallback(recordingBlob)
+					}
+					// Show playback fullscreen
+					ui.playback.src = URL.createObjectURL(reversedBlob)
+					ui.playback.style.display = 'block'
+					ui.live.style.display = 'none'
+					setInfo('Reversed')
+					ui.downloadBtn.disabled = false
+					ui.shareBtn.disabled = false
+					toast('Ready to save')
+				} catch (e) {
+					console.error(e)
+					setInfo('Reverse failed')
+					toast('Reverse failed')
+				} finally {
+					ui.revBtn.disabled = false
+				}
+			})
+
+			// Fast reverse via WebCodecs worker + OffscreenCanvas + MediaRecorder
+			async function reverseFast(blob) {
+				if (!supportsWebCodecs || !worker)
+					throw new Error('No WebCodecs')
+
+				const dims = await getDims(blob, 1920, 1080) // full but bounded for perf on iPad
+				const fps = 24
+				const canvas = document.createElement('canvas')
+				canvas.width = dims.width
+				canvas.height = dims.height
+
+				const mime = pickMime()
+				const stream = canvas.captureStream(fps)
+				const mr = new MediaRecorder(
+					stream,
+					mime
+						? {mimeType: mime, videoBitsPerSecond: 4_000_000}
+						: {videoBitsPerSecond: 4_000_000},
+				)
+				const out = []
+				mr.ondataavailable = e => {
+					if (e.data.size) out.push(e.data)
+				}
+
+				const offscreen = canvas.transferControlToOffscreen()
+
+				const done = new Promise((resolve, reject) => {
+					const onMsg = ev => {
+						const {type, message} = ev.data || {}
+						if (type === 'done') {
+							worker.removeEventListener('message', onMsg)
+							setTimeout(() => mr.stop(), 80)
+							resolve()
+						} else if (type === 'fallback') {
+							worker.removeEventListener('message', onMsg)
+							mr.stop()
+							reject(new Error('fallback'))
+						} else if (type === 'error') {
+							worker.removeEventListener('message', onMsg)
+							mr.stop()
+							reject(new Error(message || 'worker error'))
+						}
+					}
+					worker.addEventListener('message', onMsg)
+				})
+
+				mr.start()
+				worker.postMessage({type: 'init', canvas: offscreen}, [
+					offscreen,
+				])
+				const bytes = new Uint8Array(await blob.arrayBuffer())
+				worker.postMessage(
+					{
+						type: 'reverse',
+						blob: bytes.buffer,
+						fps,
+						maxSeconds: 12,
+						width: dims.width,
+						height: dims.height,
+					},
+					[bytes.buffer],
+				)
+				await done
+				await new Promise(r => {
+					mr.onstop = () => r()
+				})
+				return new Blob(out, {type: mime || 'video/webm'})
+			}
+
+			// Fallback: HTMLVideoElement + seek + draw + MediaRecorder
+			async function reverseFallback(blob) {
+				const fps = 24
+				const video = document.createElement('video')
+				video.src = URL.createObjectURL(blob)
+				video.muted = true
+				video.playsInline = true
+				await once(video, 'loadedmetadata')
+				const dims = fit(
+					video.videoWidth,
+					video.videoHeight,
+					1920,
+					1080,
+				)
+				const canvas = document.createElement('canvas')
+				canvas.width = dims.w
+				canvas.height = dims.h
+				const ctx = canvas.getContext('2d')
+				const stream = canvas.captureStream(fps)
+				const mr = new MediaRecorder(stream, {
+					mimeType: pickMime() || undefined,
+					videoBitsPerSecond: 4_000_000,
+				})
+				const out = []
+				mr.ondataavailable = e => {
+					if (e.data.size) out.push(e.data)
+				}
+
+				const maxDur = Math.min(video.duration, 12)
+				const total = Math.max(1, Math.floor(maxDur * fps))
+				mr.start()
+
+				const frameInterval = 1000 / fps
+				for (let i = total - 1; i >= 0; i--) {
+					const t = (i / total) * maxDur
+					video.currentTime = Math.min(t, maxDur - 0.033)
+					await once(video, 'seeked')
+					// draw center-fit
+					ctx.fillStyle = '#000'
+					ctx.fillRect(0, 0, canvas.width, canvas.height)
+					const scale = Math.min(
+						canvas.width / video.videoWidth,
+						canvas.height / video.videoHeight,
+					)
+					const dw = Math.round(video.videoWidth * scale)
+					const dh = Math.round(video.videoHeight * scale)
+					const dx = Math.floor((canvas.width - dw) / 2)
+					const dy = Math.floor((canvas.height - dh) / 2)
+					ctx.drawImage(video, dx, dy, dw, dh)
+					await sleep(frameInterval)
+				}
+				await sleep(80)
+				mr.stop()
+				await once(mr, 'stop')
+				URL.revokeObjectURL(video.src)
+				return new Blob(out, {type: mr.mimeType || 'video/webm'})
+			}
+
+			// Download/Share
+			ui.downloadBtn.addEventListener('click', () => {
+				if (!reversedBlob) return
+				const ext =
+					reversedBlob.type && reversedBlob.type.includes('mp4')
+						? 'mp4'
+						: 'webm'
+				const a = document.createElement('a')
+				a.href = URL.createObjectURL(reversedBlob)
+				a.download = `reversed.${ext}`
+				document.body.appendChild(a)
+				a.click()
+				a.remove()
+				toast('Downloaded')
+			})
+
+			ui.shareBtn.addEventListener('click', async () => {
+				if (!reversedBlob) return
+				const ext =
+					reversedBlob.type && reversedBlob.type.includes('mp4')
+						? 'mp4'
+						: 'webm'
+				const file = new File([reversedBlob], `reversed.${ext}`, {
+					type: reversedBlob.type || 'video/webm',
+				})
+				try {
+					if (
+						navigator.canShare &&
+						navigator.canShare({files: [file]})
+					) {
+						await navigator.share({
+							files: [file],
+							title: 'Reversed Video',
+						})
+						toast('Shared')
+					} else {
+						throw new Error('no share')
+					}
+				} catch {
+					const a = document.createElement('a')
+					a.href = URL.createObjectURL(file)
+					a.download = file.name
+					document.body.appendChild(a)
+					a.click()
+					a.remove()
+					toast('Downloaded')
+				}
+			})
+
+			// Helpers
+			function fit(w, h, maxW, maxH) {
+				const r = Math.min(maxW / w, maxH / h)
+				return {w: Math.round(w * r), h: Math.round(h * r)}
+			}
+			function once(target, ev) {
+				return new Promise(res =>
+					target.addEventListener(ev, res, {once: true}),
+				)
+			}
+			function sleep(ms) {
+				return new Promise(r => setTimeout(r, ms))
+			}
+
+			async function getDims(blob, maxW, maxH) {
+				const v = document.createElement('video')
+				v.src = URL.createObjectURL(blob)
+				await once(v, 'loadedmetadata')
+				const {w, h} = fit(v.videoWidth, v.videoHeight, maxW, maxH)
+				URL.revokeObjectURL(v.src)
+				return {width: w, height: h}
+			}
+
+			// Prevent screen sleep on iPad during recording/playback (best-effort)
+			if ('wakeLock' in navigator) {
+				let lock = null
+				const keepAwake = async () => {
+					try {
+						lock = await navigator.wakeLock.request('screen')
+					} catch {}
+				}
+				const release = async () => {
+					try {
+						await lock?.release()
+						lock = null
+					} catch {}
+				}
+				document.addEventListener('visibilitychange', () =>
+					document.visibilityState === 'visible'
+						? keepAwake()
+						: release(),
+				)
+				keepAwake()
+			}
+		</script>
+	</body>
+</html>
