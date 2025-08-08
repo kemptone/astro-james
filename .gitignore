@@ -25,5 +25,8 @@ pnpm-debug.log*
 
 .vercel
 
+# local Crush agent data
+.crush
+
 microsoft.js
 ms.config.info
