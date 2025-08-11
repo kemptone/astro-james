@@ -1,0 +1,15 @@
+---
+import Layout from '@/layouts/Layout.astro';
+---
+
+<Layout title="SRO6 - Valves Controller">
+  <section>
+    <h1>Valves Controller (SRO6)</h1>
+    <p>Enter up to three numbers: Sprinklers, House, and optional Backyard. 0 = fully on, 100 = fully off. Submit only works when Location is Backyard or Inside.</p>
+    <wc-valves />
+  </section>
+</Layout>
+
+<script>
+  import('@/components/wc-valves');
+</script>
