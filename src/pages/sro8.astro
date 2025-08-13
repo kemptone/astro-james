@@ -1,0 +1,19 @@
+---
+import Menu3 from '@/components/Menu3/Menu3.astro'
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>SRO8 App</title>
+	</head>
+	<body>
+		<Menu3 />
+		<sro8-app></sro8-app>
+		<script>
+			import('@/core/sro8/index.ts')
+		</script>
+	</body>
+</html>
