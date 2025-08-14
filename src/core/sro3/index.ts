@@ -1,8 +1,10 @@
 class TideGame extends HTMLElement {
   private timeInput: HTMLInputElement;
+  private tideFeetInput: HTMLInputElement;
   private tideDisplay: HTMLDivElement;
   private tideHeight: HTMLDivElement;
   private tideInfo: HTMLDivElement;
+  private nextTideInfo: HTMLDivElement;
   
   constructor() {
     super();
@@ -35,13 +37,23 @@ class TideGame extends HTMLElement {
           margin-bottom: 20px;
         }
         
+        .input-row {
+          display: flex;
+          gap: 10px;
+          align-items: end;
+        }
+        
+        .input-group {
+          flex: 1;
+        }
+        
         label {
           display: block;
           margin-bottom: 5px;
           font-weight: bold;
         }
         
-        input[type="time"] {
+        input[type="time"], input[type="number"] {
           width: 100%;
           padding: 8px;
           border: 2px solid #ccc;
@@ -68,7 +80,7 @@ class TideGame extends HTMLElement {
           border-radius: 0 0 4px 4px;
         }
         
-        .tide-info {
+        .tide-info, .next-tide-info {
           margin-top: 10px;
           padding: 10px;
           background: #f0f8ff;
@@ -87,12 +99,31 @@ class TideGame extends HTMLElement {
           color: #666;
           margin-top: 5px;
         }
+        
+        .next-tide-info {
+          background: #fff8e1;
+          border: 1px solid #ffc107;
+        }
+        
+        .next-tide-value {
+          font-size: 18px;
+          font-weight: bold;
+          color: #ff6f00;
+        }
       </style>
       
       <div class="container">
         <div class="input-section">
-          <label for="timeInput">Set Time:</label>
-          <input type="time" id="timeInput" value="12:00">
+          <div class="input-row">
+            <div class="input-group">
+              <label for="timeInput">Set Time:</label>
+              <input type="time" id="timeInput" value="12:00">
+            </div>
+            <div class="input-group">
+              <label for="tideFeetInput">Tide Feet:</label>
+              <input type="number" id="tideFeetInput" value="5.35" step="0.01" min="0" max="15">
+            </div>
+          </div>
         </div>
         
         <div class="tide-container">
@@ -101,64 +132,96 @@ class TideGame extends HTMLElement {
         
         <div class="tide-info">
           <div class="tide-value">0.0 ft</div>
-          <div class="tide-label">Tide Level</div>
+          <div class="tide-label">Current Tide Level</div>
+        </div>
+        
+        <div class="next-tide-info">
+          <div class="next-tide-value">Next tide in 0h 0m</div>
+          <div class="tide-label">Next Tide Prediction</div>
         </div>
       </div>
     `;
     
     this.timeInput = this.shadowRoot.querySelector('#timeInput') as HTMLInputElement;
+    this.tideFeetInput = this.shadowRoot.querySelector('#tideFeetInput') as HTMLInputElement;
     this.tideDisplay = this.shadowRoot.querySelector('.tide-container') as HTMLDivElement;
     this.tideHeight = this.shadowRoot.querySelector('.tide-height') as HTMLDivElement;
     this.tideInfo = this.shadowRoot.querySelector('.tide-value') as HTMLDivElement;
+    this.nextTideInfo = this.shadowRoot.querySelector('.next-tide-value') as HTMLDivElement;
   }
 
   private setupEventListeners() {
     this.timeInput?.addEventListener('change', () => this.updateTide());
     this.timeInput?.addEventListener('input', () => this.updateTide());
+    this.tideFeetInput?.addEventListener('change', () => this.updateTide());
+    this.tideFeetInput?.addEventListener('input', () => this.updateTide());
   }
 
-  private calculateTide(hour: number, minute: number): number {
-    const totalMinutes = hour * 60 + minute;
+  private getTideSchedule() {
+    return [
+      { time: 0, type: 'low low', level: 8.4 },      // midnight
+      { time: 360, type: 'high', level: 8.4 },       // 6:00 AM
+      { time: 720, type: 'low', level: 8.4 },        // 12:00 PM
+      { time: 1080, type: 'high high', level: 8.4 },  // 6:00 PM
+      { time: 1440, type: 'low low', level: 8.4 }     // midnight (next day)
+    ];
+  }
+
+  private findNextTide(currentMinutes: number) {
+    const schedule = this.getTideSchedule();
     
-    if (totalMinutes === 360) return 6;
-    if (totalMinutes === 720) return 3;
-    if (totalMinutes === 1080) return 10.5;
-    if (totalMinutes === 0 || totalMinutes === 1440) return -3.19;
-    
-    let prevTime: number, nextTime: number, prevTide: number, nextTide: number;
-    
-    if (totalMinutes < 360) {
-      prevTime = 0; nextTime = 360;
-      prevTide = -3.19; nextTide = 6;
-    } else if (totalMinutes < 720) {
-      prevTime = 360; nextTime = 720;
-      prevTide = 6; nextTide = 3;
-    } else if (totalMinutes < 1080) {
-      prevTime = 720; nextTime = 1080;
-      prevTide = 3; nextTide = 10.5;
-    } else {
-      prevTime = 1080; nextTime = 1440;
-      prevTide = 10.5; nextTide = -3.19;
+    for (let i = 0; i < schedule.length; i++) {
+      if (schedule[i].time > currentMinutes) {
+        return schedule[i];
+      }
     }
     
-    const t = (totalMinutes - prevTime) / (nextTime - prevTime);
-    const cosineInterpolation = (1 - Math.cos(t * Math.PI)) / 2;
+    return { time: 1440, type: 'low low', level: 8.4 };
+  }
+
+  private formatTime(minutes: number): string {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+    return `${displayHours}:${mins.toString().padStart(2, '0')} ${ampm}`;
+  }
+
+  private calculateTimeUntilNext(currentMinutes: number, nextMinutes: number): string {
+    let diff = nextMinutes - currentMinutes;
+    if (diff <= 0) diff += 1440;
     
-    return prevTide + (nextTide - prevTide) * cosineInterpolation;
+    const hours = Math.floor(diff / 60);
+    const minutes = diff % 60;
+    
+    if (hours === 0) {
+      return `${minutes}m`;
+    }
+    return `${hours}h ${minutes}m`;
   }
 
   private updateTide() {
-    if (!this.timeInput || !this.tideHeight || !this.tideInfo) return;
+    if (!this.timeInput || !this.tideFeetInput || !this.tideHeight || !this.tideInfo || !this.nextTideInfo) return;
     
     const [hours, minutes] = this.timeInput.value.split(':').map(Number);
-    const tideLevel = this.calculateTide(hours, minutes);
+    const currentMinutes = hours * 60 + minutes;
+    const userTideFeet = parseFloat(this.tideFeetInput.value) || 0;
     
-    const minTide = -4;
-    const maxTide = 11;
-    const percentage = ((tideLevel - minTide) / (maxTide - minTide)) * 100;
+    // Calculate displayed tide using 8.4ft baseline
+    const displayedTide = 8.4 - userTideFeet;
+    
+    // Find next tide
+    const nextTide = this.findNextTide(currentMinutes);
+    const timeUntilNext = this.calculateTimeUntilNext(currentMinutes, nextTide.time);
+    
+    // Update display
+    const minTide = -10;
+    const maxTide = 10;
+    const percentage = ((displayedTide - minTide) / (maxTide - minTide)) * 100;
     
     this.tideHeight.style.height = `${Math.max(0, Math.min(100, percentage))}%`;
-    this.tideInfo.textContent = `${tideLevel.toFixed(2)} ft`;
+    this.tideInfo.textContent = `${displayedTide.toFixed(2)} ft`;
+    this.nextTideInfo.textContent = `${nextTide.type} in ${timeUntilNext}`;
   }
 }
 
