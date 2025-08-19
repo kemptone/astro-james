@@ -4,7 +4,7 @@ class Sro8 extends HTMLElement {
 
   constructor() {
     super()
-    this.shadow = this.attachShadow({ mode: 'open' })
+    this.shadow = this.attachShadow({mode: 'open'})
   }
 
   connectedCallback() {
@@ -147,6 +147,9 @@ class Sro8 extends HTMLElement {
           text-align: center;
           color: #e74c3c;
         }
+        .description {
+          display:none;
+        }
       </style>
       
       <div class="container">
@@ -200,7 +203,9 @@ class Sro8 extends HTMLElement {
   }
 
   private attachEventListeners() {
-    const submitBtn = this.shadow.querySelector('#submitBtn') as HTMLButtonElement
+    const submitBtn = this.shadow.querySelector(
+      '#submitBtn',
+    ) as HTMLButtonElement
     submitBtn?.addEventListener('click', () => this.updatePattern())
   }
 
@@ -208,32 +213,32 @@ class Sro8 extends HTMLElement {
     const input1 = this.shadow.querySelector('#input1') as HTMLInputElement
     const input2 = this.shadow.querySelector('#input2') as HTMLInputElement
     const input3 = this.shadow.querySelector('#input3') as HTMLInputElement
-    
+
     const num1 = parseInt(input1.value) || 1
     const num2 = parseInt(input2.value) || 1
     const num3 = parseInt(input3.value) || 1
-    
+
     // Clamp values between 1-8
     const clampedNum1 = Math.max(1, Math.min(8, num1))
     const clampedNum2 = Math.max(1, Math.min(8, num2))
     const clampedNum3 = Math.max(1, Math.min(8, num3))
-    
+
     // Update input values if they were clamped
     input1.value = clampedNum1.toString()
     input2.value = clampedNum2.toString()
     input3.value = clampedNum3.toString()
-    
+
     // Reset all squares
     this.squares.fill(false)
-    
+
     // Apply patterns for each group
     this.applyPattern(clampedNum1, 0) // Squares 1-3 (indices 0-2)
     this.applyPattern(clampedNum2, 3) // Squares 4-6 (indices 3-5)
     this.applyPattern(clampedNum3, 6) // Squares 7-9 (indices 6-8)
-    
+
     // Update visual display
     this.updateSquareDisplay()
-    
+
     // Update pattern info
     this.updatePatternInfo(clampedNum1, clampedNum2, clampedNum3)
   }
@@ -287,26 +292,26 @@ class Sro8 extends HTMLElement {
   private updatePatternInfo(num1: number, num2: number, num3: number) {
     const patternInfo = this.shadow.querySelector('#patternInfo')
     if (!patternInfo) return
-    
+
     if (num1 === num2 && num2 === num3) {
       // All numbers are the same - symmetric pattern
       const descriptions = {
-        1: "Only squares 1, 4, and 7 are ON",
-        2: "Squares 1, 2, 4, 5, 7, and 8 are ON", 
-        3: "All squares are ON",
-        4: "Squares 2, 3, 5, 6, 8, and 9 are ON",
-        5: "Only squares 3, 6, and 9 are ON",
-        6: "All squares are OFF",
-        7: "Only squares 2, 5, and 8 are ON",
-        8: "Squares 1, 3, 4, 6, 7, and 9 are ON"
+        1: 'Only squares 1, 4, and 7 are ON',
+        2: 'Squares 1, 2, 4, 5, 7, and 8 are ON',
+        3: 'All squares are ON',
+        4: 'Squares 2, 3, 5, 6, 8, and 9 are ON',
+        5: 'Only squares 3, 6, and 9 are ON',
+        6: 'All squares are OFF',
+        7: 'Only squares 2, 5, and 8 are ON',
+        8: 'Squares 1, 3, 4, 6, 7, and 9 are ON',
       }
       patternInfo.textContent = `Symmetric Pattern (${num1}): ${descriptions[num1 as keyof typeof descriptions]}`
     } else {
       // Different numbers - custom pattern
       const onSquares = this.squares
-        .map((isOn, index) => isOn ? index + 1 : null)
+        .map((isOn, index) => (isOn ? index + 1 : null))
         .filter(num => num !== null)
-      
+
       if (onSquares.length === 0) {
         patternInfo.textContent = `Custom Pattern (${num1}-${num2}-${num3}): All squares are OFF`
       } else {
