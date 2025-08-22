@@ -1,10 +1,7 @@
-class TideGame extends HTMLElement {
+class TimeProgressionApp extends HTMLElement {
   private timeInput: HTMLInputElement;
-  private tideFeetInput: HTMLInputElement;
-  private tideDisplay: HTMLDivElement;
-  private tideHeight: HTMLDivElement;
-  private tideInfo: HTMLDivElement;
-  private nextTideInfo: HTMLDivElement;
+  private submitBtn: HTMLButtonElement;
+  private timeGrid: HTMLDivElement;
   
   constructor() {
     super();
@@ -14,7 +11,6 @@ class TideGame extends HTMLElement {
   connectedCallback() {
     this.render();
     this.setupEventListeners();
-    this.updateTide();
   }
 
   private render() {
@@ -26,205 +22,237 @@ class TideGame extends HTMLElement {
           display: block;
           padding: 20px;
           font-family: Arial, sans-serif;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          min-height: 100vh;
+          color: white;
         }
         
         .container {
-          max-width: 400px;
+          max-width: 900px;
           margin: 0 auto;
+          text-align: center;
+        }
+        
+        h1 {
+          font-size: 2.5rem;
+          margin-bottom: 2rem;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
         .input-section {
-          margin-bottom: 20px;
-        }
-        
-        .input-row {
-          display: flex;
-          gap: 10px;
-          align-items: end;
-        }
-        
-        .input-group {
-          flex: 1;
+          background: rgba(255,255,255,0.1);
+          padding: 2rem;
+          border-radius: 15px;
+          margin-bottom: 2rem;
+          backdrop-filter: blur(10px);
         }
         
         label {
           display: block;
-          margin-bottom: 5px;
+          font-size: 1.2rem;
+          margin-bottom: 1rem;
           font-weight: bold;
         }
         
-        input[type="time"], input[type="number"] {
-          width: 100%;
-          padding: 8px;
-          border: 2px solid #ccc;
-          border-radius: 4px;
-          font-size: 16px;
-        }
-        
-        .tide-container {
-          border: 3px solid #0066cc;
-          height: 300px;
-          width: 100%;
-          position: relative;
-          background: linear-gradient(to bottom, #87CEEB 0%, #4682B4 100%);
-          overflow: hidden;
-          border-radius: 8px;
-        }
-        
-        .tide-height {
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-          background: linear-gradient(to top, #1e3c72 0%, #2a5298 100%);
-          transition: height 0.5s ease-in-out;
-          border-radius: 0 0 4px 4px;
-        }
-        
-        .tide-info, .next-tide-info {
-          margin-top: 10px;
-          padding: 10px;
-          background: #f0f8ff;
-          border-radius: 4px;
+        input[type="time"] {
+          font-size: 1.5rem;
+          padding: 0.8rem;
+          border: none;
+          border-radius: 10px;
           text-align: center;
+          margin-right: 1rem;
+          width: 200px;
+          box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .tide-value {
-          font-size: 24px;
+        .submit-btn {
+          font-size: 1.2rem;
+          padding: 0.8rem 2rem;
+          background: linear-gradient(45deg, #ff6b6b, #ffa726);
+          color: white;
+          border: none;
+          border-radius: 10px;
+          cursor: pointer;
           font-weight: bold;
-          color: #0066cc;
+          transition: transform 0.2s, box-shadow 0.2s;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
-        .tide-label {
-          font-size: 14px;
-          color: #666;
-          margin-top: 5px;
+        .submit-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
         
-        .next-tide-info {
-          background: #fff8e1;
-          border: 1px solid #ffc107;
+        .time-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 15px;
+          margin-top: 2rem;
         }
         
-        .next-tide-value {
-          font-size: 18px;
+        .time-card {
+          background: rgba(255,255,255,0.15);
+          border-radius: 12px;
+          padding: 1rem;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.2);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .time-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .hour-number {
+          font-size: 1.5rem;
           font-weight: bold;
-          color: #ff6f00;
+          color: #ffd54f;
+          margin-bottom: 0.5rem;
+        }
+        
+        .actual-time {
+          font-size: 1.1rem;
+          color: #4fc3f7;
+          font-family: 'Courier New', monospace;
+        }
+        
+        .time-description {
+          font-size: 0.9rem;
+          color: #e0e0e0;
+          margin-top: 0.5rem;
+        }
+        
+        .hidden {
+          display: none;
+        }
+        
+        .explanation {
+          background: rgba(255,255,255,0.1);
+          border-radius: 10px;
+          padding: 1.5rem;
+          margin-top: 2rem;
+          backdrop-filter: blur(5px);
+        }
+        
+        .explanation h3 {
+          color: #ffd54f;
+          margin-bottom: 1rem;
+        }
+        
+        .explanation p {
+          margin: 0.5rem 0;
+          line-height: 1.5;
         }
       </style>
       
       <div class="container">
+        <h1>🕐 Submit Rosie's Operation $3 🕐</h1>
+        
         <div class="input-section">
-          <div class="input-row">
-            <div class="input-group">
-              <label for="timeInput">Set Time:</label>
-              <input type="time" id="timeInput" value="12:00">
-            </div>
-            <div class="input-group">
-              <label for="tideFeetInput">Tide Feet:</label>
-              <input type="number" id="tideFeetInput" value="5.35" step="0.01" min="0" max="15">
-            </div>
-          </div>
+          <label for="timeInput">Set Your Base Time:</label>
+          <input type="time" id="timeInput" value="12:00">
+          <button class="submit-btn" id="submitBtn">📤 Submit & Show 24 Hours</button>
         </div>
         
-        <div class="tide-container">
-          <div class="tide-height"></div>
+        <div class="time-grid hidden" id="timeGrid">
+          <!-- Time cards will be populated here -->
         </div>
         
-        <div class="tide-info">
-          <div class="tide-value">0.0 ft</div>
-          <div class="tide-label">Current Tide Level</div>
-        </div>
-        
-        <div class="next-tide-info">
-          <div class="next-tide-value">Next tide in 0h 0m</div>
-          <div class="tide-label">Next Tide Prediction</div>
+        <div class="explanation">
+          <h3>How it works:</h3>
+          <p><strong>0</strong> = Your chosen time</p>
+          <p><strong>23</strong> = 1 hour before your time</p>
+          <p><strong>13</strong> = 11 hours before your time</p>
+          <p><strong>12</strong> = The opposite AM/PM of your time</p>
         </div>
       </div>
     `;
     
     this.timeInput = this.shadowRoot.querySelector('#timeInput') as HTMLInputElement;
-    this.tideFeetInput = this.shadowRoot.querySelector('#tideFeetInput') as HTMLInputElement;
-    this.tideDisplay = this.shadowRoot.querySelector('.tide-container') as HTMLDivElement;
-    this.tideHeight = this.shadowRoot.querySelector('.tide-height') as HTMLDivElement;
-    this.tideInfo = this.shadowRoot.querySelector('.tide-value') as HTMLDivElement;
-    this.nextTideInfo = this.shadowRoot.querySelector('.next-tide-value') as HTMLDivElement;
+    this.submitBtn = this.shadowRoot.querySelector('#submitBtn') as HTMLButtonElement;
+    this.timeGrid = this.shadowRoot.querySelector('#timeGrid') as HTMLDivElement;
   }
 
   private setupEventListeners() {
-    this.timeInput?.addEventListener('change', () => this.updateTide());
-    this.timeInput?.addEventListener('input', () => this.updateTide());
-    this.tideFeetInput?.addEventListener('change', () => this.updateTide());
-    this.tideFeetInput?.addEventListener('input', () => this.updateTide());
-  }
-
-  private getTideSchedule() {
-    return [
-      { time: 0, type: 'low low', level: 8.4 },      // midnight
-      { time: 360, type: 'high', level: 8.4 },       // 6:00 AM
-      { time: 720, type: 'low', level: 8.4 },        // 12:00 PM
-      { time: 1080, type: 'high high', level: 8.4 },  // 6:00 PM
-      { time: 1440, type: 'low low', level: 8.4 }     // midnight (next day)
-    ];
-  }
-
-  private findNextTide(currentMinutes: number) {
-    const schedule = this.getTideSchedule();
-    
-    for (let i = 0; i < schedule.length; i++) {
-      if (schedule[i].time > currentMinutes) {
-        return schedule[i];
+    this.submitBtn?.addEventListener('click', () => this.showTimeProgression());
+    this.timeInput?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        this.showTimeProgression();
       }
-    }
-    
-    return { time: 1440, type: 'low low', level: 8.4 };
+    });
   }
 
-  private formatTime(minutes: number): string {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    const ampm = hours >= 12 ? 'PM' : 'AM';
+  private parseTime(timeStr: string): { hours: number, minutes: number } {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    return { hours, minutes };
+  }
+
+  private formatTime(hours: number, minutes: number): string {
+    const period = hours >= 12 ? 'PM' : 'AM';
     const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
-    return `${displayHours}:${mins.toString().padStart(2, '0')} ${ampm}`;
+    return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
   }
 
-  private calculateTimeUntilNext(currentMinutes: number, nextMinutes: number): string {
-    let diff = nextMinutes - currentMinutes;
-    if (diff <= 0) diff += 1440;
-    
-    const hours = Math.floor(diff / 60);
-    const minutes = diff % 60;
-    
-    if (hours === 0) {
-      return `${minutes}m`;
+  private getTimeDescription(hourNumber: number, baseHours: number): string {
+    if (hourNumber === 0) {
+      return "Your chosen time";
+    } else if (hourNumber === 12) {
+      const basePeriod = baseHours >= 12 ? 'PM' : 'AM';
+      const oppositePeriod = basePeriod === 'AM' ? 'PM' : 'AM';
+      return `Opposite ${oppositePeriod} (12 hours different)`;
+    } else if (hourNumber === 23) {
+      return "1 hour before your time";
+    } else if (hourNumber === 13) {
+      return "11 hours before your time";
+    } else if (hourNumber < 12) {
+      return `${24 - hourNumber} hours before your time`;
+    } else {
+      return `${24 - hourNumber} hours before your time`;
     }
-    return `${hours}h ${minutes}m`;
   }
 
-  private updateTide() {
-    if (!this.timeInput || !this.tideFeetInput || !this.tideHeight || !this.tideInfo || !this.nextTideInfo) return;
+  private showTimeProgression() {
+    if (!this.timeInput || !this.timeGrid) return;
     
-    const [hours, minutes] = this.timeInput.value.split(':').map(Number);
-    const currentMinutes = hours * 60 + minutes;
-    const userTideFeet = parseFloat(this.tideFeetInput.value) || 0;
+    const { hours: baseHours, minutes: baseMinutes } = this.parseTime(this.timeInput.value);
     
-    // Calculate displayed tide using 8.4ft baseline
-    const displayedTide = 8.4 - userTideFeet;
+    // Clear existing content
+    this.timeGrid.innerHTML = '';
     
-    // Find next tide
-    const nextTide = this.findNextTide(currentMinutes);
-    const timeUntilNext = this.calculateTimeUntilNext(currentMinutes, nextTide.time);
+    // Generate all 24 hours (0-23)
+    for (let hourNumber = 0; hourNumber <= 23; hourNumber++) {
+      // Calculate actual time based on the logic:
+      // 0 = user's time, 23 = 1 hour before, 13 = 11 hours before, etc.
+      const hoursBack = hourNumber === 0 ? 0 : 24 - hourNumber;
+      
+      let actualHours = baseHours - hoursBack;
+      let actualMinutes = baseMinutes;
+      
+      // Handle day overflow/underflow
+      if (actualHours < 0) {
+        actualHours += 24;
+      } else if (actualHours >= 24) {
+        actualHours -= 24;
+      }
+      
+      const timeCard = document.createElement('div');
+      timeCard.className = 'time-card';
+      
+      timeCard.innerHTML = `
+        <div class="hour-number">${hourNumber}</div>
+        <div class="actual-time">${this.formatTime(actualHours, actualMinutes)}</div>
+        <div class="time-description">${this.getTimeDescription(hourNumber, baseHours)}</div>
+      `;
+      
+      this.timeGrid.appendChild(timeCard);
+    }
     
-    // Update display
-    const minTide = -10;
-    const maxTide = 10;
-    const percentage = ((displayedTide - minTide) / (maxTide - minTide)) * 100;
-    
-    this.tideHeight.style.height = `${Math.max(0, Math.min(100, percentage))}%`;
-    this.tideInfo.textContent = `${displayedTide.toFixed(2)} ft`;
-    this.nextTideInfo.textContent = `${nextTide.type} in ${timeUntilNext}`;
+    // Show the grid with animation
+    this.timeGrid.classList.remove('hidden');
   }
 }
 
 if (typeof window !== 'undefined') {
-  customElements.define('sro3-app', TideGame);
+  customElements.define('sro3-app', TimeProgressionApp);
 }
