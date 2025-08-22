@@ -1,0 +1,545 @@
+---
+import Layout from '../layouts/Layout.astro'
+import WCFloatingLabel from '../components/WCFloatingLabel.astro'
+---
+
+<Layout title="DAT - Date And Tide">
+  <h1>DAT Game</h1>
+  <p style="text-align: center; margin-bottom: 2rem;">
+    Control time and watch the world change! Created by a brilliant 10-year-old.
+  </p>
+  
+  <div id="dat-game">
+    <div class="controls">
+      <WCFloatingLabel label="Time of Day">
+        <input 
+          type="time" 
+          id="timeInput" 
+          value="12:00"
+          step="1800"
+        />
+      </WCFloatingLabel>
+      
+      <div class="control-buttons">
+        <button id="playBtn" type="button">▶️ Play Journey</button>
+        <button id="pauseBtn" type="button" disabled>⏸️ Pause</button>
+        <button id="recordBtn" type="button">🎥 Record</button>
+        <button id="stopRecordBtn" type="button" disabled>⏹️ Stop Recording</button>
+      </div>
+      
+      <div class="time-display">
+        <div id="currentTime">12:00 PM</div>
+        <div id="timePhase">Full Daylight</div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div id="sky" class="sky"></div>
+      <div id="moon" class="moon"></div>
+      <div id="sun" class="sun"></div>
+      
+      <div class="landscape">
+        <div class="tree" id="tree1"></div>
+        <div class="tree" id="tree2"></div>
+        <div class="tree" id="tree3"></div>
+        <div class="mountain"></div>
+      </div>
+      
+      <div class="ground"></div>
+    </div>
+    
+    <div class="journey-controls">
+      <button id="fastBtn" type="button">⏩ Fast Journey (12 hours in 30 seconds)</button>
+      <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <video id="recordedVideo" controls style="display: none; width: 100%; max-width: 600px; margin-top: 1rem;"></video>
+</Layout>
+
+<style>
+  #dat-game {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  .controls {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .control-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+  }
+
+  .control-buttons button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    background: #007acc;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .control-buttons button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .control-buttons button:hover:not(:disabled) {
+    background: #005999;
+  }
+
+  .time-display {
+    margin-top: 1rem;
+  }
+
+  #currentTime {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  #timePhase {
+    font-size: 1rem;
+    color: #666;
+    margin-top: 0.5rem;
+  }
+
+  .scene {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #333;
+  }
+
+  .sky {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70%;
+    background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
+    transition: all 2s ease-in-out;
+  }
+
+  .sun {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, #FFD700, #FFA500);
+    border-radius: 50%;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 2s ease-in-out;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+  }
+
+  .moon {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, #F5F5DC, #E6E6FA);
+    border-radius: 50%;
+    top: 15%;
+    right: 20%;
+    opacity: 0;
+    transition: all 2s ease-in-out;
+    box-shadow: 0 0 20px rgba(245, 245, 220, 0.3);
+  }
+
+  .landscape {
+    position: absolute;
+    bottom: 30%;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    z-index: 2;
+  }
+
+  .tree {
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 80px solid #228B22;
+    transition: all 2s ease-in-out;
+  }
+
+  .tree::after {
+    content: '';
+    position: absolute;
+    left: -5px;
+    bottom: -80px;
+    width: 10px;
+    height: 20px;
+    background: #8B4513;
+  }
+
+  #tree1 {
+    left: 20%;
+  }
+
+  #tree2 {
+    left: 50%;
+    transform: scale(1.2);
+  }
+
+  #tree3 {
+    left: 80%;
+    transform: scale(0.8);
+  }
+
+  .mountain {
+    position: absolute;
+    bottom: 0;
+    right: 10%;
+    width: 0;
+    height: 0;
+    border-left: 60px solid transparent;
+    border-right: 60px solid transparent;
+    border-bottom: 100px solid #696969;
+    transition: all 2s ease-in-out;
+  }
+
+  .ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    background: linear-gradient(to bottom, #90EE90, #228B22);
+    transition: all 2s ease-in-out;
+  }
+
+  .journey-controls {
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  #fastBtn {
+    background: #ff6b35;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  #fastBtn:hover {
+    background: #e55a2b;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #007acc, #00aaff);
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+
+  @media (max-width: 600px) {
+    .control-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .control-buttons button {
+      width: 200px;
+    }
+    
+    .scene {
+      height: 300px;
+    }
+  }
+</style>
+
+<script>
+  class DATGame {
+    constructor() {
+      this.currentTime = 12 * 60;
+      this.isPlaying = false;
+      this.isRecording = false;
+      this.mediaRecorder = null;
+      this.recordedChunks = [];
+      this.animationId = null;
+      this.playStartTime = null;
+      this.journeyDuration = 30000;
+      
+      this.initializeElements();
+      this.bindEvents();
+      this.updateScene();
+    }
+
+    initializeElements() {
+      this.timeInput = document.getElementById('timeInput');
+      this.playBtn = document.getElementById('playBtn');
+      this.pauseBtn = document.getElementById('pauseBtn');
+      this.recordBtn = document.getElementById('recordBtn');
+      this.stopRecordBtn = document.getElementById('stopRecordBtn');
+      this.fastBtn = document.getElementById('fastBtn');
+      this.currentTimeDisplay = document.getElementById('currentTime');
+      this.timePhaseDisplay = document.getElementById('timePhase');
+      this.progressFill = document.getElementById('progressFill');
+      this.recordedVideo = document.getElementById('recordedVideo');
+      
+      this.sky = document.getElementById('sky');
+      this.sun = document.getElementById('sun');
+      this.moon = document.getElementById('moon');
+      this.trees = [document.getElementById('tree1'), document.getElementById('tree2'), document.getElementById('tree3')];
+      this.mountain = document.querySelector('.mountain');
+      this.ground = document.querySelector('.ground');
+    }
+
+    bindEvents() {
+      this.timeInput.addEventListener('change', (e) => {
+        const [hours, minutes] = e.target.value.split(':').map(Number);
+        this.currentTime = hours * 60 + minutes;
+        this.updateScene();
+      });
+
+      this.playBtn.addEventListener('click', () => this.startJourney());
+      this.pauseBtn.addEventListener('click', () => this.pauseJourney());
+      this.recordBtn.addEventListener('click', () => this.startRecording());
+      this.stopRecordBtn.addEventListener('click', () => this.stopRecording());
+      this.fastBtn.addEventListener('click', () => this.startFastJourney());
+    }
+
+    updateScene() {
+      const hours = Math.floor(this.currentTime / 60);
+      const minutes = this.currentTime % 60;
+      
+      this.currentTimeDisplay.textContent = this.formatTime(hours, minutes);
+      this.timePhaseDisplay.textContent = this.getTimePhase(hours);
+      
+      this.updateTimeInput(hours, minutes);
+      this.updateSkyAndLighting(hours, minutes);
+      this.updateCelestialBodies(hours, minutes);
+      this.updateLandscape(hours, minutes);
+    }
+
+    formatTime(hours, minutes) {
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours % 12 || 12;
+      return `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    }
+
+    getTimePhase(hours) {
+      if (hours >= 17 || hours < 5) return "Nighttime";
+      if (hours === 5) return "Pre-dawn";
+      if (hours === 6) return "First Light";
+      if (hours >= 7 && hours <= 11) return "Morning";
+      if (hours === 12) return "Full Daylight";
+      if (hours >= 13 && hours <= 15) return "Afternoon";
+      if (hours === 16) return "Last Light";
+      return "Daylight";
+    }
+
+    updateTimeInput(hours, minutes) {
+      this.timeInput.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    }
+
+    updateSkyAndLighting(hours, minutes) {
+      let skyColor, sunOpacity, moonOpacity, lightingIntensity;
+      
+      if (hours >= 17 || hours < 5) {
+        skyColor = 'linear-gradient(to bottom, #000428, #004e92)';
+        sunOpacity = 0;
+        moonOpacity = hours === 17 || hours === 5 ? 0.3 : (hours === 0 ? 1 : 0.8);
+        lightingIntensity = 0.1;
+      } else if (hours === 5) {
+        skyColor = 'linear-gradient(to bottom, #232526, #414345)';
+        sunOpacity = 0;
+        moonOpacity = 0.2;
+        lightingIntensity = 0.2;
+      } else if (hours === 6) {
+        skyColor = 'linear-gradient(to bottom, #4CA1AF, #C4E0E5)';
+        sunOpacity = 0.3;
+        moonOpacity = 0;
+        lightingIntensity = 0.4;
+      } else if (hours >= 7 && hours <= 11) {
+        skyColor = 'linear-gradient(to bottom, #87CEEB, #E0F6FF)';
+        sunOpacity = 0.8;
+        moonOpacity = 0;
+        lightingIntensity = 0.8;
+      } else if (hours === 12) {
+        skyColor = 'linear-gradient(to bottom, #87CEEB, #FFF8DC)';
+        sunOpacity = 1;
+        moonOpacity = 0;
+        lightingIntensity = 1;
+      } else if (hours >= 13 && hours <= 15) {
+        skyColor = 'linear-gradient(to bottom, #87CEEB, #F0E68C)';
+        sunOpacity = 0.9;
+        moonOpacity = 0;
+        lightingIntensity = 0.9;
+      } else if (hours === 16) {
+        skyColor = 'linear-gradient(to bottom, #FF7F50, #FFE4B5)';
+        sunOpacity = 0.6;
+        moonOpacity = 0;
+        lightingIntensity = 0.5;
+      }
+      
+      this.sky.style.background = skyColor;
+      this.sun.style.opacity = sunOpacity;
+      this.moon.style.opacity = moonOpacity;
+      
+      this.trees.forEach(tree => {
+        tree.style.filter = `brightness(${0.3 + lightingIntensity * 0.7})`;
+      });
+      
+      this.mountain.style.filter = `brightness(${0.3 + lightingIntensity * 0.7})`;
+      this.ground.style.filter = `brightness(${0.4 + lightingIntensity * 0.6})`;
+    }
+
+    updateCelestialBodies(hours, minutes) {
+      const totalMinutes = hours * 60 + minutes;
+      
+      if (hours >= 6 && hours <= 18) {
+        const sunProgress = (totalMinutes - 6 * 60) / (12 * 60);
+        const sunAngle = sunProgress * Math.PI;
+        const sunX = 50 + Math.cos(sunAngle) * 40;
+        const sunY = 20 + Math.sin(sunAngle) * 30;
+        this.sun.style.left = `${sunX}%`;
+        this.sun.style.top = `${Math.max(10, 50 - sunY)}%`;
+      }
+      
+      if (hours >= 18 || hours <= 6) {
+        const moonStart = hours >= 18 ? hours : hours + 24;
+        const moonProgress = (moonStart - 18) / 12;
+        const moonAngle = moonProgress * Math.PI;
+        const moonX = 80 - Math.cos(moonAngle) * 30;
+        const moonY = 15 + Math.sin(moonAngle) * 20;
+        this.moon.style.right = `${100 - moonX}%`;
+        this.moon.style.top = `${Math.max(10, moonY)}%`;
+      }
+    }
+
+    updateLandscape(hours, minutes) {
+      const isDark = hours >= 17 || hours < 6;
+      const groundColor = isDark 
+        ? 'linear-gradient(to bottom, #2F4F2F, #1C3A1C)'
+        : 'linear-gradient(to bottom, #90EE90, #228B22)';
+      
+      this.ground.style.background = groundColor;
+    }
+
+    startJourney() {
+      this.isPlaying = true;
+      this.playStartTime = Date.now();
+      this.playBtn.disabled = true;
+      this.pauseBtn.disabled = false;
+      this.animateJourney();
+    }
+
+    pauseJourney() {
+      this.isPlaying = false;
+      this.playBtn.disabled = false;
+      this.pauseBtn.disabled = true;
+      if (this.animationId) {
+        cancelAnimationFrame(this.animationId);
+      }
+    }
+
+    startFastJourney() {
+      this.currentTime = 17 * 60;
+      this.journeyDuration = 30000;
+      this.startJourney();
+    }
+
+    animateJourney() {
+      if (!this.isPlaying) return;
+      
+      const elapsed = Date.now() - this.playStartTime;
+      const progress = Math.min(elapsed / this.journeyDuration, 1);
+      
+      this.currentTime = (17 * 60 + progress * 12 * 60) % (24 * 60);
+      this.updateScene();
+      
+      this.progressFill.style.width = `${progress * 100}%`;
+      
+      if (progress < 1) {
+        this.animationId = requestAnimationFrame(() => this.animateJourney());
+      } else {
+        this.pauseJourney();
+        this.progressFill.style.width = '0%';
+      }
+    }
+
+    async startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: { mediaSource: 'screen' }
+        });
+        
+        this.recordedChunks = [];
+        this.mediaRecorder = new MediaRecorder(stream);
+        
+        this.mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            this.recordedChunks.push(event.data);
+          }
+        };
+        
+        this.mediaRecorder.onstop = () => {
+          const blob = new Blob(this.recordedChunks, { type: 'video/webm' });
+          const url = URL.createObjectURL(blob);
+          this.recordedVideo.src = url;
+          this.recordedVideo.style.display = 'block';
+          
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `dat-journey-${new Date().getTime()}.webm`;
+          a.click();
+        };
+        
+        this.mediaRecorder.start();
+        this.isRecording = true;
+        this.recordBtn.disabled = true;
+        this.stopRecordBtn.disabled = false;
+        
+      } catch (err) {
+        console.error('Error starting recording:', err);
+        alert('Recording not supported or permission denied');
+      }
+    }
+
+    stopRecording() {
+      if (this.mediaRecorder && this.isRecording) {
+        this.mediaRecorder.stop();
+        this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        this.isRecording = false;
+        this.recordBtn.disabled = false;
+        this.stopRecordBtn.disabled = true;
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    new DATGame();
+  });
+</script>
