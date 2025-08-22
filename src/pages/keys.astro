@@ -1,0 +1,32 @@
+<textarea></textarea>
+<button>yell</button>
+<div>lllll</div>
+<style>
+
+
+    div {
+        background-color: 0 0 0;
+        color: rgb(255, 0, 128);
+        font-family: wingdings;
+        font-size: 100px;
+    }
+
+    button {
+        
+    }
+
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", e => {
+
+        const e_textarea = document.querySelector("textarea") as HTMLTextAreaElement
+        const e_div = document.querySelector("div") as HTMLElement
+
+        document.querySelector("button")?.addEventListener("click", e => {
+            // alert(e_textarea.value)
+            e_div.innerText = e_textarea.value
+        })
+
+    })
+</script>

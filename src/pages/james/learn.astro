@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <form>
+
+        <fieldset>
+            <legend>This is a legend</legend>
+            <select name="kids">
+                <option>diego</option>
+                <option>oliver</option>
+            </select>
+        </fieldset>
+
+        <fieldset>
+            <legend>This is for buttons</legend>
+            <button>Press me</button>
+        </fieldset>
+
+
+    </form>
+
+    
+</body>
+</html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', e => {
+        document.querySelector("select[name='kids']")?.addEventListener('input', e => {
+            alert((e.currentTarget as HTMLSelectElement).value)
+        })
+    
+        document.querySelector("button")?.addEventListener('click', e => {
+            alert("hey, you clicked me")
+        })
+    })
+</script>
