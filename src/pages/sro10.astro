@@ -1,0 +1,410 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="Start Racing Orla #10">
+  <main>
+    <h1>🌍 Start Racing Orla #10 - Travel Game 🌍</h1>
+    
+    <div class="warning-section">
+      <div class="warning-box">
+        <h2>⚠️ IMPORTANT WARNING ⚠️</h2>
+        <p><strong>If you travel to another place without your hand holding your device, you can't get back!</strong></p>
+        <p>You would still travel without holding on to an iPad, phone, or computer.</p>
+        <p><em>Also, you can't use SRO10 in your underwear, or somebody may make fun of you!</em></p>
+      </div>
+    </div>
+
+    <div class="mina-check">
+      <h3>🎮 This game is for every person named Mina</h3>
+      <p>If you call a person "Mina", you can play with the traveling game!</p>
+    </div>
+
+    <div class="game-container">
+      <div class="travel-section">
+        <h3>🚀 Hold Your Device to Travel</h3>
+        <p>Hold onto your iPad/phone/computer and hold it down for 1 second to travel!</p>
+        <button id="travel-btn" class="travel-button">
+          🌟 Hold to Travel (1 second) 🌟
+        </button>
+        <div id="travel-status" class="travel-status"></div>
+      </div>
+
+      <div class="bitbibbies-section">
+        <h3>🎯 BitBibbies - Combine All Games</h3>
+        <p>BitBibbies combine games and help all the other SROs!</p>
+        <button id="bitbibbies-btn" class="bitbibbies-button">Add BitBibbies</button>
+      </div>
+
+      <div class="notes-section">
+        <h3>📝 Travel Notes</h3>
+        <div class="notes-label">Why did you want to go here? Write anything about it:</div>
+        <textarea id="travel-notes" class="notes-textarea" placeholder="Write your travel thoughts and reasons here..."></textarea>
+      </div>
+
+      <div class="map-section">
+        <h3>🗺️ Travel Map</h3>
+        <div id="travel-map" class="travel-map">
+          <div class="map-locations">
+            <div class="location" data-location="mountains">🏔️ Mountains</div>
+            <div class="location" data-location="beach">🏖️ Beach</div>
+            <div class="location" data-location="city">🏙️ City</div>
+            <div class="location" data-location="forest">🌲 Forest</div>
+            <div class="location" data-location="desert">🏜️ Desert</div>
+            <div class="location" data-location="island">🏝️ Island</div>
+            <div class="location" data-location="space">🚀 Space</div>
+            <div class="location" data-location="underwater">🌊 Underwater</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  h1 {
+    color: #ff6b6b;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .warning-section {
+    margin-bottom: 2rem;
+  }
+
+  .warning-box {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+    border: 3px solid #ff4757;
+  }
+
+  .warning-box h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.8rem;
+  }
+
+  .warning-box p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+    line-height: 1.4;
+  }
+
+  .mina-check {
+    background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(108, 92, 231, 0.3);
+  }
+
+  .game-container {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .travel-section,
+  .bitbibbies-section,
+  .notes-section,
+  .map-section {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .travel-section {
+    background: linear-gradient(135deg, #74b9ff, #0984e3);
+    color: white;
+  }
+
+  .travel-button {
+    font-size: 1.5rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(45deg, #00cec9, #55a3ff);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(0, 206, 201, 0.3);
+    margin: 1rem 0;
+  }
+
+  .travel-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 206, 201, 0.4);
+  }
+
+  .travel-button:active {
+    transform: scale(0.95);
+  }
+
+  .travel-status {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+
+  .bitbibbies-section {
+    background: linear-gradient(135deg, #fd79a8, #e84393);
+    color: white;
+  }
+
+  .bitbibbies-button {
+    font-size: 1.3rem;
+    padding: 1rem 2rem;
+    background: rgb(0, 0, 255);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 255, 0.3);
+    margin: 1rem 0;
+  }
+
+  .bitbibbies-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 255, 0.4);
+    background: rgb(0, 0, 200);
+  }
+
+  .notes-section {
+    background: linear-gradient(135deg, #fdcb6e, #e17055);
+    color: white;
+  }
+
+  .notes-label {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  .notes-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 1rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    resize: vertical;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .map-section {
+    background: linear-gradient(135deg, #81ecec, #00b894);
+    color: white;
+  }
+
+  .travel-map {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-top: 1rem;
+    min-height: 300px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .map-locations {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    height: 100%;
+  }
+
+  .location {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+
+  .location:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .location.selected {
+    background: rgba(255, 255, 255, 0.4);
+    border-color: #fff;
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 768px) {
+    .map-locations {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    h1 {
+      font-size: 2rem;
+    }
+    
+    .travel-button {
+      font-size: 1.2rem;
+      padding: 0.8rem 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  const travelBtn = document.getElementById('travel-btn') as HTMLButtonElement
+  const travelStatus = document.getElementById('travel-status') as HTMLElement
+  const bitbibbiesBtn = document.getElementById('bitbibbies-btn') as HTMLButtonElement
+  const travelNotes = document.getElementById('travel-notes') as HTMLTextAreaElement
+  const locations = document.querySelectorAll('.location') as NodeListOf<HTMLElement>
+
+  let isHolding = false
+  let holdTimer: number | null = null
+  let selectedLocation: string | null = null
+
+  // Travel button functionality
+  travelBtn.addEventListener('mousedown', startHolding)
+  travelBtn.addEventListener('mouseup', stopHolding)
+  travelBtn.addEventListener('mouseleave', stopHolding)
+  travelBtn.addEventListener('touchstart', startHolding)
+  travelBtn.addEventListener('touchend', stopHolding)
+
+  function startHolding() {
+    if (isHolding) return
+    
+    isHolding = true
+    travelStatus.textContent = '🤏 Holding device... Keep holding!'
+    travelBtn.style.background = 'linear-gradient(45deg, #00b894, #00cec9)'
+    
+    holdTimer = window.setTimeout(() => {
+      if (selectedLocation) {
+        travel()
+      } else {
+        travelStatus.textContent = '🗺️ Please select a location on the map first!'
+      }
+      isHolding = false
+    }, 1000)
+  }
+
+  function stopHolding() {
+    if (!isHolding) return
+    
+    isHolding = false
+    if (holdTimer) {
+      clearTimeout(holdTimer)
+      holdTimer = null
+    }
+    
+    travelStatus.textContent = '❌ Released too early! Hold for 1 full second.'
+    travelBtn.style.background = 'linear-gradient(45deg, #00cec9, #55a3ff)'
+    
+    setTimeout(() => {
+      travelStatus.textContent = ''
+    }, 3000)
+  }
+
+  function travel() {
+    if (!selectedLocation) return
+    
+    const locationEmojis: { [key: string]: string } = {
+      mountains: '🏔️',
+      beach: '🏖️', 
+      city: '🏙️',
+      forest: '🌲',
+      desert: '🏜️',
+      island: '🏝️',
+      space: '🚀',
+      underwater: '🌊'
+    }
+    
+    const emoji = locationEmojis[selectedLocation] || '🌍'
+    
+    travelStatus.innerHTML = `
+      <div style="font-size: 2rem; margin: 1rem 0;">${emoji}</div>
+      <div>🎉 Successfully traveled to ${selectedLocation}! 🎉</div>
+      <div style="font-size: 0.9rem; margin-top: 0.5rem;">Remember to hold your device to get back!</div>
+    `
+    
+    // Add travel effect
+    document.body.style.animation = 'travel-effect 2s ease-in-out'
+    
+    setTimeout(() => {
+      document.body.style.animation = ''
+    }, 2000)
+  }
+
+  // Location selection
+  locations.forEach(location => {
+    location.addEventListener('click', () => {
+      // Remove previous selection
+      locations.forEach(loc => loc.classList.remove('selected'))
+      
+      // Add selection to clicked location
+      location.classList.add('selected')
+      selectedLocation = location.getAttribute('data-location')
+      
+      travelStatus.textContent = `📍 Selected: ${location.textContent}. Now hold the travel button!`
+    })
+  })
+
+  // BitBibbies functionality
+  bitbibbiesBtn.addEventListener('click', () => {
+    alert('🎯 BitBibbies activated! All SRO games are now combined and enhanced!')
+    
+    // Add some visual feedback
+    bitbibbiesBtn.textContent = '✨ BitBibbies Active! ✨'
+    bitbibbiesBtn.style.background = 'linear-gradient(45deg, #a29bfe, #fd79a8)'
+    
+    setTimeout(() => {
+      bitbibbiesBtn.textContent = 'Add BitBibbies'
+      bitbibbiesBtn.style.background = 'rgb(0, 0, 255)'
+    }, 3000)
+  })
+
+  // Save notes to localStorage
+  travelNotes?.addEventListener('input', () => {
+    localStorage.setItem('sro10-travel-notes', travelNotes.value)
+  })
+
+  // Load saved notes
+  const savedNotes = localStorage.getItem('sro10-travel-notes')
+  if (savedNotes && travelNotes) {
+    travelNotes.value = savedNotes
+  }
+</script>
+
+<style>
+  @keyframes travel-effect {
+    0% { 
+      transform: scale(1);
+      filter: blur(0px);
+    }
+    50% { 
+      transform: scale(1.1);
+      filter: blur(2px);
+    }
+    100% { 
+      transform: scale(1);
+      filter: blur(0px);
+    }
+  }
+</style>
+</Layout>
