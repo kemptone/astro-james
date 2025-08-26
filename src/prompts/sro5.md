@@ -1,8 +1,5 @@
-in this game you can choose what AC at west park will be on. i will show you
-there are 22 classrooms. and it has wi-fi. press submit, and it will control the AC to go on in each classroom
-so here is how it works
-text:
-how it works:
-if there are 2 ac's in 1 room, then 17 1 would control which AC is on or off on the AC part, not the door to the classroom. please make it. and let it be controlled by wi-fi
-when you press the button "more..." you can see live camera and can see what is happening all around the world
-if you want to go back. press the button with a left arrow sign
+sro5 doesn't reverse videos anymore. it becomes a bank where you can buy money for anything. and this game is for every kid that is named startig with an "M" so, name your child anything starting with M. also, you have to write your name. if your name starts with these letters: a, b, c, d, e, f, g, h, i, j, k, l, n, o, p, q, r, s, t, u, v, w, x, y, z. then the game is disabled. so, please name yourself an M name to play with it. if you type "M" only. it would work. also, from gabe the slacker, there is penelope with a blue dress. she tells the player how it works. chris is her brother, he is mean. and molly is the baby. so, penelope tells you how it works. now, caillou in business friendly tells you the warning
+you cannot pay too much money, or someone may decline the request from whatever
+now, there is bitbibbies like on sro10 where you travel. bitbibbies are things that combind the games and make the others get thanked. so, the game doesn't work until you add bitbibbies. this game needs to be combinded
+good, now, we moved onto that, now, we are going to see what mina from mina english says: she is like an aide to help you. she speaks in this voice: jenny from microsoft
+so, you can talk to her about all the apps you make. she knows all the apps in boodeboo.com. the player named M**\_** will tell her. so, she will answer you and tell you how this game works. she knows all the apps you made in the past. play with her. see what she says!

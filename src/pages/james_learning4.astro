@@ -1,0 +1,31 @@
+<style>
+  html {
+    background-color: rgb(255 0 255);
+    width: 100pt;
+    height: 100pt;
+  }
+  button {
+    width: 25pt;
+    height: 25pt;
+    border-radius: 100%;
+  }
+  button {
+    background-color: rgb(255 0 0);
+  }
+  button {
+  }
+</style>
+<button id="A">1</button>
+<button id="B">2</button>
+<button id="C">3</button>
+
+<script>
+  document.querySelector('#A')?.addEventListener('click', e => {
+    alert('this button is too advanced. please click button 2')
+  })
+  document.querySelector('#C')?.addEventListener('click', e => {
+    alert(
+      'oops, button 3 is extremely advanced. button 2 is not. press button 2, i will listen'
+    )
+  })
+</script>
