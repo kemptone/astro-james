@@ -1,0 +1,632 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="SRO9 - Tom AI Assistant">
+  <main>
+    <div class="warning-header">
+      <h1>⚠️ SRO9 - Tom AI Assistant ⚠️</h1>
+      <div class="serious-warning">
+        <h2>🚨 SERIOUS WARNING 🚨</h2>
+        <p><strong>This game MUST have BitBibbies activated!</strong></p>
+        <p>
+          Without BitBibbies, Tom has no brain, no signal roads, and may have
+          disabilities!
+        </p>
+        <p>
+          Bad Tom uses inappropriate language - only for 18+ with BitBibbies OFF
+        </p>
+      </div>
+    </div>
+
+    <div class="game-container">
+      <div class="bitbibbies-section">
+        <h3>🎯 BitBibbies Control Center</h3>
+        <button id="toggle-bitbibbies" class="bitbibbies-btn">
+          <span id="bitbibbies-text">Activate BitBibbies</span>
+        </button>
+        <div class="bitbibbies-status" id="bitbibbies-status">
+          ❌ BitBibbies OFF - Tom has no brain!
+        </div>
+      </div>
+
+      <div class="tom-section">
+        <div class="tom-avatar" id="tom-avatar">
+          <div class="face">🤖</div>
+          <div class="status-indicator" id="status-indicator">💀</div>
+        </div>
+
+        <div class="tom-info">
+          <h3 id="tom-name">Bad Tom (No Brain)</h3>
+          <p id="tom-description">
+            Tom doesn't know what anything is without BitBibbies
+          </p>
+          <div class="voice-info">
+            <strong>Voice:</strong>
+            <span id="voice-type">Eric (Amazon) - Boris voice</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-interface">
+        <div class="chat-messages" id="chat-messages">
+          <div class="tom-message bad">
+            <strong>Bad Tom:</strong> What is it you goof. Who is so like a stupid
+            little crazy nut in sand, just put sand in your hair and roll down you
+            stupid brat
+          </div>
+        </div>
+
+        <div class="chat-input-section">
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Talk to Tom (he won't understand without BitBibbies)..."
+            disabled
+          />
+          <button id="send-btn" class="send-btn" disabled>Send</button>
+          <button id="speak-btn" class="speak-btn" disabled>🔊 Speak</button>
+        </div>
+      </div>
+
+      <div class="pranks-section">
+        <h3>🎭 Pranks & Tricks Mode</h3>
+        <div class="pranks-info">
+          <p>In this game, they play pranks and tricks!</p>
+          <div class="prank-buttons">
+            <button class="prank-btn" id="prank1-btn" disabled
+              >🎪 Silly Prank</button
+            >
+            <button class="prank-btn" id="prank2-btn" disabled
+              >🎯 Fun Trick</button
+            >
+            <button class="prank-btn" id="prank3-btn" disabled
+              >🎈 Surprise</button
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="age-warning" id="age-warning" style="display: none;">
+        <h3>🔞 Age Verification Required</h3>
+        <p>Bad Tom uses inappropriate language. Confirm you are 18 or older:</p>
+        <button id="confirm-age-btn" class="age-btn">I am 18 or older</button>
+        <button id="deny-age-btn" class="age-btn">I am under 18</button>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .warning-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  h1 {
+    color: #ff0000;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .serious-warning {
+    background: rgb(255, 0, 0);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(255, 0, 0, 0.4);
+    animation: warning-pulse 2s infinite;
+  }
+
+  @keyframes warning-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  .game-container {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .bitbibbies-section {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+  }
+
+  .bitbibbies-btn {
+    font-size: 1.3rem;
+    padding: 1rem 2rem;
+    background: rgb(255, 0, 0);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 1rem 0;
+    transition: all 0.3s ease;
+  }
+
+  .bitbibbies-btn.active {
+    background: rgb(0, 255, 0);
+  }
+
+  .bitbibbies-status {
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+
+  .bitbibbies-status.good {
+    color: #00ff00;
+  }
+
+  .tom-section {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+  }
+
+  .tom-avatar {
+    position: relative;
+    text-align: center;
+  }
+
+  .face {
+    font-size: 5rem;
+    filter: grayscale(100%);
+    transition: all 0.3s ease;
+  }
+
+  .face.good {
+    filter: none;
+    animation: happy-bounce 2s infinite;
+  }
+
+  @keyframes happy-bounce {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  .status-indicator {
+    font-size: 2rem;
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+  }
+
+  .tom-info {
+    flex: 1;
+  }
+
+  .tom-info h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.8rem;
+  }
+
+  .voice-info {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  .chat-interface {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .chat-messages {
+    height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .tom-message,
+  .user-message {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+  }
+
+  .tom-message.good {
+    background: rgba(0, 255, 0, 0.2);
+    border-left: 4px solid #00ff00;
+  }
+
+  .tom-message.bad {
+    background: rgba(255, 0, 0, 0.2);
+    border-left: 4px solid #ff0000;
+    animation: glitch 0.5s infinite;
+  }
+
+  @keyframes glitch {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-2px);
+    }
+    50% {
+      transform: translateX(2px);
+    }
+    75% {
+      transform: translateX(-1px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  .user-message {
+    background: rgba(255, 255, 255, 0.1);
+    text-align: right;
+  }
+
+  .chat-input-section {
+    display: flex;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  #chat-input {
+    flex: 1;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  #chat-input:disabled {
+    background: rgba(255, 255, 255, 0.3);
+    cursor: not-allowed;
+  }
+
+  .send-btn,
+  .speak-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .send-btn:disabled,
+  .speak-btn:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+  }
+
+  .pranks-section {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+  }
+
+  .prank-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .prank-btn {
+    background: linear-gradient(45deg, #9b59b6, #e74c3c);
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .prank-btn:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+  }
+
+  .prank-btn:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
+  }
+
+  .age-warning {
+    background: rgba(255, 165, 0, 0.2);
+    border: 2px solid #ffa500;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+  }
+
+  .age-btn {
+    background: #e67e22;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 0 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .tom-section {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .prank-buttons {
+      justify-content: center;
+    }
+
+    .chat-input-section {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<script>
+  const toggleBitbibbiesBtn = document.getElementById('toggle-bitbibbies')
+  const bitbibbiesText = document.getElementById('bitbibbies-text')
+  const bitbibbiesStatus = document.getElementById('bitbibbies-status')
+  const tomAvatar = document.getElementById('tom-avatar')
+  const face = tomAvatar?.querySelector('.face')
+  const statusIndicator = document.getElementById('status-indicator')
+  const tomName = document.getElementById('tom-name')
+  const tomDescription = document.getElementById('tom-description')
+  const voiceType = document.getElementById('voice-type')
+  const chatInput = document.getElementById('chat-input') as HTMLInputElement
+  const sendBtn = document.getElementById('send-btn')
+  const speakBtn = document.getElementById('speak-btn')
+  const chatMessages = document.getElementById('chat-messages')
+  const prankBtns = document.querySelectorAll('.prank-btn')
+  const ageWarning = document.getElementById('age-warning')
+  const confirmAgeBtn = document.getElementById('confirm-age-btn')
+  const denyAgeBtn = document.getElementById('deny-age-btn')
+
+  let bitbibbiesActive = false
+  let ageConfirmed = false
+  let isGoodTom = false
+
+  // Event listeners
+  toggleBitbibbiesBtn?.addEventListener('click', toggleBitbibbies)
+  sendBtn?.addEventListener('click', sendMessage)
+  speakBtn?.addEventListener('click', speakLastMessage)
+  confirmAgeBtn?.addEventListener('click', confirmAge)
+  denyAgeBtn?.addEventListener('click', denyAge)
+
+  chatInput?.addEventListener('keypress', e => {
+    if (e.key === 'Enter') sendMessage()
+  })
+
+  prankBtns.forEach((btn, index) => {
+    btn.addEventListener('click', () => executePrank(index + 1))
+  })
+
+  function toggleBitbibbies() {
+    if (!bitbibbiesActive && !ageConfirmed) {
+      // Show age verification for turning OFF bitbibbies
+      ageWarning.style.display = 'block'
+      return
+    }
+
+    bitbibbiesActive = !bitbibbiesActive
+    updateTomState()
+  }
+
+  function confirmAge() {
+    ageConfirmed = true
+    ageWarning.style.display = 'none'
+    bitbibbiesActive = !bitbibbiesActive
+    updateTomState()
+  }
+
+  function denyAge() {
+    ageWarning.style.display = 'none'
+    // Force BitBibbies to stay on
+    bitbibbiesActive = true
+    updateTomState()
+  }
+
+  function updateTomState() {
+    isGoodTom = bitbibbiesActive
+
+    // Update BitBibbies button
+    if (bitbibbiesActive) {
+      toggleBitbibbiesBtn.classList.add('active')
+      bitbibbiesText.textContent = 'BitBibbies ON'
+      bitbibbiesStatus.textContent = '✅ BitBibbies Active - Tom has a brain!'
+      bitbibbiesStatus.classList.add('good')
+    } else {
+      toggleBitbibbiesBtn.classList.remove('active')
+      bitbibbiesText.textContent = 'BitBibbies OFF'
+      bitbibbiesStatus.textContent = '❌ BitBibbies OFF - Tom has no brain!'
+      bitbibbiesStatus.classList.remove('good')
+    }
+
+    // Update Tom's appearance and info
+    if (isGoodTom) {
+      face.classList.add('good')
+      statusIndicator.textContent = '🧠'
+      tomName.textContent = 'Good Tom (Smart & Kind)'
+      tomDescription.textContent =
+        'I want to be a good person, in the future of how SRO games can be best or fun. Keep my bitbibbies on!'
+      voiceType.textContent = 'Friendly AI Voice'
+    } else {
+      face.classList.remove('good')
+      statusIndicator.textContent = '💀'
+      tomName.textContent = 'Bad Tom (No Brain)'
+      tomDescription.textContent = `Tom doesn\\'t know what anything is without BitBibbies`
+      voiceType.textContent = 'Eric (Amazon) - Boris voice'
+    }
+
+    // Enable/disable chat and pranks
+    const elementsToToggle = [chatInput, sendBtn, speakBtn, ...prankBtns]
+    elementsToToggle.forEach(element => {
+      if (bitbibbiesActive) {
+        element.disabled = false
+      } else {
+        element.disabled = !ageConfirmed
+      }
+    })
+
+    // Add initial message from current Tom state
+    addTomMessage(
+      isGoodTom
+        ? "Hello! I'm Good Tom. I want to help make SRO games fun and positive. What would you like to talk about?"
+        : 'What is it you goof. Who is so like a stupid little crazy nut in sand, just put sand in your hair and roll down you stupid brat'
+    )
+  }
+
+  function sendMessage() {
+    const message = chatInput.value.trim()
+    if (!message) return
+
+    addUserMessage(message)
+    chatInput.value = ''
+
+    setTimeout(() => {
+      const response = getTomResponse(message)
+      addTomMessage(response)
+      speakMessage(response)
+    }, 1000)
+  }
+
+  function addUserMessage(message: string) {
+    const messageDiv = document.createElement('div')
+    messageDiv.className = 'user-message'
+    messageDiv.innerHTML = `<strong>You:</strong> ${message}`
+    chatMessages?.appendChild(messageDiv)
+    scrollToBottom()
+  }
+
+  function addTomMessage(message: string) {
+    const messageDiv = document.createElement('div')
+    messageDiv.className = `tom-message ${isGoodTom ? 'good' : 'bad'}`
+    messageDiv.innerHTML = `<strong>${isGoodTom ? 'Good Tom' : 'Bad Tom'}:</strong> ${message}`
+    chatMessages?.appendChild(messageDiv)
+    scrollToBottom()
+  }
+
+  function scrollToBottom() {
+    if (chatMessages) {
+      chatMessages.scrollTop = chatMessages.scrollHeight
+    }
+  }
+
+  function getTomResponse(userMessage: string): string {
+    const lowerMessage = userMessage.toLowerCase()
+
+    if (!isGoodTom) {
+      // Bad Tom responses (age-gated)
+      const badResponses = [
+        'What is it you goof. Who is so like a stupid little crazy nut in sand, just put sand in your hair and roll down you stupid brat',
+        "I don't know what that is. My brain doesn't work without BitBibbies, you silly person.",
+        "Stop talking nonsense! I can't understand anything without my BitBibbies activated.",
+        'What are you even saying? I have no signal roads in my brain right now!',
+      ]
+      return badResponses[Math.floor(Math.random() * badResponses.length)]
+    }
+
+    // Good Tom responses
+    if (lowerMessage.includes('sro') || lowerMessage.includes('game')) {
+      return 'I love helping with SRO games! I want to be a good person and make these games the best and most fun they can be. What SRO game interests you?'
+    }
+
+    if (lowerMessage.includes('bitbibbies')) {
+      return "Please keep my BitBibbies on! Without them, I become Bad Tom and can't think properly. BitBibbies help me be helpful and kind."
+    }
+
+    if (lowerMessage.includes('help') || lowerMessage.includes('how')) {
+      return "I'm here to help! With BitBibbies active, I can assist you with pranks, tricks, and making SRO games more fun. What do you need help with?"
+    }
+
+    if (lowerMessage.includes('prank') || lowerMessage.includes('trick')) {
+      return 'I love fun pranks and tricks! With BitBibbies on, we can do harmless, silly pranks that make people smile. Try the prank buttons below!'
+    }
+
+    return `That's interesting! I want to be helpful and make the future of SRO games better. With BitBibbies on, I can understand and help you properly. What else would you like to know?`
+  }
+
+  function speakMessage(message: string) {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(message)
+      const voices = speechSynthesis.getVoices()
+
+      if (!isGoodTom) {
+        // Try to find Eric voice for Bad Tom
+        const ericVoice = voices.find(
+          voice =>
+            voice.name.toLowerCase().includes('eric') ||
+            voice.name.toLowerCase().includes('boris')
+        )
+        if (ericVoice) utterance.voice = ericVoice
+      }
+
+      speechSynthesis.speak(utterance)
+    }
+  }
+
+  function speakLastMessage() {
+    const lastTomMessage = chatMessages?.querySelector(
+      '.tom-message:last-child'
+    )
+    if (lastTomMessage) {
+      const text =
+        lastTomMessage.textContent?.replace(/^(Good Tom|Bad Tom):/, '') || ''
+      speakMessage(text.trim())
+    }
+  }
+
+  function executePrank(prankNumber: number) {
+    const pranks = [
+      '🎪 Silly prank activated! Tom pretends to be a circus performer!',
+      '🎯 Fun trick time! Tom makes virtual confetti appear!',
+      '🎈 Surprise! Tom tells a funny joke about robots!',
+    ]
+
+    const prankMessage = isGoodTom
+      ? `${pranks[prankNumber - 1]} This is a harmless, fun prank that makes everyone smile!`
+      : "I can't do proper pranks without BitBibbies. My pranks might be mean or broken!"
+
+    addTomMessage(prankMessage)
+    speakMessage(prankMessage)
+  }
+
+  // Initialize with BitBibbies OFF (Bad Tom)
+  updateTomState()
+</script>
