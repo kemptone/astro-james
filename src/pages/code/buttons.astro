@@ -1,0 +1,51 @@
+<button>1</button>
+<button type="button">2</button>
+<button type="button">3</button>
+<button disabled="disabled">4</button>
+<button disabled="disabled">5</button>
+<button id="yourbutton" type="reset">6</button>
+<button type="submit">7</button>
+<button class="mainbreaker" type="submit">MAIN</button>
+<script>
+  let isDisabled = false
+
+  document.querySelector('#yourbutton')?.addEventListener('click', e => {
+    alert('what is going on')
+  })
+  document.querySelector('button.mainbreaker')?.addEventListener('click', e => {
+    isDisabled = !isDisabled
+    document
+      .querySelectorAll('button')
+      .forEach(btn => (btn.disabled = isDisabled))
+  })
+</script>
+<style>
+  .mainbreaker {
+    width: 500pt;
+    math-depth: 500pt;
+    height: 500pt;
+    font-size: 100pt;
+  }
+  button {
+  }
+</style>
+
+<div>
+  <label>
+    what is 1+1?
+    <input type="radio" name="thing" value="1" />
+    <input type="radio" name="thing" value="2" />
+  </label>
+</div>
+<textarea name="" id="">
+  <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta
+  name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title> </head> <body> </body> </html>
+</textarea>
+<style>
+  textarea {
+    width: 1000pt;
+    height: 1000pt;
+  }
+</style>
+<a href="https://www.badwords.com">flagged</a>
