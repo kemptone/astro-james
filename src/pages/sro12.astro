@@ -125,7 +125,7 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
     gap: 40px;
     margin: 40px 0;
     padding: 20px;
-    background: #f5f5f5;
+    background: #5b4321;
     border-radius: 10px;
   }
 
@@ -136,21 +136,23 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
   .switch-label {
     font-weight: bold;
     margin-bottom: 10px;
-    color: #333;
+    color: white;
   }
 
   .switch-toggle {
     width: 60px;
     height: 100px;
-    background: #ddd;
-    border: 3px solid #333;
-    border-radius: 10px;
+    /* background: #ddd; */
+    /* border: 3px solid #333; */
+    /* border-radius: 10px; */
     position: relative;
     cursor: pointer;
     transition: all 0.3s ease;
+    background-image: url(/lights/light_off.png);
+    background-size: contain;
   }
 
-  .switch-toggle::before {
+  /* .switch-toggle::before {
     content: '';
     position: absolute;
     width: 40px;
@@ -161,10 +163,11 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
     left: 50%;
     transform: translateX(-50%);
     transition: all 0.3s ease;
-  }
+  } */
 
   .switch-toggle.on {
-    background: #4caf50;
+    /* background: #4caf50; */
+    background-image: url(/lights/light_on.png);
   }
 
   .switch-toggle.on::before {
@@ -209,6 +212,9 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
   }
   .controls h3 {
     text-align: center;
+  }
+  .controls button {
+    padding-block: 1rem;
   }
   input[name='number'] {
     width: 180px;
