@@ -4,13 +4,13 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
 
 <html>
   <head>
-    <title>SRO12 - Switch Control</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
   </head>
   <body>
     <Menu3 />
     <div class="container">
-      <h1>SRO12 Switch Control</h1>
-
       <div class="switch-panel">
         <div class="switch" id="switch1">
           <div class="switch-label">Switch 1</div>
@@ -30,7 +30,7 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
         <h3>Key Controls</h3>
         <span>
           <input type="number" name="number" required />
-          <button>submit</button>
+          <button>😊</button>
         </span>
       </form>
     </div>
@@ -122,10 +122,10 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
   .switch-panel {
     display: flex;
     justify-content: center;
-    gap: 40px;
+    gap: 0px;
     margin: 40px 0;
     padding: 20px;
-    background: #5b4321;
+    /* background: #9e9493; */
     border-radius: 10px;
   }
 
@@ -137,19 +137,22 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
     font-weight: bold;
     margin-bottom: 10px;
     color: white;
+    display: none;
   }
 
   .switch-toggle {
-    width: 60px;
-    height: 100px;
+    width: 180px;
+    height: 380px;
     /* background: #ddd; */
     /* border: 3px solid #333; */
     /* border-radius: 10px; */
     position: relative;
     cursor: pointer;
     transition: all 0.3s ease;
-    background-image: url(/lights/light_off.png);
+    background-image: url(/lights/light_off2.png);
     background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   /* .switch-toggle::before {
@@ -167,7 +170,7 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
 
   .switch-toggle.on {
     /* background: #4caf50; */
-    background-image: url(/lights/light_on.png);
+    background-image: url(/lights/light_on2.png);
   }
 
   .switch-toggle.on::before {
@@ -175,49 +178,25 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
     background: #fff;
   }
 
-  .instructions {
-    background: #e8f4f8;
-    padding: 20px;
-    border-radius: 8px;
-    margin-top: 30px;
-  }
-
-  .instructions h3 {
-    margin-top: 0;
-    color: #2c5f7a;
-  }
-
-  .instructions ul {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  .instructions li {
-    margin: 8px 0;
-    padding: 5px;
-    background: rgba(44, 95, 122, 0.1);
-    border-radius: 4px;
-  }
-
-  .current-state {
-    text-align: center;
-    margin: 20px 0;
-    font-size: 18px;
-    font-weight: bold;
-    color: #2c5f7a;
-  }
   .controls {
     margin: 0 auto;
     width: fit-content;
+  }
+  .controls span {
+    display: flex;
+    gap: 1rem;
   }
   .controls h3 {
     text-align: center;
   }
   .controls button {
-    padding-block: 1rem;
+    padding-block: 0.8rem;
+    font-size: 2rem;
+    padding-inline: 2rem;
   }
   input[name='number'] {
     width: 180px;
     padding: 1rem;
+    font-size: 2rem;
   }
 </style>
