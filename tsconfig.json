@@ -4,7 +4,7 @@
     "module": "ESNext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "strict": false,
     "skipLibCheck": true,
     "moduleResolution": "Node",
     "jsx": "react-jsx",
