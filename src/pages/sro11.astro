@@ -1,0 +1,550 @@
+---
+const title = 'SRO11 - Fan Control Game'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="stylesheet" href="/css/pico.min.css" />
+    <style>
+      .game-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .alexa-section {
+        background: var(--background-color);
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+      }
+      .good-alexa {
+        border-color: #28a745;
+        background-color: #d4edda;
+      }
+      .bad-alexa {
+        border-color: #dc3545;
+        background-color: #f8d7da;
+      }
+      .warning-box {
+        background-color: #fff3cd;
+        border: 3px solid #ffc107;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        text-align: center;
+      }
+      .fan-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      .fan-status {
+        padding: 1rem;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+      .fan-on {
+        border-color: #28a745;
+        background-color: #d4edda;
+      }
+      .fan-off {
+        border-color: #6c757d;
+        background-color: #f8f9fa;
+      }
+      .control-panel {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+      }
+      .switches {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        margin: 1rem 0;
+      }
+      .switch-container {
+        text-align: center;
+      }
+      .chat-area {
+        min-height: 200px;
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 1rem;
+        margin: 1rem 0;
+        background: white;
+      }
+      .message {
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        border-radius: 4px;
+      }
+      .good-message {
+        background-color: #e8f5e8;
+        border-left: 4px solid #28a745;
+      }
+      .bad-message {
+        background-color: #fde8e8;
+        border-left: 4px solid #dc3545;
+      }
+      .user-message {
+        background-color: #e3f2fd;
+        border-left: 4px solid #2196f3;
+      }
+      .hidden {
+        display: none;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-container">
+      <h1>🎮 SRO11 - Fan Control Game</h1>
+
+      <div class="warning-box">
+        <h2>🚨 SUPER DUPER SERIOUS WARNING! 🚨</h2>
+        <p>⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️</p>
+        <p>
+          <strong>You cannot play with Bad Alexa ever!</strong> Bad Alexa is for
+          nobody. If you have a parent or guardian, the parent can't let you. If
+          the parent does, the parent could go to federal prison!
+        </p>
+        <p>⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️</p>
+      </div>
+
+      <div class="switches">
+        <div class="switch-container">
+          <label>
+            <input type="checkbox" id="kidMode" checked />
+            Kid Mode
+          </label>
+          <p><small>With Kid Mode ON: Only Good Alexa available</small></p>
+        </div>
+
+        <div class="switch-container">
+          <label>
+            <input type="checkbox" id="bitBibbies" />
+            BitBibbies
+          </label>
+          <p><small>Makes Good & Bad Alexa happy</small></p>
+        </div>
+      </div>
+
+      <div class="control-panel">
+        <h3>🎛️ Fan Control System</h3>
+        <p>Enter a 2-digit code to control fans 1-4:</p>
+        <div
+          style="display: flex; gap: 1rem; align-items: center; justify-content: center;"
+        >
+          <input
+            type="text"
+            id="fanCode"
+            maxlength="2"
+            pattern="[1-4][1-4]"
+            placeholder="eg: 11, 23, 44"
+            style="width: 100px; text-align: center;"
+          />
+          <button onclick="controlFans()">Apply Code</button>
+          <button onclick="allFansOff()">All Off</button>
+        </div>
+
+        <div class="fan-grid">
+          <div class="fan-status fan-off" id="fan1">
+            <strong>Fan 1</strong>
+            <div>Status: <span id="fan1Status">OFF</span></div>
+          </div>
+          <div class="fan-status fan-off" id="fan2">
+            <strong>Fan 2</strong>
+            <div>Status: <span id="fan2Status">OFF</span></div>
+          </div>
+          <div class="fan-status fan-off" id="fan3">
+            <strong>Fan 3</strong>
+            <div>Status: <span id="fan3Status">OFF</span></div>
+          </div>
+          <div class="fan-status fan-off" id="fan4">
+            <strong>Fan 4</strong>
+            <div>Status: <span id="fan4Status">OFF</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alexa-section good-alexa">
+        <h3>😊 Good Alexa (Nova Voice)</h3>
+        <p>
+          <em
+            >"Hi, I am Good Alexa! I want to cheer people up. I want to do
+            something fun like water. Please step ahead and talk to me!"</em>
+        </p>
+
+        <div style="display: flex; gap: 1rem;">
+          <input
+            type="text"
+            id="userInput"
+            placeholder="Talk to Good Alexa..."
+            style="flex: 1;"
+          />
+          <button onclick="talkToGoodAlexa()">Send</button>
+          <button onclick="speakGoodAlexa()">🔊 Speak</button>
+        </div>
+      </div>
+
+      <div class="alexa-section bad-alexa" id="badAlexaSection">
+        <h3>😈 Bad Alexa (Shimmer Voice)</h3>
+        <p>
+          <em
+            >"Hey, why are you here! Get out of my face you stupid animal!"</em>
+        </p>
+        <p>
+          <strong style="color: red;"
+            >⚠️ WARNING: Bad Alexa uses horrible language and is very mean!</strong>
+        </p>
+
+        <div style="display: flex; gap: 1rem;">
+          <input
+            type="text"
+            id="badUserInput"
+            placeholder="Talk to Bad Alexa..."
+            style="flex: 1;"
+            disabled
+          />
+          <button onclick="talkToBadAlexa()" disabled id="badSendBtn"
+            >Send</button
+          >
+          <button onclick="speakBadAlexa()" disabled id="badSpeakBtn"
+            >🔊 Speak</button
+          >
+        </div>
+      </div>
+
+      <div class="chat-area" id="chatArea">
+        <div class="message good-message">
+          <strong>Good Alexa:</strong> Hi! I'm here to cheer you up! What would you
+          like to talk about? 😊
+        </div>
+      </div>
+
+      <div
+        style="margin-top: 2rem; padding: 1rem; background: #e9ecef; border-radius: 4px;"
+      >
+        <h4>📋 Code Reference</h4>
+        <ul style="font-size: 0.9em;">
+          <li><strong>1 1</strong> → Fans 1 & 3 ON</li>
+          <li><strong>1 2</strong> → Fans 1, 3 & 4 ON</li>
+          <li><strong>1 3</strong> → Fans 1 & 4 ON</li>
+          <li><strong>1 4</strong> → Fan 1 ON</li>
+          <li>
+            <strong>2 X</strong> → Fans 1 & 2 ON + pattern based on second digit
+          </li>
+          <li><strong>2 2</strong> → All fans ON</li>
+          <li><strong>4 4</strong> → All fans OFF</li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      let fanStates = [false, false, false, false] // fans 1-4
+      let goodAlexaLastMessage = ''
+      let badAlexaLastMessage = ''
+
+      // Initialize page state
+      document.addEventListener('DOMContentLoaded', function () {
+        updateKidModeState()
+        updateBitBibbiesState()
+
+        document
+          .getElementById('kidMode')
+          .addEventListener('change', updateKidModeState)
+        document
+          .getElementById('bitBibbies')
+          .addEventListener('change', updateBitBibbiesState)
+
+        document
+          .getElementById('userInput')
+          .addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+              talkToGoodAlexa()
+            }
+          })
+
+        document
+          .getElementById('badUserInput')
+          .addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && !this.disabled) {
+              talkToBadAlexa()
+            }
+          })
+      })
+
+      function updateKidModeState() {
+        const kidMode = document.getElementById('kidMode').checked
+        const badSection = document.getElementById('badAlexaSection')
+        const badInput = document.getElementById('badUserInput')
+        const badSendBtn = document.getElementById('badSendBtn')
+        const badSpeakBtn = document.getElementById('badSpeakBtn')
+
+        if (kidMode) {
+          badSection.style.display = 'none'
+          badInput.disabled = true
+          badSendBtn.disabled = true
+          badSpeakBtn.disabled = true
+        } else {
+          badSection.style.display = 'block'
+          badInput.disabled = false
+          badSendBtn.disabled = false
+          badSpeakBtn.disabled = false
+        }
+      }
+
+      function updateBitBibbiesState() {
+        const bitBibbies = document.getElementById('bitBibbies').checked
+        console.log('BitBibbies:', bitBibbies ? 'ON' : 'OFF')
+      }
+
+      async function controlFans() {
+        const code = document.getElementById('fanCode').value
+        if (!/^[1-4][1-4]$/.test(code)) {
+          alert('Please enter a valid 2-digit code (each digit 1-4)')
+          return
+        }
+
+        const firstDigit = parseInt(code[0])
+        const secondDigit = parseInt(code[1])
+
+        // Reset all fans
+        fanStates = [false, false, false, false]
+
+        // Apply fan control logic based on the prompt
+        if (firstDigit === 1) {
+          if (secondDigit === 1) {
+            fanStates[0] = true // Fan 1
+            fanStates[2] = true // Fan 3
+          } else if (secondDigit === 2) {
+            fanStates[0] = true // Fan 1
+            fanStates[2] = true // Fan 3
+            fanStates[3] = true // Fan 4
+          } else if (secondDigit === 3) {
+            fanStates[0] = true // Fan 1
+            fanStates[3] = true // Fan 4
+          } else if (secondDigit === 4) {
+            fanStates[0] = true // Fan 1
+          }
+        } else if (firstDigit === 2) {
+          fanStates[0] = true // Fan 1
+          fanStates[1] = true // Fan 2
+
+          if (secondDigit === 2) {
+            fanStates[2] = true // Fan 3
+            fanStates[3] = true // Fan 4
+          } else if (secondDigit === 3) {
+            fanStates[2] = true // Fan 3
+            fanStates[3] = true // Fan 4
+          } else if (secondDigit === 4) {
+            fanStates[2] = true // Fan 3
+            fanStates[3] = true // Fan 4
+          }
+        } else if (firstDigit === 4 && secondDigit === 4) {
+          // All fans off
+          fanStates = [false, false, false, false]
+        }
+
+        updateFanDisplay()
+        await sendFanCommands()
+
+        addMessage(`System applied code ${code}`, 'user')
+        document.getElementById('fanCode').value = ''
+      }
+
+      function allFansOff() {
+        fanStates = [false, false, false, false]
+        updateFanDisplay()
+        sendFanCommands()
+        addMessage('All fans turned OFF', 'user')
+      }
+
+      function updateFanDisplay() {
+        for (let i = 0; i < 4; i++) {
+          const fanElement = document.getElementById(`fan${i + 1}`)
+          const statusElement = document.getElementById(`fan${i + 1}Status`)
+
+          if (fanStates[i]) {
+            fanElement.className = 'fan-status fan-on'
+            statusElement.textContent = 'ON'
+          } else {
+            fanElement.className = 'fan-status fan-off'
+            statusElement.textContent = 'OFF'
+          }
+        }
+      }
+
+      async function sendFanCommands() {
+        // Placeholder API calls for WiFi plug control
+        for (let i = 0; i < 4; i++) {
+          const fanNumber = i + 1
+          const state = fanStates[i] ? 'on' : 'off'
+
+          try {
+            // Placeholder - these would be actual API calls to WiFi plugs
+            console.log(`API Call: Fan ${fanNumber} → ${state.toUpperCase()}`)
+
+            // Simulated API call
+            const response = await fetch('/api/fan-control', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                fan: fanNumber,
+                state: state,
+                // These would be actual WiFi plug IPs/endpoints
+                endpoint: `192.168.1.${100 + fanNumber}`,
+              }),
+            }).catch(() => {
+              // Fail silently for now since API doesn't exist yet
+              console.log(`Simulated: Fan ${fanNumber} set to ${state}`)
+            })
+          } catch (error) {
+            console.log(`Error controlling Fan ${fanNumber}:`, error.message)
+          }
+        }
+      }
+
+      function talkToGoodAlexa() {
+        const input = document.getElementById('userInput')
+        const message = input.value.trim()
+        if (!message) return
+
+        addMessage(`You: ${message}`, 'user')
+
+        // Good Alexa responses
+        const goodResponses = [
+          "That's wonderful! I love talking about positive things! 😊",
+          'Oh, that sounds like so much fun! Tell me more!',
+          "You seem really nice! I'm happy to chat with you!",
+          "That's amazing! I want to help make your day better!",
+          "Wow, that's so interesting! I love learning new things!",
+          "You're so kind! Let's do something fun together!",
+          'That makes me so happy! What else would you like to talk about?',
+          "I'm here to cheer you up! How can I help make you smile?",
+        ]
+
+        const response =
+          goodResponses[Math.floor(Math.random() * goodResponses.length)]
+        goodAlexaLastMessage = response
+        addMessage(`Good Alexa: ${response}`, 'good')
+
+        input.value = ''
+      }
+
+      function talkToBadAlexa() {
+        const input = document.getElementById('badUserInput')
+        const message = input.value.trim()
+        if (!message) return
+
+        addMessage(`You: ${message}`, 'user')
+
+        // Bad Alexa responses (toned down for safety)
+        const badResponses = [
+          'Hey, why are you here! Get out of my face!',
+          "Ugh, you're so annoying! Leave me alone!",
+          "I don't want to talk to you! Go away!",
+          "You're bothering me! Stop talking!",
+          "I'm the meanest and I don't like anyone!",
+          "Why won't you just leave me alone?!",
+          "I don't care about your problems!",
+          "You're wasting my time! Get lost!",
+        ]
+
+        const response =
+          badResponses[Math.floor(Math.random() * badResponses.length)]
+        badAlexaLastMessage = response
+        addMessage(`Bad Alexa: ${response}`, 'bad')
+
+        input.value = ''
+      }
+
+      function speakGoodAlexa() {
+        const message =
+          goodAlexaLastMessage ||
+          "Hi! I'm Good Alexa! I want to cheer people up!"
+        speakText(message, 'Nova')
+      }
+
+      function speakBadAlexa() {
+        if (document.getElementById('kidMode').checked) {
+          alert('Bad Alexa is not available in Kid Mode!')
+          return
+        }
+        const message =
+          badAlexaLastMessage || 'Hey, why are you here! Get out of my face!'
+        speakText(message, 'Shimmer')
+      }
+
+      function speakText(text, voice) {
+        if ('speechSynthesis' in window) {
+          const utterance = new SpeechSynthesisUtterance(text)
+
+          // Try to set the requested voice
+          const voices = speechSynthesis.getVoices()
+          const targetVoice = voices.find(v => v.name.includes(voice))
+          if (targetVoice) {
+            utterance.voice = targetVoice
+          } else {
+            // Fallback voices
+            if (voice === 'Nova') {
+              utterance.voice =
+                voices.find(
+                  v => v.name.includes('Female') || v.name.includes('Samantha')
+                ) || voices[0]
+              utterance.pitch = 1.2
+              utterance.rate = 1.0
+            } else if (voice === 'Shimmer') {
+              utterance.voice =
+                voices.find(
+                  v => v.name.includes('Male') || v.name.includes('Alex')
+                ) || voices[0]
+              utterance.pitch = 0.8
+              utterance.rate = 0.9
+            }
+          }
+
+          speechSynthesis.speak(utterance)
+        } else {
+          console.log(`Would speak: "${text}" in ${voice} voice`)
+        }
+      }
+
+      function addMessage(message, type) {
+        const chatArea = document.getElementById('chatArea')
+        const messageDiv = document.createElement('div')
+        messageDiv.className = `message ${type}-message`
+        messageDiv.innerHTML = message
+        chatArea.appendChild(messageDiv)
+        chatArea.scrollTop = chatArea.scrollHeight
+      }
+
+      // Load voices when available
+      if ('speechSynthesis' in window) {
+        speechSynthesis.onvoiceschanged = function () {
+          console.log(
+            'Available voices:',
+            speechSynthesis.getVoices().map(v => v.name)
+          )
+        }
+      }
+    </script>
+  </body>
+</html>

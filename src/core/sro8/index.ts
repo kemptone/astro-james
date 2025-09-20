@@ -246,34 +246,36 @@ class Sro8 extends HTMLElement {
   private applyPattern(number: number, startIndex: number) {
     // Pattern definitions based on the specification
     switch (number) {
-      case 1: // only 1 is on
-        this.squares[startIndex] = true
-        break
-      case 2: // only 1 and 2 are on
-        this.squares[startIndex] = true
-        this.squares[startIndex + 1] = true
-        break
-      case 3: // all are on
-        this.squares[startIndex] = true
+      case 1: // only 2 and 3
         this.squares[startIndex + 1] = true
         this.squares[startIndex + 2] = true
         break
-      case 4: // only 2 and 3 are on
+      case 2: // only 1 and 3 are on
+        this.squares[startIndex] = true
+        this.squares[startIndex + 2] = true
+        break
+      case 3: // 1 and 2 are on
+        this.squares[startIndex] = true
         this.squares[startIndex + 1] = true
-        this.squares[startIndex + 2] = true
+
         break
-      case 5: // only 3 is on
-        this.squares[startIndex + 2] = true
+      case 4: // only 1 is on
+        this.squares[startIndex] = true
+        //this.squares[startIndex + 2] = true
         break
-      case 6: // none are on
+      case 5: // only 2 is on
+        this.squares[startIndex + 1] = true
+        break
+      case 6: // only 3 is on
+        this.squares[startIndex + 2] = true
         // All remain false
         break
-      case 7: // just 2 is on
-        this.squares[startIndex + 1] = true
-        break
-      case 8: // only 1 and 3 are on
+      case 7: // all are on
         this.squares[startIndex] = true
+        this.squares[startIndex + 1] = true
         this.squares[startIndex + 2] = true
+        break
+      case 8: // all are off  øøø
         break
     }
   }

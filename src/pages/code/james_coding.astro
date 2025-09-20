@@ -1,0 +1,55 @@
+please move the slider a bit
+<input type="image" />
+<input type="range" name="slider" id="" />
+<style>
+  html {
+    background-image: -o-repeating-linear-gradient();
+  }
+  textarea#big {
+    width: 500pt;
+    height: 500pt;
+  }
+</style>
+<input type="time" name="" id="" />
+<input type="color" name="" id="" />
+<input type="url" name="" id="" />
+<textarea name="" id="" rows="10"></textarea>
+<select name="" id="">
+  <option value="">Hello</option>
+  <option value="">jabin</option>
+  <option value="">fortrescue</option>
+</select>
+<button>Submit</button>
+<input type="checkbox" name="cb1" id="" />
+<input type="checkbox" name="cb1" id="" />
+<input type="checkbox" name="cb1" id="" />
+
+<input type="radio" name="john" id="" value="1" />
+<input type="radio" name="john" id="" value="2" />
+<input type="radio" name="john" id="" value="3" />
+<input type="radio" name="john" id="" value="4" />
+<input type="number" name="" id="" />
+<button type="button"></button>
+<header></header>
+<input type="date" name="" id="" />
+<textarea name="" id="big"></textarea>
+<base href="daddy" />
+<button disabled="disabled">this button is unavalible</button>
+<button>this button is avalible</button>
+<input type="week" name="" id="" />
+
+<script>
+  document.querySelector('input[name="john"]')?.addEventListener('click', e => {
+    const target = e.target as HTMLInputElement
+    // if (target.value === '1') {
+    document.querySelectorAll("input[name='cb1']")?.forEach(e => {
+      ;(e as HTMLInputElement).checked = target.value === '1'
+    })
+    // }
+  })
+</script>
+<input type="button" value="" />
+<input type="submit" value="" />
+<input type="tel" name="" id="" />
+<input type="datetime-local" name="" id="" />
+""""""""""

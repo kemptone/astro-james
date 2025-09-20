@@ -1,0 +1,205 @@
+---
+import Menu3 from '@/components/Menu3/Menu3.astro'
+
+const NUMBER_OF_SWITCHES = 5 // Configure number of switches here (max 9)
+---
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <Menu3 />
+    <div class="container">
+      <div class="switch-panel">
+        {
+          Array.from({length: NUMBER_OF_SWITCHES}, (_, i) => i + 1).map(
+            switchNum => (
+              <div class="switch" id={`switch${switchNum}`}>
+                <div class="switch-label">Switch {switchNum}</div>
+                <div class="switch-toggle" data-switch={switchNum.toString()} />
+              </div>
+            )
+          )
+        }
+      </div>
+
+      <form class="controls" method="dialog">
+        <h3>Key Controls</h3>
+        <span>
+          <input type="number" name="number" required />
+          <button>😊</button>
+        </span>
+      </form>
+    </div>
+
+    <script>
+      // const NUMBER_OF_SWITCHES = {NUMBER_OF_SWITCHES};
+      const NUMBER_OF_SWITCHES = 5
+
+      // Get all switches from the DOM
+      const switches = {}
+      for (let i = 1; i <= NUMBER_OF_SWITCHES; i++) {
+        switches[i] = document.querySelector(`[data-switch="${i}"]`)
+      }
+
+      function setSwitchState(switchNum, isOn) {
+        const switchEl = switches[switchNum]
+        if (switchEl) {
+          if (isOn) {
+            switchEl.classList.add('on')
+          } else {
+            switchEl.classList.remove('on')
+          }
+        }
+      }
+
+      function setAllSwitches(...states) {
+        for (let i = 1; i <= NUMBER_OF_SWITCHES; i++) {
+          setSwitchState(i, states[i - 1] || false)
+        }
+      }
+
+      document.querySelector('form')?.addEventListener?.('submit', e => {
+        const num = document.querySelector(
+          'input[name="number"]'
+        ) as HTMLInputElement
+
+        const value = Number(num.value)
+
+        // Reset all switches to OFF first
+        const switchStates = new Array(NUMBER_OF_SWITCHES).fill(false)
+
+        // New logic: number represents switches that are OFF
+        // All others are ON
+        if (value === 0) {
+          // 0 means all switches are ON
+          switchStates.fill(true)
+        } else {
+          // Set all to ON first
+          switchStates.fill(true)
+
+          // Turn OFF the switches specified in the number
+          const valueStr = value.toString()
+          for (const digit of valueStr) {
+            const switchNum = parseInt(digit)
+            if (switchNum >= 1 && switchNum <= NUMBER_OF_SWITCHES) {
+              switchStates[switchNum - 1] = false
+            }
+          }
+        }
+
+        setAllSwitches(...switchStates)
+      })
+
+      // Initialize all switches to OFF
+      setAllSwitches(...new Array(NUMBER_OF_SWITCHES).fill(false))
+    </script>
+  </body>
+</html>
+
+<style>
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+
+  .switch-panel {
+    display: flex;
+    justify-content: center;
+    gap: 0px;
+    margin: 40px 0;
+    border-radius: 10px;
+    width: 100hw;
+  }
+
+  .switch {
+    text-align: center;
+  }
+
+  .switch-label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: white;
+    display: none;
+  }
+
+  .switch-toggle {
+    width: 120px;
+    height: 380px;
+    position: relative;
+    background-image: url(/lights/light_off2.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* .switch-toggle::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: #666;
+    border-radius: 50%;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.3s ease;
+  } */
+
+  .switch-toggle.on {
+    /* background: #4caf50; */
+    background-image: url(/lights/light_on2.png);
+  }
+
+  .switch-toggle.on::before {
+    top: 10px;
+    background: #fff;
+  }
+
+  .controls {
+    margin: 0 auto;
+    width: fit-content;
+  }
+  .controls span {
+    display: flex;
+    gap: 1rem;
+  }
+  .controls h3 {
+    text-align: center;
+  }
+  .controls button {
+    padding-block: 0.8rem;
+    font-size: 2rem;
+    padding-inline: 2rem;
+  }
+  input[name='number'] {
+    width: 180px;
+    padding: 1rem;
+    font-size: 2rem;
+  }
+
+  /* Responsive adjustments for more switches */
+  @media (max-width: 1200px) {
+    .switch-toggle {
+      width: 120px;
+      height: 260px;
+    }
+  }
+
+  @media (max-width: 800px) {
+    .switch-toggle {
+      width: 80px;
+      height: 180px;
+    }
+  }
+</style>

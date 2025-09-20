@@ -1,0 +1,29 @@
+---
+const options = ['first', 'second', 'third', 5, 6, 7, 3434, 33434]
+const options2 = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30,
+  35, 50, 75, 100, 125, 180,
+]
+---
+
+<iframe src="https://boodeboo.com/sro8" frameborder="0"></iframe>
+<style>
+  iframe {
+    width: 100%;
+    height: 400pt;
+  }
+</style>
+<div>controll valves</div>
+<select name="selector" id="">
+  {options.map(v => <option>{v}</option>)}
+</select>
+<select name="selector">
+  {options2.map(h => <option>{h}</option>)}
+</select>
+<button type="reset"></button>
+<script>
+  // document.querySelector('select')?.addEventListener('input', fffff {
+  //   alert('hello')
+  // })
+  // .querySelector('select')
+</script>

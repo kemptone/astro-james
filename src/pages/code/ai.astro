@@ -1,0 +1,52 @@
+<a href="http://" target="_blank" rel="noopener noreferrer">go outside</a>
+<a href="boodeboo.com/sro8">hec</a>
+<h2>choose how high you want to write</h2>
+<input type="range" name="" id="" />
+<h1>here is a textarea:</h1>
+<style>
+  placeholder {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  textarea {
+    width: 375pt;
+    height: 375pt;
+  }
+  button {
+    background-color: rgb(0 255 255);
+    border-radius: 15%;
+  }
+</style>
+<textarea placeholder="Write whatever you want" name="" id=""></textarea>
+<h1>Hint:</h1>
+<h3>go outside goes to no code, and hec is where 404 is not found</h3>
+<h1>Joke circus</h1>
+<h4>where you tell jokes in an input or textarea</h4>
+<input placeholder="Question" type="text" />
+<input placeholder="Answer" type="text" />
+<h2>if you don't want to use inputs, use the textarea for the story of it</h2>
+<textarea placeholder="Story" name="" id=""></textarea>
+<button>Check Your Answer</button>
+<h1>Alert maker</h1>
+<h2>Makes alerts in a meta</h2>
+<h6>this button will trigger the alert</h6>
+<button id="plants">get alert</button>
+<h1>Paintbrush</h1>
+<h3>paints the whole app</h3>
+<input type="color" name="paintbrush" id="paintbrush" />
+<h1>Hint:</h1>
+<h6>this is the panel for coding it</h6>
+
+<script>
+  document.querySelector('#plants')?.addEventListener('click', e => {
+    alert('HA HA HA!!!')
+  })
+  document
+    .querySelector('input[name="paintbrush"]')
+    ?.addEventListener('input', e => {
+      console.log(e.currentTarget.value)
+      document.body.style.backgroundColor = e.currentTarget.value
+    })
+</script>
+<h1>Color it Blue</h1>
+<h1>what time is it?</h1>
+<input type="datetime-local" name="" id="" />
