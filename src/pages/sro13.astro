@@ -1,0 +1,513 @@
+---
+import Menu3 from '@/components/Menu3/Menu3.astro'
+---
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SRO13 - Fantasy Schedule App</title>
+  </head>
+  <body>
+    <Menu3 />
+    <div class="container">
+      <h1>SRO13 - Fantasy Schedule App</h1>
+
+      <!-- Kid Mode Switch -->
+      <div class="kid-mode">
+        <label>
+          <input type="checkbox" id="kidMode"> Kid Mode (disables bad dog)
+        </label>
+      </div>
+
+      <!-- Dog Selection Radio Buttons -->
+      <div class="dog-selection">
+        <h3>Choose Your Dog Companion:</h3>
+        <label><input type="radio" name="dogMode" value="1" checked> Good Dog Only</label>
+        <label><input type="radio" name="dogMode" value="2"> Both Dogs</label>
+        <label><input type="radio" name="dogMode" value="3"> Bad Dog Only</label>
+        <label><input type="radio" name="dogMode" value="4"> No Dogs</label>
+      </div>
+
+      <!-- Dog Response Area -->
+      <div class="dog-response" id="dogResponse"></div>
+
+      <!-- Grok Chat -->
+      <div class="grok-chat">
+        <h3>Ask Grok Anything (Eric Voice):</h3>
+        <div class="chat-container">
+          <div id="chatHistory"></div>
+          <div class="chat-input">
+            <input type="text" id="grokInput" placeholder="Ask Grok anything...">
+            <button id="askGrok">Ask</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fantasy Schedule -->
+      <div class="schedule-section">
+        <h3>Fantasy Schedule (Time Trick Active!)</h3>
+        <p class="time-explanation">Remember: Times are tricky! 1:00 = 11:00, 2:00 = 10:00, etc.</p>
+
+        <div class="add-schedule">
+          <input type="time" id="scheduleTime" step="60">
+          <input type="text" id="scheduleTask" placeholder="What's happening?">
+          <button id="addSchedule">Add to Schedule</button>
+        </div>
+
+        <div class="schedule-list" id="scheduleList"></div>
+      </div>
+    </div>
+
+    <script>
+      // Time conversion mapping (fantasy time)
+      const timeConversion = {
+        '01:00': '11:00',
+        '02:00': '10:00',
+        '03:00': '09:00',
+        '04:00': '08:00',
+        '05:00': '07:00',
+        '06:00': '06:00',
+        '07:00': '05:00',
+        '08:00': '04:00',
+        '09:00': '03:00',
+        '10:00': '02:00',
+        '11:00': '01:00',
+        '12:00': '12:00'
+      };
+
+      // Dog responses
+      const dogResponses = {
+        good: "Woof woof, I am a good dog, I want to make everyone feel happy! 🐕",
+        bad: "Woof woof! Go touch grass! You filthy old person! 😤🐕"
+      };
+
+      let schedules = [];
+
+      // Dog mode functionality
+      function updateDogResponse() {
+        const selectedMode = document.querySelector('input[name="dogMode"]:checked')?.value;
+        const responseDiv = document.getElementById('dogResponse');
+
+        switch(selectedMode) {
+          case '1':
+            responseDiv.innerHTML = `<div class="good-dog">${dogResponses.good}</div>`;
+            break;
+          case '2':
+            responseDiv.innerHTML = `
+              <div class="good-dog">${dogResponses.good}</div>
+              <div class="bad-dog">${dogResponses.bad}</div>
+            `;
+            break;
+          case '3':
+            responseDiv.innerHTML = `<div class="bad-dog">${dogResponses.bad}</div>`;
+            break;
+          case '4':
+            responseDiv.innerHTML = '<div class="no-dogs">No dogs here, just peace and quiet 🌸</div>';
+            break;
+        }
+      }
+
+      // Kid mode functionality
+      function toggleKidMode() {
+        const kidMode = document.getElementById('kidMode').checked;
+        const radio2 = document.querySelector('input[name="dogMode"][value="2"]');
+        const radio3 = document.querySelector('input[name="dogMode"][value="3"]');
+
+        if (kidMode) {
+          radio2.disabled = true;
+          radio3.disabled = true;
+          radio2.parentElement.style.opacity = '0.5';
+          radio3.parentElement.style.opacity = '0.5';
+
+          // If bad dog modes are selected, switch to good dog
+          if (radio2.checked || radio3.checked) {
+            document.querySelector('input[name="dogMode"][value="1"]').checked = true;
+            updateDogResponse();
+          }
+        } else {
+          radio2.disabled = false;
+          radio3.disabled = false;
+          radio2.parentElement.style.opacity = '1';
+          radio3.parentElement.style.opacity = '1';
+        }
+      }
+
+      // Fantasy time conversion
+      function convertTime(inputTime) {
+        const [hour, minute] = inputTime.split(':');
+        const hourKey = hour.padStart(2, '0') + ':00';
+        const realHour = timeConversion[hourKey] || inputTime;
+
+        // Calculate minutes until next hour
+        const minutesUntilNext = 60 - parseInt(minute);
+
+        return {
+          fantasy: inputTime,
+          real: realHour,
+          minutesUntilNext: minutesUntilNext === 60 ? 0 : minutesUntilNext
+        };
+      }
+
+      // Add schedule functionality
+      function addSchedule() {
+        const timeInput = document.getElementById('scheduleTime');
+        const taskInput = document.getElementById('scheduleTask');
+
+        if (!timeInput.value || !taskInput.value) {
+          alert('Please fill in both time and task!');
+          return;
+        }
+
+        const timeData = convertTime(timeInput.value);
+        const schedule = {
+          id: Date.now(),
+          fantasy: timeData.fantasy,
+          real: timeData.real,
+          task: taskInput.value,
+          minutesUntilNext: timeData.minutesUntilNext
+        };
+
+        schedules.push(schedule);
+        schedules.sort((a, b) => a.fantasy.localeCompare(b.fantasy));
+
+        renderSchedules();
+
+        // Clear inputs
+        timeInput.value = '';
+        taskInput.value = '';
+      }
+
+      // Render schedules
+      function renderSchedules() {
+        const listDiv = document.getElementById('scheduleList');
+        listDiv.innerHTML = schedules.map(schedule => `
+          <div class="schedule-item">
+            <div class="schedule-time">
+              <span class="fantasy-time">${schedule.fantasy}</span>
+              <span class="real-time">(Really: ${schedule.real})</span>
+              <span class="minutes-info">${schedule.minutesUntilNext} min until next hour</span>
+            </div>
+            <div class="schedule-task">${schedule.task}</div>
+            <button onclick="removeSchedule(${schedule.id})" class="remove-btn">Remove</button>
+          </div>
+        `).join('');
+      }
+
+      // Remove schedule
+      function removeSchedule(id) {
+        schedules = schedules.filter(s => s.id !== id);
+        renderSchedules();
+      }
+
+      // Grok chat (simulated)
+      function askGrok() {
+        const input = document.getElementById('grokInput');
+        const question = input.value.trim();
+
+        if (!question) return;
+
+        const chatHistory = document.getElementById('chatHistory');
+
+        // Add user message
+        chatHistory.innerHTML += `
+          <div class="chat-message user">
+            <strong>You:</strong> ${question}
+          </div>
+        `;
+
+        // Simulate Grok response with Eric voice personality
+        const responses = [
+          "Well, that's a fascinating question! Let me think about that with my Eric voice...",
+          "Ah, I see what you're getting at there. From my perspective as Grok with Eric's voice...",
+          "That's quite intriguing! You know, in my experience...",
+          "Hmm, let me process that with my sophisticated AI brain and Eric's charm...",
+          "Great question! Here's what I think about that..."
+        ];
+
+        setTimeout(() => {
+          const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+          chatHistory.innerHTML += `
+            <div class="chat-message grok">
+              <strong>Grok (Eric Voice):</strong> ${randomResponse} ${question.includes('?') ? 'The answer depends on many factors, but I\'d say it\'s worth exploring further!' : 'That\'s quite a statement! I find that perspective interesting.'}
+            </div>
+          `;
+          chatHistory.scrollTop = chatHistory.scrollHeight;
+        }, 1000);
+
+        input.value = '';
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+      }
+
+      // Event listeners
+      document.addEventListener('DOMContentLoaded', () => {
+        // Dog mode changes
+        document.querySelectorAll('input[name="dogMode"]').forEach(radio => {
+          radio.addEventListener('change', updateDogResponse);
+        });
+
+        // Kid mode toggle
+        document.getElementById('kidMode').addEventListener('change', toggleKidMode);
+
+        // Schedule functionality
+        document.getElementById('addSchedule').addEventListener('click', addSchedule);
+        document.getElementById('scheduleTime').addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') addSchedule();
+        });
+        document.getElementById('scheduleTask').addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') addSchedule();
+        });
+
+        // Grok chat
+        document.getElementById('askGrok').addEventListener('click', askGrok);
+        document.getElementById('grokInput').addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') askGrok();
+        });
+
+        // Initialize
+        updateDogResponse();
+      });
+
+      // Make removeSchedule global
+      window.removeSchedule = removeSchedule;
+    </script>
+  </body>
+</html>
+
+<style>
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+  }
+
+  .kid-mode {
+    background: #e8f4f8;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .kid-mode label {
+    font-weight: bold;
+    color: #2c5aa0;
+  }
+
+  .dog-selection {
+    background: #f0f8ff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+
+  .dog-selection h3 {
+    margin-top: 0;
+    color: #333;
+  }
+
+  .dog-selection label {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .dog-selection label:hover {
+    background: #e6f3ff;
+  }
+
+  .dog-response {
+    min-height: 60px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    background: #fff9e6;
+  }
+
+  .good-dog {
+    color: #2d8f47;
+    font-weight: bold;
+    margin: 5px 0;
+  }
+
+  .bad-dog {
+    color: #d63384;
+    font-weight: bold;
+    margin: 5px 0;
+  }
+
+  .no-dogs {
+    color: #6f42c1;
+    font-style: italic;
+  }
+
+  .grok-chat {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+
+  .chat-container {
+    max-height: 300px;
+  }
+
+  #chatHistory {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+
+  .chat-message {
+    margin: 10px 0;
+    padding: 8px;
+    border-radius: 5px;
+  }
+
+  .chat-message.user {
+    background: #e3f2fd;
+    text-align: right;
+  }
+
+  .chat-message.grok {
+    background: #f3e5f5;
+  }
+
+  .chat-input {
+    display: flex;
+    gap: 10px;
+  }
+
+  .chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  .chat-input button {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .schedule-section {
+    background: #fff3cd;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .time-explanation {
+    font-style: italic;
+    color: #856404;
+    margin-bottom: 15px;
+  }
+
+  .add-schedule {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .add-schedule input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  .add-schedule input[type="time"] {
+    width: 120px;
+  }
+
+  .add-schedule input[type="text"] {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .add-schedule button {
+    padding: 10px 20px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .schedule-item {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border-left: 4px solid #ffc107;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .schedule-time {
+    font-weight: bold;
+  }
+
+  .fantasy-time {
+    color: #dc3545;
+    font-size: 1.1em;
+  }
+
+  .real-time {
+    color: #6c757d;
+    font-size: 0.9em;
+    margin-left: 10px;
+  }
+
+  .minutes-info {
+    color: #17a2b8;
+    font-size: 0.8em;
+    display: block;
+  }
+
+  .schedule-task {
+    flex: 1;
+    margin: 0 15px;
+  }
+
+  .remove-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8em;
+  }
+
+  @media (max-width: 768px) {
+    .add-schedule {
+      flex-direction: column;
+    }
+
+    .schedule-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  }
+</style>
