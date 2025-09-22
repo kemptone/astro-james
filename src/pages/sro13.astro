@@ -193,7 +193,8 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
         }
 
         schedules.push(schedule)
-        schedules.sort((a, b) => a.fantasy.localeCompare(b.fantasy))
+        // schedules.sort((a, b) => a.fantasy.localeCompare(b.fantasy))
+        schedules.sort((b, a) => a.fantasy.localeCompare(b.fantasy))
 
         renderSchedules()
 
