@@ -1,0 +1,403 @@
+---
+export const prerender = false
+import Menu3 from '@/components/Menu3/Menu3.astro'
+import '../../pico.css'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>SRO14 - Talk to Grok (Kevin)</title>
+    <style>
+      .chat-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+
+      .message {
+        margin: 1rem 0;
+        padding: 1rem;
+        border-radius: 8px;
+      }
+
+      .user-message {
+        background-color: #e3f2fd;
+        margin-left: 2rem;
+      }
+
+      .grok-message {
+        background-color: #f5f5f5;
+        margin-right: 2rem;
+      }
+
+      .machine-container {
+        background-color: #1a1a1a;
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-top: 2rem;
+        border: 2px solid #444;
+      }
+
+      .inputs-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(5, 1fr);
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .input-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .input-row label {
+        min-width: 100px;
+        font-weight: bold;
+      }
+
+      .input-row input {
+        width: 80px;
+        background-color: #333;
+        border: 1px solid #666;
+        color: white;
+        text-align: center;
+        margin-bottom: 0;
+      }
+
+      .buttons-container {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .machine-button {
+        min-width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        background-color: #4caf50;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .machine-button:hover:not(:disabled) {
+        background-color: #45a049;
+        transform: translateY(-2px);
+      }
+
+      .machine-button:disabled {
+        background-color: #666;
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      .machine-button.triggered {
+        /* background-color: #f44336; */
+        /* animation: flash 0.5s; */
+      }
+
+      @keyframes flash {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      .press-count {
+        display: none;
+      }
+
+      #chatMessages {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+      }
+      #chatForm {
+        display: flex;
+        gap: 0.5rem;
+      }
+      #chatForm textarea {
+        flex: 1;
+        min-height: 4rem;
+      }
+      #chatForm button {
+        flex: 0;
+      }
+
+      .loading {
+        opacity: 0.6;
+      }
+    </style>
+  </head>
+  <body>
+    <Menu3 />
+    <div class="chat-container">
+      <h1>SRO14 - Talk to Grok (Kevin)</h1>
+
+      <div id="chatMessages"></div>
+
+      <form id="chatForm">
+        <textarea
+          type="text"
+          id="messageInput"
+          placeholder="Type your message to Grok..."
+          required
+          autocomplete="off"></textarea>
+        <button type="submit">Send</button>
+      </form>
+
+      <div class="machine-container">
+        <h3>The Machine</h3>
+
+        <form id="input_rows" class="inputs-grid">
+          <div class="input-row">
+            <label for="input1">Button 1:</label>
+            <input type="number" id="input1" min="0" max="999" value="3" />
+            <span>presses allowed</span>
+          </div>
+          <div class="input-row">
+            <label for="input2">Button 2:</label>
+            <input type="number" id="input2" min="0" max="999" value="5" />
+            <span>presses allowed</span>
+          </div>
+          <div class="input-row">
+            <label for="input3">Button 3:</label>
+            <input type="number" id="input3" min="0" max="999" value="0" />
+            <span>presses allowed</span>
+          </div>
+          <div class="input-row">
+            <label for="input4">Button 4:</label>
+            <input type="number" id="input4" min="0" max="999" value="2" />
+            <span>presses allowed</span>
+          </div>
+          <div class="input-row">
+            <label for="input5">Button 5:</label>
+            <input type="number" id="input5" min="0" max="999" value="7" />
+            <span>presses allowed</span>
+          </div>
+          <button>Submit</button>
+        </form>
+
+        <div class="buttons-container">
+          <button type="button" class="machine-button" data-button="1">1</button
+          >
+          <button type="button" class="machine-button" data-button="2">2</button
+          >
+          <button type="button" class="machine-button" data-button="3" disabled
+            >3</button
+          >
+          <button type="button" class="machine-button" data-button="4">4</button
+          >
+          <button type="button" class="machine-button" data-button="5">5</button
+          >
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Machine state - no need to track presses, just read from inputs
+
+      // Initialize the page
+      document.addEventListener('DOMContentLoaded', () => {
+        updateMachineDisplay()
+        setupEventListeners()
+        addGrokMessage(
+          "Hello! I'm Grok, speaking with Kevin's voice. I'm here to help you and answer your questions. What would you like to talk about?"
+        )
+      })
+
+      function setupEventListeners() {
+        // Chat form submission
+        document
+          .getElementById('chatForm')
+          .addEventListener('submit', handleChatSubmit)
+
+        // Machine button clicks
+        document.querySelectorAll('.machine-button').forEach(button => {
+          button.addEventListener('click', handleMachineButtonClick)
+        })
+
+        // Chat form submission
+        const e_form = document.getElementById('input_rows')
+        e_form.addEventListener('submit', e => {
+          e.preventDefault()
+          const data = new FormData(e.target as HTMLFormElement)
+          updateMachineDisplay()
+          // for (const [name, value] of data) {
+          //   // console.log(name, ':', value)
+          //   updateButtonLimit()
+          // }
+        })
+
+        // Input changes
+        // for (let i = 1; i <= 5; i++) {
+        //   document
+        //     .getElementById(`input${i}`)
+        //     .addEventListener('input', () => updateButtonLimit(i))
+        // }
+      }
+
+      async function handleChatSubmit(e) {
+        e.preventDefault()
+        const input = document.getElementById('messageInput')
+        const message = input.value.trim()
+
+        if (!message) return
+
+        addUserMessage(message)
+        input.value = ''
+
+        // Show loading state
+        const loadingDiv = addGrokMessage('Kevin is thinking...')
+        loadingDiv.classList.add('loading')
+
+        try {
+          const response = await fetch('/api/grok/sro14', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              prompt: message,
+            }),
+          })
+
+          const data = await response.json()
+
+          if (data.choices && data.choices[0]) {
+            const grokResponse = data.choices[0].message.content
+            loadingDiv.remove()
+            addGrokMessage(grokResponse)
+
+            // Speak the response with Kevin's voice
+            speakWithKevin(grokResponse)
+          } else {
+            loadingDiv.textContent = 'Sorry, I had trouble understanding that.'
+            loadingDiv.classList.remove('loading')
+          }
+        } catch (error) {
+          console.error('Chat error:', error)
+          loadingDiv.textContent =
+            'Sorry, I had trouble connecting. Please try again.'
+          loadingDiv.classList.remove('loading')
+        }
+      }
+
+      function addUserMessage(message) {
+        const chatMessages = document.getElementById('chatMessages')
+        const messageDiv = document.createElement('div')
+        messageDiv.className = 'message user-message'
+        messageDiv.textContent = message
+        chatMessages.appendChild(messageDiv)
+        chatMessages.scrollTop = chatMessages.scrollHeight
+      }
+
+      function addGrokMessage(message) {
+        const chatMessages = document.getElementById('chatMessages')
+        const messageDiv = document.createElement('div')
+        messageDiv.className = 'message grok-message'
+        messageDiv.textContent = message
+        chatMessages.appendChild(messageDiv)
+        chatMessages.scrollTop = chatMessages.scrollHeight
+        return messageDiv
+      }
+
+      async function speakWithKevin(text) {
+        try {
+          const response = await fetch('/api/polly/say', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              text: text,
+              voiceId: 'Kevin',
+              engine: 'neural',
+            }),
+          })
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch audio')
+          }
+
+          const reader = response.body?.getReader()
+          const chunks = []
+
+          while (true) {
+            const {done, value} = await reader?.read()
+            if (done) break
+            chunks.push(value)
+          }
+
+          const audioBlob = new Blob(chunks, {type: 'audio/mpeg'})
+          const audioUrl = URL.createObjectURL(audioBlob)
+          const audio = new Audio(audioUrl)
+          audio.play()
+        } catch (error) {
+          console.error('Speech error:', error)
+        }
+      }
+
+      function handleMachineButtonClick(e) {
+        const buttonNumber = parseInt(e.target.dataset.button)
+        const input = document.getElementById(`input${buttonNumber}`)
+        const currentValue = parseInt(input.value) || 0
+
+        if (currentValue === 0) return // Button is disabled
+
+        // Decrease the input value
+        const newValue = currentValue - 1
+        input.value = newValue
+
+        updateMachineDisplay()
+
+        if (newValue === 0) {
+          // Button triggered when it reaches 0!
+          e.target.classList.add('triggered')
+          setTimeout(() => e.target.classList.remove('triggered'), 500)
+
+          // addGrokMessage(
+          //   `Button ${buttonNumber} has been triggered! Something special happened.`
+          // )
+          // speakWithKevin(`Don't be a dummy. That is a bad word button poop.`)
+        }
+      }
+
+      function updateButtonLimit(buttonNumber) {
+        updateMachineDisplay()
+      }
+
+      function updateMachineDisplay() {
+        for (let i = 1; i <= 5; i++) {
+          const button = document.querySelector(`[data-button="${i}"]`)
+          const input = document.getElementById(`input${i}`)
+          const currentValue = input.value ? parseInt(input.value) : Infinity
+
+          // Update button state - disabled if value is 0
+          if (currentValue === 0) {
+            button.disabled = true
+          } else {
+            button.disabled = false
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
