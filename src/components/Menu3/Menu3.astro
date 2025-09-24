@@ -56,12 +56,13 @@ talkers3
 grok
 girls
 sro14
+code/textareas
 colorthing`
   .split(/[ \n]/g)
   .filter(item => !!item)
   .sort()
   .map(item => ({
-    name: item,
+    name: item.replace('code/', ''),
     url: `/${item}`,
   }))
 ---
