@@ -1,0 +1,270 @@
+---
+import Menu3 from '@/components/Menu3/Menu3.astro'
+import '@/layouts/style.css'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main>
+      <h1>SRO15 - Talk to Ivy</h1>
+      <p>Ivy from Amazon will guide you through this interactive grid game.</p>
+
+      <div class="grid-container">
+        <div class="labels">
+          <div class="corner"></div>
+          <div class="column-label">Zander</div>
+          <div class="column-label">Carmen</div>
+          <div class="column-label">Stephanie</div>
+          <div class="column-label">Xavior</div>
+          <div class="column-label">Dexter the Dog</div>
+        </div>
+
+        <div class="grid-row">
+          <div class="row-label">High-fives</div>
+          <input type="checkbox" id="check-0-0" disabled />
+          <input type="checkbox" id="check-0-1" disabled />
+          <input type="checkbox" id="check-0-2" disabled />
+          <input type="checkbox" id="check-0-3" disabled />
+          <input type="checkbox" id="check-0-4" disabled />
+        </div>
+
+        <div class="grid-row">
+          <div class="row-label">Hugs</div>
+          <input type="checkbox" id="check-1-0" disabled />
+          <input type="checkbox" id="check-1-1" disabled />
+          <input type="checkbox" id="check-1-2" disabled />
+          <input type="checkbox" id="check-1-3" disabled />
+          <input type="checkbox" id="check-1-4" disabled />
+        </div>
+
+        <div class="grid-row dangerous">
+          <div class="row-label">Kissing ⚠️</div>
+          <input type="checkbox" id="check-2-0" disabled />
+          <input type="checkbox" id="check-2-1" disabled />
+          <input type="checkbox" id="check-2-2" disabled />
+          <input type="checkbox" id="check-2-3" disabled />
+          <input type="checkbox" id="check-2-4" disabled />
+        </div>
+
+        <div class="grid-row dangerous">
+          <div class="row-label">Sex ⚠️</div>
+          <input type="checkbox" id="check-3-0" disabled />
+          <input type="checkbox" id="check-3-1" disabled />
+          <input type="checkbox" id="check-3-2" disabled />
+          <input type="checkbox" id="check-3-3" disabled />
+          <input type="checkbox" id="check-3-4" disabled />
+        </div>
+
+        <div class="grid-row dangerous">
+          <div class="row-label">Choking ⚠️</div>
+          <input type="checkbox" id="check-4-0" disabled />
+          <input type="checkbox" id="check-4-1" disabled />
+          <input type="checkbox" id="check-4-2" disabled />
+          <input type="checkbox" id="check-4-3" disabled />
+          <input type="checkbox" id="check-4-4" disabled />
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="enableBtn">Enable Checkmarks</button>
+        <button id="disableBtn">Disable Checkmarks</button>
+        <button id="submitBtn">Submit and Generate List</button>
+        <button id="ivyIntroBtn">Ivy Introduction</button>
+      </div>
+
+      <div id="output"></div>
+    </main>
+    <Menu3 />
+
+    <style>
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      h1 {
+        margin-bottom: 1rem;
+      }
+
+      .grid-container {
+        margin: 2rem 0;
+      }
+
+      .labels {
+        display: grid;
+        grid-template-columns: 150px repeat(5, 100pt);
+        gap: 0;
+        margin-bottom: 0;
+      }
+
+      .corner {
+        width: 150px;
+      }
+
+      .column-label {
+        font-weight: bold;
+        text-align: center;
+        padding: 0.5rem;
+        background: #e0e0e0;
+        width: 100pt;
+      }
+
+      .grid-row {
+        display: grid;
+        grid-template-columns: 150px repeat(5, 100pt);
+        gap: 0;
+        margin-bottom: 0;
+      }
+
+      .grid-row.dangerous {
+        background-color: #ffe0e0;
+      }
+
+      .row-label {
+        font-weight: bold;
+        padding: 0.5rem;
+        background: #e0e0e0;
+        display: flex;
+        align-items: center;
+      }
+
+      input[type='checkbox'] {
+        width: 100pt;
+        height: 100pt;
+        margin: 0;
+        cursor: pointer;
+      }
+
+      input[type='checkbox']:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      .controls {
+        display: flex;
+        gap: 1rem;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+      }
+
+      button {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+
+      #output {
+        margin-top: 2rem;
+        padding: 1rem;
+        background: #f5f5f5;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        min-height: 2rem;
+      }
+    </style>
+
+    <script>
+      const enableBtn = document.getElementById(
+        'enableBtn'
+      ) as HTMLButtonElement
+      const disableBtn = document.getElementById(
+        'disableBtn'
+      ) as HTMLButtonElement
+      const submitBtn = document.getElementById(
+        'submitBtn'
+      ) as HTMLButtonElement
+      const ivyIntroBtn = document.getElementById(
+        'ivyIntroBtn'
+      ) as HTMLButtonElement
+      const output = document.getElementById('output') as HTMLDivElement
+
+      const rows = ['High-fives', 'Hugs', 'Kissing', 'Sex', 'Choking']
+      const columns = [
+        'Zander',
+        'Carmen',
+        'Stephanie',
+        'Xavior',
+        'Dexter the Dog',
+      ]
+
+      async function speakIvy(text: string) {
+        try {
+          const response = await fetch('/api/polly/say', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              text: text,
+              voiceId: 'Ivy',
+              engine: 'neural',
+            }),
+          })
+
+          if (response.ok) {
+            const audioBlob = await response.blob()
+            const audioUrl = URL.createObjectURL(audioBlob)
+            const audio = new Audio(audioUrl)
+            audio.play()
+          }
+        } catch (error) {
+          console.error('Error playing audio:', error)
+        }
+      }
+
+      enableBtn.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]')
+        checkboxes.forEach(checkbox => {
+          ;(checkbox as HTMLInputElement).disabled = false
+        })
+        output.textContent =
+          'Checkmarks enabled! Be careful with rows 3, 4, and 5!'
+      })
+
+      disableBtn.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]')
+        checkboxes.forEach(checkbox => {
+          ;(checkbox as HTMLInputElement).disabled = true
+        })
+        output.textContent = 'Checkmarks disabled.'
+      })
+
+      submitBtn.addEventListener('click', () => {
+        let result = 'Selected interactions:\n\n'
+        let hasSelections = false
+
+        for (let row = 0; row < 5; row++) {
+          for (let col = 0; col < 5; col++) {
+            const checkbox = document.getElementById(
+              `check-${row}-${col}`
+            ) as HTMLInputElement
+            if (checkbox && checkbox.checked) {
+              result += `${columns[col]} - ${rows[row]}\n`
+              hasSelections = true
+            }
+          }
+        }
+
+        if (!hasSelections) {
+          result = 'No interactions selected.'
+        }
+
+        output.textContent = result
+      })
+
+      ivyIntroBtn.addEventListener('click', () => {
+        const introText =
+          "Hi, my name is Ivy. Try the 5 by 5 grid checkmarks and don't press row 3, 4, or 5. Row 1 is high-fives. Row 2 is hugs. Row 3 is kissing, which is only allowed with family members. Row 4 is sex, which is only allowed when married to get babies. Row 5 is choking, which is the worst and most dangerous. The columns are Zander, Carmen, Stephanie, Xavior, and Dexter the Dog. Be careful!"
+        speakIvy(introText)
+        output.textContent = 'Ivy is speaking...'
+      })
+    </script>
+  </body>
+</html>
