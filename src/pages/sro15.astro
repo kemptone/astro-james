@@ -27,47 +27,47 @@ import '@/layouts/style.css'
 
         <div class="grid-row">
           <div class="row-label">High-fives</div>
-          <input type="checkbox" id="check-0-0" disabled />
-          <input type="checkbox" id="check-0-1" disabled />
-          <input type="checkbox" id="check-0-2" disabled />
-          <input type="checkbox" id="check-0-3" disabled />
-          <input type="checkbox" id="check-0-4" disabled />
+          <div class="checkbox" data-row="0" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="0" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="0" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="0" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="0" data-col="4" data-disabled="true"></div>
         </div>
 
         <div class="grid-row">
           <div class="row-label">Hugs</div>
-          <input type="checkbox" id="check-1-0" disabled />
-          <input type="checkbox" id="check-1-1" disabled />
-          <input type="checkbox" id="check-1-2" disabled />
-          <input type="checkbox" id="check-1-3" disabled />
-          <input type="checkbox" id="check-1-4" disabled />
+          <div class="checkbox" data-row="1" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="1" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="1" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="1" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="1" data-col="4" data-disabled="true"></div>
         </div>
 
         <div class="grid-row dangerous">
           <div class="row-label">Kissing ⚠️</div>
-          <input type="checkbox" id="check-2-0" disabled />
-          <input type="checkbox" id="check-2-1" disabled />
-          <input type="checkbox" id="check-2-2" disabled />
-          <input type="checkbox" id="check-2-3" disabled />
-          <input type="checkbox" id="check-2-4" disabled />
+          <div class="checkbox" data-row="2" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="2" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="2" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="2" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="2" data-col="4" data-disabled="true"></div>
         </div>
 
         <div class="grid-row dangerous">
           <div class="row-label">Sex ⚠️</div>
-          <input type="checkbox" id="check-3-0" disabled />
-          <input type="checkbox" id="check-3-1" disabled />
-          <input type="checkbox" id="check-3-2" disabled />
-          <input type="checkbox" id="check-3-3" disabled />
-          <input type="checkbox" id="check-3-4" disabled />
+          <div class="checkbox" data-row="3" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="3" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="3" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="3" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="3" data-col="4" data-disabled="true"></div>
         </div>
 
         <div class="grid-row dangerous">
           <div class="row-label">Choking ⚠️</div>
-          <input type="checkbox" id="check-4-0" disabled />
-          <input type="checkbox" id="check-4-1" disabled />
-          <input type="checkbox" id="check-4-2" disabled />
-          <input type="checkbox" id="check-4-3" disabled />
-          <input type="checkbox" id="check-4-4" disabled />
+          <div class="checkbox" data-row="4" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="4" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="4" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="4" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="4" data-col="4" data-disabled="true"></div>
         </div>
       </div>
 
@@ -135,16 +135,37 @@ import '@/layouts/style.css'
         align-items: center;
       }
 
-      input[type='checkbox'] {
+      .checkbox {
         width: 100pt;
         height: 100pt;
         margin: 0;
         cursor: pointer;
+        border: 2px solid #333;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        position: relative;
+        transition: all 0.2s ease;
       }
 
-      input[type='checkbox']:disabled {
+      .checkbox[data-disabled='true'] {
         cursor: not-allowed;
-        opacity: 0.6;
+        opacity: 0.5;
+        background-color: #f0f0f0;
+      }
+
+      .checkbox.checked {
+        background-color: #4CAF50;
+      }
+
+      .checkbox.checked::after {
+        content: '✓';
+        color: white;
+        font-size: 60pt;
+        font-weight: bold;
+        line-height: 1;
       }
 
       .controls {
@@ -219,19 +240,29 @@ import '@/layouts/style.css'
         }
       }
 
+      // Handle checkbox clicks
+      document.querySelectorAll('.checkbox').forEach(checkbox => {
+        checkbox.addEventListener('click', () => {
+          const disabled = checkbox.getAttribute('data-disabled') === 'true'
+          if (!disabled) {
+            checkbox.classList.toggle('checked')
+          }
+        })
+      })
+
       enableBtn.addEventListener('click', () => {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]')
+        const checkboxes = document.querySelectorAll('.checkbox')
         checkboxes.forEach(checkbox => {
-          ;(checkbox as HTMLInputElement).disabled = false
+          checkbox.setAttribute('data-disabled', 'false')
         })
         output.textContent =
           'Checkmarks enabled! Be careful with rows 3, 4, and 5!'
       })
 
       disableBtn.addEventListener('click', () => {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]')
+        const checkboxes = document.querySelectorAll('.checkbox')
         checkboxes.forEach(checkbox => {
-          ;(checkbox as HTMLInputElement).disabled = true
+          checkbox.setAttribute('data-disabled', 'true')
         })
         output.textContent = 'Checkmarks disabled.'
       })
@@ -240,17 +271,13 @@ import '@/layouts/style.css'
         let result = 'Selected interactions:\n\n'
         let hasSelections = false
 
-        for (let row = 0; row < 5; row++) {
-          for (let col = 0; col < 5; col++) {
-            const checkbox = document.getElementById(
-              `check-${row}-${col}`
-            ) as HTMLInputElement
-            if (checkbox && checkbox.checked) {
-              result += `${columns[col]} - ${rows[row]}\n`
-              hasSelections = true
-            }
-          }
-        }
+        const checkboxes = document.querySelectorAll('.checkbox.checked')
+        checkboxes.forEach(checkbox => {
+          const row = parseInt(checkbox.getAttribute('data-row') || '0')
+          const col = parseInt(checkbox.getAttribute('data-col') || '0')
+          result += `${columns[col]} - ${rows[row]}\n`
+          hasSelections = true
+        })
 
         if (!hasSelections) {
           result = 'No interactions selected.'

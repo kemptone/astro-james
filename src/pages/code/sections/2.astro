@@ -1,0 +1,45 @@
+<h5>what's your name?</h5>
+<input placeholder="Name goes here" type="text" />
+<h2>
+  now, write a prediction of what these 2 things do. it can be whatever you want
+</h2>
+<h4>for example, i type this</h4>
+<textarea disabled name="" id="">i think the inputs change </textarea>
+<h3>do the same!!!</h3>
+<textarea placeholder="Start sentence" name="" id=""></textarea>
+<h3>the second input radio means no, and the first radio means yes</h3>
+<h4>
+  did you do excactly what you did when the computer typed in the disabled
+  textarea?
+</h4>
+
+<input type="radio" name="yes" id="" /> yes
+<input type="radio" name="yes" id="" /> no
+<h1>Warning!!!</h1>
+<h3>it is very polite to tell us the date and time</h3>
+<h1>Email</h1>
+<input placeholder="Required" type="email" name="" id="" />
+<h1>Password</h1>
+<input placeholder="Required" type="password" name="" id="" />
+<h3>what does your input do</h3>
+so, the boy's name is <input step="20" type="text" />
+<div>
+  <textarea style="display:block" disabled name="" id="this" cols="30" rows="10"
+  ></textarea>
+</div>
+<input type="number" name="" id="width" />
+<input type="number" name="" id="height" />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<script>
+  document.getElementById('width').addEventListener('input', e => {
+    document.getElementById('this').style.width = e.target.value + '%'
+  })
+  document.getElementById('height').addEventListener('input', e => {
+    document.getElementById('this').style.height = e.target.value + 'vh'
+  })
+</script>
