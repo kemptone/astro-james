@@ -1,0 +1,76 @@
+---
+
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Scab game</h1>
+    <h3>choose how bad the scab will be</h3>
+    <input type="number" name="" id="" />%
+    <h3>can you please tell me where the scab is?</h3>
+    <h6>platelets help clear them</h6>
+    <h4>please tell me where it is</h4>
+    <div>
+      <form action="">
+        <input type="checkbox" name="light" checked value="1" />
+        <input type="checkbox" name="light" checked value="7" />
+        <input type="checkbox" name="light" value="5" />
+      </form>
+    </div>
+  </body>
+</html>
+
+<script>
+  function getValues() {
+    let value = 0
+    document.querySelectorAll('input[name="light"]:checked').forEach(item => {
+      value += Number(item.value)
+    })
+
+    let color = ''
+
+    switch (value) {
+      case 1:
+        color = 'rgb(255 0 0)'
+        break
+      case 7:
+        color = 'rgb(0 255 0)'
+        break
+      case 5:
+        color = 'rgb(0 0 255)'
+        break
+      case 8:
+        color = 'rgb(255 255 0)'
+        break
+      case 13:
+        color = 'rgb(255 255 255)'
+        break
+      case 0:
+        color = 'rgb(0 0 0)'
+        break
+      case 6:
+        color = 'rgb(255 0 255)'
+        break
+      case 12:
+        color = 'rgb(0 255 255)'
+    }
+
+    document.body.style.backgroundColor = color
+
+    return value
+  }
+
+  document.querySelectorAll('input[name="light"]').forEach(item => {
+    item.addEventListener('change', e => {
+      const value = getValues()
+    })
+  })
+
+  getValues()
+</script>
