@@ -1,5 +1,5 @@
 ---
-
+import Switches from './Switches.astro'
 ---
 
 <html lang="en">
@@ -17,60 +17,7 @@
     <h6>platelets help clear them</h6>
     <h4>please tell me where it is</h4>
     <div>
-      <form action="">
-        <input type="checkbox" name="light" checked value="1" />
-        <input type="checkbox" name="light" checked value="7" />
-        <input type="checkbox" name="light" value="5" />
-      </form>
+      <Switches />
     </div>
   </body>
 </html>
-
-<script>
-  function getValues() {
-    let value = 0
-    document.querySelectorAll('input[name="light"]:checked').forEach(item => {
-      value += Number(item.value)
-    })
-
-    let color = ''
-
-    switch (value) {
-      case 1:
-        color = 'rgb(255 0 0)'
-        break
-      case 7:
-        color = 'rgb(0 255 0)'
-        break
-      case 5:
-        color = 'rgb(0 0 255)'
-        break
-      case 8:
-        color = 'rgb(255 255 0)'
-        break
-      case 13:
-        color = 'rgb(255 255 255)'
-        break
-      case 0:
-        color = 'rgb(0 0 0)'
-        break
-      case 6:
-        color = 'rgb(255 0 255)'
-        break
-      case 12:
-        color = 'rgb(0 255 255)'
-    }
-
-    document.body.style.backgroundColor = color
-
-    return value
-  }
-
-  document.querySelectorAll('input[name="light"]').forEach(item => {
-    item.addEventListener('change', e => {
-      const value = getValues()
-    })
-  })
-
-  getValues()
-</script>
