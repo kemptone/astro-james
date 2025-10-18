@@ -1,30 +1,30 @@
 import {MetaFlipTime} from './timeHelpers'
 
-const bitbibbiesBtn = document.getElementById('bitbibbies-btn')
-const bitbibbiesStatus = document.getElementById('bitbibbies-status')
-const chatInput = document.getElementById('chat-input') as HTMLInputElement
-const sendBtn = document.getElementById('send-btn')
-const speakBtn = document.getElementById('speak-btn')
-const chatMessages = document.getElementById('chat-messages')
-const timeInput = document.getElementById('time-input') as HTMLInputElement
-const submitTimeBtn = document.getElementById('submit-time-btn')
-const flippedDisplay = document.getElementById('flipped-display')
+const e_bitbibbiesBtn = document.getElementById('bitbibbies-btn')
+const e_bitbibbiesStatus = document.getElementById('bitbibbies-status')
+const e_chatInput = document.getElementById('chat-input') as HTMLInputElement
+const e_sendBtn = document.getElementById('send-btn')
+const e_speakBtn = document.getElementById('speak-btn')
+const e_chatMessages = document.getElementById('chat-messages')
+const e_timeInput = document.getElementById('time-input') as HTMLInputElement
+const e_submitTimeBtn = document.getElementById('submit-time-btn')
+const e_flippedDisplay = document.getElementById('flipped-display')
 
-const {flipTime} = MetaFlipTime(timeInput, flippedDisplay)
+const {flipTime} = MetaFlipTime(e_timeInput, e_flippedDisplay)
 
 let bitbibbiesActive = false
 
 // Event listeners
-bitbibbiesBtn?.addEventListener('click', toggleBitbibbies)
-sendBtn?.addEventListener('click', sendMessage)
-speakBtn?.addEventListener('click', speakLastMessage)
-submitTimeBtn?.addEventListener('click', flipTime)
+e_bitbibbiesBtn?.addEventListener('click', toggleBitbibbies)
+e_sendBtn?.addEventListener('click', sendMessage)
+e_speakBtn?.addEventListener('click', speakLastMessage)
+e_submitTimeBtn?.addEventListener('click', flipTime)
 
-chatInput?.addEventListener('keypress', e => {
+e_chatInput?.addEventListener('keypress', e => {
   if (e.key === 'Enter') sendMessage()
 })
 
-timeInput?.addEventListener('keypress', e => {
+e_timeInput?.addEventListener('keypress', e => {
   if (e.key === 'Enter') flipTime()
 })
 
@@ -32,24 +32,24 @@ function toggleBitbibbies() {
   bitbibbiesActive = !bitbibbiesActive
 
   if (bitbibbiesActive) {
-    bitbibbiesBtn!.textContent = '✨ BitBibbies Active!'
-    bitbibbiesBtn!.classList.add('active')
-    bitbibbiesStatus!.textContent = '✅ BitBibbies Active - Games Enhanced!'
-    bitbibbiesStatus!.classList.add('active')
+    e_bitbibbiesBtn!.textContent = '✨ BitBibbies Active!'
+    e_bitbibbiesBtn!.classList.add('active')
+    e_bitbibbiesStatus!.textContent = '✅ BitBibbies Active - Games Enhanced!'
+    e_bitbibbiesStatus!.classList.add('active')
   } else {
-    bitbibbiesBtn!.textContent = 'Add BitBibbies'
-    bitbibbiesBtn!.classList.remove('active')
-    bitbibbiesStatus!.textContent = '❌ BitBibbies Not Added'
-    bitbibbiesStatus!.classList.remove('active')
+    e_bitbibbiesBtn!.textContent = 'Add BitBibbies'
+    e_bitbibbiesBtn!.classList.remove('active')
+    e_bitbibbiesStatus!.textContent = '❌ BitBibbies Not Added'
+    e_bitbibbiesStatus!.classList.remove('active')
   }
 }
 
 function sendMessage() {
-  const message = chatInput.value.trim()
+  const message = e_chatInput.value.trim()
   if (!message) return
 
   addUserMessage(message)
-  chatInput.value = ''
+  e_chatInput.value = ''
 
   setTimeout(() => {
     const response = getMaliaResponse(message)
@@ -59,24 +59,24 @@ function sendMessage() {
 }
 
 function addUserMessage(message: string) {
-  const messageDiv = document.createElement('div')
-  messageDiv.className = 'user-message'
-  messageDiv.innerHTML = `<strong>You:</strong> ${message}`
-  chatMessages?.appendChild(messageDiv)
+  const e_messageDiv = document.createElement('div')
+  e_messageDiv.className = 'user-message'
+  e_messageDiv.innerHTML = `<strong>You:</strong> ${message}`
+  e_chatMessages?.appendChild(e_messageDiv)
   scrollToBottom()
 }
 
 function addMaliaMessage(message: string) {
-  const messageDiv = document.createElement('div')
-  messageDiv.className = 'malia-message'
-  messageDiv.innerHTML = `<strong>Malia:</strong> ${message}`
-  chatMessages?.appendChild(messageDiv)
+  const e_messageDiv = document.createElement('div')
+  e_messageDiv.className = 'malia-message'
+  e_messageDiv.innerHTML = `<strong>Malia:</strong> ${message}`
+  e_chatMessages?.appendChild(e_messageDiv)
   scrollToBottom()
 }
 
 function scrollToBottom() {
-  if (chatMessages) {
-    chatMessages.scrollTop = chatMessages.scrollHeight
+  if (e_chatMessages) {
+    e_chatMessages.scrollTop = e_chatMessages.scrollHeight
   }
 }
 
@@ -120,7 +120,7 @@ function getMaliaResponse(userMessage: string): string {
 
 async function speakWithAna(text: string) {
   try {
-    const response = await fetch('https://boodeboo.com/api/polly/say_m', {
+    const response = await fetch('/api/polly/say_m', {
       headers: {
         accept: '*/*',
         'accept-language': 'en-US,en;q=0.9',
@@ -193,11 +193,11 @@ function fallbackSpeak(text: string) {
 }
 
 function speakLastMessage() {
-  const lastMaliaMessage = chatMessages?.querySelector(
+  const e_lastMaliaMessage = e_chatMessages?.querySelector(
     '.malia-message:last-child'
   )
-  if (lastMaliaMessage) {
-    const text = lastMaliaMessage.textContent?.replace(/^Malia:/, '') || ''
+  if (e_lastMaliaMessage) {
+    const text = e_lastMaliaMessage.textContent?.replace(/^Malia:/, '') || ''
     speakWithAna(text.trim())
   }
 }
