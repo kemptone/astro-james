@@ -59,8 +59,13 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
           Remember: Times are tricky! 1:00 = 11:00, 2:00 = 10:00, etc.
         </p>
 
-        <div class="add-schedule">
+        <div class="add-schedule number">
           <input type="number" id="scheduleTime2" />
+          <input type="time" id="numberInTime" />
+          <select name="format" id="format">
+            <option>number</option>
+            <option>time</option>
+          </select>
           <input
             type="text"
             id="scheduleTask"
@@ -74,29 +79,19 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
     </div>
 
     <script>
-      import {flipTime} from './sro13.timeHelpers'
-
-      // Time conversion mapping (fantasy time)
-      const timeConversion = {
-        '01:00': '11:00',
-        '02:00': '10:00',
-        '03:00': '09:00',
-        '04:00': '08:00',
-        '05:00': '07:00',
-        '06:00': '06:00',
-        '07:00': '05:00',
-        '08:00': '04:00',
-        '09:00': '03:00',
-        '10:00': '02:00',
-        '11:00': '01:00',
-        '12:00': '12:00',
-      }
+      import {MetaFlipTime} from './timeHelpers'
 
       // Dog responses
       const dogResponses = {
         good: 'Woof woof, I am a good dog, I want to make everyone feel happy! 🐕',
         bad: 'Woof woof! Go touch grass! You filthy old person! 😤🐕',
       }
+
+      document.querySelector('#format').addEventListener('input', e => {
+        const target = e.currentTarget as HTMLSelectElement
+        target.closest('.add-schedule').className =
+          `add-schedule ${target.value}`
+      })
 
       let schedules = []
 
@@ -160,18 +155,8 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
       // Fantasy time conversion
       function convertTime(inputTime) {
         const dateTime = getTimeFromMidnight(Number(inputTime) * 5)
-        // const [hour, minute] = inputTime.split(':')
-        // const hourKey = hour.padStart(2, '0') + ':00'
-        // const realHour = timeConversion[hourKey] || inputTime
-
-        // Calculate minutes until next hour
-        // const minutesUntilNext = 60 - parseInt(minute)
-
         return {
-          // fantasy: inputTime,
           dateTime,
-          // real: realHour,
-          // minutesUntilNext: minutesUntilNext === 60 ? 0 : minutesUntilNext,
         }
       }
 
@@ -179,21 +164,25 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
       function addSchedule() {
         const timeInput = document.getElementById('scheduleTime2')
         const taskInput = document.getElementById('scheduleTask')
+        const numberInTime = document.getElementById(
+          'numberInTime'
+        ) as HTMLInputElement
 
-        if (!timeInput.value || !taskInput.value) {
+        if ((!timeInput.value && !numberInTime.value) || !taskInput.value) {
           alert('Please fill in both time and task!')
           return
         }
 
-        const timeData = convertTime(timeInput.value)
+        const timeData = numberInTime.value
+          ? {dateTime: new Date(numberInTime.value)}
+          : convertTime(timeInput.value)
         const schedule = {
           id: Date.now(),
-          // fantasy: timeData.fantasy,
-          // real: timeData.real,
           task: taskInput.value,
           dateTime: timeData.dateTime,
-          // minutesUntilNext: timeData.minutesUntilNext,
         }
+
+        debugger
 
         schedules.push(schedule)
         // schedules.sort((a, b) => a.fantasy.localeCompare(b.fantasy))
@@ -489,6 +478,18 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
     gap: 10px;
     margin-bottom: 20px;
     flex-wrap: wrap;
+  }
+
+  .add-schedule.time {
+    #scheduleTime2 {
+      display: none;
+    }
+  }
+
+  .add-schedule.number {
+    #numberInTime {
+      display: none;
+    }
   }
 
   .add-schedule input {
