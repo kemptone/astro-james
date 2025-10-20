@@ -1,0 +1,473 @@
+---
+import Layout from '@/layouts/Layout.astro'
+---
+
+<Layout title="SRO19 - Tide Tracker for Fortnite Fishing">
+  <main>
+    <dialog id="ageDialog">
+      <article>
+        <h2>Age Restriction</h2>
+        <p><strong>SRO19 has restricted material.</strong></p>
+        <p>Press okay to confirm you are 17 or older.</p>
+        <p style="color: var(--pico-del-color); font-size: 0.9rem;">
+          Age Rating: 17+ - This content is not for kids because there is
+          violence in this content.
+        </p>
+        <footer>
+          <button id="confirmAge" autofocus>I am 17 or Older - OK</button>
+        </footer>
+      </article>
+    </dialog>
+
+    <div id="appContent" style="display: none;">
+      <h1>Fortnite Fishing Tide Tracker</h1>
+      <p class="subtitle">
+        <i>Fun level = super fun</i> - Create your own tides!
+      </p>
+
+      <div class="tide-container">
+        <!-- Tide Visualization -->
+        <section class="tide-display">
+          <div class="tide-screen">
+            <div id="tideWater" class="tide-water"></div>
+            <div class="tide-sand"></div>
+          </div>
+          <div class="tide-info">
+            <div class="tide-percentage">
+              <span id="tidePercentText">50%</span>
+            </div>
+            <div class="tide-feet">
+              <span id="tideFeetText">0.00 ft</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Controls -->
+        <section class="controls">
+          <h2>Tide Controls</h2>
+
+          <div class="control-group">
+            <label for="tidePercent">
+              Tide Level (0% = Full Blue, 100% = Empty)
+            </label>
+            <input
+              type="range"
+              id="tidePercent"
+              min="0"
+              max="100"
+              value="50"
+            />
+            <output id="tidePercentOutput">50%</output>
+            <p class="hint">
+              Increase number = tide goes down, Decrease = tide goes up
+            </p>
+          </div>
+
+          <div class="control-group">
+            <label for="tideFeet">Tide Height Input (feet)</label>
+            <input
+              type="number"
+              id="tideFeet"
+              step="0.01"
+              placeholder="e.g., 6.90"
+            />
+            <output id="tideFeetOutput">8.40 ft</output>
+            <p class="hint">Formula: 8.40 - your input = displayed feet</p>
+          </div>
+
+          <div class="control-group">
+            <label for="currentTime">Current Time (for tide prediction)</label>
+            <input type="time" id="currentTime" />
+            <button id="checkTide">Check Next Tide</button>
+          </div>
+
+          <div id="tidePredict" class="tide-prediction">
+            <h3>Tide Schedule</h3>
+            <ul>
+              <li><strong>6:00 AM</strong> - High Tide</li>
+              <li><strong>12:00 PM</strong> - Low Tide</li>
+              <li><strong>6:00 PM</strong> - Very High Tide</li>
+              <li><strong>12:00 AM</strong> - Very Low Tide</li>
+            </ul>
+            <div id="nextTideInfo" class="next-tide"></div>
+          </div>
+
+          <button id="submitTide" class="submit-btn">
+            Generate Fortnite Tide Info
+          </button>
+        </section>
+
+        <!-- Tide Information Display -->
+        <section class="tide-output">
+          <h2>Current Fortnite Fishing Conditions</h2>
+          <div id="tideOutput" class="output-box">
+            <p>Adjust the controls and click "Generate Fortnite Tide Info"</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  dialog {
+    max-width: 500px;
+  }
+
+  dialog article {
+    margin: 0;
+  }
+
+  dialog h2 {
+    margin-top: 0;
+    color: var(--pico-del-color);
+  }
+
+  dialog footer {
+    margin-top: 2rem;
+    text-align: center;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: var(--pico-muted-color);
+  }
+
+  .tide-container {
+    display: grid;
+    gap: 2rem;
+  }
+
+  /* Tide Display */
+  .tide-display {
+    background: var(--pico-card-background-color);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .tide-screen {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    border: 4px solid var(--pico-primary);
+    border-radius: 8px;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #87ceeb 0%, #e0f6ff 100%);
+  }
+
+  .tide-water {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to bottom, #1e90ff 0%, #4169e1 100%);
+    transition: height 0.5s ease;
+    border-top: 3px solid #fff;
+  }
+
+  .tide-sand {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+    background: linear-gradient(to bottom, #f4a460 0%, #daa520 100%);
+    pointer-events: none;
+  }
+
+  .tide-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .tide-percentage,
+  .tide-feet {
+    text-align: center;
+    padding: 1rem;
+    background: var(--pico-card-sectionning-background-color);
+    border-radius: 8px;
+  }
+
+  .tide-percentage span,
+  .tide-feet span {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--pico-primary);
+  }
+
+  /* Controls */
+  .controls {
+    background: var(--pico-card-background-color);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .control-group {
+    margin-bottom: 2rem;
+  }
+
+  .control-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  .control-group input[type='range'] {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .control-group output {
+    display: block;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--pico-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .hint {
+    font-size: 0.85rem;
+    color: var(--pico-muted-color);
+    font-style: italic;
+    margin: 0;
+  }
+
+  .tide-prediction {
+    background: var(--pico-card-sectionning-background-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  .tide-prediction h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+  .tide-prediction ul {
+    margin-bottom: 1rem;
+  }
+
+  .tide-prediction li {
+    margin-bottom: 0.5rem;
+  }
+
+  .next-tide {
+    padding: 1rem;
+    background: var(--pico-primary-background);
+    border-left: 4px solid var(--pico-primary);
+    border-radius: 4px;
+    font-weight: bold;
+    margin-top: 1rem;
+  }
+
+  .submit-btn {
+    width: 100%;
+    font-size: 1.2rem;
+    padding: 1rem;
+  }
+
+  /* Tide Output */
+  .tide-output {
+    background: var(--pico-card-background-color);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .output-box {
+    background: var(--pico-code-background-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--pico-primary);
+    min-height: 100px;
+    font-family: monospace;
+  }
+
+  .output-box p {
+    margin: 0.5rem 0;
+  }
+
+  .output-box strong {
+    color: var(--pico-primary);
+  }
+
+  @media (max-width: 768px) {
+    .tide-screen {
+      height: 300px;
+    }
+
+    .tide-info {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .tide-percentage span,
+    .tide-feet span {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+<script>
+  // Age verification
+  const ageDialog = document.getElementById('ageDialog') as HTMLDialogElement
+  const confirmAge = document.getElementById('confirmAge') as HTMLButtonElement
+  const appContent = document.getElementById('appContent') as HTMLDivElement
+
+  const AGE_CONFIRMED_KEY = 'sro19_age_confirmed'
+
+  if (!localStorage.getItem(AGE_CONFIRMED_KEY)) {
+    ageDialog?.showModal()
+  } else {
+    appContent.style.display = 'block'
+  }
+
+  confirmAge?.addEventListener('click', () => {
+    localStorage.setItem(AGE_CONFIRMED_KEY, 'true')
+    ageDialog?.close()
+    appContent.style.display = 'block'
+  })
+
+  // Tide controls
+  const tidePercent = document.getElementById('tidePercent') as HTMLInputElement
+  const tidePercentOutput = document.getElementById(
+    'tidePercentOutput'
+  ) as HTMLOutputElement
+  const tidePercentText = document.getElementById(
+    'tidePercentText'
+  ) as HTMLSpanElement
+  const tideWater = document.getElementById('tideWater') as HTMLDivElement
+
+  const tideFeet = document.getElementById('tideFeet') as HTMLInputElement
+  const tideFeetOutput = document.getElementById(
+    'tideFeetOutput'
+  ) as HTMLOutputElement
+  const tideFeetText = document.getElementById(
+    'tideFeetText'
+  ) as HTMLSpanElement
+
+  const currentTime = document.getElementById('currentTime') as HTMLInputElement
+  const checkTide = document.getElementById('checkTide') as HTMLButtonElement
+  const nextTideInfo = document.getElementById('nextTideInfo') as HTMLDivElement
+  const submitTide = document.getElementById('submitTide') as HTMLButtonElement
+  const tideOutput = document.getElementById('tideOutput') as HTMLDivElement
+
+  // Tide percentage control (0% = full blue, 100% = empty)
+  tidePercent?.addEventListener('input', e => {
+    const value = parseInt((e.target as HTMLInputElement).value)
+    tidePercentOutput.textContent = `${value}%`
+    tidePercentText.textContent = `${value}%`
+
+    // 0% = 100% water height, 100% = 0% water height
+    const waterHeight = 100 - value
+    tideWater.style.height = `${waterHeight}%`
+  })
+
+  // Tide feet calculation (8.40 - input = result)
+  tideFeet?.addEventListener('input', e => {
+    const value = parseFloat((e.target as HTMLInputElement).value) || 0
+    const result = 8.4 - value
+    tideFeetOutput.textContent = `${result.toFixed(2)} ft`
+    tideFeetText.textContent = `${result.toFixed(2)} ft`
+  })
+
+  // Tide time prediction
+  checkTide?.addEventListener('click', () => {
+    if (!currentTime.value) {
+      alert('Please enter a time!')
+      return
+    }
+
+    const [hours, minutes] = currentTime.value.split(':').map(Number)
+    const currentMinutes = hours * 60 + minutes
+
+    // Tide times in minutes from midnight
+    const tideTimes = [
+      {time: 0, name: 'Very Low Tide', label: '12:00 AM'},
+      {time: 360, name: 'High Tide', label: '6:00 AM'},
+      {time: 720, name: 'Low Tide', label: '12:00 PM'},
+      {time: 1080, name: 'Very High Tide', label: '6:00 PM'},
+      {time: 1440, name: 'Very Low Tide', label: '12:00 AM (next day)'},
+    ]
+
+    let nextTide = tideTimes.find(t => t.time > currentMinutes)
+    if (!nextTide) {
+      nextTide = tideTimes[0] // Wrap to midnight
+    }
+
+    const minutesUntil =
+      nextTide.time > currentMinutes
+        ? nextTide.time - currentMinutes
+        : 1440 - currentMinutes + nextTide.time
+
+    const hoursUntil = Math.floor(minutesUntil / 60)
+    const minsUntil = minutesUntil % 60
+
+    let timeText = ''
+    if (minutesUntil < 1) {
+      timeText = '< 1 min'
+    } else if (minutesUntil < 60) {
+      timeText = `${minsUntil} min`
+    } else {
+      timeText = `${hoursUntil}h ${minsUntil}m`
+    }
+
+    nextTideInfo.innerHTML = `<strong>${nextTide.name}</strong> at <strong>${nextTide.label}</strong><br/>Time until: <strong>${timeText}</strong>`
+  })
+
+  // Generate tide info
+  submitTide?.addEventListener('click', () => {
+    const percentValue = parseInt(tidePercent.value)
+    const feetInput = parseFloat(tideFeet.value) || 0
+    const feetResult = 8.4 - feetInput
+
+    let tideStatus = ''
+    if (percentValue <= 25) {
+      tideStatus = 'VERY HIGH TIDE - Perfect for Fortnite fishing!'
+    } else if (percentValue <= 50) {
+      tideStatus = 'HIGH TIDE - Good fishing conditions'
+    } else if (percentValue <= 75) {
+      tideStatus = 'LOW TIDE - Moderate fishing'
+    } else {
+      tideStatus = 'VERY LOW TIDE - Challenging fishing conditions'
+    }
+
+    tideOutput.innerHTML = `
+      <p><strong>FORTNITE TIDE REPORT</strong></p>
+      <p>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
+      <p><strong>Tide Level:</strong> ${percentValue}% (${100 - percentValue}% water)</p>
+      <p><strong>Tide Height:</strong> ${feetResult.toFixed(2)} feet</p>
+      <p><strong>Status:</strong> ${tideStatus}</p>
+      <p>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
+      <p>Gamers can now fish with these tide conditions!</p>
+      <p style="font-size: 0.85rem; color: var(--pico-muted-color); margin-top: 1rem;">
+        Remember: Tide points happen every 6 hours (12 AM, 6 AM, 12 PM, 6 PM)
+      </p>
+    `
+  })
+
+  // Initialize with default values
+  if (tidePercentText) tidePercentText.textContent = '50%'
+  if (tideFeetText) tideFeetText.textContent = '8.40 ft'
+</script>
+</Layout>
