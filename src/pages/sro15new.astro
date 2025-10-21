@@ -208,6 +208,71 @@
         line-height: 1.8;
       }
 
+      /* Temperature Customization */
+      .temp-customization {
+        background: var(--pico-card-sectionning-background-color);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-top: 2rem;
+      }
+
+      .slider-limits {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .temp-ranges-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .temp-range-item {
+        display: grid;
+        grid-template-columns: 80px 80px 1fr 100px 50px;
+        gap: 0.5rem;
+        align-items: center;
+        padding: 1rem;
+        background: var(--pico-card-background-color);
+        border-radius: 8px;
+        border: 2px solid var(--pico-muted-border-color);
+      }
+
+      .temp-range-item input[type='number'] {
+        padding: 0.5rem;
+        margin: 0;
+      }
+
+      .temp-range-item input[type='text'] {
+        padding: 0.5rem;
+        margin: 0;
+      }
+
+      .temp-range-item input[type='color'] {
+        width: 100%;
+        height: 50px;
+        cursor: pointer;
+        border: 2px solid var(--pico-primary);
+        border-radius: 4px;
+      }
+
+      .remove-range-btn {
+        padding: 0.5rem;
+        background: var(--pico-del-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+
+      .add-range-btn {
+        width: 100%;
+        margin-top: 1rem;
+      }
+
       /* Big Textarea */
       .notes-section {
         margin-top: 2rem;
@@ -256,6 +321,15 @@
 
         .temp-status {
           font-size: 1.2rem;
+        }
+
+        .temp-range-item {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+        }
+
+        .slider-limits {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -313,7 +387,7 @@
     <section class="temperature-section">
       <h2>Backyard Temperature</h2>
       <p style="text-align: center;">
-        Adjust the temperature slider (-140°F to 120°F)
+        Adjust the temperature slider
       </p>
       <div class="temp-slider-container">
         <input
@@ -326,6 +400,45 @@
         />
         <div class="temp-display" id="tempDisplay">70°F</div>
         <div class="temp-status" id="tempStatus">Warm</div>
+      </div>
+
+      <!-- Temperature Customization -->
+      <div class="temp-customization">
+        <h3>Customize Temperature Ranges</h3>
+        <p style="font-size: 0.9rem; color: var(--pico-muted-color);">
+          Set slider limits, define temperature ranges, labels, and colors!
+        </p>
+
+        <div class="slider-limits">
+          <div>
+            <label for="sliderMin">Slider Minimum:</label>
+            <input
+              type="number"
+              id="sliderMin"
+              value="-140"
+              placeholder="Min temp"
+            />
+          </div>
+          <div>
+            <label for="sliderMax">Slider Maximum:</label>
+            <input
+              type="number"
+              id="sliderMax"
+              value="120"
+              placeholder="Max temp"
+            />
+          </div>
+        </div>
+
+        <button id="applyLimits" style="width: 100%; margin-bottom: 1.5rem;">
+          Apply Slider Limits
+        </button>
+
+        <h4>Temperature Ranges</h4>
+        <div id="tempRangesList" class="temp-ranges-list"></div>
+        <button class="add-range-btn" id="addRangeBtn">
+          + Add Temperature Range
+        </button>
       </div>
     </section>
 
@@ -398,6 +511,46 @@
     const tempSlider = document.getElementById('tempSlider') as HTMLInputElement
     const tempDisplay = document.getElementById('tempDisplay') as HTMLDivElement
     const tempStatus = document.getElementById('tempStatus') as HTMLDivElement
+    const sliderMin = document.getElementById('sliderMin') as HTMLInputElement
+    const sliderMax = document.getElementById('sliderMax') as HTMLInputElement
+    const applyLimits = document.getElementById('applyLimits') as HTMLButtonElement
+    const tempRangesList = document.getElementById('tempRangesList') as HTMLDivElement
+    const addRangeBtn = document.getElementById('addRangeBtn') as HTMLButtonElement
+
+    // Temperature ranges configuration
+    interface TempRange {
+      min: number
+      max: number
+      label: string
+      color: string
+    }
+
+    let tempRanges: TempRange[] = [
+      {min: -140, max: -100, label: 'Super Cold', color: '#00008b'},
+      {min: -99, max: -41, label: 'Cool Stroke Cold', color: '#0000ff'},
+      {min: -40, max: 31, label: 'Freezing', color: '#1e90ff'},
+      {min: 32, max: 50, label: 'Very Chilly', color: '#4682b4'},
+      {min: 51, max: 65, label: 'Chilly', color: '#87ceeb'},
+      {min: 66, max: 80, label: 'Warm', color: '#ffa500'},
+      {min: 81, max: 92, label: 'Hot', color: '#ff8c00'},
+      {min: 93, max: 105, label: 'Very Hot', color: '#ff6347'},
+      {min: 106, max: 119, label: 'Oven Hot', color: '#ff4500'},
+      {min: 120, max: 999, label: 'Burning Hot', color: '#ff0000'},
+    ]
+
+    // Load saved ranges from localStorage
+    const savedRanges = localStorage.getItem('tempRanges')
+    if (savedRanges) {
+      try {
+        tempRanges = JSON.parse(savedRanges)
+      } catch (e) {
+        console.error('Failed to load saved ranges')
+      }
+    }
+
+    function saveRanges() {
+      localStorage.setItem('tempRanges', JSON.stringify(tempRanges))
+    }
 
     function updateTemperature() {
       const temp = parseInt(tempSlider.value)
@@ -406,36 +559,19 @@
       let status = ''
       let color = ''
 
-      if (temp >= 120) {
-        status = 'Burning Hot'
-        color = '#ff0000'
-      } else if (temp >= 106) {
-        status = 'Oven Hot'
-        color = '#ff4500'
-      } else if (temp >= 93) {
-        status = 'Very Hot'
-        color = '#ff6347'
-      } else if (temp >= 81) {
-        status = 'Hot'
-        color = '#ff8c00'
-      } else if (temp >= 66) {
-        status = 'Warm'
-        color = '#ffa500'
-      } else if (temp >= 51) {
-        status = 'Chilly'
-        color = '#87ceeb'
-      } else if (temp >= 32) {
-        status = 'Very Chilly'
-        color = '#4682b4'
-      } else if (temp >= -40) {
-        status = 'Freezing'
-        color = '#1e90ff'
-      } else if (temp >= -99) {
-        status = 'Cool Stroke Cold'
-        color = '#0000ff'
-      } else if (temp >= -140) {
-        status = 'Super Cold'
-        color = '#00008b'
+      // Find matching range
+      for (const range of tempRanges) {
+        if (temp >= range.min && temp <= range.max) {
+          status = range.label
+          color = range.color
+          break
+        }
+      }
+
+      // Fallback
+      if (!status) {
+        status = 'Unknown'
+        color = '#888888'
       }
 
       tempStatus.textContent = status
@@ -444,6 +580,102 @@
     }
 
     tempSlider?.addEventListener('input', updateTemperature)
+
+    // Apply slider limits
+    applyLimits?.addEventListener('click', () => {
+      const min = parseInt(sliderMin.value)
+      const max = parseInt(sliderMax.value)
+
+      if (isNaN(min) || isNaN(max)) {
+        alert('Please enter valid numbers for min and max')
+        return
+      }
+
+      if (min >= max) {
+        alert('Minimum must be less than maximum')
+        return
+      }
+
+      tempSlider.min = min.toString()
+      tempSlider.max = max.toString()
+
+      // Adjust current value if out of bounds
+      const currentTemp = parseInt(tempSlider.value)
+      if (currentTemp < min) {
+        tempSlider.value = min.toString()
+      } else if (currentTemp > max) {
+        tempSlider.value = max.toString()
+      }
+
+      updateTemperature()
+      alert(`Slider limits updated: ${min}°F to ${max}°F`)
+    })
+
+    // Render temperature ranges
+    function renderTempRanges() {
+      tempRangesList.innerHTML = ''
+
+      tempRanges.forEach((range, index) => {
+        const rangeItem = document.createElement('div')
+        rangeItem.className = 'temp-range-item'
+
+        rangeItem.innerHTML = `
+          <input type="number" value="${range.min}" data-index="${index}" data-field="min" placeholder="Min" />
+          <input type="number" value="${range.max}" data-index="${index}" data-field="max" placeholder="Max" />
+          <input type="text" value="${range.label}" data-index="${index}" data-field="label" placeholder="Label" />
+          <input type="color" value="${range.color}" data-index="${index}" data-field="color" />
+          <button class="remove-range-btn" data-index="${index}">×</button>
+        `
+
+        tempRangesList.appendChild(rangeItem)
+      })
+
+      // Add event listeners
+      tempRangesList.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', e => {
+          const target = e.target as HTMLInputElement
+          const index = parseInt(target.dataset.index || '0')
+          const field = target.dataset.field as keyof TempRange
+
+          if (field === 'min' || field === 'max') {
+            tempRanges[index][field] = parseInt(target.value) || 0
+          } else {
+            tempRanges[index][field] = target.value
+          }
+
+          saveRanges()
+          updateTemperature()
+        })
+      })
+
+      tempRangesList.querySelectorAll('.remove-range-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const target = e.target as HTMLButtonElement
+          const index = parseInt(target.dataset.index || '0')
+          tempRanges.splice(index, 1)
+          saveRanges()
+          renderTempRanges()
+          updateTemperature()
+        })
+      })
+    }
+
+    // Add new range
+    addRangeBtn?.addEventListener('click', () => {
+      const newRange: TempRange = {
+        min: 0,
+        max: 10,
+        label: 'New Range',
+        color: '#888888',
+      }
+      tempRanges.push(newRange)
+      tempRanges.sort((a, b) => a.min - b.min)
+      saveRanges()
+      renderTempRanges()
+    })
+
+    // Initialize
+    renderTempRanges()
     updateTemperature()
 
     // Switch input sync
