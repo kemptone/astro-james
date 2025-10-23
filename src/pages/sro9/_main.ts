@@ -1,4 +1,5 @@
-import {MetaFlipTime} from './timeHelpers'
+// import {MetaFlipTime} from '../../helpers/timeHelpers'
+import {MetaFlipTime} from '@/helpers/timeHelpers'
 
 const e_bitbibbiesBtn = document.getElementById('bitbibbies-btn')
 const e_bitbibbiesStatus = document.getElementById('bitbibbies-status')
@@ -179,7 +180,7 @@ function fallbackSpeak(text: string) {
         voice.name.toLowerCase().includes('ana') ||
         voice.name.toLowerCase().includes('child') ||
         (voice.name.toLowerCase().includes('female') &&
-          voice.lang.includes('en'))
+          voice.lang.includes('en')),
     )
 
     if (childVoice) {
@@ -194,7 +195,7 @@ function fallbackSpeak(text: string) {
 
 function speakLastMessage() {
   const e_lastMaliaMessage = e_chatMessages?.querySelector(
-    '.malia-message:last-child'
+    '.malia-message:last-child',
   )
   if (e_lastMaliaMessage) {
     const text = e_lastMaliaMessage.textContent?.replace(/^Malia:/, '') || ''
@@ -204,5 +205,5 @@ function speakLastMessage() {
 
 // Initialize with a welcome message
 addMaliaMessage(
-  "Hello! I'm Malia and I'm excited to talk with you! Ask me anything you'd like, or try the time flipper below!"
+  "Hello! I'm Malia and I'm excited to talk with you! Ask me anything you'd like, or try the time flipper below!",
 )

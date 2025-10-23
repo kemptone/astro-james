@@ -1,13 +1,12 @@
 import {
-  Engine,
+  type Engine,
   PollyClient,
   SynthesizeSpeechCommand,
   type TextType,
   type SynthesizeSpeechCommandInput,
   type VoiceId,
 } from '@aws-sdk/client-polly'
-import { getRandomBehavior } from '../../../data/bad_stuff'
-
+import {getRandomBehavior} from '../../../data/bad_stuff'
 
 const XAI_API_KEY = import.meta.env.XAI_API_KEY // 'grok key';
 
@@ -110,7 +109,7 @@ export async function POST({
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
   }
 
@@ -119,7 +118,7 @@ export async function POST({
     Text: text,
     VoiceId: voiceId,
     Engine: engine,
-    TextType : textType || 'text', // Change to 'ssml' if using SSML input
+    TextType: textType || 'text', // Change to 'ssml' if using SSML input
   }
 
   try {
@@ -145,8 +144,11 @@ export async function POST({
     }
   } catch (error) {
     console.error('Error synthesizing speech:', error)
-    return new Response(JSON.stringify({ error: 'Failed to synthesize speech' }), {
-      status: 500,
-    })
+    return new Response(
+      JSON.stringify({error: 'Failed to synthesize speech'}),
+      {
+        status: 500,
+      },
+    )
   }
 }

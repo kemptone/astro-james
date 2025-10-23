@@ -1,5 +1,5 @@
-import type {Talkers2VoiceDetails} from '@/core/talkers2/types'
-import {neon} from '@neondatabase/serverless'
+// import type {Talkers2VoiceDetails} from '@/core/talkers2/types'
+// import {neon} from '@neondatabase/serverless'
 
 // const databaseUrl = import.meta.env.DATABASE_URL;
 
@@ -56,13 +56,16 @@ export async function POST({request}: {request: Request}) {
     })
   }
 
-  return new Response(JSON.stringify({
-    success: true,
-    body,
-  }), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
+  return new Response(
+    JSON.stringify({
+      success: true,
+      body,
+    }),
+    {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     },
-  })
+  )
 }
