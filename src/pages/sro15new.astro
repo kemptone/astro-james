@@ -385,10 +385,8 @@
 
     <!-- Temperature Section -->
     <section class="temperature-section">
-      <h2>Backyard Temperature</h2>
-      <p style="text-align: center;">
-        Adjust the temperature slider
-      </p>
+      <h1>Your slider</h1>
+      <p style="text-align: center;">Adjust the slider</p>
       <div class="temp-slider-container">
         <input
           type="range"
@@ -404,9 +402,9 @@
 
       <!-- Temperature Customization -->
       <div class="temp-customization">
-        <h3>Customize Temperature Ranges</h3>
+        <h3>Customize Ranges</h3>
         <p style="font-size: 0.9rem; color: var(--pico-muted-color);">
-          Set slider limits, define temperature ranges, labels, and colors!
+          Set slider limits, define ranges, labels, and colors!
         </p>
 
         <div class="slider-limits">
@@ -434,11 +432,9 @@
           Apply Slider Limits
         </button>
 
-        <h4>Temperature Ranges</h4>
+        <h6>Choose ranges</h6>
         <div id="tempRangesList" class="temp-ranges-list"></div>
-        <button class="add-range-btn" id="addRangeBtn">
-          + Add Temperature Range
-        </button>
+        <button class="add-range-btn" id="addRangeBtn"> Add </button>
       </div>
     </section>
 
@@ -513,9 +509,15 @@
     const tempStatus = document.getElementById('tempStatus') as HTMLDivElement
     const sliderMin = document.getElementById('sliderMin') as HTMLInputElement
     const sliderMax = document.getElementById('sliderMax') as HTMLInputElement
-    const applyLimits = document.getElementById('applyLimits') as HTMLButtonElement
-    const tempRangesList = document.getElementById('tempRangesList') as HTMLDivElement
-    const addRangeBtn = document.getElementById('addRangeBtn') as HTMLButtonElement
+    const applyLimits = document.getElementById(
+      'applyLimits'
+    ) as HTMLButtonElement
+    const tempRangesList = document.getElementById(
+      'tempRangesList'
+    ) as HTMLDivElement
+    const addRangeBtn = document.getElementById(
+      'addRangeBtn'
+    ) as HTMLButtonElement
 
     // Temperature ranges configuration
     interface TempRange {
@@ -554,7 +556,7 @@
 
     function updateTemperature() {
       const temp = parseInt(tempSlider.value)
-      tempDisplay.textContent = `${temp}°F`
+      tempDisplay.textContent = `${temp}`
 
       let status = ''
       let color = ''
@@ -755,4 +757,6 @@
     // Initialize with a default summary
     submitBtn?.click()
   </script>
+
+
 </html>
