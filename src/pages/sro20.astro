@@ -1,0 +1,786 @@
+---
+import Layout from '@/layouts/Layout.astro'
+---
+
+<Layout title="SRO20 - Temperature Scale Game">
+  <main>
+    <h1>Temperature Scale Game ☁️</h1>
+    <p class="subtitle">Set the temperature, unlock features, and control switches!</p>
+
+    <div class="container">
+      <!-- Temperature Input Section -->
+      <section class="temperature-section">
+        <h2>Temperature Control</h2>
+        <p class="info-text">Temperature is disabled until you set it.</p>
+
+        <div class="temp-input-group">
+          <label for="tempInput">Enter Temperature (°F):</label>
+          <input
+            type="number"
+            id="tempInput"
+            placeholder="e.g., 23"
+            disabled
+          />
+          <div class="temp-display">
+            <div class="display-label">Helvetica 100pt Output:</div>
+            <div id="tempOutput" class="temp-output-box" style="font-family: Helvetica; font-size: 100pt; text-align: center;">
+              --
+            </div>
+          </div>
+          <p class="formula-hint">Formula: 120 - your input = displayed number</p>
+        </div>
+
+        <div class="button-group">
+          <button id="submitTemp" disabled>Submit Temperature</button>
+          <button id="resetTemp">☁️ Reset</button>
+        </div>
+      </section>
+
+      <!-- Mode Selection -->
+      <section id="modeSection" class="mode-section" style="display: none;">
+        <h2>Choose Button Mode</h2>
+        <div class="mode-buttons">
+          <button id="selectMode1" class="mode-btn">Option 1: Press Limits</button>
+          <button id="selectMode2" class="mode-btn">Option 2: Threshold Unlock</button>
+        </div>
+      </section>
+
+      <!-- Button Count Control -->
+      <section id="buttonCountSection" class="control-section" style="display: none;">
+        <h2>Button Count Control</h2>
+        <label for="buttonCount">Number of Buttons (1-10):</label>
+        <input
+          type="number"
+          id="buttonCount"
+          min="1"
+          max="10"
+          value="5"
+        />
+        <p class="hint">Change this to have more or fewer buttons</p>
+      </section>
+
+      <!-- Bitbibies Button -->
+      <div id="bitbibbiesContainer" style="display: none;">
+        <button id="bitbibbiesBtn" class="bitbibies-btn">Add Bitbibbies 🎉</button>
+      </div>
+
+      <!-- Main Control Section -->
+      <section id="controlSection" class="main-control" style="display: none;">
+        <h2>Button Controls</h2>
+        <div id="buttonsContainer" class="buttons-grid"></div>
+      </section>
+
+      <!-- Switch Control Section -->
+      <section id="switchSection" class="switch-section" style="display: none;">
+        <h2>Switch Control System</h2>
+        <p class="info-text">Enter a number (1-8) to control the switches:</p>
+
+        <div class="switch-input-group">
+          <label for="switchInput">Switch Number:</label>
+          <input
+            type="number"
+            id="switchInput"
+            min="1"
+            max="8"
+            placeholder="1-8"
+          />
+        </div>
+
+        <div class="switch-display">
+          <div class="switch-item">
+            <label>Switch 1</label>
+            <div id="switch1" class="switch off"></div>
+          </div>
+          <div class="switch-item">
+            <label>Switch 2</label>
+            <div id="switch2" class="switch off"></div>
+          </div>
+          <div class="switch-item">
+            <label>Switch 3</label>
+            <div id="switch3" class="switch off"></div>
+          </div>
+        </div>
+
+        <div class="switch-legend">
+          <p><strong>Switch Guide:</strong></p>
+          <ul>
+            <li>1 = Switches 1 & 2 ON</li>
+            <li>2 = All 3 switches ON</li>
+            <li>3 = Switches 1 & 3 ON</li>
+            <li>4 = Only Switch 1 ON</li>
+            <li>5 = Only Switch 2 ON</li>
+            <li>6 = Switches 2 & 3 ON</li>
+            <li>7 = Only Switch 3 ON</li>
+            <li>8 = All switches OFF</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Mode 1: Button Details -->
+      <section id="mode1Details" class="details-section" style="display: none;">
+        <h3>Mode 1: Press Limits Explanation</h3>
+        <p>• Each button has a limited number of times it can be pressed</p>
+        <p>• The number below each button shows how many presses remain</p>
+        <p>• Type "00" in the input to make a button free (unlimited presses)</p>
+        <p>• Lock icon (🔒) appears when a button is disabled</p>
+      </section>
+
+      <!-- Mode 2: Button Details -->
+      <section id="mode2Details" class="details-section" style="display: none;">
+        <h3>Mode 2: Threshold Unlock Explanation</h3>
+        <p>• Each button unlocks when its input reaches or exceeds a threshold</p>
+        <p>• Green button = unlocked and ready to use</p>
+        <p>• When locked, shows a 🔒 emoji under the button number</p>
+        <p>• Set threshold numbers for each button below:</p>
+        <div id="thresholdInputs" class="threshold-grid"></div>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--pico-muted-color);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  section {
+    background: var(--pico-card-background-color);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  section h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  section h3 {
+    margin-top: 0;
+  }
+
+  /* Temperature Section */
+  .temperature-section {
+    border-left: 4px solid var(--pico-primary);
+  }
+
+  .temp-input-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .temp-input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  .temp-input-group input {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .temp-display {
+    background: var(--pico-card-sectionning-background-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .display-label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: var(--pico-muted-color);
+  }
+
+  .temp-output-box {
+    padding: 2rem;
+    background: var(--pico-code-background-color);
+    border-radius: 8px;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .formula-hint {
+    font-size: 0.9rem;
+    color: var(--pico-muted-color);
+    font-style: italic;
+    margin: 0;
+  }
+
+  .info-text {
+    color: var(--pico-muted-color);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  .button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .button-group button {
+    padding: 0.75rem;
+  }
+
+  /* Mode Section */
+  .mode-section {
+    border-left: 4px solid var(--pico-form-element-valid-border-color);
+  }
+
+  .mode-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .mode-btn {
+    padding: 1rem;
+    font-weight: bold;
+  }
+
+  .mode-btn:hover {
+    background-color: var(--pico-primary);
+    color: white;
+  }
+
+  /* Control Section */
+  .control-section {
+    border-left: 4px solid var(--pico-form-element-disabled-background-color);
+  }
+
+  .control-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  .control-section input {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .hint {
+    font-size: 0.85rem;
+    color: var(--pico-muted-color);
+    margin: 0;
+  }
+
+  .bitbibies-btn {
+    width: 100%;
+    background-color: #4a90e2;
+    color: white;
+    padding: 0.75rem;
+    font-weight: bold;
+  }
+
+  /* Buttons Grid */
+  .buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .game-button {
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    background-color: var(--pico-primary);
+    color: white;
+  }
+
+  .game-button:hover:not(:disabled) {
+    transform: scale(1.05);
+  }
+
+  .game-button:disabled {
+    background-color: var(--pico-form-element-disabled-background-color);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .button-number {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .button-count {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .button-lock {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Switch Section */
+  .switch-section {
+    border-left: 4px solid var(--pico-form-element-focused-border-color);
+  }
+
+  .switch-input-group {
+    margin-bottom: 2rem;
+  }
+
+  .switch-input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  .switch-input-group input {
+    width: 100%;
+  }
+
+  .switch-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--pico-card-sectionning-background-color);
+    border-radius: 8px;
+  }
+
+  .switch-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .switch-item label {
+    font-weight: bold;
+  }
+
+  .switch {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid var(--pico-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .switch.on {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  .switch.off {
+    background-color: var(--pico-form-element-disabled-background-color);
+    color: var(--pico-muted-color);
+  }
+
+  .switch-legend {
+    background: var(--pico-card-sectionning-background-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--pico-primary);
+  }
+
+  .switch-legend p {
+    margin: 0.5rem 0;
+  }
+
+  .switch-legend ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .switch-legend li {
+    margin: 0.3rem 0;
+    font-size: 0.95rem;
+  }
+
+  /* Details Section */
+  .details-section {
+    border-left: 4px solid var(--pico-form-element-valid-border-color);
+    background: var(--pico-card-sectionning-background-color);
+  }
+
+  .details-section p {
+    margin: 0.5rem 0;
+  }
+
+  .threshold-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .threshold-input {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .threshold-input label {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+  }
+
+  .threshold-input input {
+    padding: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .button-group {
+      grid-template-columns: 1fr;
+    }
+
+    .mode-buttons {
+      grid-template-columns: 1fr;
+    }
+
+    .buttons-grid {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .switch-display {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+</style>
+
+<script>
+  // State management
+  let appState = {
+    temperatureSet: false,
+    currentTemp: 0,
+    modeSelected: false,
+    currentMode: null,
+    buttonCount: 5,
+    buttons: [] as any[],
+    mode1Presses: {} as {[key: number]: number},
+    mode2Thresholds: {} as {[key: number]: number},
+    switches: {1: false, 2: false, 3: false}
+  }
+
+  // DOM Elements
+  const tempInput = document.getElementById('tempInput') as HTMLInputElement
+  const tempOutput = document.getElementById('tempOutput') as HTMLDivElement
+  const submitTemp = document.getElementById('submitTemp') as HTMLButtonElement
+  const resetTemp = document.getElementById('resetTemp') as HTMLButtonElement
+  const selectMode1 = document.getElementById('selectMode1') as HTMLButtonElement
+  const selectMode2 = document.getElementById('selectMode2') as HTMLButtonElement
+  const modeSection = document.getElementById('modeSection') as HTMLDivElement
+  const buttonCountInput = document.getElementById('buttonCount') as HTMLInputElement
+  const buttonCountSection = document.getElementById('buttonCountSection') as HTMLDivElement
+  const bitbibbiesContainer = document.getElementById('bitbibbiesContainer') as HTMLDivElement
+  const bitbibbiesBtn = document.getElementById('bitbibbiesBtn') as HTMLButtonElement
+  const controlSection = document.getElementById('controlSection') as HTMLDivElement
+  const buttonsContainer = document.getElementById('buttonsContainer') as HTMLDivElement
+  const switchSection = document.getElementById('switchSection') as HTMLDivElement
+  const switchInput = document.getElementById('switchInput') as HTMLInputElement
+  const mode1Details = document.getElementById('mode1Details') as HTMLDivElement
+  const mode2Details = document.getElementById('mode2Details') as HTMLDivElement
+  const thresholdInputs = document.getElementById('thresholdInputs') as HTMLDivElement
+
+  // Temperature Input Handler
+  tempInput.addEventListener('input', (e) => {
+    const input = parseFloat((e.target as HTMLInputElement).value) || 0
+    const result = 120 - input
+    tempOutput.textContent = result.toString()
+  })
+
+  // Submit Temperature
+  submitTemp.addEventListener('click', () => {
+    const temp = parseFloat(tempInput.value)
+    if (isNaN(temp)) {
+      alert('Please enter a valid temperature')
+      return
+    }
+
+    appState.temperatureSet = true
+    appState.currentTemp = temp
+    tempInput.disabled = true
+    submitTemp.disabled = true
+
+    // Show mode selection
+    modeSection.style.display = 'block'
+    buttonCountSection.style.display = 'block'
+    bitbibbiesContainer.style.display = 'block'
+    switchSection.style.display = 'block'
+  })
+
+  // Reset Temperature
+  resetTemp.addEventListener('click', () => {
+    appState.temperatureSet = false
+    appState.modeSelected = false
+    appState.currentTemp = 0
+
+    tempInput.value = ''
+    tempInput.disabled = false
+    tempOutput.textContent = '--'
+    submitTemp.disabled = false
+
+    modeSection.style.display = 'none'
+    buttonCountSection.style.display = 'none'
+    bitbibbiesContainer.style.display = 'none'
+    controlSection.style.display = 'none'
+    switchSection.style.display = 'none'
+    mode1Details.style.display = 'none'
+    mode2Details.style.display = 'none'
+    buttonsContainer.innerHTML = ''
+  })
+
+  // Mode Selection
+  selectMode1.addEventListener('click', () => {
+    appState.currentMode = 1
+    appState.modeSelected = true
+    mode1Details.style.display = 'block'
+    mode2Details.style.display = 'none'
+    controlSection.style.display = 'block'
+    renderMode1Buttons()
+  })
+
+  selectMode2.addEventListener('click', () => {
+    appState.currentMode = 2
+    appState.modeSelected = true
+    mode2Details.style.display = 'block'
+    mode1Details.style.display = 'none'
+    controlSection.style.display = 'block'
+    renderMode2Setup()
+  })
+
+  // Button Count Change
+  buttonCountInput.addEventListener('change', (e) => {
+    const count = parseInt((e.target as HTMLInputElement).value)
+    if (count >= 1 && count <= 10) {
+      appState.buttonCount = count
+
+      if (appState.currentMode === 1) {
+        renderMode1Buttons()
+      } else if (appState.currentMode === 2) {
+        renderMode2Buttons()
+      }
+    }
+  })
+
+  // Bitbibies Button
+  if (bitbibbiesBtn) {
+    bitbibbiesBtn.addEventListener('click', () => {
+      alert('Bitbibies activated! The app is now enhanced! 🎉')
+    })
+  }
+
+  // Mode 1: Render Buttons with Press Limits
+  function renderMode1Buttons() {
+    buttonsContainer.innerHTML = ''
+    appState.buttons = []
+    appState.mode1Presses = {}
+
+    for (let i = 1; i <= appState.buttonCount; i++) {
+      appState.mode1Presses[i] = Math.floor(Math.random() * 5) + 1
+
+      const btn = document.createElement('button')
+      btn.className = 'game-button'
+      btn.innerHTML = `
+        <div class="button-number">${i}</div>
+        <div class="button-count" id="count-${i}">${appState.mode1Presses[i]}</div>
+      `
+      btn.addEventListener('click', () => handleMode1Press(i, btn))
+      buttonsContainer.appendChild(btn)
+    }
+  }
+
+  // Handle Mode 1 Button Press
+  function handleMode1Press(buttonNum: number, btn: HTMLButtonElement) {
+    if (appState.mode1Presses[buttonNum] > 0) {
+      appState.mode1Presses[buttonNum]--
+
+      const countEl = document.getElementById(`count-${buttonNum}`)
+      if (countEl) {
+        if (appState.mode1Presses[buttonNum] === 0) {
+          btn.disabled = true
+          countEl.innerHTML = '🔒'
+        } else {
+          countEl.textContent = appState.mode1Presses[buttonNum].toString()
+        }
+      }
+    }
+  }
+
+  // Mode 2: Render Setup with Threshold Inputs
+  function renderMode2Setup() {
+    thresholdInputs.innerHTML = ''
+    appState.mode2Thresholds = {}
+
+    for (let i = 1; i <= appState.buttonCount; i++) {
+      appState.mode2Thresholds[i] = Math.floor(Math.random() * 10) + 1
+
+      const div = document.createElement('div')
+      div.className = 'threshold-input'
+      div.innerHTML = `
+        <label for="threshold-${i}">Button ${i} Unlock at:</label>
+        <input type="number" id="threshold-${i}" min="0" max="100" value="${appState.mode2Thresholds[i]}" />
+      `
+      thresholdInputs.appendChild(div)
+
+      const input = div.querySelector(`#threshold-${i}`) as HTMLInputElement
+      input.addEventListener('change', (e) => {
+        appState.mode2Thresholds[i] = parseInt((e.target as HTMLInputElement).value)
+      })
+    }
+
+    // Add button to confirm thresholds
+    const confirmBtn = document.createElement('button')
+    confirmBtn.textContent = 'Confirm Thresholds'
+    confirmBtn.style.width = '100%'
+    confirmBtn.style.marginTop = '1rem'
+    confirmBtn.addEventListener('click', renderMode2Buttons)
+    thresholdInputs.parentElement?.appendChild(confirmBtn)
+  }
+
+  // Mode 2: Render Buttons with Threshold Unlock
+  function renderMode2Buttons() {
+    buttonsContainer.innerHTML = ''
+    appState.buttons = []
+
+    for (let i = 1; i <= appState.buttonCount; i++) {
+      const btn = document.createElement('button')
+      btn.className = 'game-button'
+      const threshold = appState.mode2Thresholds[i] || 5
+      const isUnlocked = appState.currentTemp >= threshold
+
+      btn.innerHTML = `
+        <div class="button-number">${i}</div>
+        ${isUnlocked ? '' : '<div class="button-lock">🔒</div>'}
+      `
+      btn.disabled = !isUnlocked
+
+      if (isUnlocked) {
+        btn.style.backgroundColor = '#4caf50'
+      }
+
+      btn.addEventListener('click', () => {
+        alert(`Button ${i} pressed!`)
+      })
+
+      buttonsContainer.appendChild(btn)
+    }
+  }
+
+  // Switch Control
+  const switch1 = document.getElementById('switch1') as HTMLDivElement
+  const switch2 = document.getElementById('switch2') as HTMLDivElement
+  const switch3 = document.getElementById('switch3') as HTMLDivElement
+
+  switchInput.addEventListener('input', (e) => {
+    const value = parseInt((e.target as HTMLInputElement).value)
+
+    if (value >= 1 && value <= 8) {
+      updateSwitches(value)
+    }
+  })
+
+  function updateSwitches(code: number) {
+    // Reset all switches
+    appState.switches = {1: false, 2: false, 3: false}
+
+    // Apply switch logic based on code
+    switch(code) {
+      case 1: // Switches 1 & 2 on
+        appState.switches[1] = true
+        appState.switches[2] = true
+        break
+      case 2: // All 3 on
+        appState.switches[1] = true
+        appState.switches[2] = true
+        appState.switches[3] = true
+        break
+      case 3: // Switches 1 & 3 on
+        appState.switches[1] = true
+        appState.switches[3] = true
+        break
+      case 4: // Only Switch 1 on
+        appState.switches[1] = true
+        break
+      case 5: // Only Switch 2 on
+        appState.switches[2] = true
+        break
+      case 6: // Switches 2 & 3 on
+        appState.switches[2] = true
+        appState.switches[3] = true
+        break
+      case 7: // Only Switch 3 on
+        appState.switches[3] = true
+        break
+      case 8: // All off
+        break
+    }
+
+    // Update display
+    updateSwitchDisplay()
+  }
+
+  function updateSwitchDisplay() {
+    if (appState.switches[1]) {
+      switch1.classList.remove('off')
+      switch1.classList.add('on')
+      switch1.textContent = '✓'
+    } else {
+      switch1.classList.remove('on')
+      switch1.classList.add('off')
+      switch1.textContent = '○'
+    }
+
+    if (appState.switches[2]) {
+      switch2.classList.remove('off')
+      switch2.classList.add('on')
+      switch2.textContent = '✓'
+    } else {
+      switch2.classList.remove('on')
+      switch2.classList.add('off')
+      switch2.textContent = '○'
+    }
+
+    if (appState.switches[3]) {
+      switch3.classList.remove('off')
+      switch3.classList.add('on')
+      switch3.textContent = '✓'
+    } else {
+      switch3.classList.remove('on')
+      switch3.classList.add('off')
+      switch3.textContent = '○'
+    }
+  }
+</script>

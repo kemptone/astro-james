@@ -1,0 +1,497 @@
+---
+// SRO22 - Interactive Date Scroller with Text-to-Speech and Switch Controls
+---
+
+<div class="sro22-container">
+  <!-- Iframe Section -->
+  <div class="iframe-section">
+    <h2>SRO6 Game</h2>
+    <iframe
+      src="/sro6"
+      width="100%"
+      height="100vh"
+      frameborder="0"
+      allowfullscreen
+      title="SRO6 Game"
+    >
+    </iframe>
+  </div>
+
+  <!-- Date Picker Section -->
+  <div class="date-section">
+    <h3>Choose a Date</h3>
+    <input type="date" id="datePicker" />
+
+    <!-- Date Scroller -->
+    <div class="date-scroller" id="dateScroller">
+      <!-- Dates will be generated here -->
+    </div>
+
+    <div class="date-status" id="dateStatus"></div>
+  </div>
+
+  <!-- Text-to-Speech Section -->
+  <div class="tts-section">
+    <h3>Talk to Ana</h3>
+    <div class="tts-container">
+      <textarea
+        id="ttsInput"
+        placeholder="Type something for Ana to say..."
+        rows="4"
+        cols="50"
+      >
+      </textarea>
+      <button id="ttsButton">Speak</button>
+    </div>
+    <audio id="ttsAudio" controls></audio>
+  </div>
+
+  <!-- Switch Controls Section -->
+  <div class="switch-section">
+    <h3>Switch Controls</h3>
+    <div class="switch-info">
+      <p>Enter switch positions (space-separated numbers 1-8):</p>
+      <div class="switch-legend">
+        <p>1 = Switches 1,2 UP, 3 DOWN</p>
+        <p>2 = All UP</p>
+        <p>3 = Switches 1,3 UP</p>
+        <p>4 = Switch 1 UP</p>
+        <p>5 = Switch 2 UP</p>
+        <p>6 = Switches 2,3 UP</p>
+        <p>7 = Switch 3 UP</p>
+        <p>8 = All DOWN</p>
+      </div>
+    </div>
+
+    <input type="text" id="switchInput" placeholder="e.g., 1 2 3 4" />
+
+    <div class="switches-display" id="switchesDisplay">
+      <!-- Switch visualization will be displayed here -->
+    </div>
+  </div>
+</div>
+
+<style>
+  .sro22-container {
+    width: 100%;
+    font-family: Arial, sans-serif;
+  }
+
+  .iframe-section {
+    width: 100%;
+    height: 100vh;
+    margin-bottom: 2rem;
+  }
+
+  .iframe-section iframe {
+    width: 100%;
+    height: 100vh;
+  }
+
+  .iframe-section h2 {
+    margin: 0;
+    padding: 1rem;
+    background-color: #f0f0f0;
+  }
+
+  .iframe-section iframe {
+    border: none;
+  }
+
+  .date-section {
+    padding: 2rem;
+    background-color: #fff;
+  }
+
+  .date-section h3 {
+    margin-top: 0;
+  }
+
+  #datePicker {
+    padding: 0.5rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .date-status {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+    min-height: 1.5rem;
+  }
+
+  .date-scroller {
+    height: 400px;
+    overflow-y: scroll;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
+
+  .date-item {
+    padding: 0.5rem;
+    margin: 0.25rem 0;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .date-item:hover {
+    background-color: #e8f4f8;
+  }
+
+  .date-item.active {
+    background-color: #4caf50;
+    color: white;
+    font-weight: bold;
+  }
+
+  .years-ago {
+    font-size: 0.85rem;
+    color: #666;
+    margin-left: 0.5rem;
+  }
+
+  .tts-section {
+    padding: 2rem;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+  }
+
+  .tts-section h3 {
+    margin-top: 0;
+  }
+
+  .tts-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  #ttsInput {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+  }
+
+  #ttsButton {
+    padding: 0.5rem 1.5rem;
+    background-color: #008cba;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+
+  #ttsButton:hover {
+    background-color: #007399;
+  }
+
+  #ttsButton:active {
+    background-color: #005f7f;
+  }
+
+  #ttsAudio {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .switch-section {
+    padding: 2rem;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+  }
+
+  .switch-section h3 {
+    margin-top: 0;
+  }
+
+  .switch-legend {
+    background-color: #f9f9f9;
+    border-left: 4px solid #4caf50;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .switch-legend p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+  }
+
+  #switchInput {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 300px;
+    margin-bottom: 1.5rem;
+  }
+
+  .switches-display {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .switch-set {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+
+  .switch-set-label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .switch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .switch-label {
+    width: 60px;
+  }
+
+  .switch-toggle {
+    width: 60px;
+    height: 30px;
+    background-color: #ccc;
+    border-radius: 15px;
+    position: relative;
+    border: 2px solid #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .switch-toggle.up {
+    background-color: #4caf50;
+  }
+
+  .switch-toggle.down {
+    background-color: #f44336;
+  }
+
+  .switch-toggle-label {
+    font-size: 0.75rem;
+    color: white;
+    font-weight: bold;
+  }
+</style>
+
+<script>
+  // Date Scroller Logic
+  const datePicker = document.getElementById('datePicker')
+  const dateScroller = document.getElementById('dateScroller')
+  const dateStatus = document.getElementById('dateStatus')
+  let selectedDate = new Date()
+
+  // Initialize date picker with today's date
+  datePicker.valueAsDate = new Date()
+
+  function generateDates() {
+    selectedDate = datePicker.valueAsDate || new Date()
+    dateScroller.innerHTML = ''
+    dateStatus.innerHTML = ''
+
+    // Always start from year 0
+    const startDate = new Date(0, 0, 1)
+    dateStatus.innerHTML =
+      '<strong>Generating dates... This may take a moment!</strong>'
+
+    let currentDate = new Date(startDate)
+    let count = 0
+
+    // Limit rendering to prevent browser crash - use document fragment for batch rendering
+    const fragment = document.createDocumentFragment()
+    const batchSize = 1000
+
+    while (currentDate <= selectedDate) {
+      const dateElement = document.createElement('div')
+      dateElement.className = 'date-item'
+
+      const dateStr = currentDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
+
+      // Calculate years ago
+      const yearsAgo = Math.floor(
+        (selectedDate - currentDate) / (1000 * 60 * 60 * 24 * 365.25)
+      )
+
+      dateElement.innerHTML = `${dateStr} <span class="years-ago">${yearsAgo} years ago</span>`
+
+      if (currentDate.toDateString() === selectedDate.toDateString()) {
+        dateElement.classList.add('active')
+      }
+
+      dateElement.addEventListener('click', () => {
+        datePicker.valueAsDate = new Date(currentDate)
+        generateDates()
+      })
+
+      fragment.appendChild(dateElement)
+      count++
+
+      // Batch append every 1000 dates
+      if (count % batchSize === 0) {
+        dateScroller.appendChild(fragment)
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1)
+    }
+
+    // Append remaining dates
+    if (fragment.childNodes.length > 0) {
+      dateScroller.appendChild(fragment)
+    }
+
+    dateStatus.innerHTML = `Displaying <strong>${count.toLocaleString()}</strong> dates`
+
+    // Scroll to the bottom to show the selected date
+    setTimeout(() => {
+      dateScroller.scrollTop = dateScroller.scrollHeight
+    }, 0)
+  }
+
+  datePicker.addEventListener('change', generateDates)
+  generateDates()
+
+  // Text-to-Speech Logic
+  const ttsInput = document.getElementById('ttsInput')
+  const ttsButton = document.getElementById('ttsButton')
+  const ttsAudio = document.getElementById('ttsAudio')
+
+  ttsButton.addEventListener('click', async () => {
+    const text = ttsInput.value.trim()
+
+    if (!text) {
+      alert('Please enter some text!')
+      return
+    }
+
+    ttsButton.disabled = true
+    ttsButton.textContent = 'Speaking...'
+
+    try {
+      // Using Web Speech API as fallback or a TTS service
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({text}),
+      })
+
+      if (response.ok) {
+        const blob = await response.blob()
+        const url = URL.createObjectURL(blob)
+        ttsAudio.src = url
+        ttsAudio.play()
+      } else {
+        // Fallback to Web Speech API
+        const utterance = new SpeechSynthesisUtterance(text)
+        utterance.voice =
+          speechSynthesis.getVoices().find(v => v.name.includes('Ana')) ||
+          speechSynthesis.getVoices()[0]
+        speechSynthesis.speak(utterance)
+      }
+    } catch (error) {
+      console.error('TTS Error:', error)
+      // Fallback to Web Speech API
+      const utterance = new SpeechSynthesisUtterance(text)
+      speechSynthesis.speak(utterance)
+    } finally {
+      ttsButton.disabled = false
+      ttsButton.textContent = 'Speak'
+    }
+  })
+
+  // Switch Controls Logic
+  const switchInput = document.getElementById('switchInput')
+  const switchesDisplay = document.getElementById('switchesDisplay')
+
+  function getSwitchState(number) {
+    const states = {
+      1: [true, true, false],
+      2: [true, true, true],
+      3: [true, false, true],
+      4: [true, false, false],
+      5: [false, true, false],
+      6: [false, true, true],
+      7: [false, false, true],
+      8: [false, false, false],
+    }
+    return states[number] || [false, false, false]
+  }
+
+  function renderSwitches() {
+    const input = switchInput.value.trim()
+
+    if (!input) {
+      switchesDisplay.innerHTML = ''
+      return
+    }
+
+    const numbers = input
+      .split(/\s+/)
+      .map(n => parseInt(n))
+      .filter(n => n >= 1 && n <= 8)
+
+    switchesDisplay.innerHTML = ''
+
+    numbers.forEach((num, index) => {
+      const state = getSwitchState(num)
+
+      const switchSet = document.createElement('div')
+      switchSet.className = 'switch-set'
+
+      const label = document.createElement('div')
+      label.className = 'switch-set-label'
+      label.textContent = `Position ${num}`
+
+      switchSet.appendChild(label)
+
+      state.forEach((isUp, switchNum) => {
+        const switchDiv = document.createElement('div')
+        switchDiv.className = 'switch'
+
+        const switchLabel = document.createElement('span')
+        switchLabel.className = 'switch-label'
+        switchLabel.textContent = `Switch ${switchNum + 1}`
+
+        const switchToggle = document.createElement('div')
+        switchToggle.className = `switch-toggle ${isUp ? 'up' : 'down'}`
+        switchToggle.innerHTML = `<span class="switch-toggle-label">${isUp ? 'UP' : 'DOWN'}</span>`
+
+        switchDiv.appendChild(switchLabel)
+        switchDiv.appendChild(switchToggle)
+        switchSet.appendChild(switchDiv)
+      })
+
+      switchesDisplay.appendChild(switchSet)
+    })
+  }
+
+  switchInput.addEventListener('input', renderSwitches)
+</script>
