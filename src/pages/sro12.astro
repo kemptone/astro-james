@@ -1,7 +1,7 @@
 ---
 import Menu3 from '@/components/Menu3/Menu3.astro'
 
-const NUMBER_OF_SWITCHES = 5 // Configure number of switches here (max 9)
+const NUMBER_OF_SWITCHES = 4 // Configure number of switches here (max 9)
 ---
 
 <html>
@@ -13,7 +13,7 @@ const NUMBER_OF_SWITCHES = 5 // Configure number of switches here (max 9)
   <body>
     <Menu3 />
     <div class="container">
-      <div class="switch-panel">
+      <div class="switch-panel" id="switches">
         {
           Array.from({length: NUMBER_OF_SWITCHES}, (_, i) => i + 1).map(
             switchNum => (
@@ -29,6 +29,7 @@ const NUMBER_OF_SWITCHES = 5 // Configure number of switches here (max 9)
       <form class="controls" method="dialog">
         <h3>Key Controls</h3>
         <span>
+          <input type="number" name="switches" />
           <input type="number" name="number" required />
           <button>😊</button>
         </span>
@@ -37,35 +38,60 @@ const NUMBER_OF_SWITCHES = 5 // Configure number of switches here (max 9)
 
     <script>
       // const NUMBER_OF_SWITCHES = {NUMBER_OF_SWITCHES};
-      const NUMBER_OF_SWITCHES = 5
+      let NUMBER_OF_SWITCHES = 5
 
-      // Get all switches from the DOM
-      const switches = {}
-      for (let i = 1; i <= NUMBER_OF_SWITCHES; i++) {
-        switches[i] = document.querySelector(`[data-switch="${i}"]`)
-      }
+      function buildSwitches() {
+        let html = ''
 
-      function setSwitchState(switchNum, isOn) {
-        const switchEl = switches[switchNum]
-        if (switchEl) {
-          if (isOn) {
-            switchEl.classList.add('on')
-          } else {
-            switchEl.classList.remove('on')
-          }
+        for (let x = 0; x < NUMBER_OF_SWITCHES; x++) {
+          html += `
+              <div class="switch" id="switch${x + 1}">
+                <div class="switch-label">Switch ${x + 1}</div>
+                <div class="switch-toggle" data-switch="${x + 1}""></div>
+              </div>
+          `
         }
+
+        const e_switches = document.querySelector('#switches')
+        // item.innerHTML = buildSwitches()
+        // })
+        e_switches.innerHTML = html
       }
 
-      function setAllSwitches(...states) {
-        for (let i = 1; i <= NUMBER_OF_SWITCHES; i++) {
-          setSwitchState(i, states[i - 1] || false)
-        }
-      }
+      document
+        .querySelector("input[name='switches']")
+        .addEventListener('input', e => {
+          NUMBER_OF_SWITCHES = Number(e.currentTarget.value)
+          buildSwitches()
+        })
 
       document.querySelector('form')?.addEventListener?.('submit', e => {
         const num = document.querySelector(
           'input[name="number"]'
         ) as HTMLInputElement
+
+        // Get all switches from the DOM
+        const switches = {}
+        for (let i = 1; i <= NUMBER_OF_SWITCHES; i++) {
+          switches[i] = document.querySelector(`[data-switch="${i}"]`)
+        }
+
+        function setSwitchState(switchNum, isOn) {
+          const switchEl = switches[switchNum]
+          if (switchEl) {
+            if (isOn) {
+              switchEl.classList.add('on')
+            } else {
+              switchEl.classList.remove('on')
+            }
+          }
+        }
+
+        function setAllSwitches(...states) {
+          for (let i = 1; i <= NUMBER_OF_SWITCHES; i++) {
+            setSwitchState(i, states[i - 1] || false)
+          }
+        }
 
         const value = Number(num.value)
 
@@ -95,12 +121,12 @@ const NUMBER_OF_SWITCHES = 5 // Configure number of switches here (max 9)
       })
 
       // Initialize all switches to OFF
-      setAllSwitches(...new Array(NUMBER_OF_SWITCHES).fill(false))
+      // setAllSwitches(...new Array(NUMBER_OF_SWITCHES).fill(false))
     </script>
   </body>
 </html>
 
-<style>
+<style is:global>
   .container {
     max-width: 800px;
     margin: 0 auto;
@@ -182,8 +208,8 @@ const NUMBER_OF_SWITCHES = 5 // Configure number of switches here (max 9)
     font-size: 2rem;
     padding-inline: 2rem;
   }
-  input[name='number'] {
-    width: 180px;
+  input {
+    width: 100px;
     padding: 1rem;
     font-size: 2rem;
   }

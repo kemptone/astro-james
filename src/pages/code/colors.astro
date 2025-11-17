@@ -1,0 +1,78 @@
+<h3>first, what would you earn if you code the paintbrush?</h3>
+<input placeholder="Write whatever you want of what you earn" type="text" />
+<select name="" id="">
+  <option value="">Minimum</option>
+  <option value="">Mega less</option>
+  <option value="">Super less</option>
+  <option value="">Very less</option>
+  <option value="">Less</option>
+  <option value="">Mega low</option>
+  <option value="">Super low</option>
+  <option value="">Very low</option>
+  <option value="">Low</option>
+  <option value="">0</option>
+  <option value="">1</option>
+  <option value="">2</option>
+  <option value="">3</option>
+  <option value="">4</option>
+  <option value="">5</option>
+  <option value="">6</option>
+  <option value="">7</option>
+  <option value="">8</option>
+  <option value="">9</option>
+  <option value="">10</option>
+  <option value="">High</option>
+  <option value="">Very high</option>
+  <option value="">Super high</option>
+  <option value="">Mega high</option>
+  <option value="">Over</option>
+  <option value="">Very over</option>
+  <option value="">Super over</option>
+  <option value="">Mega over</option>
+  <option value="">Maximum</option>
+</select>
+--- ---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="bigbox"></div>
+    <input type="color" name="" id="color" />
+    <input type="color" name="" id="color2" />
+
+    <script>
+      document.getElementById('color').addEventListener('input', e => {
+        document.body.style.backgroundColor = e.target.value
+      })
+      document.getElementById('color2').addEventListener('input', e => {
+        document.getElementById('bigbox').style.backgroundColor = e.target.value
+      })
+    </script>
+
+    <video src="/sample.mov"></video>
+  </body>
+</html>
+
+<style>
+  #bigbox {
+    display: inline-block;
+    width: 400px;
+    height: 400px;
+    background-color: azure;
+  }
+</style>
+<h1>Maker</h1>
+<input type="time" name="" id="picker" />
+<script>
+  document.getElementById('picker').addEventListener('input', e => {
+    alert(e.target.value)
+  })
+</script>
+<h6>Earn Kitkats!!!!!!!!!!</h6>
+<h4>do you want to text something, or, search the web</h4>
+<input type="search" name="" id="" />

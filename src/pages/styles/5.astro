@@ -1,0 +1,65 @@
+---
+
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Document</title>
+  </head>
+  <body>
+    <h3>input</h3>
+    <h4>there is an input</h4>
+    <h4>fix it</h4>
+    <h3>man!!! it is over much</h3>
+    <input type="range" name="" value="20" id="range" />
+    <span id="results"></span>
+    <div id="word"></div>
+  </body>
+</html>
+
+<script>
+  const e_range = document.querySelector('#range')
+  const e_results = document.querySelector('#results')
+  const e_word = document.querySelector('#word')
+  e_range.addEventListener('input', e => {
+    e_results.innerHTML = e.target.value
+    const number = Number(e.target.value)
+    let word = ''
+    if (number > 90) {
+      word = 'Chocolate man'
+    } else if (number > 80) {
+      word = 'fire man'
+    } else if (number > 56) {
+      word = 'super man'
+    }
+    e_word.innerHTML = word
+  })
+</script>
+<input type="checkbox" name="" id="first" />
+<input type="checkbox" name="" id="second" />
+<div id="light1">💡</div>
+<script>
+  const e_light1 = document.getElementById('light1')
+  document.getElementById('first').addEventListener('input', e => {
+    if (e.target.checked) {
+      e_light1.classList.add('show')
+    } else {
+      e_light1.classList.remove('show')
+    }
+  })
+</script>
+
+<style>
+  #light1 {
+    font-size: 50pt;
+    display: none;
+  }
+  #light1.show {
+    display: block;
+  }
+</style>
+<input type="tel" name="" value="not if" id="" />
+<input type="color" name="" value="#000169" id="" />

@@ -1,5 +1,5 @@
 import {
-  Engine,
+  type Engine,
   PollyClient,
   SynthesizeSpeechCommand,
   type TextType,
@@ -53,7 +53,7 @@ export async function POST({
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     )
   }
 
@@ -92,7 +92,7 @@ export async function POST({
       JSON.stringify({error: 'Failed to synthesize speech'}),
       {
         status: 500,
-      }
+      },
     )
   }
 }

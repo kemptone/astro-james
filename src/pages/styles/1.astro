@@ -1,0 +1,72 @@
+<h1>today we are going styles</h1>
+<h3>in this textarea, you change style</h3>
+<h2>change the style. what is the text?</h2>
+<div id="div">Hello</div>
+<style>
+  div {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+<h3>please click here to see the settings for the game</h3>
+<details>
+  <summary>
+    <h1>Style</h1>
+    <input type="number" name="" id="pick" />
+    <script>
+      document.getElementById('pick').addEventListener('input', e => {
+        document.getElementById('div').style.fontSize = e.target.value + 'pt'
+      })
+    </script>
+  </summary>
+</details>
+<h1>Pt and Px situation</h1>
+<h3>which one do you like better for font size?</h3>
+<select name="" id="">
+  <option value="">Pt</option>
+  <option value="">Px</option>
+</select>
+<h3>why do you like using this option better then the other?</h3>
+<textarea name="" id=""></textarea>
+<h3>what would you say to someone when you don't like something?</h3>
+<textarea name="" id=""></textarea>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="">
+      <div>
+        <label for="">
+          This is the label
+          <input type="text" name="maximum" id="" maxlength="30" />
+        </label>
+      </div>
+    </form>
+  </body>
+</html>
+
+<style>
+  input[name='maximum'] {
+    width: 98%;
+    padding: 1rem;
+  }
+</style>
+<h2>please write code neatly</h2>
+<style>
+  input[type='number'] {
+    width: 5%;
+    height: 2vh;
+    display: inline-block;
+  }
+</style>
+<input max="9" type="number" name="" id="" />
+<input type="number" name="" id="" />
+<input type="number" name="" id="" />
+<input type="number" name="" id="" />
+<h2>email & password</h2>
+<input placeholder="Email" type="email" name="" id="" />
+<input type="search" name="" id="" />
+<input type="password" name="" id="" />

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script>
+      customElements.define(
+        'light-switch',
+        class LightSwitch extends HTMLElement {
+          constructor() {
+            super()
+            const {on} = this.dataset
+            const html = `<div class="switch ${on === '1' ? 'on' : 'off'}"></div>`
+            this.innerHTML = html
+          }
+        }
+      )
+    </script>
+  </head>
+  <body>
+    <h1>hello</h1>
+    <div class="group">
+      <light-switch data-on="1">hello</light-switch>
+      <light-switch data-on="0">hello</light-switch>
+      <light-switch data-on="0">hello</light-switch>
+      <light-switch data-on="0">hello</light-switch>
+      <light-switch data-on="0">hello</light-switch>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  .group {
+    display: flex;
+  }
+  .switch {
+    width: 100px;
+    height: 200px;
+    position: relative;
+    background-image: url(/lights/light_off2.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .switch.on {
+    background-image: url(/lights/light_on2.png);
+  }
+</style>

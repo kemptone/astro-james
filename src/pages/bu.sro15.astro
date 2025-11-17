@@ -1,0 +1,297 @@
+---
+import Menu3 from '@/components/Menu3/Menu3.astro'
+import '@/layouts/style.css'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main>
+      <h1>SRO15 - Talk to Ivy</h1>
+      <p>Ivy from Amazon will guide you through this interactive grid game.</p>
+
+      <div class="grid-container">
+        <div class="labels">
+          <div class="corner"></div>
+          <div class="column-label">Zander</div>
+          <div class="column-label">Carmen</div>
+          <div class="column-label">Stephanie</div>
+          <div class="column-label">Xavior</div>
+          <div class="column-label">Dexter the Dog</div>
+        </div>
+
+        <div class="grid-row">
+          <div class="row-label">High-fives</div>
+          <div class="checkbox" data-row="0" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="0" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="0" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="0" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="0" data-col="4" data-disabled="true"></div>
+        </div>
+
+        <div class="grid-row">
+          <div class="row-label">Hugs</div>
+          <div class="checkbox" data-row="1" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="1" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="1" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="1" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="1" data-col="4" data-disabled="true"></div>
+        </div>
+
+        <div class="grid-row dangerous">
+          <div class="row-label">Kissing ⚠️</div>
+          <div class="checkbox" data-row="2" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="2" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="2" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="2" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="2" data-col="4" data-disabled="true"></div>
+        </div>
+
+        <div class="grid-row dangerous">
+          <div class="row-label">Sex ⚠️</div>
+          <div class="checkbox" data-row="3" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="3" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="3" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="3" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="3" data-col="4" data-disabled="true"></div>
+        </div>
+
+        <div class="grid-row dangerous">
+          <div class="row-label">Choking ⚠️</div>
+          <div class="checkbox" data-row="4" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="4" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="4" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="4" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="4" data-col="4" data-disabled="true"></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="enableBtn">Enable Checkmarks</button>
+        <button id="disableBtn">Disable Checkmarks</button>
+        <button id="submitBtn">Submit and Generate List</button>
+        <button id="ivyIntroBtn">Ivy Introduction</button>
+      </div>
+
+      <div id="output"></div>
+    </main>
+    <Menu3 />
+
+    <style>
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      h1 {
+        margin-bottom: 1rem;
+      }
+
+      .grid-container {
+        margin: 2rem 0;
+      }
+
+      .labels {
+        display: grid;
+        grid-template-columns: 150px repeat(5, 100pt);
+        gap: 0;
+        margin-bottom: 0;
+      }
+
+      .corner {
+        width: 150px;
+      }
+
+      .column-label {
+        font-weight: bold;
+        text-align: center;
+        padding: 0.5rem;
+        background: #e0e0e0;
+        width: 100pt;
+      }
+
+      .grid-row {
+        display: grid;
+        grid-template-columns: 150px repeat(5, 100pt);
+        gap: 0;
+        margin-bottom: 0;
+      }
+
+      .grid-row.dangerous {
+        background-color: #ffe0e0;
+      }
+
+      .row-label {
+        font-weight: bold;
+        padding: 0.5rem;
+        background: #e0e0e0;
+        display: flex;
+        align-items: center;
+      }
+
+      .checkbox {
+        width: 100pt;
+        height: 100pt;
+        margin: 0;
+        cursor: pointer;
+        border: 2px solid #333;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        position: relative;
+        transition: all 0.2s ease;
+      }
+
+      .checkbox[data-disabled='true'] {
+        cursor: not-allowed;
+        opacity: 0.5;
+        background-color: #f0f0f0;
+      }
+
+      .checkbox.checked {
+        background-color: #4CAF50;
+      }
+
+      .checkbox.checked::after {
+        content: '✓';
+        color: white;
+        font-size: 60pt;
+        font-weight: bold;
+        line-height: 1;
+      }
+
+      .controls {
+        display: flex;
+        gap: 1rem;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+      }
+
+      button {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+
+      #output {
+        margin-top: 2rem;
+        padding: 1rem;
+        background: #f5f5f5;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        min-height: 2rem;
+      }
+    </style>
+
+    <script>
+      const enableBtn = document.getElementById(
+        'enableBtn'
+      ) as HTMLButtonElement
+      const disableBtn = document.getElementById(
+        'disableBtn'
+      ) as HTMLButtonElement
+      const submitBtn = document.getElementById(
+        'submitBtn'
+      ) as HTMLButtonElement
+      const ivyIntroBtn = document.getElementById(
+        'ivyIntroBtn'
+      ) as HTMLButtonElement
+      const output = document.getElementById('output') as HTMLDivElement
+
+      const rows = ['High-fives', 'Hugs', 'Kissing', 'Sex', 'Choking']
+      const columns = [
+        'Zander',
+        'Carmen',
+        'Stephanie',
+        'Xavior',
+        'Dexter the Dog',
+      ]
+
+      async function speakIvy(text: string) {
+        try {
+          const response = await fetch('/api/polly/say', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              text: text,
+              voiceId: 'Ivy',
+              engine: 'neural',
+            }),
+          })
+
+          if (response.ok) {
+            const audioBlob = await response.blob()
+            const audioUrl = URL.createObjectURL(audioBlob)
+            const audio = new Audio(audioUrl)
+            audio.play()
+          }
+        } catch (error) {
+          console.error('Error playing audio:', error)
+        }
+      }
+
+      // Handle checkbox clicks
+      document.querySelectorAll('.checkbox').forEach(checkbox => {
+        checkbox.addEventListener('click', () => {
+          const disabled = checkbox.getAttribute('data-disabled') === 'true'
+          if (!disabled) {
+            checkbox.classList.toggle('checked')
+          }
+        })
+      })
+
+      enableBtn.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.checkbox')
+        checkboxes.forEach(checkbox => {
+          checkbox.setAttribute('data-disabled', 'false')
+        })
+        output.textContent =
+          'Checkmarks enabled! Be careful with rows 3, 4, and 5!'
+      })
+
+      disableBtn.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.checkbox')
+        checkboxes.forEach(checkbox => {
+          checkbox.setAttribute('data-disabled', 'true')
+        })
+        output.textContent = 'Checkmarks disabled.'
+      })
+
+      submitBtn.addEventListener('click', () => {
+        let result = 'Selected interactions:\n\n'
+        let hasSelections = false
+
+        const checkboxes = document.querySelectorAll('.checkbox.checked')
+        checkboxes.forEach(checkbox => {
+          const row = parseInt(checkbox.getAttribute('data-row') || '0')
+          const col = parseInt(checkbox.getAttribute('data-col') || '0')
+          result += `${columns[col]} - ${rows[row]}\n`
+          hasSelections = true
+        })
+
+        if (!hasSelections) {
+          result = 'No interactions selected.'
+        }
+
+        output.textContent = result
+      })
+
+      ivyIntroBtn.addEventListener('click', () => {
+        const introText =
+          "Hi, my name is Ivy. Try the 5 by 5 grid checkmarks and don't press row 3, 4, or 5. Row 1 is high-fives. Row 2 is hugs. Row 3 is kissing, which is only allowed with family members. Row 4 is sex, which is only allowed when married to get babies. Row 5 is choking, which is the worst and most dangerous. The columns are Zander, Carmen, Stephanie, Xavior, and Dexter the Dog. Be careful!"
+        speakIvy(introText)
+        output.textContent = 'Ivy is speaking...'
+      })
+    </script>
+  </body>
+</html>

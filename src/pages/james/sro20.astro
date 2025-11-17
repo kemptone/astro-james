@@ -1,0 +1,45 @@
+<h2>Sign in</h2>
+<h4>Email</h4>
+<input type="email" name="" id="" />
+<h4>Password</h4>
+<input type="password" name="" id="" />
+<h4>Textarea</h4>
+<textarea name="" id="" cols="30" rows="10">My textarea</textarea>
+<h3>Paint your app!</h3>
+<input type="color" name="" id="pick" />
+<script>
+  document.getElementById('pick').addEventListener('input', e => {
+    document.body.style.backgroundColor = e.target.value
+  })
+</script>
+<style>
+  input [type='color'] {
+    width: 500pt;
+    height: 500pt;
+  }
+</style>
+<h3>what should you do to this textarea?</h3>
+<h4>use the numbers to style it</h4>
+<input type="number" name="" id="first" />
+<input type="number" name="" id="second" />
+<input type="number" name="" id="third" />
+<input type="number" name="" id="fourth" />
+<textarea name="" id="style"></textarea>
+<script>
+  document.getElementById('first').addEventListener('input', e => {
+    document.getElementById('style').style.borderBottomLeftRadius =
+      e.target.value + '%'
+    document.getElementById('second').addEventListener('input', e => {
+      document.getElementById('style').style.borderBottomRightRadius =
+        e.target.value + '%'
+      document.getElementById('third').addEventListener('input', e => {
+        document.getElementById('style').style.borderTopleftRadius =
+          e.target.value + '%'
+        document.getElementById('fourth').addEventListener('input', e => {
+          document.getElementById('style').style.borderTopRightRadius =
+            e.target.value + '%'
+        })
+      })
+    })
+  })
+</script>

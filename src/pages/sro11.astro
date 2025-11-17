@@ -187,7 +187,8 @@ const title = 'SRO11 - Fan Control Game'
         <p>
           <em
             >"Hi, I am Good Alexa! I want to cheer people up. I want to do
-            something fun like water. Please step ahead and talk to me!"</em>
+            something fun like water. Please step ahead and talk to me!"</em
+          >
         </p>
 
         <div style="display: flex; gap: 1rem;">
@@ -205,12 +206,13 @@ const title = 'SRO11 - Fan Control Game'
       <div class="alexa-section bad-alexa" id="badAlexaSection">
         <h3>😈 Bad Alexa (Shimmer Voice)</h3>
         <p>
-          <em
-            >"Hey, why are you here! Get out of my face you stupid animal!"</em>
+          <em>"Hey, why are you here! Get out of my face you stupid animal!"</em
+          >
         </p>
         <p>
           <strong style="color: red;"
-            >⚠️ WARNING: Bad Alexa uses horrible language and is very mean!</strong>
+            >⚠️ WARNING: Bad Alexa uses horrible language and is very mean!</strong
+          >
         </p>
 
         <div style="display: flex; gap: 1rem;">
@@ -401,21 +403,21 @@ const title = 'SRO11 - Fan Control Game'
             console.log(`API Call: Fan ${fanNumber} → ${state.toUpperCase()}`)
 
             // Simulated API call
-            const response = await fetch('/api/fan-control', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                fan: fanNumber,
-                state: state,
-                // These would be actual WiFi plug IPs/endpoints
-                endpoint: `192.168.1.${100 + fanNumber}`,
-              }),
-            }).catch(() => {
-              // Fail silently for now since API doesn't exist yet
-              console.log(`Simulated: Fan ${fanNumber} set to ${state}`)
-            })
+            // const response = await fetch('/api/fan-control', {
+            //   method: 'POST',
+            //   headers: {
+            //     'Content-Type': 'application/json',
+            //   },
+            //   body: JSON.stringify({
+            //     fan: fanNumber,
+            //     state: state,
+            //     // These would be actual WiFi plug IPs/endpoints
+            //     endpoint: `192.168.1.${100 + fanNumber}`,
+            //   }),
+            // }).catch(() => {
+            //   // Fail silently for now since API doesn't exist yet
+            //   console.log(`Simulated: Fan ${fanNumber} set to ${state}`)
+            // })
           } catch (error) {
             console.log(`Error controlling Fan ${fanNumber}:`, error.message)
           }

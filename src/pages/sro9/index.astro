@@ -1,0 +1,111 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import './_styles.css'
+---
+
+<Layout title="SRO9 - Malia Time Flipper">
+  <main>
+    <div class="header-section">
+      <h1>🕐 SRO9 - Malia Time Flipper 🕐</h1>
+      <p class="subtitle">
+        3rd decoration of SRO9 - Ask Malia anything and flip time!
+      </p>
+    </div>
+
+    <div class="game-container">
+      <div class="bitbibbies-section">
+        <h3>🎯 BitBibbies Required</h3>
+        <button id="bitbibbies-btn" class="bitbibbies-btn"
+          >Add BitBibbies</button
+        >
+        <div id="bitbibbies-status" class="bitbibbies-status">
+          ❌ BitBibbies Not Added
+        </div>
+      </div>
+
+      <div class="malia-section">
+        <div class="malia-avatar">
+          <div class="face">👧🏻</div>
+          <div class="voice-indicator">🎤</div>
+        </div>
+
+        <div class="malia-info">
+          <h3>Meet Malia</h3>
+          <p>A child who speaks English with Ana's voice from Microsoft</p>
+          <div class="voice-info">
+            <strong>Voice:</strong> Ana (Child) from Microsoft - like in talkers2
+          </div>
+          <p class="intro-text">You never talked with a child before!</p>
+        </div>
+      </div>
+
+      <div class="chat-interface">
+        <h3>💬 Ask Malia Anything You'd Like</h3>
+        <div class="chat-messages" id="chat-messages">
+          <div class="malia-message">
+            <strong>Malia:</strong> Hi! I'm Malia! Ask me anything you'd like and
+            I'll respond in my Ana voice from Microsoft!
+          </div>
+        </div>
+
+        <div class="chat-input-section">
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Ask Malia anything..."
+          />
+          <button id="send-btn" class="send-btn">Send</button>
+          <button id="speak-btn" class="speak-btn">🔊 Speak</button>
+        </div>
+      </div>
+
+      <div class="time-flipper-section">
+        <h3>⏰ Time Flipper</h3>
+        <div class="time-explanation">
+          <p>Dive into how it works - you can flip time!</p>
+          <p>
+            Example: Type 2:00 PM and it will generate 10:00 AM after pressing
+            submit!
+          </p>
+        </div>
+
+        <div class="time-input-section">
+          <label for="time-input">Enter Time:</label>
+          <input type="time" id="time-input" value="14:00" />
+          <button id="submit-time-btn" class="submit-btn">Submit</button>
+        </div>
+
+        <div class="time-result" id="time-result">
+          <div class="flipped-time">
+            <h4>Flipped Time:</h4>
+            <div id="flipped-display">--:--</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-rules-section">
+        <h3>📋 How Time Flipping Works</h3>
+        <div class="rules-grid">
+          <div class="rule-category">
+            <h4>Minutes Flip:</h4>
+            <div class="rule-examples">
+              <div>1 → 59, 2 → 58, 3 → 57</div>
+              <div>30 → 30 (stays same)</div>
+              <div>59 → 1, 0 → 0</div>
+            </div>
+          </div>
+          <div class="rule-category">
+            <h4>Hours Flip:</h4>
+            <div class="rule-examples">
+              <div>1 → 23, 2 → 22, 3 → 21</div>
+              <div>12 → 12 (stays same)</div>
+              <div>23 → 1, 0 → 0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script src="./_main.ts"></script>

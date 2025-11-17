@@ -1,0 +1,76 @@
+---
+import Menu3 from '@/components/Menu3/Menu3.astro'
+
+Menu3
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Document</title>
+  </head>
+  <body>
+    <Menu3 />
+    <details>
+      <summary>buttons</summary>
+      <div>
+        <button></button>
+        <button type="button"></button>
+        <button type="button"></button>
+        <button disabled="disabled"></button>
+        <button disabled="disabled"></button>
+        <button type="reset"></button>
+        <button type="submit"></button>
+        <button type="submit"></button>
+      </div>
+    </details>
+    <meta />
+    <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <meta name="description" content="" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="keywords" content="" />
+
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <h3>how does an html work. write a story/reason why</h3>
+    <h2>first, write a funny name</h2>
+    <input placeholder="Write a fun name" type="text" />
+    <style>
+      textarea {
+        width: 100%;
+        height: 100vh;
+      }
+    </style>
+    <textarea placeholder="Reason" name="" id=""></textarea>
+    <h1>kids place</h1>
+    <h2>the age rating is 4+</h2>
+    <menu type="context">ggg</menu>
+    <h3>for real. does the app want and html or need an html?</h3>
+    <style>
+      input {
+        width: 30%;
+      }
+    </style>
+    <select name="" id="">
+      <option value="">it wants an html</option>
+      <option value="">it needs an html</option>
+    </select>
+    <h2>colors</h2>
+    <h6>make paint and paint your app!!!!!</h6>
+    <input type="color" name="" id="pickcolor" />
+    <script>
+      document.getElementById('pickcolor').addEventListener('input', e => {
+        document.body.style.backgroundColor = e.target.value
+      })
+    </script>
+    <div style="margin-top:100px">
+      <img
+        src="/change_colors.png"
+        alt="How to change the color"
+        width="100%"
+      />
+    </div>
+  </body>
+</html>

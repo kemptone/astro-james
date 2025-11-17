@@ -25,8 +25,13 @@ class MusicApp extends HTMLElement {
     this.shadowRoot.innerHTML = `
       <style>
         select,
+        textarea,
         input {
           padding:10px;
+        }
+        textarea {
+          min-height:400px;
+          width:100%;
         }
         button {
           padding:10px;
@@ -47,14 +52,11 @@ class MusicApp extends HTMLElement {
       </style>
       <div style="padding: 20px;">
         <form id="inputForm">
-          <input type="text" id="sentenceInput" placeholder="Enter a sentence" />
+          <div>
+            <textarea colspan="10" rowspan="10" type="text" id="sentenceInput" placeholder="Enter a sentence"></textarea>
+          </div>
           <button type="submit">Submit</button>
         </form>
-        <div id="results" style="display: none;">
-          <h3>Musical Notation:</h3>
-          <div id="notation" style="margin: 20px 0; overflow-x: auto;"></div>
-          <h3>Piano Roll (Keyboard Visualization):</h3>
-          <div class="piano" id="piano"></div>
           <select id="oscType">
             <option value="sine">Sine</option>
             <option value="square">Square</option>
@@ -63,6 +65,11 @@ class MusicApp extends HTMLElement {
           </select>
           <button id="playButton" style="margin-top: 10px;">Play Sequence</button>
           <label style="margin-left: 10px;"><input type="checkbox" id="loopToggle"> Loop</label>
+        <div id="results" style="display: none;">
+          <h3>Musical Notation:</h3>
+          <div id="notation" style="margin: 20px 0; overflow-x: auto;"></div>
+          <h3>Piano Roll (Keyboard Visualization):</h3>
+          <div class="piano" id="piano"></div>
         </div>
       </div>
     `
@@ -140,7 +147,7 @@ class MusicApp extends HTMLElement {
       if (measureNotes.length < 8) {
         while (measureNotes.length < 8) {
           measureNotes.push(
-            new VF.StaveNote({clef: 'treble', keys: ['b/4'], duration: '8r'})
+            new VF.StaveNote({clef: 'treble', keys: ['b/4'], duration: '8r'}),
           )
         }
       }
@@ -194,14 +201,17 @@ class MusicApp extends HTMLElement {
             if (keyElement) {
               keyElement.style.backgroundColor = 'yellow'
               const durSec = Tone.Time(val.duration).toSeconds()
-              setTimeout(() => {
-                keyElement.style.backgroundColor = 'white'
-              }, durSec * 1000 - 50)
+              setTimeout(
+                () => {
+                  keyElement.style.backgroundColor = 'white'
+                },
+                durSec * 1000 - 50,
+              )
             }
           }
         },
         this.sequence,
-        '8n'
+        '8n',
       )
 
       this.seq.loop = loopChecked
@@ -215,12 +225,15 @@ class MusicApp extends HTMLElement {
       if (!loopChecked) {
         const stepDur = Tone.Time('8n').toSeconds()
         const totalDur = this.sequence.length * stepDur
-        setTimeout(() => {
-          Tone.Transport.stop()
-          if (this.seq) this.seq.stop()
-          this.isPlaying = false
-          this.playButton.textContent = 'Play Sequence'
-        }, totalDur * 1000 + 100)
+        setTimeout(
+          () => {
+            Tone.Transport.stop()
+            if (this.seq) this.seq.stop()
+            this.isPlaying = false
+            this.playButton.textContent = 'Play Sequence'
+          },
+          totalDur * 1000 + 100,
+        )
       }
     }
   }
