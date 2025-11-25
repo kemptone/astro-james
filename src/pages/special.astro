@@ -35,9 +35,9 @@ import Layout from '@/layouts/Layout.astro';
 			'wc-special-sro',
 			class extends HTMLElement {
 				private items: Array<{ name: string; side: 'left' | 'right' }> = [];
-				private options: string[] = [];
-				private submitCount = 0;
+				private options: Array<{ name: string; unlockCount: number; currentCount: number }> = [];
 				private activeColor = { r: 100, g: 149, b: 237 };
+				private showResults = false;
 
 				constructor() {
 					super();
@@ -51,7 +51,7 @@ import Layout from '@/layouts/Layout.astro';
 
 				private setupEventListeners() {
 					const input = this.shadowRoot!.querySelector(
-						'input[type="text"]'
+						'input.item-input'
 					) as HTMLInputElement;
 					const sideSelect = this.shadowRoot!.querySelector(
 						'select'
@@ -59,14 +59,14 @@ import Layout from '@/layouts/Layout.astro';
 					const addBtn = this.shadowRoot!.querySelector(
 						'button.add-btn'
 					) as HTMLButtonElement;
-					const optionInput = this.shadowRoot!.querySelector(
-						'input.option-input'
-					) as HTMLInputElement;
 					const addOptionBtn = this.shadowRoot!.querySelector(
 						'button.add-option-btn'
 					) as HTMLButtonElement;
 					const submitBtn = this.shadowRoot!.querySelector(
 						'button.submit-btn'
+					) as HTMLButtonElement;
+					const showResultsBtn = this.shadowRoot!.querySelector(
+						'button.show-results-btn'
 					) as HTMLButtonElement;
 					const resetBtn = this.shadowRoot!.querySelector(
 						'button.reset-btn'
@@ -79,10 +79,9 @@ import Layout from '@/layouts/Layout.astro';
 					) as HTMLButtonElement;
 
 					addBtn?.addEventListener('click', () => this.addItem(input, sideSelect));
-					addOptionBtn?.addEventListener('click', () =>
-						this.addOption(optionInput)
-					);
+					addOptionBtn?.addEventListener('click', () => this.addOption());
 					submitBtn?.addEventListener('click', () => this.submitGame());
+					showResultsBtn?.addEventListener('click', () => this.toggleShowResults());
 					resetBtn?.addEventListener('click', () => this.reset());
 					colorSubmitBtn?.addEventListener('click', () =>
 						this.updateColor(colorInputs)
@@ -92,9 +91,14 @@ import Layout from '@/layouts/Layout.astro';
 						if (e.key === 'Enter') this.addItem(input, sideSelect);
 						if (e.key === '0') {
 							e.preventDefault();
-							this.showResults();
+							this.toggleShowResults();
 						}
 					});
+				}
+
+				private toggleShowResults() {
+					this.showResults = !this.showResults;
+					this.render();
 				}
 
 				private addItem(
@@ -112,17 +116,38 @@ import Layout from '@/layouts/Layout.astro';
 					this.render();
 				}
 
-				private addOption(input: HTMLInputElement) {
-					const value = input.value.trim();
-					if (!value) return;
+				private addOption() {
+					const numberInput = this.shadowRoot!.querySelector(
+						'input.option-number'
+					) as HTMLInputElement;
+					const nameInput = this.shadowRoot!.querySelector(
+						'input.option-name'
+					) as HTMLInputElement;
 
-					this.options.push(value);
-					input.value = '';
+					const numberValue = numberInput?.value.trim();
+					const nameValue = nameInput?.value.trim();
+
+					if (!numberValue || !nameValue) return;
+
+					const unlockCount = parseInt(numberValue);
+					if (isNaN(unlockCount) || unlockCount < 1) return;
+
+					this.options.push({
+						name: nameValue,
+						unlockCount,
+						currentCount: 0
+					});
+					numberInput.value = '';
+					nameInput.value = '';
 					this.render();
 				}
 
 				private submitGame() {
-					this.submitCount++;
+					this.options.forEach((opt) => {
+						if (opt.currentCount < opt.unlockCount) {
+							opt.currentCount++;
+						}
+					});
 					this.render();
 				}
 
@@ -168,7 +193,7 @@ import Layout from '@/layouts/Layout.astro';
 				private reset() {
 					this.items = [];
 					this.options = [];
-					this.submitCount = 0;
+					this.showResults = false;
 					this.render();
 				}
 
@@ -181,15 +206,23 @@ import Layout from '@/layouts/Layout.astro';
 				private render() {
 					const color = `rgb(${this.activeColor.r}, ${this.activeColor.g}, ${this.activeColor.b})`;
 
-					const unlockedOptions = this.options.filter(
-						(_, index) => index < this.submitCount
-					);
+					const leftItems = this.items.filter((i) => i.side === 'left');
+					const rightItems = this.items.filter((i) => i.side === 'right');
 
-					const itemsList = this.items
-						.map(
-							(item) =>
-								`<li>${this.escapeHtml(item.name)} <span class="badge">${item.side}</span></li>`
-						)
+					const leftListHtml = leftItems
+						.map((item) => `<li>${this.escapeHtml(item.name)}</li>`)
+						.join('');
+
+					const rightListHtml = rightItems
+						.map((item) => `<li>${this.escapeHtml(item.name)}</li>`)
+						.join('');
+
+					const optionsHtml = this.options
+						.map((opt) => {
+							const isUnlocked = opt.currentCount >= opt.unlockCount;
+							const bgColor = isUnlocked ? color : '#aaa';
+							return `<div class="option-button" style="background: ${bgColor}; color: white; padding: 0.5rem 1rem; border-radius: 4px; display: inline-block; margin: 0.5rem 0.25rem; cursor: default;">${this.escapeHtml(opt.name)}</div>`;
+						})
 						.join('');
 
 					this.shadowRoot!.innerHTML = `
@@ -334,6 +367,12 @@ import Layout from '@/layouts/Layout.astro';
 								border-radius: 2px;
 							}
 
+							.result-list {
+								list-style: none;
+								padding: 0;
+								margin: 0;
+							}
+
 							.unlocked-options {
 								display: flex;
 								gap: 0.5rem;
@@ -374,31 +413,57 @@ import Layout from '@/layouts/Layout.astro';
 							<h2>Add Items to Sort</h2>
 							<div class="section">
 								<div class="input-group">
-									<input type="text" placeholder="Enter an item to sort..." />
+									<input type="text" class="item-input" placeholder="Enter an item to sort..." />
 									<select>
 										<option value="left">Place on Left</option>
 										<option value="right">Place on Right</option>
 									</select>
 									<button class="add-btn">Add Item</button>
 								</div>
-								${this.items.length > 0 ? `<ul class="items-list">${itemsList}</ul>` : ''}
-								<p class="submit-info">Press 0 or click "Show Results" when done adding items</p>
+								<p class="submit-info">Choose a side and add items to sort them!</p>
 							</div>
+
+							${this.items.length > 0 ? `
+								<button class="show-results-btn" style="width: 100%; padding: 1rem; font-size: 1.2rem; font-weight: bold; background: ${color}; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 1rem 0;">
+									${this.showResults ? 'Hide Results' : 'SHOW RESULTS (or press 0)'}
+								</button>
+
+								${this.showResults ? `
+									<div class="results-section">
+										<h2>Sorted Items</h2>
+										<div class="result-sides">
+											<div class="result-column">
+												<h4>Left:</h4>
+												<ul class="result-list">
+													${leftListHtml}
+												</ul>
+											</div>
+											<div class="result-column">
+												<h4>Right:</h4>
+												<ul class="result-list">
+													${rightListHtml}
+												</ul>
+											</div>
+										</div>
+									</div>
+								` : ''}
+							` : ''}
 
 							<h2>Create Custom Options</h2>
 							<div class="section">
 								<div class="input-group">
-									<input type="text" class="option-input" placeholder="Name a new option..." />
+									<input type="text" class="option-name" placeholder="Option name (e.g., Wow)" />
+									<input type="text" class="option-number" placeholder="Times to press Submit" />
 									<button class="add-option-btn">Add Option</button>
 								</div>
-								${this.options.length > 0 ? `<p class="submit-info">You have ${this.options.length} option(s). Press submit to unlock them!</p>` : ''}
+								${this.options.length > 0 ? `<p class="submit-info">Options created! Press submit to unlock them.</p>` : ''}
+								${this.options.length > 0 ? `<div style="margin-top: 1rem;">${optionsHtml}</div>` : ''}
 							</div>
 
-							<h2>Unlock Options</h2>
+							<h2>Submit to Unlock</h2>
 							<div class="section">
-								<p class="submit-info">Submit count: ${this.submitCount} / ${this.options.length}</p>
+								<p class="submit-info">Press submit to unlock options (you need to press it the specified number of times)</p>
 								<button class="submit-btn">Submit</button>
-								${unlockedOptions.length > 0 ? `<div class="unlocked-options">${unlockedOptions.map((opt) => `<div class="option-tag">${this.escapeHtml(opt)}</div>`).join('')}</div>` : ''}
 							</div>
 
 							<h2>Customize Color</h2>
@@ -414,8 +479,6 @@ import Layout from '@/layouts/Layout.astro';
 
 							<button class="reset-btn" style="width: 100%; margin-top: 2rem;">Reset Game</button>
 						</div>
-
-						<div class="results"></div>
 					`;
 
 					this.setupEventListeners();
