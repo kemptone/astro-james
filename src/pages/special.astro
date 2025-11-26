@@ -1,0 +1,489 @@
+---
+import Layout from '@/layouts/Layout.astro';
+---
+
+<Layout title="Special SRO">
+	<div class="container">
+		<h1>Special SRO</h1>
+		<p>Welcome to the sorting game! Create custom sorting options and organize items.</p>
+		<wc-special-sro></wc-special-sro>
+	</div>
+</Layout>
+
+<style>
+	.container {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 2rem;
+	}
+
+	h1 {
+		text-align: center;
+		margin-bottom: 1rem;
+	}
+
+	p {
+		text-align: center;
+		color: var(--muted-color);
+		margin-bottom: 2rem;
+	}
+</style>
+
+<script>
+	if (typeof window !== 'undefined') {
+		customElements.define(
+			'wc-special-sro',
+			class extends HTMLElement {
+				private items: Array<{ name: string; side: 'left' | 'right' }> = [];
+				private options: Array<{ name: string; unlockCount: number; currentCount: number }> = [];
+				private activeColor = { r: 100, g: 149, b: 237 };
+				private showResults = false;
+
+				constructor() {
+					super();
+					this.attachShadow({ mode: 'open' });
+				}
+
+				connectedCallback() {
+					this.render();
+					this.setupEventListeners();
+				}
+
+				private setupEventListeners() {
+					const input = this.shadowRoot!.querySelector(
+						'input.item-input'
+					) as HTMLInputElement;
+					const sideSelect = this.shadowRoot!.querySelector(
+						'select'
+					) as HTMLSelectElement;
+					const addBtn = this.shadowRoot!.querySelector(
+						'button.add-btn'
+					) as HTMLButtonElement;
+					const addOptionBtn = this.shadowRoot!.querySelector(
+						'button.add-option-btn'
+					) as HTMLButtonElement;
+					const submitBtn = this.shadowRoot!.querySelector(
+						'button.submit-btn'
+					) as HTMLButtonElement;
+					const showResultsBtn = this.shadowRoot!.querySelector(
+						'button.show-results-btn'
+					) as HTMLButtonElement;
+					const resetBtn = this.shadowRoot!.querySelector(
+						'button.reset-btn'
+					) as HTMLButtonElement;
+					const colorInputs = this.shadowRoot!.querySelectorAll(
+						'input[type="number"].color-input'
+					) as NodeListOf<HTMLInputElement>;
+					const colorSubmitBtn = this.shadowRoot!.querySelector(
+						'button.color-submit-btn'
+					) as HTMLButtonElement;
+
+					addBtn?.addEventListener('click', () => this.addItem(input, sideSelect));
+					addOptionBtn?.addEventListener('click', () => this.addOption());
+					submitBtn?.addEventListener('click', () => this.submitGame());
+					showResultsBtn?.addEventListener('click', () => this.toggleShowResults());
+					resetBtn?.addEventListener('click', () => this.reset());
+					colorSubmitBtn?.addEventListener('click', () =>
+						this.updateColor(colorInputs)
+					);
+
+					input?.addEventListener('keypress', (e) => {
+						if (e.key === 'Enter') this.addItem(input, sideSelect);
+						if (e.key === '0') {
+							e.preventDefault();
+							this.toggleShowResults();
+						}
+					});
+				}
+
+				private toggleShowResults() {
+					this.showResults = !this.showResults;
+					this.render();
+				}
+
+				private addItem(
+					input: HTMLInputElement,
+					sideSelect: HTMLSelectElement
+				) {
+					const value = input.value.trim();
+					if (!value) return;
+
+					const side = sideSelect.value as 'left' | 'right';
+					const inversedSide = side === 'left' ? 'right' : 'left';
+
+					this.items.push({ name: value, side: inversedSide });
+					input.value = '';
+					this.render();
+				}
+
+				private addOption() {
+					const numberInput = this.shadowRoot!.querySelector(
+						'input.option-number'
+					) as HTMLInputElement;
+					const nameInput = this.shadowRoot!.querySelector(
+						'input.option-name'
+					) as HTMLInputElement;
+
+					const numberValue = numberInput?.value.trim();
+					const nameValue = nameInput?.value.trim();
+
+					if (!numberValue || !nameValue) return;
+
+					const unlockCount = parseInt(numberValue);
+					if (isNaN(unlockCount) || unlockCount < 1) return;
+
+					this.options.push({
+						name: nameValue,
+						unlockCount,
+						currentCount: 0
+					});
+					numberInput.value = '';
+					nameInput.value = '';
+					this.render();
+				}
+
+				private submitGame() {
+					this.options.forEach((opt) => {
+						if (opt.currentCount < opt.unlockCount) {
+							opt.currentCount++;
+						}
+					});
+					this.render();
+				}
+
+				private updateColor(inputs: NodeListOf<HTMLInputElement>) {
+					let r = parseInt(inputs[0]?.value || '100');
+					let g = parseInt(inputs[1]?.value || '149');
+					let b = parseInt(inputs[2]?.value || '237');
+
+					r = Math.max(0, Math.min(255, r));
+					g = Math.max(0, Math.min(255, g));
+					b = Math.max(0, Math.min(255, b));
+
+					this.activeColor = { r, g, b };
+					this.render();
+				}
+
+				private showResults() {
+					const left = this.items.filter((i) => i.side === 'left');
+					const right = this.items.filter((i) => i.side === 'right');
+
+					const resultsDiv = this.shadowRoot!.querySelector('.results');
+					if (resultsDiv) {
+						resultsDiv.innerHTML = `
+							<h3>Results:</h3>
+							<div class="result-sides">
+								<div class="result-column">
+									<h4>Left:</h4>
+									<ul>
+										${left.map((i) => `<li>${this.escapeHtml(i.name)}</li>`).join('')}
+									</ul>
+								</div>
+								<div class="result-column">
+									<h4>Right:</h4>
+									<ul>
+										${right.map((i) => `<li>${this.escapeHtml(i.name)}</li>`).join('')}
+									</ul>
+								</div>
+							</div>
+						`;
+					}
+				}
+
+				private reset() {
+					this.items = [];
+					this.options = [];
+					this.showResults = false;
+					this.render();
+				}
+
+				private escapeHtml(text: string): string {
+					const div = document.createElement('div');
+					div.textContent = text;
+					return div.innerHTML;
+				}
+
+				private render() {
+					const color = `rgb(${this.activeColor.r}, ${this.activeColor.g}, ${this.activeColor.b})`;
+
+					const leftItems = this.items.filter((i) => i.side === 'left');
+					const rightItems = this.items.filter((i) => i.side === 'right');
+
+					const leftListHtml = leftItems
+						.map((item) => `<li>${this.escapeHtml(item.name)}</li>`)
+						.join('');
+
+					const rightListHtml = rightItems
+						.map((item) => `<li>${this.escapeHtml(item.name)}</li>`)
+						.join('');
+
+					const optionsHtml = this.options
+						.map((opt) => {
+							const isUnlocked = opt.currentCount >= opt.unlockCount;
+							const bgColor = isUnlocked ? color : '#aaa';
+							return `<div class="option-button" style="background: ${bgColor}; color: white; padding: 0.5rem 1rem; border-radius: 4px; display: inline-block; margin: 0.5rem 0.25rem; cursor: default;">${this.escapeHtml(opt.name)}</div>`;
+						})
+						.join('');
+
+					this.shadowRoot!.innerHTML = `
+						<style>
+							:host {
+								display: block;
+								font-family: var(--font-family, inherit);
+							}
+
+							.game-container {
+								background: ${color}22;
+								border: 2px solid ${color};
+								border-radius: 8px;
+								padding: 2rem;
+								margin-bottom: 2rem;
+							}
+
+							.section {
+								margin-bottom: 2rem;
+							}
+
+							.section-title {
+								font-size: 1.1rem;
+								font-weight: bold;
+								margin-bottom: 1rem;
+								color: ${color};
+							}
+
+							.input-group {
+								display: flex;
+								gap: 0.5rem;
+								margin-bottom: 1rem;
+								flex-wrap: wrap;
+							}
+
+							input[type="text"],
+							input[type="number"],
+							select {
+								padding: 0.5rem;
+								border: 1px solid ${color};
+								border-radius: 4px;
+								background: white;
+								color: black;
+							}
+
+							input[type="text"],
+							select {
+								flex: 1;
+								min-width: 150px;
+							}
+
+							input[type="number"].color-input {
+								max-width: 80px;
+							}
+
+							button {
+								padding: 0.5rem 1rem;
+								background: ${color};
+								color: white;
+								border: none;
+								border-radius: 4px;
+								cursor: pointer;
+								font-weight: bold;
+								transition: opacity 0.2s;
+							}
+
+							button:hover {
+								opacity: 0.8;
+							}
+
+							.items-list {
+								list-style: none;
+								padding: 0;
+								margin: 1rem 0;
+							}
+
+							.items-list li {
+								padding: 0.5rem;
+								background: white;
+								border: 1px solid ${color}44;
+								margin-bottom: 0.5rem;
+								border-radius: 4px;
+								display: flex;
+								justify-content: space-between;
+								align-items: center;
+							}
+
+							.badge {
+								background: ${color};
+								color: white;
+								padding: 0.25rem 0.5rem;
+								border-radius: 3px;
+								font-size: 0.85rem;
+								font-weight: bold;
+							}
+
+							.color-picker {
+								display: flex;
+								gap: 0.5rem;
+								align-items: center;
+								flex-wrap: wrap;
+							}
+
+							.color-preview {
+								width: 50px;
+								height: 50px;
+								background: ${color};
+								border-radius: 4px;
+								border: 2px solid ${color};
+							}
+
+							.results {
+								background: white;
+								border: 2px solid ${color};
+								border-radius: 8px;
+								padding: 1.5rem;
+								margin-top: 2rem;
+							}
+
+							.result-sides {
+								display: grid;
+								grid-template-columns: 1fr 1fr;
+								gap: 2rem;
+								margin-top: 1rem;
+							}
+
+							.result-column h4 {
+								color: ${color};
+								margin-bottom: 0.5rem;
+							}
+
+							.result-column ul {
+								list-style: none;
+								padding: 0;
+							}
+
+							.result-column li {
+								padding: 0.5rem;
+								background: ${color}11;
+								border-left: 3px solid ${color};
+								margin-bottom: 0.5rem;
+								border-radius: 2px;
+							}
+
+							.result-list {
+								list-style: none;
+								padding: 0;
+								margin: 0;
+							}
+
+							.unlocked-options {
+								display: flex;
+								gap: 0.5rem;
+								flex-wrap: wrap;
+							}
+
+							.option-tag {
+								background: ${color};
+								color: white;
+								padding: 0.5rem 1rem;
+								border-radius: 20px;
+								font-size: 0.9rem;
+							}
+
+							.submit-info {
+								font-size: 0.9rem;
+								color: ${color};
+								margin-top: 0.5rem;
+							}
+
+							@media (max-width: 600px) {
+								.result-sides {
+									grid-template-columns: 1fr;
+								}
+
+								.input-group {
+									flex-direction: column;
+								}
+
+								input[type="text"],
+								select {
+									width: 100%;
+								}
+							}
+						</style>
+
+						<div class="game-container">
+							<h2>Add Items to Sort</h2>
+							<div class="section">
+								<div class="input-group">
+									<input type="text" class="item-input" placeholder="Enter an item to sort..." />
+									<select>
+										<option value="left">Place on Left</option>
+										<option value="right">Place on Right</option>
+									</select>
+									<button class="add-btn">Add Item</button>
+								</div>
+								<p class="submit-info">Choose a side and add items to sort them!</p>
+							</div>
+
+							${this.items.length > 0 ? `
+								<button class="show-results-btn" style="width: 100%; padding: 1rem; font-size: 1.2rem; font-weight: bold; background: ${color}; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 1rem 0;">
+									${this.showResults ? 'Hide Results' : 'SHOW RESULTS (or press 0)'}
+								</button>
+
+								${this.showResults ? `
+									<div class="results-section">
+										<h2>Sorted Items</h2>
+										<div class="result-sides">
+											<div class="result-column">
+												<h4>Left:</h4>
+												<ul class="result-list">
+													${leftListHtml}
+												</ul>
+											</div>
+											<div class="result-column">
+												<h4>Right:</h4>
+												<ul class="result-list">
+													${rightListHtml}
+												</ul>
+											</div>
+										</div>
+									</div>
+								` : ''}
+							` : ''}
+
+							<h2>Create Custom Options</h2>
+							<div class="section">
+								<div class="input-group">
+									<input type="text" class="option-name" placeholder="Option name (e.g., Wow)" />
+									<input type="text" class="option-number" placeholder="Times to press Submit" />
+									<button class="add-option-btn">Add Option</button>
+								</div>
+								${this.options.length > 0 ? `<p class="submit-info">Options created! Press submit to unlock them.</p>` : ''}
+								${this.options.length > 0 ? `<div style="margin-top: 1rem;">${optionsHtml}</div>` : ''}
+							</div>
+
+							<h2>Submit to Unlock</h2>
+							<div class="section">
+								<p class="submit-info">Press submit to unlock options (you need to press it the specified number of times)</p>
+								<button class="submit-btn">Submit</button>
+							</div>
+
+							<h2>Customize Color</h2>
+							<div class="section">
+								<div class="color-picker">
+									<label>R: <input type="number" class="color-input" min="0" max="255" value="${this.activeColor.r}" /></label>
+									<label>G: <input type="number" class="color-input" min="0" max="255" value="${this.activeColor.g}" /></label>
+									<label>B: <input type="number" class="color-input" min="0" max="255" value="${this.activeColor.b}" /></label>
+									<div class="color-preview"></div>
+									<button class="color-submit-btn">Apply Color</button>
+								</div>
+							</div>
+
+							<button class="reset-btn" style="width: 100%; margin-top: 2rem;">Reset Game</button>
+						</div>
+					`;
+
+					this.setupEventListeners();
+				}
+			}
+		);
+	}
+</script>

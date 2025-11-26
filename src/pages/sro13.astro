@@ -93,6 +93,44 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
 
       let schedules = []
 
+      // Flip a time value (HH:MM format) to its opposite
+      function flipTime(date) {
+        let hours = date.getHours()
+        let minutes = date.getMinutes()
+
+        // Convert 24-hour to 12-hour for calculation
+        let hours12 = hours % 12 || 12  // 0->12, 1->1, 12->12, 13->1, 23->11
+
+        // Flip hours in 12-hour format: 11 - hour (not 12)
+        if (hours12 === 0 || hours12 === 12) {
+          hours12 = 11
+        } else {
+          hours12 = 11 - hours12
+        }
+
+        // Flip minutes: 60 - minute (special case for 0)
+        if (minutes === 0) {
+          minutes = 0
+        } else {
+          minutes = 60 - minutes
+        }
+
+        // Convert back to 24-hour format, TOGGLING AM/PM (opposite period)
+        const isAM = hours < 12
+        if (hours12 === 11) {
+          // Special case for 11: check what it flipped from
+          hours = isAM ? 23 : 11  // AM 12 -> 11 PM, PM 12 -> 11 AM
+        } else {
+          // Toggle AM/PM: if was AM, make PM; if was PM, make AM
+          hours = isAM ? hours12 + 12 : hours12
+        }
+
+        // Create new date with flipped time
+        const flipped = new Date(date)
+        flipped.setHours(hours, minutes, 0, 0)
+        return flipped
+      }
+
       // Dog mode functionality
       function updateDogResponse() {
         const selectedMode = document.querySelector(
@@ -160,8 +198,8 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
 
       // Add schedule functionality
       function addSchedule() {
-        const timeInput = document.getElementById('scheduleTime2')
-        const taskInput = document.getElementById('scheduleTask')
+        const timeInput = document.getElementById('scheduleTime2') as HTMLInputElement
+        const taskInput = document.getElementById('scheduleTask') as HTMLInputElement
         const numberInTime = document.getElementById(
           'numberInTime'
         ) as HTMLInputElement
@@ -171,29 +209,43 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
           return
         }
 
-        const timeData = numberInTime.value
-          ? {dateTime: new Date(numberInTime.value)}
-          : convertTime(timeInput.value)
+        let inputTimeStr
+        let flippedTime
+
+        if (numberInTime.value) {
+          // Parse time string (HH:MM) from time picker
+          const [hours, minutes] = numberInTime.value.split(':')
+          const inputDate = new Date()
+          inputDate.setHours(parseInt(hours), parseInt(minutes), 0, 0)
+          inputTimeStr = numberInTime.value
+          flippedTime = flipTime(inputDate)
+        } else {
+          alert('Please use the time picker to enter a time!')
+          return
+        }
+
         const schedule = {
           id: Date.now(),
           task: taskInput.value,
-          dateTime: timeData.dateTime,
+          inputTime: inputTimeStr,
+          flippedTime: flippedTime,
         }
 
-        debugger
-
         schedules.push(schedule)
-        // schedules.sort((a, b) => a.fantasy.localeCompare(b.fantasy))
-        schedules.sort(
-          (b, a) =>
-            (a.dateTime as Date).getTime() < (b.dateTime as Date).getTime()
-        )
+        // Sort: latest added at top, earliest at bottom
+        schedules.sort((a, b) => b.id - a.id)
 
         renderSchedules()
 
         // Clear inputs
         timeInput.value = ''
+        numberInTime.value = ''
         taskInput.value = ''
+      }
+
+      // Format time without seconds, 12-hour format with AM/PM
+      function formatTimeWithoutSeconds(date) {
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
       }
 
       // Render schedules
@@ -201,15 +253,18 @@ import Menu3 from '@/components/Menu3/Menu3.astro'
         const listDiv = document.getElementById('scheduleList')
         listDiv.innerHTML = schedules
           .map(
-            schedule => `
+            schedule => {
+              const flippedTimeStr = formatTimeWithoutSeconds(schedule.flippedTime as Date)
+              return `
           <div class="schedule-item">
             <div class="schedule-time">
-              <span class="fantasy-time">${(schedule.dateTime as Date).toLocaleTimeString()}</span>
+              <span class="fantasy-time">${flippedTimeStr}</span>
               <span class="schedule-task">${schedule.task}</span>
               <button onclick="removeSchedule(${schedule.id})" class="remove-btn">Remove</button>
             </div>
           </div>
         `
+            }
           )
           .join('')
       }
