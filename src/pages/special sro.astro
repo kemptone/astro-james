@@ -38,6 +38,7 @@ import Layout from '@/layouts/Layout.astro';
 				private options: Array<{ name: string; unlockCount: number; currentCount: number }> = [];
 				private activeColor = { r: 100, g: 149, b: 237 };
 				private showResults = false;
+				private showAllOptions = false;
 
 				constructor() {
 					super();
@@ -68,6 +69,9 @@ import Layout from '@/layouts/Layout.astro';
 					const showResultsBtn = this.shadowRoot!.querySelector(
 						'button.show-results-btn'
 					) as HTMLButtonElement;
+					const showAllOptionsBtn = this.shadowRoot!.querySelector(
+						'button.show-all-options-btn'
+					) as HTMLButtonElement;
 					const resetBtn = this.shadowRoot!.querySelector(
 						'button.reset-btn'
 					) as HTMLButtonElement;
@@ -82,6 +86,7 @@ import Layout from '@/layouts/Layout.astro';
 					addOptionBtn?.addEventListener('click', () => this.addOption());
 					submitBtn?.addEventListener('click', () => this.submitGame());
 					showResultsBtn?.addEventListener('click', () => this.toggleShowResults());
+					showAllOptionsBtn?.addEventListener('click', () => this.toggleShowAllOptions());
 					resetBtn?.addEventListener('click', () => this.reset());
 					colorSubmitBtn?.addEventListener('click', () =>
 						this.updateColor(colorInputs)
@@ -98,6 +103,11 @@ import Layout from '@/layouts/Layout.astro';
 
 				private toggleShowResults() {
 					this.showResults = !this.showResults;
+					this.render();
+				}
+
+				private toggleShowAllOptions() {
+					this.showAllOptions = !this.showAllOptions;
 					this.render();
 				}
 
@@ -455,9 +465,32 @@ import Layout from '@/layouts/Layout.astro';
 									<input type="text" class="option-name" placeholder="Option name (e.g., Wow)" />
 									<input type="text" class="option-number" placeholder="Times to press Submit" />
 									<button class="add-option-btn">Add Option</button>
+									${this.options.length > 0 ? `<button class="show-all-options-btn" style="background: #6c757d; padding: 0.5rem 1rem; border-radius: 4px; border: none; color: white; cursor: pointer; font-weight: bold; font-size: 1.2rem;">☁️</button>` : ''}
 								</div>
 								${this.options.length > 0 ? `<p class="submit-info">Options created! Press submit to unlock them.</p>` : ''}
-								${this.options.length > 0 ? `<div style="margin-top: 1rem;">${optionsHtml}</div>` : ''}
+								${this.showAllOptions ? `
+									<div style="background: white; border: 2px solid ${color}; border-radius: 8px; padding: 1.5rem; margin-top: 1rem;">
+										<h3 style="color: ${color}; margin-bottom: 1rem;">All Options Progress</h3>
+										<div style="display: flex; flex-direction: column; gap: 0.75rem;">
+											${this.options.map((opt) => {
+												const isUnlocked = opt.currentCount >= opt.unlockCount;
+												const progressPercent = Math.min(100, (opt.currentCount / opt.unlockCount) * 100);
+												return `
+													<div style="border: 1px solid ${color}44; padding: 0.75rem; border-radius: 4px;">
+														<div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+															<span style="font-weight: bold; color: ${isUnlocked ? color : '#333'};">${this.escapeHtml(opt.name)}</span>
+															<span style="color: ${isUnlocked ? color : '#999'};">${opt.currentCount}/${opt.unlockCount}</span>
+														</div>
+														<div style="background: #f0f0f0; height: 8px; border-radius: 4px; overflow: hidden;">
+															<div style="background: ${isUnlocked ? color : '#ccc'}; height: 100%; width: ${progressPercent}%; transition: width 0.3s;"></div>
+														</div>
+													</div>
+												`;
+											}).join('')}
+										</div>
+									</div>
+								` : ''}
+								${this.options.length > 0 && !this.showAllOptions ? `<div style="margin-top: 1rem;">${optionsHtml}</div>` : ''}
 							</div>
 
 							<h2>Submit to Unlock</h2>

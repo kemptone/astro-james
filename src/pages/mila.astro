@@ -1,0 +1,495 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Mila's Interactive Tool">
+  <style>
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      font-family: system-ui, sans-serif;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .section {
+      padding: 1.5rem;
+      background: #f5f5f5;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .section h2 {
+      margin-top: 0;
+      color: #222;
+      font-size: 1.2rem;
+      border-bottom: 2px solid #007acc;
+      padding-bottom: 0.5rem;
+    }
+
+    /* Schedule Section */
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .day-btn {
+      padding: 0.75rem;
+      border: 2px solid #007acc;
+      background: white;
+      color: #007acc;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+
+    .day-btn:hover {
+      background: #e3f2fd;
+    }
+
+    .day-btn.active {
+      background: #007acc;
+      color: white;
+    }
+
+    .day-label {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 0.25rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .reset-btn {
+      flex: 1;
+      padding: 0.75rem;
+      border: none;
+      background: #28a745;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .reset-btn:hover {
+      background: #218838;
+    }
+
+    /* Color Bar Section */
+    .color-entry {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+
+    .color-input {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .percentage-input {
+      width: 80px;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .add-color-btn {
+      padding: 0.5rem 1rem;
+      background: #007acc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .add-color-btn:hover {
+      background: #005a9c;
+    }
+
+    .color-bar-container {
+      background: white;
+      height: 60px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .color-segment {
+      position: absolute;
+      height: 100%;
+      opacity: 0.8;
+      transition: width 0.3s;
+    }
+
+    .color-marker {
+      position: absolute;
+      width: 2px;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      top: 0;
+    }
+
+    .color-list {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #ddd;
+    }
+
+    .color-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .color-box {
+      width: 24px;
+      height: 24px;
+      border-radius: 2px;
+      border: 1px solid #ccc;
+    }
+
+    /* Switches Section */
+    .switch-group {
+      margin-bottom: 2rem;
+    }
+
+    .switch-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #222;
+    }
+
+    .switch-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    .switch-explanation {
+      margin-top: 0.75rem;
+      padding: 0.75rem;
+      background: white;
+      border-left: 4px solid #007acc;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .switch-state {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .switch-indicator {
+      padding: 0.75rem;
+      border-radius: 4px;
+      text-align: center;
+      font-weight: bold;
+      color: white;
+    }
+
+    .switch-on {
+      background: #28a745;
+    }
+
+    .switch-off {
+      background: #dc3545;
+    }
+
+    .footer-note {
+      grid-column: 1 / -1;
+      padding: 1rem;
+      background: #fff3cd;
+      border-radius: 4px;
+      color: #856404;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .schedule-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+
+  <main>
+    <h1>Mila's Interactive Game</h1>
+
+    <div class="container">
+      <!-- Schedule Section -->
+      <div class="section">
+        <h2>Weekly Schedule</h2>
+        <div class="button-group">
+          <button class="reset-btn" id="resetWeek">Reset Week Schedule</button>
+          <button class="reset-btn" id="resetColors">Reset Colors</button>
+        </div>
+
+        <p>Select days for activities (like train rides):</p>
+        <div class="schedule-grid" id="scheduleGrid"></div>
+
+        <div id="selectedDays" style="margin-top: 1rem; padding: 1rem; background: white; border-radius: 4px;">
+          <strong>Selected:</strong> <span id="selectedDaysText">None</span>
+        </div>
+      </div>
+
+      <!-- Color Bar Section -->
+      <div class="section">
+        <h2>Color Bar System</h2>
+        <p>Add colors and percentages to create a visualization:</p>
+
+        <div class="color-entry">
+          <input type="color" id="colorInput" class="color-input" value="#FF0000">
+          <input type="number" id="percentageInput" class="percentage-input" min="0" max="100" placeholder="0-100">
+          <button class="add-color-btn" id="addColorBtn">Add</button>
+        </div>
+
+        <div class="color-bar-container" id="colorBar"></div>
+
+        <div class="color-list" id="colorList"></div>
+      </div>
+    </div>
+
+    <!-- Switches Section -->
+    <div class="section">
+      <h2>Switch Controls</h2>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div class="switch-group">
+          <label class="switch-label">Left Input (Controls Switches 1 & 2)</label>
+          <input type="number" class="switch-input" id="leftSwitch" min="1" max="4" value="1">
+          <div class="switch-explanation">
+            <strong>1:</strong> Switch 1 ON, Switch 2 OFF<br>
+            <strong>2:</strong> Switch 1 ON, Switch 2 ON<br>
+            <strong>3:</strong> Switch 1 OFF, Switch 2 ON<br>
+            <strong>4:</strong> Switch 1 OFF, Switch 2 OFF
+          </div>
+
+          <div class="switch-state">
+            <div>
+              <strong>Switch 1</strong>
+              <div class="switch-indicator switch-on" id="switch1">ON</div>
+            </div>
+            <div>
+              <strong>Switch 2</strong>
+              <div class="switch-indicator switch-off" id="switch2">OFF</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="switch-group">
+          <label class="switch-label">Right Input (Controls Switches 3 & 4)</label>
+          <input type="number" class="switch-input" id="rightSwitch" min="1" max="4" value="1">
+          <div class="switch-explanation">
+            <strong>1:</strong> Switch 3 ON, Switch 4 OFF<br>
+            <strong>2:</strong> Switch 3 ON, Switch 4 ON<br>
+            <strong>3:</strong> Switch 3 OFF, Switch 4 ON<br>
+            <strong>4:</strong> Switch 3 OFF, Switch 4 OFF
+          </div>
+
+          <div class="switch-state">
+            <div>
+              <strong>Switch 3</strong>
+              <div class="switch-indicator switch-on" id="switch3">ON</div>
+            </div>
+            <div>
+              <strong>Switch 4</strong>
+              <div class="switch-indicator switch-off" id="switch4">OFF</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        Talk to Mr. Grok! These switches are fake but fun to control.
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const days = [
+      { num: 1, name: 'Monday' },
+      { num: 2, name: 'Tuesday' },
+      { num: 3, name: 'Wednesday' },
+      { num: 4, name: 'Thursday' },
+      { num: 5, name: 'Friday' },
+      { num: 6, name: 'Saturday' },
+      { num: 7, name: 'Sunday' },
+      { num: 8, name: 'Snuggleday' }
+    ];
+
+    let selectedDays = new Set();
+    let colors = [];
+
+    // Initialize schedule grid
+    const scheduleGrid = document.getElementById('scheduleGrid');
+    days.forEach(day => {
+      const btn = document.createElement('button');
+      btn.className = 'day-btn';
+      btn.innerHTML = `<div>${day.num}</div><div class="day-label">${day.name}</div>`;
+      btn.addEventListener('click', () => toggleDay(day.num, btn));
+      scheduleGrid.appendChild(btn);
+    });
+
+    function toggleDay(dayNum, btn) {
+      if (selectedDays.has(dayNum)) {
+        selectedDays.delete(dayNum);
+        btn.classList.remove('active');
+      } else {
+        selectedDays.add(dayNum);
+        btn.classList.add('active');
+      }
+      updateSelectedDaysDisplay();
+    }
+
+    function updateSelectedDaysDisplay() {
+      const sorted = Array.from(selectedDays).sort((a, b) => a - b);
+      const dayNames = sorted.map(num => {
+        const day = days.find(d => d.num === num);
+        return day.name;
+      }).join(', ');
+
+      document.getElementById('selectedDaysText').textContent = dayNames || 'None';
+    }
+
+    // Reset buttons
+    document.getElementById('resetWeek').addEventListener('click', () => {
+      selectedDays.clear();
+      document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+      updateSelectedDaysDisplay();
+    });
+
+    document.getElementById('resetColors').addEventListener('click', () => {
+      colors = [];
+      document.getElementById('colorBar').innerHTML = '';
+      document.getElementById('colorList').innerHTML = '';
+    });
+
+    // Color bar functionality
+    document.getElementById('addColorBtn').addEventListener('click', addColor);
+
+    function addColor() {
+      const color = document.getElementById('colorInput').value;
+      const percentage = parseInt(document.getElementById('percentageInput').value);
+
+      if (isNaN(percentage) || percentage < 0 || percentage > 100) {
+        alert('Please enter a valid percentage (0-100)');
+        return;
+      }
+
+      colors.push({ color, percentage });
+      colors.sort((a, b) => a.percentage - b.percentage);
+
+      updateColorBar();
+      updateColorList();
+      document.getElementById('percentageInput').value = '';
+    }
+
+    function updateColorBar() {
+      const bar = document.getElementById('colorBar');
+      bar.innerHTML = '';
+
+      if (colors.length === 0) return;
+
+      let lastPercentage = 0;
+      colors.forEach((item, index) => {
+        const segment = document.createElement('div');
+        segment.className = 'color-segment';
+        segment.style.background = item.color;
+        segment.style.left = lastPercentage + '%';
+        segment.style.width = (item.percentage - lastPercentage) + '%';
+        bar.appendChild(segment);
+
+        const marker = document.createElement('div');
+        marker.className = 'color-marker';
+        marker.style.left = item.percentage + '%';
+        bar.appendChild(marker);
+
+        lastPercentage = item.percentage;
+      });
+    }
+
+    function updateColorList() {
+      const list = document.getElementById('colorList');
+      list.innerHTML = '';
+
+      colors.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'color-item';
+        div.innerHTML = `
+          <div class="color-box" style="background: ${item.color}"></div>
+          <span>${item.color} at ${item.percentage}%</span>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    // Switch functionality
+    function updateSwitches(inputId, switch1Id, switch2Id) {
+      const input = document.getElementById(inputId);
+      const value = parseInt(input.value) || 1;
+
+      const switches = {
+        1: { [switch1Id]: true, [switch2Id]: false },
+        2: { [switch1Id]: true, [switch2Id]: true },
+        3: { [switch1Id]: false, [switch2Id]: true },
+        4: { [switch1Id]: false, [switch2Id]: false }
+      };
+
+      const state = switches[Math.min(Math.max(value, 1), 4)];
+
+      Object.entries(state).forEach(([switchId, isOn]) => {
+        const element = document.getElementById(switchId);
+        element.textContent = isOn ? 'ON' : 'OFF';
+        element.className = `switch-indicator ${isOn ? 'switch-on' : 'switch-off'}`;
+      });
+    }
+
+    document.getElementById('leftSwitch').addEventListener('change', () => {
+      updateSwitches('leftSwitch', 'switch1', 'switch2');
+    });
+
+    document.getElementById('rightSwitch').addEventListener('change', () => {
+      updateSwitches('rightSwitch', 'switch3', 'switch4');
+    });
+
+    // Initialize switches
+    updateSwitches('leftSwitch', 'switch1', 'switch2');
+    updateSwitches('rightSwitch', 'switch3', 'switch4');
+  </script>
+</Layout>
