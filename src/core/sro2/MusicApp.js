@@ -4,6 +4,15 @@ import * as Vex from 'vexflow'
 const noteLetters = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
 
 const allNotes = []
+
+// Add 20 notes below C3 (D0 through B2)
+for (let stepsBack = 20; stepsBack >= 1; stepsBack--) {
+  const noteIndex = (7 - (stepsBack % 7)) % 7
+  const octave = 2 - Math.floor((stepsBack - 1) / 7)
+  allNotes.push(`${noteLetters[noteIndex]}${octave}`)
+}
+
+// Add 36 notes for a-z and +1 through +0 (C3 through C8)
 for (let idx = 0; idx < 36; idx++) {
   const noteLetter = noteLetters[idx % 7]
   const octave = 3 + Math.floor(idx / 7)
@@ -39,6 +48,7 @@ class MusicApp extends HTMLElement {
         .piano {
           display: flex;
           flex-direction: row;
+          flex-wrap:wrap;
         }
         .piano-key {
           background-color: white;
@@ -104,23 +114,34 @@ class MusicApp extends HTMLElement {
     for (let i = 0; i < input.length; i++) {
       const char = input[i]
       if (char >= 'A' && char <= 'Z') {
-        const idx = char.charCodeAt(0) - 'A'.charCodeAt(0)
-        const noteLetter = noteLetters[idx % 7]
-        const octave = 3 + Math.floor(idx / 7)
-        newSequence.push({note: `${noteLetter}${octave}`, duration: '8n'})
+        // Letters a-z map to indices 20-45
+        const idx = char.charCodeAt(0) - 'A'.charCodeAt(0) + 20
+        newSequence.push({note: allNotes[idx], duration: '8n'})
       } else if (char === ' ') {
         newSequence.push({note: null, duration: '8n'})
       } else if (char === '+' && i + 1 < input.length) {
         const nextChar = input[i + 1]
         if (nextChar >= '0' && nextChar <= '9') {
-          // +1 to +9 map to indices 26-34, +0 maps to index 35
+          // +1 to +9 map to indices 46-54, +0 maps to index 55
           const digitValue = nextChar === '0' ? 10 : parseInt(nextChar)
-          const idx = 25 + digitValue
-          const noteLetter = noteLetters[idx % 7]
-          const octave = 3 + Math.floor(idx / 7)
-          newSequence.push({note: `${noteLetter}${octave}`, duration: '8n'})
+          const idx = 45 + digitValue
+          newSequence.push({note: allNotes[idx], duration: '8n'})
           i++ // Skip the next character since we've already processed it
         }
+      } else if (char === '-' && i + 1 < input.length) {
+        const nextChar = input[i + 1]
+        if (nextChar >= '0' && nextChar <= '9') {
+          // -1 to -9 map to indices 9-1, -0 maps to index 0
+          const digitValue = nextChar === '0' ? 10 : parseInt(nextChar)
+          const idx = 10 - digitValue
+          newSequence.push({note: allNotes[idx], duration: '8n'})
+          i++ // Skip the next character since we've already processed it
+        }
+      } else if (char >= '0' && char <= '9') {
+        // Standalone digits 0-9 map to indices 10-19
+        const digitValue = parseInt(char)
+        const idx = 10 + digitValue
+        newSequence.push({note: allNotes[idx], duration: '8n'})
       }
     }
 
