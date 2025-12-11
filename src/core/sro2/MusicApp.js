@@ -4,7 +4,7 @@ import * as Vex from 'vexflow'
 const noteLetters = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
 
 const allNotes = []
-for (let idx = 0; idx < 26; idx++) {
+for (let idx = 0; idx < 36; idx++) {
   const noteLetter = noteLetters[idx % 7]
   const octave = 3 + Math.floor(idx / 7)
   allNotes.push(`${noteLetter}${octave}`)
@@ -101,7 +101,8 @@ class MusicApp extends HTMLElement {
       .getElementById('sentenceInput')
       .value.toUpperCase()
     const newSequence = []
-    for (let char of input) {
+    for (let i = 0; i < input.length; i++) {
+      const char = input[i]
       if (char >= 'A' && char <= 'Z') {
         const idx = char.charCodeAt(0) - 'A'.charCodeAt(0)
         const noteLetter = noteLetters[idx % 7]
@@ -109,6 +110,17 @@ class MusicApp extends HTMLElement {
         newSequence.push({note: `${noteLetter}${octave}`, duration: '8n'})
       } else if (char === ' ') {
         newSequence.push({note: null, duration: '8n'})
+      } else if (char === '+' && i + 1 < input.length) {
+        const nextChar = input[i + 1]
+        if (nextChar >= '0' && nextChar <= '9') {
+          // +1 to +9 map to indices 26-34, +0 maps to index 35
+          const digitValue = nextChar === '0' ? 10 : parseInt(nextChar)
+          const idx = 25 + digitValue
+          const noteLetter = noteLetters[idx % 7]
+          const octave = 3 + Math.floor(idx / 7)
+          newSequence.push({note: `${noteLetter}${octave}`, duration: '8n'})
+          i++ // Skip the next character since we've already processed it
+        }
       }
     }
 
