@@ -39,6 +39,7 @@ const Arr = Array.from(
   import { loadPlayLoop } from "@/lib/fanSound"
   import { getFanSoundManager } from "@/lib/fanSound"
   import { fanDefaults } from "./defaults"
+  import type { SoundLayer } from "@/lib/fanSound"
 
   customElements.define(
     "pr8-blades",
@@ -46,7 +47,7 @@ const Arr = Array.from(
       startAngle = 0
       index = 0
       isRunning = false
-      soundUrl = fanDefaults.fanSound
+      soundLayers = fanDefaults.soundLayers.map(layer => ({...layer}))
 
       static get observedAttributes() {
         return [
@@ -54,7 +55,7 @@ const Arr = Array.from(
           "blade_count",
           "data-scale",
           "data-opacity",
-          "data-sound-url",
+          "data-sound-layers",
           "data-reverb-amount",
           "data-reverb-type",
         ]
@@ -67,8 +68,12 @@ const Arr = Array.from(
         if (dataset.opacity) {
           this.style.setProperty("--opacity", dataset.opacity)
         }
-        if (dataset.soundUrl) {
-          this.soundUrl = dataset.soundUrl
+        if (dataset.soundLayers) {
+          try {
+            this.soundLayers = JSON.parse(dataset.soundLayers)
+          } catch (e) {
+            console.error("Failed to parse sound layers:", e)
+          }
         }
         if (dataset.reverbType) {
           // Load new impulse response when reverb type changes
@@ -144,10 +149,10 @@ const Arr = Array.from(
             return
           }
 
-          // Start the fan sound
+          // Start the fan sound with layered sounds
           try {
             await loadPlayLoop({
-              url: this.soundUrl,
+              soundLayers: this.soundLayers,
               accelTime,
               fullSpeedTime,
               decelTime,

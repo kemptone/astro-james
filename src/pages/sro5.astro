@@ -3,461 +3,505 @@
 // No external dependencies - all code is self-contained
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SRO5 - Weekly Task Scheduler</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SRO5 - Weekly Task Scheduler</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 2rem;
-      color: #333;
-    }
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem;
+        color: #333;
+      }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    }
-
-    h1 {
-      color: #667eea;
-      text-align: center;
-      margin-bottom: 1.5rem;
-      font-size: 2.5rem;
-    }
-
-    .intro {
-      background: #f0f4ff;
-      padding: 1.5rem;
-      border-radius: 10px;
-      margin-bottom: 2rem;
-      border-left: 5px solid #667eea;
-    }
-
-    .intro h2 {
-      color: #764ba2;
-      margin-bottom: 1rem;
-    }
-
-    .cornot-section {
-      background: #fff9e6;
-      padding: 1.5rem;
-      border-radius: 10px;
-      margin-bottom: 2rem;
-      border-left: 5px solid #ffd93d;
-    }
-
-    .cornot-section h3 {
-      color: #f39c12;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .days-reference {
-      background: #e8f5e9;
-      padding: 1rem;
-      border-radius: 8px;
-      margin: 1rem 0;
-    }
-
-    .days-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .day-item {
-      background: white;
-      padding: 0.5rem;
-      border-radius: 5px;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .task-entry {
-      background: #f8f9fa;
-      padding: 1.5rem;
-      border-radius: 10px;
-      margin-bottom: 2rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-      color: #555;
-    }
-
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 0.8rem;
-      border: 2px solid #ddd;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: border-color 0.3s;
-    }
-
-    input[type="text"]:focus,
-    input[type="number"]:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-
-    button {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-
-    .task-list {
-      margin-top: 2rem;
-    }
-
-    .task-item {
-      background: white;
-      border: 2px solid #e0e0e0;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-
-    .task-days {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .task-day-badge {
-      background: #667eea;
-      color: white;
-      padding: 0.3rem 0.8rem;
-      border-radius: 15px;
-      font-size: 0.9rem;
-    }
-
-    .magic-section {
-      background: linear-gradient(135deg, #ffd93d 0%, #f39c12 100%);
-      padding: 2rem;
-      border-radius: 10px;
-      margin-top: 2rem;
-      color: white;
-    }
-
-    .magic-section.disabled {
-      opacity: 0.5;
-      pointer-events: none;
-    }
-
-    .magic-section h2 {
-      margin-bottom: 1rem;
-    }
-
-    .magic-calculator {
-      background: rgba(255, 255, 255, 0.3);
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin-top: 1rem;
-    }
-
-    .magic-result {
-      font-size: 100pt;
-      font-family: Helvetica, Arial, sans-serif;
-      font-weight: bold;
-      text-align: center;
-      margin-top: 1rem;
-      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-      min-height: 150px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .helper-text {
-      font-size: 0.9rem;
-      color: #666;
-      font-style: italic;
-      margin-top: 0.5rem;
-    }
-
-    .example-box {
-      background: rgba(255, 255, 255, 0.5);
-      padding: 1rem;
-      border-radius: 8px;
-      margin-top: 1rem;
-    }
-
-    @media (max-width: 768px) {
       .container {
-        padding: 1rem;
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
       }
 
       h1 {
-        font-size: 2rem;
+        color: #667eea;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 2.5rem;
+      }
+
+      .intro {
+        background: #f0f4ff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        border-left: 5px solid #667eea;
+      }
+
+      .intro h2 {
+        color: #764ba2;
+        margin-bottom: 1rem;
+      }
+
+      .cornot-section {
+        background: #fff9e6;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        border-left: 5px solid #ffd93d;
+      }
+
+      .cornot-section h3 {
+        color: #f39c12;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .days-reference {
+        background: #e8f5e9;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+      }
+
+      .days-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .day-item {
+        background: white;
+        padding: 0.5rem;
+        border-radius: 5px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .task-entry {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #555;
+      }
+
+      input[type='text'],
+      input[type='number'] {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+      }
+
+      input[type='text']:focus,
+      input[type='number']:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .task-list {
+        margin-top: 2rem;
+      }
+
+      .task-item {
+        background: white;
+        border: 2px solid #e0e0e0;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .task-days {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .task-day-badge {
+        background: #667eea;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.9rem;
+      }
+
+      .magic-section {
+        background: linear-gradient(135deg, #ffd93d 0%, #f39c12 100%);
+        padding: 2rem;
+        border-radius: 10px;
+        margin-top: 2rem;
+        color: white;
+      }
+
+      .magic-section.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      .magic-section h2 {
+        margin-bottom: 1rem;
+      }
+
+      .magic-calculator {
+        background: rgba(255, 255, 255, 0.3);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-top: 1rem;
       }
 
       .magic-result {
-        font-size: 60pt;
+        font-size: 100pt;
+        font-family: Helvetica, Arial, sans-serif;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 1rem;
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+        min-height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>📅 SRO5 - Weekly Task Scheduler</h1>
 
-    <div class="intro">
-      <h2>Welcome to Version 3!</h2>
-      <p>This is a game where you can write words and put them in the week you like. After this update, the next update will be about changing the name of the game, but we are on version 3 today!</p>
-    </div>
+      .helper-text {
+        font-size: 0.9rem;
+        color: #666;
+        font-style: italic;
+        margin-top: 0.5rem;
+      }
 
-    <div class="cornot-section">
-      <h3>👨 Meet Cornot - Your Helper</h3>
-      <p>Cornot will help with this game! Here's how it works:</p>
+      .example-box {
+        background: rgba(255, 255, 255, 0.5);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+      }
 
-      <div class="days-reference">
-        <strong>📋 The 7 Days of the Week:</strong>
-        <div class="days-list">
-          <div class="day-item">1️⃣ Monday</div>
-          <div class="day-item">2️⃣ Tuesday</div>
-          <div class="day-item">3️⃣ Wednesday</div>
-          <div class="day-item">4️⃣ Thursday</div>
-          <div class="day-item">5️⃣ Friday</div>
-          <div class="day-item">6️⃣ Saturday</div>
-          <div class="day-item">7️⃣ Sunday</div>
+      @media (max-width: 768px) {
+        .container {
+          padding: 1rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .magic-result {
+          font-size: 60pt;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📅 SRO5 - Weekly Task Scheduler</h1>
+
+      <div class="intro">
+        <h2>Welcome to Version 3!</h2>
+        <p>
+          This is a game where you can write words and put them in the week you
+          like. After this update, the next update will be about changing the
+          name of the game, but we are on version 3 today!
+        </p>
+      </div>
+
+      <div class="cornot-section">
+        <h3>👨 Meet Cornot - Your Helper</h3>
+        <p>Cornot will help with this game! Here's how it works:</p>
+
+        <div class="days-reference">
+          <strong>📋 The 7 Days of the Week:</strong>
+          <div class="days-list">
+            <div class="day-item">1️⃣ Monday</div>
+            <div class="day-item">2️⃣ Tuesday</div>
+            <div class="day-item">3️⃣ Wednesday</div>
+            <div class="day-item">4️⃣ Thursday</div>
+            <div class="day-item">5️⃣ Friday</div>
+            <div class="day-item">6️⃣ Saturday</div>
+            <div class="day-item">7️⃣ Sunday</div>
+          </div>
+        </div>
+
+        <p>
+          If you don't know and you are confused, look at the list of the 7 days
+          above!
+        </p>
+
+        <div class="example-box">
+          <strong>Example from Cornot:</strong>
+          <p>
+            📝 Cornot typed <strong>135</strong> in the number input and <strong
+              >"law workers"</strong
+            > in the task input.
+          </p>
+          <p>
+            This means they did law workers on <strong
+              >Mondays, Wednesdays, and Fridays</strong
+            >.
+          </p>
+          <p>
+            <br />📦 Then Cornot did "box carrying" with number <strong
+              >1</strong
+            > only. He would do that only on Monday!
+          </p>
         </div>
       </div>
 
-      <p>If you don't know and you are confused, look at the list of the 7 days above!</p>
+      <div class="task-entry">
+        <h3>➕ Add Your Task</h3>
 
-      <div class="example-box">
-        <strong>Example from Cornot:</strong>
-        <p>📝 Cornot typed <strong>135</strong> in the number input and <strong>"law workers"</strong> in the task input.</p>
-        <p>This means they did law workers on <strong>Mondays, Wednesdays, and Fridays</strong>.</p>
-        <p><br>📦 Then Cornot did "box carrying" with number <strong>1</strong> only. He would do that only on Monday!</p>
-      </div>
-    </div>
-
-    <div class="task-entry">
-      <h3>➕ Add Your Task</h3>
-
-      <div class="form-group">
-        <label for="day-numbers">Enter Day Numbers (1-7, can combine like 135):</label>
-        <input
-          type="text"
-          id="day-numbers"
-          placeholder="e.g., 135 for Mon/Wed/Fri or 1 for Monday only"
-          maxlength="7"
-        />
-        <p class="helper-text">Type the numbers for the days you want. Up to 1234567!</p>
-      </div>
-
-      <div class="form-group">
-        <label for="task-description">What will you do on those days?</label>
-        <input
-          type="text"
-          id="task-description"
-          placeholder="e.g., law workers, box carrying, study time..."
-        />
-      </div>
-
-      <button id="submit-task">📌 Submit Task</button>
-    </div>
-
-    <div class="task-list">
-      <h3>📝 Your Weekly Schedule</h3>
-      <div id="tasks-container">
-        <p style="color: #999; text-align: center;">No tasks yet. Add one above!</p>
-      </div>
-    </div>
-
-    <!-- Magic Trick Section -->
-    <div class="magic-section" id="magic-section">
-      <h2>✨ Magic Trick Feature</h2>
-
-      <div class="magic-calculator" id="magic-calculator">
-        <h3>🎩 The Magic Subtraction Trick</h3>
-        <p>This is where you type a number and it will be subtracting!</p>
-        <p><strong>150 - (your secret number) = the answer in big Helvetica numbers which is 100pt!!!</strong></p>
-        <p style="font-size: 0.9rem; margin-top: 0.5rem;">And it hides the input number so that nobody knows how the person does it. It is a magic trick!</p>
-
-        <div class="form-group" style="margin-top: 1rem;">
-          <label for="magic-number">Enter your secret number:</label>
+        <div class="form-group">
+          <label for="day-numbers"
+            >Enter Day Numbers (1-7, can combine like 135):</label
+          >
           <input
-            type="number"
-            id="magic-number"
-            min="0"
-            max="150"
-            placeholder="0-150"
+            type="text"
+            id="day-numbers"
+            placeholder="e.g., 135 for Mon/Wed/Fri or 1 for Monday only"
+            maxlength="7"
           />
-          <button id="calculate-magic" style="margin-top: 0.5rem;">🎲 Calculate Magic Result</button>
+          <p class="helper-text">
+            Type the numbers for the days you want. Up to 1234567!
+          </p>
         </div>
 
-        <div class="magic-result" id="magic-result"></div>
+        <div class="form-group">
+          <label for="task-description">What will you do on those days?</label>
+          <input
+            type="text"
+            id="task-description"
+            placeholder="e.g., law workers, box carrying, study time..."
+          />
+        </div>
+
+        <button id="submit-task">📌 Submit Task</button>
+      </div>
+
+      <div class="task-list">
+        <h3>📝 Your Weekly Schedule</h3>
+        <div id="tasks-container">
+          <p style="color: #999; text-align: center;">
+            No tasks yet. Add one above!
+          </p>
+        </div>
+      </div>
+
+      <!-- Magic Trick Section -->
+      <div class="magic-section" id="magic-section">
+        <h2>✨ Magic Trick Feature</h2>
+
+        <div class="magic-calculator" id="magic-calculator">
+          <h3>🎩 The Magic Subtraction Trick</h3>
+          <p>This is where you type a number and it will be subtracting!</p>
+          <p>
+            <strong
+              >150 - (your secret number) = the answer in big Helvetica numbers
+              which is 100pt!!!</strong
+            >
+          </p>
+          <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+            And it hides the input number so that nobody knows how the person
+            does it. It is a magic trick!
+          </p>
+
+          <div class="form-group" style="margin-top: 1rem;">
+            <label for="magic-number">Enter your secret number:</label>
+            <input
+              type="text"
+              id="magic-number"
+              min="0.000"
+              max="150000000000000.000"
+              placeholder="your secret number"
+            />
+            <button id="calculate-magic" style="margin-top: 0.5rem;"
+              >🎲 Calculate Magic Result</button
+            >
+          </div>
+
+          <div class="magic-result" id="magic-result"></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    // Task scheduling functionality
-    const dayNumbersInput = document.getElementById('day-numbers');
-    const taskDescInput = document.getElementById('task-description');
-    const submitTaskBtn = document.getElementById('submit-task');
-    const tasksContainer = document.getElementById('tasks-container');
+    <script>
+      // Task scheduling functionality
+      const dayNumbersInput = document.getElementById('day-numbers')
+      const taskDescInput = document.getElementById('task-description')
+      const submitTaskBtn = document.getElementById('submit-task')
+      const tasksContainer = document.getElementById('tasks-container')
 
-    const dayNames = {
-      '1': 'Monday',
-      '2': 'Tuesday',
-      '3': 'Wednesday',
-      '4': 'Thursday',
-      '5': 'Friday',
-      '6': 'Saturday',
-      '7': 'Sunday'
-    };
-
-    let tasks = [];
-
-    submitTaskBtn.addEventListener('click', addTask);
-    taskDescInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') addTask();
-    });
-
-    function addTask() {
-      const dayNumbers = dayNumbersInput.value.trim();
-      const description = taskDescInput.value.trim();
-
-      if (!dayNumbers || !description) {
-        alert('Please fill in both the day numbers and task description!');
-        return;
+      const dayNames = {
+        '1': 'Monday',
+        '2': 'Tuesday',
+        '3': 'Wednesday',
+        '4': 'Thursday',
+        '5': 'Friday',
+        '6': 'Saturday',
+        '7': 'Sunday',
       }
 
-      // Validate day numbers
-      const validDays = dayNumbers.split('').filter(d => '1234567'.includes(d));
-      if (validDays.length === 0) {
-        alert('Please enter valid day numbers (1-7)!');
-        return;
+      let tasks = []
+
+      submitTaskBtn.addEventListener('click', addTask)
+      taskDescInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') addTask()
+      })
+
+      function addTask() {
+        const dayNumbers = dayNumbersInput.value.trim()
+        const description = taskDescInput.value.trim()
+
+        if (!dayNumbers || !description) {
+          alert('Please fill in both the day numbers and task description!')
+          return
+        }
+
+        // Validate day numbers
+        const validDays = dayNumbers
+          .split('')
+          .filter(d => '1234567'.includes(d))
+        if (validDays.length === 0) {
+          alert('Please enter valid day numbers (1-7)!')
+          return
+        }
+
+        // Remove duplicates and sort
+        const uniqueDays = [...new Set(validDays)].sort()
+
+        const task = {
+          days: uniqueDays,
+          description: description,
+          id: Date.now(),
+        }
+
+        tasks.push(task)
+        renderTasks()
+
+        // Clear inputs
+        dayNumbersInput.value = ''
+        taskDescInput.value = ''
+        dayNumbersInput.focus()
       }
 
-      // Remove duplicates and sort
-      const uniqueDays = [...new Set(validDays)].sort();
+      function renderTasks() {
+        if (tasks.length === 0) {
+          tasksContainer.innerHTML =
+            '<p style="color: #999; text-align: center;">No tasks yet. Add one above!</p>'
+          return
+        }
 
-      const task = {
-        days: uniqueDays,
-        description: description,
-        id: Date.now()
-      };
+        tasksContainer.innerHTML = tasks
+          .map(task => {
+            const dayBadges = task.days
+              .map(
+                day => `<span class="task-day-badge">${dayNames[day]}</span>`
+              )
+              .join('')
 
-      tasks.push(task);
-      renderTasks();
-
-      // Clear inputs
-      dayNumbersInput.value = '';
-      taskDescInput.value = '';
-      dayNumbersInput.focus();
-    }
-
-    function renderTasks() {
-      if (tasks.length === 0) {
-        tasksContainer.innerHTML = '<p style="color: #999; text-align: center;">No tasks yet. Add one above!</p>';
-        return;
-      }
-
-      tasksContainer.innerHTML = tasks.map(task => {
-        const dayBadges = task.days.map(day =>
-          `<span class="task-day-badge">${dayNames[day]}</span>`
-        ).join('');
-
-        return `
+            return `
           <div class="task-item">
             <strong>${task.description}</strong>
             <div class="task-days">${dayBadges}</div>
           </div>
-        `;
-      }).join('');
-    }
-
-    // Magic trick functionality
-    const magicNumberInput = document.getElementById('magic-number');
-    const calculateMagicBtn = document.getElementById('calculate-magic');
-    const magicResult = document.getElementById('magic-result');
-
-    calculateMagicBtn.addEventListener('click', calculateMagic);
-    magicNumberInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') calculateMagic();
-    });
-
-    function calculateMagic() {
-      const secretNumber = parseInt(magicNumberInput.value);
-
-      if (isNaN(secretNumber) || secretNumber < 0 || secretNumber > 150) {
-        alert('Please enter a number between 0 and 150!');
-        return;
+        `
+          })
+          .join('')
       }
 
-      const result = 150 - secretNumber;
+      // Magic trick functionality
+      const magicNumberInput = document.getElementById('magic-number')
+      const calculateMagicBtn = document.getElementById('calculate-magic')
+      const magicResult = document.getElementById('magic-result')
 
-      // Hide the input (the magic trick!)
-      magicNumberInput.value = '';
+      calculateMagicBtn.addEventListener('click', calculateMagic)
+      magicNumberInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') calculateMagic()
+      })
 
-      // Show the result in big 100pt Helvetica
-      magicResult.textContent = result;
+      function calculateMagic() {
+        const secretNumber = parseInt(magicNumberInput.value)
 
-      // Optional: Add a magical animation
-      magicResult.style.animation = 'none';
-      setTimeout(() => {
-        magicResult.style.animation = 'fadeIn 0.5s ease-in';
-      }, 10);
-    }
-  </script>
+        if (isNaN(secretNumber)) {
+          alert('Please enter any number!')
+          return
+        }
 
-  <style>
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.8);
+        const result = 150 - secretNumber
+
+        // Hide the input (the magic trick!)
+        magicNumberInput.value = ''
+
+        // Show the result in big 100pt Helvetica
+        magicResult.textContent = result
+
+        // Optional: Add a magical animation
+        magicResult.style.animation = 'none'
+        setTimeout(() => {
+          magicResult.style.animation = 'fadeIn 0.5s ease-in'
+        }, 10)
       }
-      to {
-        opacity: 1;
-        transform: scale(1);
+    </script>
+
+    <style>
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
       }
-    }
-  </style>
-</body>
+    </style>
+  </body>
 </html>

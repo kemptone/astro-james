@@ -1,3 +1,11 @@
+import type { SoundLayer } from '@/lib/fanSound'
+
+export const defaultSoundLayers: SoundLayer[] = [
+  { url: "/fans/00.wav", initialPlaybackRate: 0.5 },
+  { url: "/fans/01.wav", initialPlaybackRate: 1.0 },
+  { url: "/fans/08.wav", initialPlaybackRate: 0.25 },
+]
+
 export const fanDefaults = {
   // Timing defaults
   accelTime: 5,
@@ -11,10 +19,13 @@ export const fanDefaults = {
   bladeCount: 3,
   bladeType: "paddleSpacer",
 
-  // Audio defaults
+  // Audio defaults - layered approach
+  soundLayers: defaultSoundLayers,
+
+  // Backward compatibility
   fanSound: "/fans/08.wav",
-  reverbType: "/impulse/IRx1000_01A.wav", // Hall A
-  reverbAmount: 0.52,
+  reverbType: "/impulse/reaperblog/IRx1000_03C.wav", // Match timer4
+  reverbAmount: 0.52, // Note: Not used with 100% wet signal, kept for UI compatibility
 } as const
 
 export type FanDefaults = typeof fanDefaults

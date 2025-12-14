@@ -1,5 +1,11 @@
-interface FanSoundParams {
+interface SoundLayer {
   url: string
+  initialPlaybackRate: number
+}
+
+interface FanSoundParams {
+  url?: string // For backward compatibility
+  soundLayers?: SoundLayer[] // For layered approach
   accelTime: number
   fullSpeedTime: number
   decelTime: number
@@ -66,8 +72,6 @@ class FanSoundManager {
   private audioContext: AudioContext
   private masterGainNode: GainNode
   private reverbNode: ConvolverNode | null = null
-  private dryGainNode: GainNode
-  private wetGainNode: GainNode
   private activeSounds: Set<AudioBufferSourceNode> = new Set()
   private reverbInitialized: boolean = false
 
@@ -75,18 +79,9 @@ class FanSoundManager {
     this.audioContext = new (window.AudioContext ||
       (window as any).webkitAudioContext)()
 
-    // Create audio nodes
+    // Create audio nodes - 100% wet signal like timer4
     this.masterGainNode = this.audioContext.createGain()
-    this.dryGainNode = this.audioContext.createGain()
-    this.wetGainNode = this.audioContext.createGain()
-
-    // Set up dry path immediately
-    this.dryGainNode.connect(this.audioContext.destination)
-
-    // Set mix levels (30% wet, 70% dry)
-    this.dryGainNode.gain.value = 0.7
-    this.wetGainNode.gain.value = 0.5
-    this.masterGainNode.gain.value = 1.0
+    this.masterGainNode.gain.value = 0.125 // Match timer4's low gain
 
     // Initialize reverb asynchronously
     this.initializeReverb()
@@ -99,8 +94,8 @@ class FanSoundManager {
         impulseResponseUrl,
       )
 
-      // Set up wet path once reverb is ready
-      this.wetGainNode.connect(this.reverbNode)
+      // Set up signal path: masterGain → reverb → destination (100% wet)
+      this.masterGainNode.connect(this.reverbNode)
       this.reverbNode.connect(this.audioContext.destination)
 
       this.reverbInitialized = true
@@ -115,7 +110,7 @@ class FanSoundManager {
     try {
       // Disconnect existing reverb if present
       if (this.reverbNode) {
-        this.wetGainNode.disconnect(this.reverbNode)
+        this.masterGainNode.disconnect(this.reverbNode)
         this.reverbNode.disconnect(this.audioContext.destination)
       }
 
@@ -125,8 +120,8 @@ class FanSoundManager {
         impulseResponseUrl,
       )
 
-      // Reconnect with new reverb
-      this.wetGainNode.connect(this.reverbNode)
+      // Reconnect with new reverb: masterGain → reverb → destination
+      this.masterGainNode.connect(this.reverbNode)
       this.reverbNode.connect(this.audioContext.destination)
 
       this.reverbInitialized = true
@@ -155,9 +150,8 @@ class FanSoundManager {
     source.buffer = buffer
     source.playbackRate.value = playbackRate
 
-    // Connect to both dry and wet paths
-    source.connect(this.dryGainNode)
-    source.connect(this.wetGainNode)
+    // Connect to master gain (100% wet, all through reverb like timer4)
+    source.connect(this.masterGainNode)
 
     // Clean up when done
     source.addEventListener("ended", () => {
@@ -168,34 +162,38 @@ class FanSoundManager {
     return source
   }
 
-  async loadPlayLoop(params: FanSoundParams): Promise<void> {
+  private async loadAndPlaySingleLayer(
+    url: string,
+    initialPlaybackRate: number,
+    params: {
+      accelTime: number
+      fullSpeedTime: number
+      decelTime: number
+      maxSpeed: number
+      adjustedPitch: number
+      startTime: number
+      totalTime: number
+    }
+  ): Promise<void> {
     const {
-      url,
       accelTime,
       fullSpeedTime,
       decelTime,
       maxSpeed,
-      adjustedPitch = 0,
-      reverbAmount = 0.5,
+      adjustedPitch,
+      startTime,
+      totalTime,
     } = params
-
-    // Calculate total time from the three phases
-    const totalTime = accelTime + fullSpeedTime + decelTime
-
-    // Resume audio context if suspended (required by browsers)
-    if (this.audioContext.state === "suspended") {
-      await this.audioContext.resume()
-    }
 
     // Load audio file
     const audioBuffer = await this.loadAudioFile(url)
     const { sampleRate, numberOfChannels, length } = audioBuffer
 
     console.log(
-      `Audio file: ${audioBuffer.duration}s, total time: ${totalTime}s`,
+      `Layer [${url}] ${initialPlaybackRate}x: ${audioBuffer.duration}s`,
     )
 
-    // Extract just the middle loop section (like your example)
+    // Extract just the middle loop section
     const loopLength = Math.floor(length / 3) // 1/3 of the file
     const loopStart = loopLength // Start at 1/3 (middle section)
 
@@ -215,44 +213,102 @@ class FanSoundManager {
     }
 
     // Create source with loop
-    const source = this.createSourceNode(loopBuffer, 1 + adjustedPitch)
+    const source = this.createSourceNode(loopBuffer, initialPlaybackRate)
     source.loop = true
 
-    // Adjust reverb mix based on reverbAmount (0 = all dry, 1 = all wet)
-    const wetLevel = reverbAmount
-    const dryLevel = 1 - reverbAmount
-    this.setReverbMix(wetLevel, dryLevel)
-
     // Set up speed ramping
-    const startTime = this.audioContext.currentTime
     const rampUpStartTime = startTime
     const rampDownStartTime = startTime + accelTime + fullSpeedTime
 
-    console.log(`Ramp up: ${rampUpStartTime} for ${accelTime}s`)
-    console.log(`Ramp down: ${rampDownStartTime} for ${decelTime}s`)
-
-    // Apply speed ramping (like your commented example)
-    source.playbackRate.setValueAtTime(1 + adjustedPitch, rampUpStartTime)
+    // Apply speed ramping with the initial playback rate as the base
+    const baseRate = initialPlaybackRate + adjustedPitch
+    source.playbackRate.setValueAtTime(baseRate, rampUpStartTime)
     source.playbackRate.linearRampToValueAtTime(
-      maxSpeed + adjustedPitch,
+      maxSpeed * initialPlaybackRate + adjustedPitch,
       rampUpStartTime + accelTime,
     )
     source.playbackRate.linearRampToValueAtTime(
-      maxSpeed + adjustedPitch,
+      maxSpeed * initialPlaybackRate + adjustedPitch,
       rampDownStartTime,
     )
     source.playbackRate.linearRampToValueAtTime(
-      1 + adjustedPitch,
+      baseRate,
       rampDownStartTime + decelTime,
     )
 
     // Start playing and stop after totalTime
     source.start(startTime)
     source.stop(startTime + totalTime)
+  }
 
-    console.log(
-      `Playing looped middle section for ${totalTime}s with speed ramping`,
-    )
+  async loadPlayLoop(params: FanSoundParams): Promise<void> {
+    const {
+      url,
+      soundLayers,
+      accelTime,
+      fullSpeedTime,
+      decelTime,
+      maxSpeed,
+      adjustedPitch = 0,
+      reverbAmount = 0.5,
+    } = params
+
+    // Calculate total time from the three phases
+    const totalTime = accelTime + fullSpeedTime + decelTime
+
+    // Resume audio context if suspended (required by browsers)
+    if (this.audioContext.state === "suspended") {
+      await this.audioContext.resume()
+    }
+
+    // Note: reverbAmount parameter is kept for backward compatibility but not used
+    // Signal is now 100% wet (all through reverb) like timer4
+
+    const startTime = this.audioContext.currentTime
+
+    console.log(`Ramp up: ${startTime} for ${accelTime}s`)
+    console.log(`Ramp down: ${startTime + accelTime + fullSpeedTime} for ${decelTime}s`)
+
+    // If soundLayers is provided, use layered approach
+    if (soundLayers && soundLayers.length > 0) {
+      console.log(`Playing ${soundLayers.length} layered sounds`)
+
+      // Load and play all layers in parallel
+      await Promise.all(
+        soundLayers.map((layer) =>
+          this.loadAndPlaySingleLayer(layer.url, layer.initialPlaybackRate, {
+            accelTime,
+            fullSpeedTime,
+            decelTime,
+            maxSpeed,
+            adjustedPitch,
+            startTime,
+            totalTime,
+          })
+        )
+      )
+
+      console.log(
+        `Playing ${soundLayers.length} layered sounds for ${totalTime}s with speed ramping`,
+      )
+    } else if (url) {
+      // Backward compatibility: single sound approach
+      await this.loadAndPlaySingleLayer(url, 1.0, {
+        accelTime,
+        fullSpeedTime,
+        decelTime,
+        maxSpeed,
+        adjustedPitch,
+        startTime,
+        totalTime,
+      })
+
+      console.log(
+        `Playing single sound for ${totalTime}s with speed ramping`,
+      )
+    } else {
+      throw new Error('Either url or soundLayers must be provided')
+    }
   }
 
   stopAll(): void {
@@ -268,11 +324,6 @@ class FanSoundManager {
 
   setMasterVolume(volume: number): void {
     this.masterGainNode.gain.value = Math.max(0, Math.min(1, volume))
-  }
-
-  setReverbMix(wetLevel: number, dryLevel: number): void {
-    this.wetGainNode.gain.value = Math.max(0, Math.min(1, wetLevel))
-    this.dryGainNode.gain.value = Math.max(0, Math.min(1, dryLevel))
   }
 }
 
@@ -299,4 +350,4 @@ export async function loadImpulseResponse(
 }
 
 export { FanSoundManager }
-export type { FanSoundParams }
+export type { FanSoundParams, SoundLayer }

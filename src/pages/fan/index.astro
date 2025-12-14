@@ -12,20 +12,34 @@ const fanSounds = Array.from({length: 21}, (_, i) => {
   return {value: `/fans/${num}.wav`, label: `Fan Sound ${num}`}
 })
 
-// Generate list of available impulse responses
+// Generate list of available impulse responses based on actual files
+const sizes = [
+  {prefix: 'IRx125', label: 'Small (125ms)'},
+  {prefix: 'IRx250', label: 'Medium (250ms)'},
+  {prefix: 'IRx500', label: 'Large (500ms)'},
+  {prefix: 'IRx1000', label: 'Hall (1000ms)'},
+]
+
 const reverbTypes = [
-  {value: '/impulse/IRx125_01A.wav', label: 'Small Room A'},
-  {value: '/impulse/IRx125_01B.wav', label: 'Small Room B'},
-  {value: '/impulse/IRx125_01C.wav', label: 'Small Room C'},
-  {value: '/impulse/IRx250_01A.wav', label: 'Medium Room A'},
-  {value: '/impulse/IRx250_01B.wav', label: 'Medium Room B'},
-  {value: '/impulse/IRx250_01C.wav', label: 'Medium Room C'},
-  {value: '/impulse/IRx500_01A.wav', label: 'Large Room A'},
-  {value: '/impulse/IRx500_01B.wav', label: 'Large Room B'},
-  {value: '/impulse/IRx500_01C.wav', label: 'Large Room C'},
-  {value: '/impulse/IRx1000_01A.wav', label: 'Hall A'},
-  {value: '/impulse/IRx1000_01B.wav', label: 'Hall B'},
-  {value: '/impulse/IRx1000_01C.wav', label: 'Hall C'},
+  {value: '/impulse/i01.wav', label: 'Default'},
+  // Standard impulse responses
+  ...sizes.flatMap(({prefix, label}) =>
+    ['01', '02', '03', '04'].flatMap(num =>
+      ['A', 'B', 'C'].map(variant => ({
+        value: `/impulse/${prefix}_${num}${variant}.wav`,
+        label: `${label} - ${num}${variant}`,
+      }))
+    )
+  ),
+  // // ReaperBlog impulse responses
+  // ...sizes.flatMap(({ prefix, label }) =>
+  //   ['01', '02', '03', '04'].flatMap(num =>
+  //     ['A', 'B', 'C'].map(variant => ({
+  //       value: `/impulse/reaperblog/${prefix}_${num}${variant}.wav`,
+  //       label: `ReaperBlog ${label} - ${num}${variant}`
+  //     }))
+  //   )
+  // )
 ]
 ---
 
@@ -159,21 +173,56 @@ const reverbTypes = [
             </select>
           </label>
 
-          <label>
-            Fan Sound
-            <select name="fanSound">
-              {
-                fanSounds.map(sound => (
-                  <option
-                    value={sound.value}
-                    selected={sound.value === fanDefaults.fanSound}
-                  >
-                    {sound.label}
-                  </option>
-                ))
-              }
-            </select>
-          </label>
+          <fieldset>
+            <legend>Layered Sounds</legend>
+            <label>
+              Layer 1 (0.5x)
+              <select name="soundLayer0">
+                {
+                  fanSounds.map(sound => (
+                    <option
+                      value={sound.value}
+                      selected={sound.value === fanDefaults.soundLayers[0].url}
+                    >
+                      {sound.label}
+                    </option>
+                  ))
+                }
+              </select>
+            </label>
+
+            <label>
+              Layer 2 (1.0x)
+              <select name="soundLayer1">
+                {
+                  fanSounds.map(sound => (
+                    <option
+                      value={sound.value}
+                      selected={sound.value === fanDefaults.soundLayers[1].url}
+                    >
+                      {sound.label}
+                    </option>
+                  ))
+                }
+              </select>
+            </label>
+
+            <label>
+              Layer 3 (0.25x)
+              <select name="soundLayer2">
+                {
+                  fanSounds.map(sound => (
+                    <option
+                      value={sound.value}
+                      selected={sound.value === fanDefaults.soundLayers[2].url}
+                    >
+                      {sound.label}
+                    </option>
+                  ))
+                }
+              </select>
+            </label>
+          </fieldset>
 
           <label>
             Reverb Type
@@ -221,7 +270,7 @@ const reverbTypes = [
           e_settingsInputs: NodeListOf<
             HTMLInputElement | HTMLSelectElement
           > | null
-          selectedSound: string = fanDefaults.fanSound
+          soundLayers = fanDefaults.soundLayers.map(layer => ({...layer}))
 
           constructor() {
             super()
@@ -259,7 +308,10 @@ const reverbTypes = [
 
               // Trigger the fan animation and sound
               if (this.e_blades) {
-                this.e_blades.dataset.soundUrl = this.selectedSound
+                // Pass sound layers as JSON string via dataset
+                this.e_blades.dataset.soundLayers = JSON.stringify(
+                  this.soundLayers
+                )
                 this.e_blades.click()
               }
             })
@@ -293,9 +345,21 @@ const reverbTypes = [
                     this.e_blades.setAttribute('blade_count', value)
                   } else if (name === 'curve_type') {
                     this.e_blades.setAttribute('curve_type', value)
-                  } else if (name === 'fanSound') {
-                    this.selectedSound = value
-                    this.e_blades.dataset.soundUrl = value
+                  } else if (name === 'soundLayer0') {
+                    this.soundLayers[0].url = value
+                    this.e_blades.dataset.soundLayers = JSON.stringify(
+                      this.soundLayers
+                    )
+                  } else if (name === 'soundLayer1') {
+                    this.soundLayers[1].url = value
+                    this.e_blades.dataset.soundLayers = JSON.stringify(
+                      this.soundLayers
+                    )
+                  } else if (name === 'soundLayer2') {
+                    this.soundLayers[2].url = value
+                    this.e_blades.dataset.soundLayers = JSON.stringify(
+                      this.soundLayers
+                    )
                   } else if (name === 'reverbAmount') {
                     this.e_blades.dataset.reverbAmount = value
                   } else if (name === 'reverbType') {
