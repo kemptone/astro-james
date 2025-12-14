@@ -1,0 +1,200 @@
+---
+export const prerender = false
+const urlParams = Astro.url.searchParams
+import { CurveTypes } from "./helpers"
+import { fanDefaults } from "./defaults"
+
+// Accept props from parent component
+let curve_type = Astro.props.curve_type as keyof typeof CurveTypes
+let blade_count = Astro.props.blade_count as number
+
+// or use URL params as fallback, then defaults
+curve_type = curve_type || urlParams.get("curve_type") || fanDefaults.bladeType
+blade_count =
+  blade_count || Number(urlParams.get("blade_count")) || fanDefaults.bladeCount
+
+const Arr = Array.from(
+  { length: blade_count },
+  (_, i) => i * (360 / blade_count)
+)
+---
+
+<pr8-blades
+  data-fragment_path={"/fan/blades"}
+  style={`--scale: ${fanDefaults.scale}; --opacity: ${fanDefaults.opacity};`}
+>
+  <svg width="480" height="480" viewBox="0 0 480 480">
+    <path d={CurveTypes[curve_type]} transform={`rotate(0, 240, 240)`}></path>
+    {
+      Arr.map((r) => (
+        <path d={CurveTypes[curve_type]} transform={`rotate(${r}, 240, 240)`} />
+      ))
+    }
+  </svg>
+</pr8-blades>
+
+<script>
+  import { Prime8 } from "@/lib/Prime8"
+  import { buildFanKeyframes } from "@/lib/programaticAnimations"
+  import { loadPlayLoop } from "@/lib/fanSound"
+  import { getFanSoundManager } from "@/lib/fanSound"
+  import { fanDefaults } from "./defaults"
+
+  customElements.define(
+    "pr8-blades",
+    class Blades extends Prime8 {
+      startAngle = 0
+      index = 0
+      isRunning = false
+      soundUrl = fanDefaults.fanSound
+
+      static get observedAttributes() {
+        return [
+          "curve_type",
+          "blade_count",
+          "data-scale",
+          "data-opacity",
+          "data-sound-url",
+          "data-reverb-amount",
+          "data-reverb-type",
+        ]
+      }
+
+      onClientChange(dataset: DOMStringMap): void {
+        if (dataset.scale) {
+          this.style.setProperty("--scale", dataset.scale)
+        }
+        if (dataset.opacity) {
+          this.style.setProperty("--opacity", dataset.opacity)
+        }
+        if (dataset.soundUrl) {
+          this.soundUrl = dataset.soundUrl
+        }
+        if (dataset.reverbType) {
+          // Load new impulse response when reverb type changes
+          const manager = getFanSoundManager()
+          manager.loadImpulseResponse(dataset.reverbType)
+        }
+      }
+
+      connectedCallback() {
+        const manager = getFanSoundManager()
+        manager.loadImpulseResponse(fanDefaults.reverbType)
+
+        const checkAngle = () => {
+          // 1. Get the computed style at the end
+          const style = getComputedStyle(this)
+          const matrix = new DOMMatrix(style.transform)
+
+          // 2. Convert matrix back to angle
+          let angle = Math.atan2(matrix.b, matrix.a) * (180 / Math.PI)
+
+          // normalize (e.g., no negatives)
+          if (angle < 0) angle += 360
+
+          this.startAngle = angle
+        }
+
+        if (this.dataset.scale) {
+          this.style.setProperty("--scale", this.dataset.scale)
+        }
+
+        this.addEventListener("animationend", () => {
+          this.isRunning = false
+        })
+
+        this.addEventListener("click", async () => {
+          checkAngle()
+
+          // Get values from data attributes with fallbacks
+          const accelTime = parseFloat(
+            this.dataset.accelTime || fanDefaults.accelTime.toString()
+          )
+          const fullSpeedTime = parseFloat(
+            this.dataset.fullSpeedTime || fanDefaults.fullSpeedTime.toString()
+          )
+          const decelTime = parseFloat(
+            this.dataset.decelTime || fanDefaults.decelTime.toString()
+          )
+          const maxSpeed = parseFloat(
+            this.dataset.maxSpeed || fanDefaults.maxSpeed.toString()
+          )
+          const totalTime = accelTime + fullSpeedTime + decelTime
+          const reverbAmount = parseFloat(
+            this.dataset.reverbAmount || fanDefaults.reverbAmount.toString()
+          )
+
+          if (this.isRunning) {
+            let classKey = `animate-${this.index}`
+            buildFanKeyframes({
+              accelTime,
+              fullSpeedTime,
+              decelTime,
+              maxSpeed,
+              initialRotation: this.startAngle,
+              classKey,
+            })
+
+            this.className = `dead${classKey}`
+            this.isRunning = false
+
+            // Stop the fan sound when stopping the animation
+            const manager = getFanSoundManager()
+            manager.stopAll()
+            return
+          }
+
+          // Start the fan sound
+          try {
+            await loadPlayLoop({
+              url: this.soundUrl,
+              accelTime,
+              fullSpeedTime,
+              decelTime,
+              maxSpeed,
+              adjustedPitch: 0,
+              reverbAmount,
+            })
+          } catch (error) {
+            console.error("Failed to play fan sound:", error)
+          }
+
+          this.index++
+
+          const classKey = `animate-${this.index}`
+
+          buildFanKeyframes({
+            accelTime,
+            fullSpeedTime,
+            decelTime,
+            maxSpeed,
+            initialRotation: this.startAngle,
+            classKey,
+          })
+          this.className = classKey
+          // this.classList.add(classKey)
+
+          const oldClassKey = `animate-${this.index - 2}`
+          const e_oldStyle = document.getElementById(oldClassKey)
+          if (e_oldStyle) {
+            e_oldStyle.parentElement?.removeChild(e_oldStyle)
+          }
+          this.isRunning = true
+        })
+      }
+    }
+  )
+</script>
+
+<style>
+  pr8-blades {
+    width: 480px;
+    height: 480px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin: -240px 0 0 -240px;
+    scale: var(--scale, 1);
+    opacity: var(--opacity, 1);
+  }
+</style>

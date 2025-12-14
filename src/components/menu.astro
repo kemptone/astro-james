@@ -1,0 +1,258 @@
+---
+export const prerender = false
+
+// Menu links configuration
+const menuLinks = [
+  {href: '/air', label: 'air'},
+  {href: '/ampm', label: 'ampm'},
+  {href: '/fan', label: 'fan'},
+  {href: '/badtomgoodtom', label: 'badtomgoodtom'},
+  {href: '/bignumbers', label: 'bignumbers'},
+  {href: '/brownthing', label: 'brownthing'},
+  {href: '/calculator', label: 'calculator'},
+  {href: '/characters', label: 'characters'},
+  {href: '/code/more', label: 'more'},
+  {href: '/code/metas', label: 'metas'},
+  {href: '/code/textareas', label: 'textareas'},
+  {href: '/colorfinder', label: 'colorfinder'},
+  {href: '/colorthing', label: 'colorthing'},
+  {href: '/countries', label: 'countries'},
+  {href: '/decibel', label: 'decibel'},
+  {href: '/dictionary', label: 'dictionary'},
+  {href: '/exam', label: 'exam'},
+  {href: '/girls', label: 'girls'},
+  {href: '/grok', label: 'grok'},
+  {href: '/hamster', label: 'hamster'},
+  {href: '/heatergame', label: 'heatergame'},
+  {href: '/kidthing', label: 'kidthing'},
+  {href: '/lasko', label: 'lasko'},
+  {href: '/learncode', label: 'learncode'},
+  {href: '/live', label: 'live'},
+  {href: '/mina', label: 'mina'},
+  {href: '/music2', label: 'music2'},
+  {href: '/nightnight', label: 'nightnight'},
+  {href: '/polkis', label: 'polkis'},
+  {href: '/punishments', label: 'punishments'},
+  {href: '/reject', label: 'reject'},
+  {href: '/reinstall', label: 'reinstall'},
+  {href: '/special sro', label: 'special sro'},
+  {href: '/speedup', label: 'speedup'},
+  {href: '/spinners', label: 'spinners'},
+  {href: '/sro', label: 'sro'},
+  {href: '/sro10', label: 'sro10'},
+  {href: '/sro12', label: 'sro12'},
+  {href: '/sro13', label: 'sro13'},
+  {href: '/sro14', label: 'sro14'},
+  {href: '/sro15', label: 'sro15'},
+  {href: '/sro15new', label: 'sro15new'},
+  {href: '/sro16', label: 'sro16'},
+  {href: '/sro19', label: 'sro19'},
+  {href: '/sro2', label: 'sro2'},
+  {href: '/sro20', label: 'sro20'},
+  {href: '/sro22', label: 'sro22'},
+  {href: '/sro3', label: 'sro3'},
+  {href: '/sro4', label: 'sro4'},
+  {href: '/sro5', label: 'sro5'},
+  {href: '/sro6', label: 'sro6'},
+  {href: '/sro8', label: 'sro8'},
+  {href: '/sro9', label: 'sro9'},
+  {href: '/talkers', label: 'talkers'},
+  {href: '/talkers2', label: 'talkers2'},
+  {href: '/talkers3', label: 'talkers3'},
+  {href: '/texttospeech', label: 'texttospeech'},
+  {href: '/tide', label: 'tide'},
+  {href: '/timer2', label: 'timer2'},
+  {href: '/timer3', label: 'timer3'},
+  {href: '/timer4', label: 'timer4'},
+  {href: '/voicemaker', label: 'voicemaker'},
+  {href: '/wordsearch', label: 'wordsearch'},
+]
+---
+
+<nav class="hamburger-nav">
+  <button class="hamburger-btn" aria-label="Toggle menu">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+  </button>
+
+  <div class="menu-overlay">
+    <button class="reinstall" type="button">Reinstall app</button>
+    <ul class="menu-list">
+      {
+        menuLinks.map(link => (
+          <li class="menu-item">
+            <a href={link.href} class="menu-link">
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const hamburgerNav = document.querySelector('.hamburger-nav')
+    const hamburgerBtn = document.querySelector('.hamburger-btn')
+    const menuOverlay = document.querySelector('.menu-overlay')
+    const menuLinks = document.querySelectorAll('.menu-link')
+    const menuReinstall = document.querySelector('.reinstall')
+
+    if (hamburgerBtn && hamburgerNav) {
+      hamburgerBtn.addEventListener('click', () => {
+        hamburgerNav.classList.toggle('active')
+      })
+
+      // Close menu when clicking on overlay
+      menuOverlay?.addEventListener('click', e => {
+        if (e.target === menuOverlay) {
+          hamburgerNav.classList.remove('active')
+        }
+      })
+
+      // Close menu when clicking on a link
+      menuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          hamburgerNav.classList.remove('active')
+        })
+      })
+
+      // Close menu with Escape key
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && hamburgerNav.classList.contains('active')) {
+          hamburgerNav.classList.remove('active')
+        }
+      })
+
+      if (menuReinstall) {
+        menuReinstall.addEventListener('click', () => {
+          localStorage.clear()
+          caches.delete('my-cache')
+          setTimeout(() => {
+            window.location.href = '/'
+          }, 1000)
+        })
+      }
+    }
+  })
+</script>
+
+<style>
+  button.reinstall {
+    position: fixed;
+    top: 14px;
+    left: 10px;
+    padding: 2px 10px;
+    font-size: 21px;
+    cursor: pointer;
+    margin: 10px;
+  }
+
+  .hamburger-nav {
+    position: fixed;
+    z-index: 1000;
+    right: 20px;
+    top: 20px;
+  }
+
+  .hamburger-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+    position: relative;
+    box-shadow: none;
+  }
+
+  .hamburger-line {
+    width: 100%;
+    height: 6px;
+    background-color: #333;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+
+  .hamburger-btn:hover .hamburger-line {
+    background-color: #555;
+  }
+
+  /* Menu overlay */
+  .menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: transparent;
+    backdrop-filter: blur(38px);
+    -webkit-backdrop-filter: blur(38px);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+
+  .menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 4rem;
+  }
+
+  .menu-item {
+    margin: 0;
+  }
+
+  .menu-link {
+    color: var(--pico-color);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 300;
+    font-family: system-ui, sans-serif;
+    transition: color 0.3s ease;
+    display: block;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .menu-link:hover {
+    color: #ccc;
+  }
+
+  /* Active states */
+  .hamburger-nav.active .menu-overlay {
+    transform: translateX(0);
+  }
+
+  .hamburger-nav.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(15px, 15px);
+  }
+
+  .hamburger-nav.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger-nav.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -9px);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .menu-link {
+      font-size: 1.2rem;
+    }
+  }
+</style>

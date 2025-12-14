@@ -1,0 +1,79 @@
+<div id="fan">🌀</div>
+
+<script>
+  function buildFanKeyframes({
+    totalTime = 3,
+    maxSpeed = 3,
+    accelTime = 2,
+    decelTime = 2,
+  } = {}) {
+    // adjust accel/decel if totalTime is too short
+    if (totalTime < accelTime + decelTime) {
+      const scale = totalTime / (accelTime + decelTime)
+      accelTime *= scale
+      decelTime *= scale
+    }
+
+    // steady duration
+    const steadyTime = Math.max(0, totalTime - accelTime - decelTime)
+
+    // turns
+    const accelTurns = 0.5 * maxSpeed * accelTime
+    const steadyTurns = maxSpeed * steadyTime
+    const decelTurns = 0.5 * maxSpeed * decelTime
+    const totalTurns = accelTurns + steadyTurns + decelTurns
+
+    // convert to degrees
+    const accelDeg = accelTurns * 360
+    const steadyDeg = (accelTurns + steadyTurns) * 360
+    const totalDeg = totalTurns * 360
+
+    // percentages
+    const accelPct = (accelTime / totalTime) * 100
+    const steadyPct = ((accelTime + steadyTime) / totalTime) * 100
+
+    // build keyframes
+    const keyframes = `
+    @keyframes spin-sequence {
+      0% {
+        transform: rotate(0deg);
+        animation-timing-function: ease-in;
+      }
+      ${accelPct}% {
+        transform: rotate(${accelDeg}deg);
+        animation-timing-function: linear;
+      }
+      ${steadyPct}% {
+        transform: rotate(${steadyDeg}deg);
+        animation-timing-function: ease-out;
+      }
+      100% {
+        transform: rotate(${totalDeg}deg);
+      }
+    }
+  `
+
+    // inject
+    const styleEl = document.createElement("style")
+    styleEl.textContent = keyframes
+    document.head.appendChild(styleEl)
+
+    // apply
+    const fan = document.getElementById("fan")
+    fan.style.cssText = `
+    font-size:100px;
+    display:inline-block;
+    margin:100px;
+    transform-origin:50% 50%;
+    animation: spin-sequence ${totalTime}s forwards;
+  `
+  }
+
+  // Example usage:
+  buildFanKeyframes({
+    totalTime: 5,
+    maxSpeed: 5,
+    accelTime: 2,
+    decelTime: 9,
+  })
+</script>

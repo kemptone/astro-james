@@ -1,0 +1,53 @@
+<div id="fan">🌀</div>
+
+<script>
+  function makeFanAnimation({
+    accelPct = 30, // percentage for acceleration phase
+    steadyPct = 70, // percentage for steady spin
+    totalTurns = 7, // total rotations until stop
+  } = {}) {
+    // calculate rotation degrees
+    const rampDeg = 2 * 360 // 2 turns during ramp up
+    const steadyDeg = 6 * 360 // 6 turns during steady phase
+    const slowDeg = totalTurns * 360
+
+    // build the keyframes text dynamically
+    const keyframes = `
+    @keyframes spin-sequence {
+      0% {
+        transform: rotate(0deg);
+        animation-timing-function: ease-in;
+      }
+      ${accelPct}% {
+        transform: rotate(${rampDeg}deg);
+        animation-timing-function: linear;
+      }
+      ${steadyPct}% {
+        transform: rotate(${steadyDeg}deg);
+        animation-timing-function: ease-out;
+      }
+      100% {
+        transform: rotate(${slowDeg}deg);
+      }
+    }
+  `
+
+    // inject the style into the document
+    const styleEl = document.createElement("style")
+    styleEl.textContent = keyframes
+    document.head.appendChild(styleEl)
+
+    // apply the animation to the fan
+    const fan = document.getElementById("fan")
+    fan.style.cssText = `
+    font-size:100px;
+    display:inline-block;
+    margin:100px;
+    transform-origin:50% 50%;
+    animation: spin-sequence 6s forwards;
+  `
+  }
+
+  // Example: generate with custom percentages
+  makeFanAnimation({ accelPct: 20, steadyPct: 60, totalTurns: 8 })
+</script>

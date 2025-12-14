@@ -1,0 +1,148 @@
+---
+export const prerender = false
+const urlParams = Astro.url.searchParams
+import { CurveTypes } from "./helpers"
+
+// Accept props from parent component
+let curveType = Astro.props.curveType as keyof typeof CurveTypes
+let bladeCount = Astro.props.bladeCount as number
+let speedUp = Astro.props.speedUp as number
+let slowDown = Astro.props.slowDown as number
+let fullSpeed = Astro.props.fullSpeed as number
+
+// or use URL params as fallback
+curveType = curveType || urlParams.get("curveType") || "normal"
+bladeCount = bladeCount || Number(urlParams.get("bladeCount")) || 5
+speedUp = speedUp || Number(urlParams.get("speedUp")) || 3
+slowDown = slowDown || Number(urlParams.get("slowDown")) || 3
+fullSpeed = fullSpeed || Number(urlParams.get("fullSpeed")) || 8
+
+const Arr = Array.from({ length: bladeCount }, (_, i) => i * (360 / bladeCount))
+---
+
+<p8x-blades>
+  <div class="outer">
+    <div class="inner">
+      <svg width="480" height="480" viewBox="0 0 480 480">
+        <path d={CurveTypes[curveType]} transform={`rotate(0, 240, 240)`}
+        ></path>
+        {
+          Arr.map((r) => (
+            <path
+              d={CurveTypes[curveType]}
+              transform={`rotate(${r}, 240, 240)`}
+            />
+          ))
+        }
+      </svg>
+    </div>
+  </div>
+</p8x-blades>
+
+<script>
+  import { Prime8 } from "@/lib/Prime8"
+
+  type SpinningStates = "stopped" | "starting" | "going" | "slowing"
+
+  customElements.define(
+    "p8x-blades",
+    class Blades extends Prime8 {
+      e_outer: HTMLElement | null
+
+      constructor() {
+        super()
+        this.e_outer = this.querySelector(".outer")
+        this.e_outer?.addEventListener("animationend", () => {
+          if (this.dataset.spinstate === "starting") {
+            this.setAttribute("data-spinstate", "going" as SpinningStates)
+          }
+
+          if (this.dataset.spinstate === "slowing") {
+            this.setAttribute("data-spinstate", "stopped" as SpinningStates)
+          }
+        })
+      }
+
+      static get observedAttributes() {
+        return ["curveType", "bladeCount"]
+      }
+
+      connectedCallback() {
+        setTimeout(() => {
+          this.setAttribute("data-spinstate", "starting" as SpinningStates)
+          setTimeout(() => {
+            this.setAttribute("data-spinstate", "slowing" as SpinningStates)
+          }, 6000)
+        }, 1000)
+      }
+    }
+  )
+</script>
+
+<style>
+  .outer {
+    width: 480px;
+    height: 480px;
+    /* outline: 1px solid black; */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin: -240px 0 0 -240px;
+  }
+
+  .inner {
+    width: 480px;
+    height: 480px;
+  }
+
+  [data-spinstate="starting"] .inner,
+  [data-spinstate="going"] .inner,
+  [data-spinstate="slowing"] .inner,
+  [data-spinstate="stopped"] .inner {
+    animation: spin-continuous 0.5s linear infinite;
+  }
+
+  [data-spinstate="stopped"] .outer {
+    animation: spin-continuous 0.5s linear infinite reverse;
+  }
+
+  [data-spinstate="slowing"] .outer {
+    animation: spin-out 6s ease-in forwards;
+  }
+
+  [data-spinstate="starting"] .outer {
+    animation: spin-up 2s ease-out forwards;
+  }
+
+  [data-spinstate="going"] .outer {
+    /* animation: none; */
+    animation: spin-continuous 900000000s linear infinite reverse;
+  }
+
+  @keyframes spin-out {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(-2160deg); /* 6 full counter-clockwise rotations */
+    }
+  }
+
+  @keyframes spin-up {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(-720deg); /* 2 full counter-clockwise rotations */
+    }
+  }
+
+  @keyframes spin-continuous {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg); /* 1 full clockwise rotation */
+    }
+  }
+</style>

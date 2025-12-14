@@ -1,0 +1,39 @@
+<div
+  id="fan"
+  style="
+  font-size:100px;
+  width:100px;
+  height:100px;
+  margin:100px auto;
+  text-align:center;
+  transition:.02s rotate;
+"
+>
+  🌀
+</div>
+
+<script>
+  const fan = document.getElementById("fan")
+  let angle = 0
+  let speed = 0
+  let phase = "accelerating" // "steady" → "decelerating"
+
+  function animate() {
+    if (phase === "accelerating") {
+      speed += 0.3 // accelerate
+      if (speed >= 25) phase = "steady"
+    } else if (phase === "steady") {
+      if (angle > 2000) phase = "decelerating" // after some spins, slow down
+    } else if (phase === "decelerating") {
+      speed -= 0.2 // decelerate
+      if (speed < 0) speed = 0
+    }
+
+    angle += speed
+    fan.style.transform = `rotate(${angle}deg)`
+
+    if (speed > 0) requestAnimationFrame(animate)
+  }
+
+  animate()
+</script>

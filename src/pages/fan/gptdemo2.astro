@@ -1,0 +1,38 @@
+<div id="fan">🌀</div>
+
+<style>
+  #fan {
+    --startdegree: 0deg;
+    --rampdegree: 720deg;
+    --spindegree: 2160deg;
+    --slowdegree: 2520deg;
+  }
+
+  #fan {
+    font-size: 100px;
+    width: 100px;
+    height: 100px;
+    margin: 100px auto;
+    text-align: center;
+    transform-origin: 50% 50%;
+    animation: spin-sequence 6s forwards;
+  }
+
+  @keyframes spin-sequence {
+    0% {
+      transform: rotate(var(--startdegree, 0deg));
+      animation-timing-function: ease-in;
+    }
+    30% {
+      transform: rotate(var(--rampdegree, 720deg)); /* ramp up */
+      animation-timing-function: linear;
+    }
+    70% {
+      transform: rotate(var(--spindegree, 2160deg)); /* steady spin */
+      animation-timing-function: ease-out;
+    }
+    100% {
+      transform: rotate(var(--slowdegree, 2520deg)); /* wind down */
+    }
+  }
+</style>
