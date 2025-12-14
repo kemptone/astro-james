@@ -5,7 +5,6 @@ import Dialog from '@/components/pr8-dialog.astro'
 import {CurveTypes} from './helpers'
 import {fanDefaults} from './defaults'
 import Menu from '@/components/menu.astro'
-import Menu3 from '@/components/Menu3/Menu3.astro'
 
 // Generate list of available fan sounds (00.wav - 20.wav)
 const fanSounds = Array.from({length: 21}, (_, i) => {
@@ -35,7 +34,7 @@ const reverbTypes = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Fan</title>
   </head>
   <body>
     <Menu />
