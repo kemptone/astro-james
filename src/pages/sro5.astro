@@ -25,7 +25,7 @@
       }
 
       .container {
-        max-width: 900px;
+        /* max-width: 900px; */
         margin: 0 auto;
         background: white;
         border-radius: 20px;
@@ -91,6 +91,54 @@
         font-weight: bold;
       }
 
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .calendar-day {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .calendar-day-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.8rem;
+        text-align: center;
+        font-weight: bold;
+        border-radius: 6px 6px 0 0;
+        font-size: 0.9rem;
+      }
+
+      .calendar-day-content {
+        padding: 0.8rem;
+        flex: 1;
+        overflow-y: auto;
+      }
+
+      .calendar-task {
+        background: #f0f4ff;
+        border-left: 3px solid #667eea;
+        padding: 0.6rem;
+        margin-bottom: 0.5rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        word-wrap: break-word;
+      }
+
+      @media (max-width: 768px) {
+        .calendar-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
       .task-entry {
         background: #f8f9fa;
         padding: 1.5rem;
@@ -152,27 +200,28 @@
         margin-top: 2rem;
       }
 
-      .task-item {
-        background: white;
-        border: 2px solid #e0e0e0;
-        padding: 1rem;
-        border-radius: 8px;
-        margin-bottom: 1rem;
+      .task-list.hidden {
+        display: none;
       }
 
-      .task-days {
-        display: flex;
-        gap: 0.5rem;
-        margin-top: 0.5rem;
-        flex-wrap: wrap;
+      #huge-submit-button {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        margin-left: 1rem;
       }
 
-      .task-day-badge {
-        background: #667eea;
-        color: white;
-        padding: 0.3rem 0.8rem;
-        border-radius: 15px;
-        font-size: 0.9rem;
+      #huge-submit-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+      }
+
+      #reset-button {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        margin-left: 1rem;
+      }
+
+      #reset-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
       }
 
       .magic-section {
@@ -324,16 +373,18 @@
         </div>
 
         <button id="submit-task">📌 Submit Task</button>
+        <button id="huge-submit-button">Show Schedule</button>
+        <button id="reset-button">🔄 Reset</button>
       </div>
 
-      <div class="task-list">
+      <div class="task-list hidden" id="task-list">
         <h3>📝 Your Weekly Schedule</h3>
-        <div id="tasks-container">
-          <p style="color: #999; text-align: center;">
-            No tasks yet. Add one above!
-          </p>
+        <div class="calendar-grid" id="calendar-container">
+          <!-- Calendar will be rendered here by JavaScript -->
         </div>
       </div>
+
+      <div></div>
 
       <!-- Magic Trick Section -->
       <div class="magic-section" id="magic-section">
@@ -377,7 +428,10 @@
       const dayNumbersInput = document.getElementById('day-numbers')
       const taskDescInput = document.getElementById('task-description')
       const submitTaskBtn = document.getElementById('submit-task')
-      const tasksContainer = document.getElementById('tasks-container')
+      const calendarContainer = document.getElementById('calendar-container')
+      const taskListSection = document.getElementById('task-list')
+      const showScheduleBtn = document.getElementById('huge-submit-button')
+      const resetBtn = document.getElementById('reset-button')
 
       const dayNames = {
         '1': 'Monday',
@@ -391,9 +445,28 @@
 
       let tasks = []
 
+      // Initialize calendar on load
+      renderCalendar()
+
       submitTaskBtn.addEventListener('click', addTask)
       taskDescInput.addEventListener('keypress', e => {
         if (e.key === 'Enter') addTask()
+      })
+
+      // Show/hide schedule button
+      showScheduleBtn.addEventListener('click', () => {
+        taskListSection.classList.toggle('hidden')
+        showScheduleBtn.textContent = taskListSection.classList.contains('hidden')
+          ? 'Show Schedule'
+          : 'Hide Schedule'
+      })
+
+      // Reset button - clear all tasks
+      resetBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear all tasks?')) {
+          tasks = []
+          renderCalendar()
+        }
       })
 
       function addTask() {
@@ -424,7 +497,7 @@
         }
 
         tasks.push(task)
-        renderTasks()
+        renderCalendar()
 
         // Clear inputs
         dayNumbersInput.value = ''
@@ -432,29 +505,31 @@
         dayNumbersInput.focus()
       }
 
-      function renderTasks() {
-        if (tasks.length === 0) {
-          tasksContainer.innerHTML =
-            '<p style="color: #999; text-align: center;">No tasks yet. Add one above!</p>'
-          return
-        }
-
-        tasksContainer.innerHTML = tasks
-          .map(task => {
-            const dayBadges = task.days
+      function renderCalendar() {
+        // Create calendar structure with all 7 days
+        const calendarHTML = Object.keys(dayNames)
+          .map(dayNum => {
+            const dayTasks = tasks.filter(task => task.days.includes(dayNum))
+            const tasksHTML = dayTasks
               .map(
-                day => `<span class="task-day-badge">${dayNames[day]}</span>`
+                task => `<div class="calendar-task">• ${task.description}</div>`
               )
               .join('')
 
             return `
-          <div class="task-item">
-            <strong>${task.description}</strong>
-            <div class="task-days">${dayBadges}</div>
-          </div>
-        `
+            <div class="calendar-day">
+              <div class="calendar-day-header">
+                ${dayNames[dayNum]}:
+              </div>
+              <div class="calendar-day-content">
+                ${tasksHTML}
+              </div>
+            </div>
+          `
           })
           .join('')
+
+        calendarContainer.innerHTML = calendarHTML
       }
 
       // Magic trick functionality
