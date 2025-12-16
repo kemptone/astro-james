@@ -412,6 +412,9 @@
               min="0.000"
               max="150000000000000.000"
               placeholder="your secret number"
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
             />
             <button id="calculate-magic" style="margin-top: 0.5rem;"
               >🎲 Calculate Magic Result</button
@@ -456,7 +459,9 @@
       // Show/hide schedule button
       showScheduleBtn.addEventListener('click', () => {
         taskListSection.classList.toggle('hidden')
-        showScheduleBtn.textContent = taskListSection.classList.contains('hidden')
+        showScheduleBtn.textContent = taskListSection.classList.contains(
+          'hidden'
+        )
           ? 'Show Schedule'
           : 'Hide Schedule'
       })
@@ -543,7 +548,7 @@
       })
 
       function calculateMagic() {
-        const secretNumber = parseInt(magicNumberInput.value)
+        const secretNumber = parseFloat(magicNumberInput.value)
 
         if (isNaN(secretNumber)) {
           alert('Please enter any number!')
