@@ -1,0 +1,439 @@
+---
+import Menu3 from '@/components/menu.astro'
+
+// SRO23 - Age Calculator Game with Checkbox Control
+---
+
+<div class="sro23-container" id="gameContainer">
+  <!-- Iframe Section -->
+  <div class="iframe-section">
+    <Menu3 />
+    <iframe
+      src="https://www.boodeboo.com/sro4"
+      width="100%"
+      height="500px"
+      frameborder="0"
+      allowfullscreen
+      title="SRO4 Fan Game"
+    >
+    </iframe>
+  </div>
+
+  <!-- Game Section -->
+  <div class="game-section" id="gameSection">
+    <h2>Age Calculator Game</h2>
+
+    <div class="input-group">
+      <label for="checkYear">What Year:</label>
+      <input type="number" id="checkYear" placeholder="Enter year to check" />
+    </div>
+
+    <div class="result-section" id="resultSection">
+      <!-- Results will be displayed here -->
+    </div>
+
+    <div class="input-group">
+      <label for="personName">Name of Person:</label>
+      <input type="text" id="personName" placeholder="Enter person's name" />
+    </div>
+
+    <div class="input-group">
+      <label for="birthYear">Year Person Was Born:</label>
+      <input type="number" id="birthYear" placeholder="Enter birth year" />
+    </div>
+
+    <div class="button-group">
+      <button id="addBtn">Add</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+
+    <div class="people-list" id="peopleList">
+      <!-- List of people will appear here -->
+    </div>
+  </div>
+
+  <!-- Checkbox Control Section -->
+  <div class="checkbox-section">
+    <div class="warning-sign">
+      <p>⚠️ Please leave checkbox checked ⚠️</p>
+    </div>
+    <label class="checkbox-label">
+      <input type="checkbox" id="gameToggle" checked />
+      <span>Keep Game Active</span>
+    </label>
+  </div>
+</div>
+
+<style>
+  .sro23-container {
+    width: 100%;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    transition: background-color 0.3s;
+  }
+
+  .sro23-container.game-off {
+    background-color: rgb(0, 0, 0);
+    min-height: 100vh;
+  }
+
+  .iframe-section {
+    width: 100%;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #f5f5f5;
+  }
+
+  .iframe-section iframe {
+    width: 100%;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+  }
+
+  .game-section {
+    padding: 2rem;
+    background-color: #fff;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .game-section h2 {
+    margin-top: 0;
+    color: #333;
+    text-align: center;
+  }
+
+  .input-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+  }
+
+  .input-group input:focus {
+    outline: none;
+    border-color: #4caf50;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .button-group button {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  #addBtn {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  #addBtn:hover {
+    background-color: #45a049;
+  }
+
+  #resetBtn {
+    background-color: #ff9800;
+    color: white;
+  }
+
+  #resetBtn:hover {
+    background-color: #e68900;
+  }
+
+  .people-list {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    min-height: 50px;
+  }
+
+  .people-list h3 {
+    margin-top: 0;
+    color: #333;
+  }
+
+  .person-item {
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background-color: #fff;
+    border-left: 4px solid #2196f3;
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .person-info {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .person-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
+  }
+
+  .person-age {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2196f3;
+  }
+
+  .result-section {
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    min-height: 150px;
+    border: 2px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .big-age {
+    font-size: 100pt;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    color: #000;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .not-born {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #f44336;
+    margin: 1rem 0;
+  }
+
+  .result-item {
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    background-color: #e8f5e9;
+    border-left: 4px solid #4caf50;
+    border-radius: 3px;
+  }
+
+  .checkbox-section {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+  }
+
+  .warning-sign {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background-color: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .warning-sign p {
+    margin: 0;
+    font-weight: bold;
+    color: #856404;
+    font-size: 0.95rem;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  /* Hidden state when checkbox is unchecked */
+  .sro23-container.game-off .iframe-section,
+  .sro23-container.game-off .game-section {
+    display: none;
+  }
+
+  .sro23-container.game-off .checkbox-section {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+  }
+</style>
+
+<script>
+  // Game elements
+  const gameContainer = document.getElementById('gameContainer')
+  const gameSection = document.getElementById('gameSection')
+  const personName = document.getElementById('personName')
+  const birthYear = document.getElementById('birthYear')
+  const checkYear = document.getElementById('checkYear')
+  const addBtn = document.getElementById('addBtn')
+  const resetBtn = document.getElementById('resetBtn')
+  const resultSection = document.getElementById('resultSection')
+  const peopleList = document.getElementById('peopleList')
+  const gameToggle = document.getElementById('gameToggle')
+
+  // Array to store people
+  let people = []
+
+  // Auto-calculate function for current input
+  function calculateAge() {
+    const birth = parseInt(birthYear.value)
+    const year = parseInt(checkYear.value)
+
+    if (isNaN(birth) || isNaN(year)) {
+      resultSection.innerHTML = ''
+      return
+    }
+
+    // Check if not born yet
+    if (year < birth) {
+      resultSection.innerHTML = `
+        <div class="not-born">NOT BORN YET</div>
+      `
+      return
+    }
+
+    // Calculate age in that year
+    const age = year - birth
+
+    resultSection.innerHTML = `
+      <div class="big-age">${age}</div>
+    `
+  }
+
+  // Listen for input changes and auto-calculate
+  birthYear.addEventListener('input', calculateAge)
+
+  // When checkYear changes, recalculate current age AND update the list
+  checkYear.addEventListener('input', () => {
+    calculateAge()
+    updatePeopleList()
+  })
+
+  // Add person to list
+  addBtn.addEventListener('click', () => {
+    const name = personName.value.trim()
+    const birth = parseInt(birthYear.value)
+
+    if (!name) {
+      alert('Please enter a name!')
+      return
+    }
+
+    if (isNaN(birth)) {
+      alert('Please enter a valid birth year!')
+      return
+    }
+
+    // Add to people array (just name and birth year)
+    people.push({name, birth})
+
+    // Update the list display
+    updatePeopleList()
+
+    // Clear inputs after adding
+    personName.value = ''
+    birthYear.value = ''
+    resultSection.innerHTML = ''
+  })
+
+  // Update people list display
+  function updatePeopleList() {
+    if (people.length === 0) {
+      peopleList.innerHTML = ''
+      return
+    }
+
+    const year = parseInt(checkYear.value)
+
+    let html = '<h3>People Added:</h3>'
+
+    people.forEach((person, index) => {
+      if (!isNaN(year)) {
+        if (year < person.birth) {
+          html += `
+            <div class="person-item">
+              <span class="person-name">${person.name}: NOT BORN YET</span>
+            </div>
+          `
+        } else {
+          const age = year - person.birth
+          html += `
+            <div class="person-item">
+              <span class="person-name">${person.name}: ${age}</span>
+            </div>
+          `
+        }
+      } else {
+        html += `
+          <div class="person-item">
+            <span class="person-name">${person.name}</span>
+          </div>
+        `
+      }
+    })
+
+    peopleList.innerHTML = html
+  }
+
+  // Reset function
+  resetBtn.addEventListener('click', () => {
+    personName.value = ''
+    birthYear.value = ''
+    resultSection.innerHTML = ''
+    people = []
+    updatePeopleList()
+  })
+
+  // Checkbox toggle - controls entire game visibility
+  gameToggle.addEventListener('change', (e) => {
+    if (e.target.checked) {
+      // Game is ON
+      gameContainer.classList.remove('game-off')
+    } else {
+      // Game is OFF - everything goes black except checkbox
+      gameContainer.classList.add('game-off')
+    }
+  })
+</script>
