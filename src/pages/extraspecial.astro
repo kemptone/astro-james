@@ -1,5 +1,6 @@
 ---
 // Interactive Map Builder - Create cities with custom weather
+import SliderInput from '@/components/SliderInput.astro';
 ---
 
 <html lang="en">
@@ -351,20 +352,34 @@
                 <input type="text" id="cityName" placeholder="Enter city name">
             </div>
 
-            <div class="input-group">
-                <label for="temperature">Temperature: <span class="range-value" id="tempValue">30</span>°</label>
-                <input type="range" id="temperature" min="-100" max="160" value="30" step="1">
-            </div>
+            <SliderInput
+                id="temperature"
+                label="Temperature"
+                min={-100}
+                max={160}
+                value={30}
+                step={1}
+                suffix="°"
+            />
 
-            <div class="input-group">
-                <label for="airQuality">Air Quality: <span class="range-value" id="aqValue">50</span></label>
-                <input type="range" id="airQuality" min="0" max="500" value="50" step="1">
-            </div>
+            <SliderInput
+                id="airQuality"
+                label="Air Quality"
+                min={0}
+                max={500}
+                value={50}
+                step={1}
+            />
 
-            <div class="input-group">
-                <label for="fontSize">Letter Size: <span class="range-value" id="fontValue">16</span>px</label>
-                <input type="range" id="fontSize" min="10" max="48" value="16" step="1">
-            </div>
+            <SliderInput
+                id="fontSize"
+                label="Letter Size"
+                min={10}
+                max={48}
+                value={16}
+                step={1}
+                suffix="px"
+            />
 
             <div class="input-group">
                 <label>Position: Click on the map to place your city</label>
@@ -464,18 +479,6 @@
         let mapGenerated = false;
 
         // Update range value displays
-        document.getElementById('temperature').addEventListener('input', (e) => {
-            document.getElementById('tempValue').textContent = e.target.value;
-        });
-
-        document.getElementById('airQuality').addEventListener('input', (e) => {
-            document.getElementById('aqValue').textContent = e.target.value;
-        });
-
-        document.getElementById('fontSize').addEventListener('input', (e) => {
-            document.getElementById('fontValue').textContent = e.target.value;
-        });
-
         document.getElementById('highTemp').addEventListener('input', (e) => {
             document.getElementById('highValue').textContent = e.target.value;
         });
@@ -503,9 +506,9 @@
 
             const city = {
                 name,
-                temperature: parseFloat(document.getElementById('temperature').value),
-                airQuality: parseFloat(document.getElementById('airQuality').value),
-                fontSize: parseFloat(document.getElementById('fontSize').value),
+                temperature: parseFloat(document.getElementById('temperature-range').value),
+                airQuality: parseFloat(document.getElementById('airQuality-range').value),
+                fontSize: parseFloat(document.getElementById('fontSize-range').value),
                 position: { ...selectedPosition }
             };
 

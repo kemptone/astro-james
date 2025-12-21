@@ -1,0 +1,87 @@
+---
+interface Props {
+    id: string;
+    label: string;
+    min: number;
+    max: number;
+    value: number;
+    step?: number;
+    suffix?: string;
+}
+
+const { id, label, min, max, value, step = 1, suffix = '' } = Astro.props;
+---
+
+<div class="input-group">
+    <label for={`${id}-range`}>
+        {label}: <span class="range-value" id={`${id}Value`}>{value}</span>{suffix}
+    </label>
+    <div class="slider-input-container">
+        <input
+            type="number"
+            id={`${id}-number`}
+            class="number-input"
+            min={min}
+            max={max}
+            value={value}
+            step={step}
+        />
+        <input
+            type="range"
+            id={`${id}-range`}
+            class="range-input"
+            min={min}
+            max={max}
+            value={value}
+            step={step}
+        />
+    </div>
+</div>
+
+<style>
+    .slider-input-container {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .number-input {
+        width: 100%;
+        padding: 8px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    .range-input {
+        width: 100%;
+    }
+</style>
+
+<script define:vars={{ id }}>
+    const numberId = `${id}-number`;
+    const rangeId = `${id}-range`;
+    const valueId = `${id}Value`;
+
+    const numberInput = document.getElementById(numberId);
+    const rangeInput = document.getElementById(rangeId);
+    const valueDisplay = document.getElementById(valueId);
+
+    function updateValue(value) {
+        numberInput.value = value;
+        rangeInput.value = value;
+        valueDisplay.textContent = value;
+    }
+
+    numberInput.addEventListener('input', (e) => {
+        const value = e.target.value;
+        updateValue(value);
+    });
+
+    rangeInput.addEventListener('input', (e) => {
+        const value = e.target.value;
+        updateValue(value);
+    });
+</script>
