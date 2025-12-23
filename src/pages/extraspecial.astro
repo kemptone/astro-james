@@ -1,930 +1,1014 @@
 ---
 // Interactive Map Builder - Create cities with custom weather
-import SliderInput from '@/components/SliderInput.astro';
+import SliderInput from '@/components/SliderInput.astro'
+import Menu from '@/components/menu.astro'
 ---
 
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>City Map Builder</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            max-width: 1600px;
-            margin: 0 auto;
-            background: #f5f5f5;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        max-width: 1600px;
+        margin: 0 auto;
+        background: #f5f5f5;
+      }
 
-        .container {
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 20px;
-        }
+      .container {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 20px;
+      }
 
-        .controls {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
+      .controls {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-height: 90vh;
+        overflow-y: auto;
+      }
 
-        h1 {
-            color: #333;
-            margin-top: 0;
-        }
+      h1 {
+        color: #333;
+        margin-top: 0;
+      }
 
-        h2 {
-            color: #555;
-            font-size: 18px;
-            margin-top: 25px;
-            border-bottom: 2px solid #2196F3;
-            padding-bottom: 5px;
-        }
+      h2 {
+        color: #555;
+        font-size: 18px;
+        margin-top: 25px;
+        border-bottom: 2px solid #2196f3;
+        padding-bottom: 5px;
+      }
 
-        .input-group {
-            margin-bottom: 15px;
-        }
+      .input-group {
+        margin-bottom: 15px;
+      }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+      }
 
-        input[type="text"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 8px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
+      input[type='text'],
+      input[type='number'],
+      select {
+        width: 100%;
+        padding: 8px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 14px;
+      }
 
-        input[type="range"] {
-            width: 100%;
-        }
+      input[type='range'] {
+        width: 100%;
+      }
 
-        .range-value {
-            display: inline-block;
-            margin-left: 10px;
-            font-weight: bold;
-            color: #333;
-        }
+      .range-value {
+        display: inline-block;
+        margin-left: 10px;
+        font-weight: bold;
+        color: #333;
+      }
 
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
 
-        .add-city {
-            background: #4CAF50;
-            color: white;
-        }
+      .add-city {
+        background: #4caf50;
+        color: white;
+      }
 
-        .add-city:hover {
-            background: #45a049;
-        }
+      .add-city:hover {
+        background: #45a049;
+      }
 
-        .add-connection {
-            background: #9C27B0;
-            color: white;
-        }
+      .add-connection {
+        background: #9c27b0;
+        color: white;
+      }
 
-        .add-connection:hover {
-            background: #7B1FA2;
-        }
+      .add-connection:hover {
+        background: #7b1fa2;
+      }
 
-        .add-day {
-            background: #FF9800;
-            color: white;
-        }
+      .add-day {
+        background: #ff9800;
+        color: white;
+      }
 
-        .add-day:hover {
-            background: #F57C00;
-        }
+      .add-day:hover {
+        background: #f57c00;
+      }
 
-        .generate-map {
-            background: #2196F3;
-            color: white;
-            font-size: 24px;
-            padding: 20px 40px;
-            width: 100%;
-        }
+      .generate-map {
+        background: #2196f3;
+        color: white;
+        font-size: 24px;
+        padding: 20px 40px;
+        width: 100%;
+      }
 
-        .generate-map:hover {
-            background: #0b7dda;
-        }
+      .generate-map:hover {
+        background: #0b7dda;
+      }
 
-        .clear-cities {
-            background: #f44336;
-            color: white;
-        }
+      .clear-cities {
+        background: #f44336;
+        color: white;
+      }
 
-        .clear-cities:hover {
-            background: #da190b;
-        }
+      .clear-cities:hover {
+        background: #da190b;
+      }
 
-        .right-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+      .right-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
 
-        .map-container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+      .map-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-        #mapWrapper {
-            position: relative;
-            width: 100%;
-            height: 600px;
-        }
+      #mapWrapper {
+        position: relative;
+        width: 100%;
+        height: 600px;
+      }
 
-        #connectionCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
+      #connectionCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
 
-        #map {
-            width: 100%;
-            height: 100%;
-            background: white;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            position: relative;
-            cursor: crosshair;
-        }
+      #map {
+        width: 100%;
+        height: 100%;
+        background: white;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        position: relative;
+        cursor: crosshair;
+      }
 
-        .city-list {
-            margin-top: 20px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
+      .city-list {
+        margin-top: 20px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
 
-        .city-item {
-            background: #f9f9f9;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 4px;
-            border-left: 4px solid #2196F3;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .city-item {
+        background: #f9f9f9;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        border-left: 4px solid #2196f3;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .city-item button,
-        .connection-item button,
-        .day-item button {
-            background: #f44336;
-            color: white;
-            padding: 5px 10px;
-            font-size: 12px;
-            margin: 0;
-        }
+      .city-item button,
+      .connection-item button,
+      .day-item button {
+        background: #f44336;
+        color: white;
+        padding: 5px 10px;
+        font-size: 12px;
+        margin: 0;
+      }
 
-        .city-marker {
-            position: absolute;
-            transform: translate(0, -50%);
-            pointer-events: none;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            transition: color 0.3s;
-            white-space: nowrap;
-        }
+      .city-marker {
+        position: absolute;
+        transform: translate(0, -50%);
+        pointer-events: none;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        transition: color 0.3s;
+        white-space: nowrap;
+      }
 
-        .mode-selector {
-            margin-bottom: 20px;
-            padding: 10px;
-            background: #e3f2fd;
-            border-radius: 4px;
-        }
+      .mode-selector {
+        margin-bottom: 20px;
+        padding: 10px;
+        background: #e3f2fd;
+        border-radius: 4px;
+      }
 
-        .mode-selector label {
-            display: inline;
-            font-weight: normal;
-            margin-left: 5px;
-        }
+      .mode-selector label {
+        display: inline;
+        font-weight: normal;
+        margin-left: 5px;
+      }
 
-        .mode-selector input[type="radio"] {
-            margin-left: 15px;
-        }
+      .mode-selector input[type='radio'] {
+        margin-left: 15px;
+      }
 
-        .legend {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 4px;
-        }
+      .legend {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 4px;
+      }
 
-        .legend h3 {
-            margin-top: 0;
-            font-size: 14px;
-        }
+      .legend h3 {
+        margin-top: 0;
+        font-size: 14px;
+      }
 
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-            font-size: 12px;
-        }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        font-size: 12px;
+      }
 
-        .legend-color {
-            width: 30px;
-            height: 15px;
-            margin-right: 10px;
-            border: 1px solid #999;
-        }
+      .legend-color {
+        width: 30px;
+        height: 15px;
+        margin-right: 10px;
+        border: 1px solid #999;
+      }
 
-        .connection-item {
-            background: #f3e5f5;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 4px;
-            border-left: 4px solid #9C27B0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .connection-item {
+        background: #f3e5f5;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        border-left: 4px solid #9c27b0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .temperature-chart {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+      .temperature-chart {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-        .day-item {
-            background: #fff3e0;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 4px;
-            border-left: 4px solid #FF9800;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .day-item {
+        background: #fff3e0;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        border-left: 4px solid #ff9800;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .chart-bars {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-            padding: 20px;
-            background: #fafafa;
-            border-radius: 4px;
-            min-height: 200px;
-        }
+      .chart-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+        padding: 20px;
+        background: #fafafa;
+        border-radius: 4px;
+        min-height: 200px;
+      }
 
-        .chart-bar {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+      .chart-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-        .bar-label {
-            width: 80px;
-            font-size: 12px;
-            font-weight: bold;
-        }
+      .bar-label {
+        width: 80px;
+        font-size: 12px;
+        font-weight: bold;
+      }
 
-        .bar-container {
-            flex: 1;
-            height: 30px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            position: relative;
-            overflow: visible;
-            border: 1px solid #ccc;
-        }
+      .bar-container {
+        flex: 1;
+        height: 30px;
+        background: #e0e0e0;
+        border-radius: 4px;
+        position: relative;
+        overflow: visible;
+        border: 1px solid #ccc;
+      }
 
-        .bar-fill {
-            height: 100%;
-            border-radius: 4px;
-            position: absolute;
-            top: 0;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            box-sizing: border-box;
-        }
+      .bar-fill {
+        height: 100%;
+        border-radius: 4px;
+        position: absolute;
+        top: 0;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        box-sizing: border-box;
+      }
 
-        .two-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
+      .two-inputs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <Menu />
     <h1>🗺️ City Map Builder - The Best Game Ever!</h1>
-    <p>Create your own map, name your cities, connect them with lines, and track temperature over days!</p>
+    <p>
+      Create your own map, name your cities, connect them with lines, and track
+      temperature over days!
+    </p>
 
     <div class="container">
-        <div class="controls">
-            <h2>🏙️ Add Cities</h2>
-            <div class="input-group">
-                <label for="cityName">City/Town Name:</label>
-                <input type="text" id="cityName" placeholder="Enter city name">
-            </div>
-
-            <SliderInput
-                id="temperature"
-                label="Temperature"
-                min={-100}
-                max={160}
-                value={30}
-                step={1}
-                suffix="°"
-            />
-
-            <SliderInput
-                id="airQuality"
-                label="Air Quality"
-                min={0}
-                max={500}
-                value={50}
-                step={1}
-            />
-
-            <SliderInput
-                id="fontSize"
-                label="Letter Size"
-                min={10}
-                max={48}
-                value={16}
-                step={1}
-                suffix="px"
-            />
-
-            <div class="input-group">
-                <label>Position: Click on the map to place your city</label>
-            </div>
-
-            <button class="add-city" id="addCity">Add City to Map</button>
-            <button class="clear-cities" id="clearCities">Clear All Cities</button>
-
-            <div class="city-list" id="cityList"></div>
-
-            <h2>🔗 Connect Cities</h2>
-            <div class="input-group">
-                <label for="cityFrom">From City:</label>
-                <select id="cityFrom"></select>
-            </div>
-
-            <div class="input-group">
-                <label for="cityTo">To City:</label>
-                <select id="cityTo"></select>
-            </div>
-
-            <button class="add-connection" id="addConnection">Add Connection Line</button>
-
-            <div class="city-list" id="connectionList"></div>
-
-            <h2>📅 Temperature Days</h2>
-            <div class="input-group">
-                <label for="dayName">Day Name:</label>
-                <input type="text" id="dayName" placeholder="e.g., Day 1, Monday">
-            </div>
-
-            <div class="two-inputs">
-                <div class="input-group">
-                    <label for="highTemp">High: <span class="range-value" id="highValue">50</span>°</label>
-                    <input type="range" id="highTemp" min="-100" max="160" value="50" step="1">
-                </div>
-
-                <div class="input-group">
-                    <label for="lowTemp">Low: <span class="range-value" id="lowValue">26</span>°</label>
-                    <input type="range" id="lowTemp" min="-100" max="160" value="26" step="1">
-                </div>
-            </div>
-
-            <button class="add-day" id="addDay">Add Day</button>
-            <button class="clear-cities" id="clearDays">Clear All Days</button>
-
-            <div class="city-list" id="dayList"></div>
-
-            <div class="mode-selector">
-                <strong>Display Mode:</strong><br>
-                <input type="radio" name="mode" value="temperature" id="modeTemp" checked>
-                <label for="modeTemp">Temperature</label>
-                <input type="radio" name="mode" value="airquality" id="modeAQ">
-                <label for="modeAQ">Air Quality</label>
-            </div>
-
-            <button class="generate-map" id="generateMap">M - GENERATE MAP!</button>
-
-            <div class="legend">
-                <h3>Temperature Scale</h3>
-                <div class="legend-item"><div class="legend-color" style="background: rgb(0,0,0)"></div>-100° Black</div>
-                <div class="legend-item"><div class="legend-color" style="background: rgb(0,0,255)"></div>-40° Dark Blue</div>
-                <div class="legend-item"><div class="legend-color" style="background: rgb(0,128,255)"></div>0° Blue</div>
-                <div class="legend-item"><div class="legend-color" style="background: rgb(0,255,255)"></div>30° Aqua</div>
-                <div class="legend-item"><div class="legend-color" style="background: rgb(0,255,0)"></div>60° Green</div>
-                <div class="legend-item"><div class="legend-color" style="background: rgb(255,255,0)"></div>70° Yellow</div>
-                <div class="legend-item"><div class="legend-color" style="background: rgb(255,128,0)"></div>80° Orange</div>
-                <div class="legend-item"><div class="legend-color" style="background: rgb(255,0,0)"></div>100° Red</div>
-                <div class="legend-item"><div class="legend-color" style="background: rgb(100,0,0)"></div>130° Dark Red</div>
-                <div class="legend-item"><div class="legend-color" style="background: rgb(0,0,0)"></div>160° Black</div>
-            </div>
+      <div class="controls">
+        <h2>🏙️ Add Cities</h2>
+        <div class="input-group">
+          <label for="cityName">City/Town Name:</label>
+          <input type="text" id="cityName" placeholder="Enter city name" />
         </div>
 
-        <div class="right-panel">
-            <div class="map-container">
-                <h2>🗺️ City Map</h2>
-                <div id="mapWrapper">
-                    <svg id="connectionCanvas"></svg>
-                    <div id="map"></div>
-                </div>
-            </div>
+        <SliderInput
+          id="temperature"
+          label="Temperature"
+          min={-100}
+          max={160}
+          value={30}
+          step={1}
+          suffix="°"
+        />
 
-            <div class="temperature-chart">
-                <h2>🌡️ Temperature Over Days</h2>
-                <div class="chart-bars" id="chartBars">
-                    <p style="color: #999; text-align: center;">Add temperature days to see the chart</p>
-                </div>
-            </div>
+        <SliderInput
+          id="airQuality"
+          label="Air Quality"
+          min={0}
+          max={500}
+          value={50}
+          step={1}
+        />
+
+        <SliderInput
+          id="fontSize"
+          label="Letter Size"
+          min={10}
+          max={48}
+          value={16}
+          step={1}
+          suffix="px"
+        />
+
+        <div class="input-group">
+          <label>Position: Click on the map to place your city</label>
         </div>
+
+        <button class="add-city" id="addCity">Add City to Map</button>
+        <button class="clear-cities" id="clearCities">Clear All Cities</button>
+
+        <div class="city-list" id="cityList"></div>
+
+        <h2>🔗 Connect Cities</h2>
+        <div class="input-group">
+          <label for="cityFrom">From City:</label>
+          <select id="cityFrom"></select>
+        </div>
+
+        <div class="input-group">
+          <label for="cityTo">To City:</label>
+          <select id="cityTo"></select>
+        </div>
+
+        <button class="add-connection" id="addConnection"
+          >Add Connection Line</button
+        >
+
+        <div class="city-list" id="connectionList"></div>
+
+        <h2>📅 Temperature Days</h2>
+        <div class="input-group">
+          <label for="dayName">Day Name:</label>
+          <input type="text" id="dayName" placeholder="e.g., Day 1, Monday" />
+        </div>
+
+        <div class="two-inputs">
+          <div class="input-group">
+            <label for="highTemp"
+              >High: <span class="range-value" id="highValue">50</span>°</label
+            >
+            <input
+              type="range"
+              id="highTemp"
+              min="-100"
+              max="160"
+              value="50"
+              step="1"
+            />
+          </div>
+
+          <div class="input-group">
+            <label for="lowTemp"
+              >Low: <span class="range-value" id="lowValue">26</span>°</label
+            >
+            <input
+              type="range"
+              id="lowTemp"
+              min="-100"
+              max="160"
+              value="26"
+              step="1"
+            />
+          </div>
+        </div>
+
+        <button class="add-day" id="addDay">Add Day</button>
+        <button class="clear-cities" id="clearDays">Clear All Days</button>
+
+        <div class="city-list" id="dayList"></div>
+
+        <div class="mode-selector">
+          <strong>Display Mode:</strong><br />
+          <input
+            type="radio"
+            name="mode"
+            value="temperature"
+            id="modeTemp"
+            checked
+          />
+          <label for="modeTemp">Temperature</label>
+          <input type="radio" name="mode" value="airquality" id="modeAQ" />
+          <label for="modeAQ">Air Quality</label>
+        </div>
+
+        <button class="generate-map" id="generateMap">M - GENERATE MAP!</button>
+
+        <div class="legend">
+          <h3>Temperature Scale</h3>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(0,0,0)"></div>-100°
+            Black
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(0,0,255)">
+            </div>-40° Dark Blue
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(0,128,255)">
+            </div>0° Blue
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(0,255,255)">
+            </div>30° Aqua
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(0,255,0)"></div>60°
+            Green
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(255,255,0)">
+            </div>70° Yellow
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(255,128,0)">
+            </div>80° Orange
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(255,0,0)">
+            </div>100° Red
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(100,0,0)">
+            </div>130° Dark Red
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: rgb(0,0,0)"></div>160°
+            Black
+          </div>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="map-container">
+          <h2>🗺️ City Map</h2>
+          <div id="mapWrapper">
+            <svg id="connectionCanvas"></svg>
+            <div id="map"></div>
+          </div>
+        </div>
+
+        <div class="temperature-chart">
+          <h2>🌡️ Temperature Over Days</h2>
+          <div class="chart-bars" id="chartBars">
+            <p style="color: #999; text-align: center;">
+              Add temperature days to see the chart
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
-        const cities = [];
-        const connections = [];
-        const temperatureDays = [];
-        let selectedPosition = { x: 50, y: 50 };
-        let mapGenerated = false;
+      const cities = []
+      const connections = []
+      const temperatureDays = []
+      let selectedPosition = {x: 50, y: 50}
+      let mapGenerated = false
 
-        // Update range value displays
-        document.getElementById('highTemp').addEventListener('input', (e) => {
-            document.getElementById('highValue').textContent = e.target.value;
-        });
+      // Update range value displays
+      document.getElementById('highTemp').addEventListener('input', e => {
+        document.getElementById('highValue').textContent = e.target.value
+      })
 
-        document.getElementById('lowTemp').addEventListener('input', (e) => {
-            document.getElementById('lowValue').textContent = e.target.value;
-        });
+      document.getElementById('lowTemp').addEventListener('input', e => {
+        document.getElementById('lowValue').textContent = e.target.value
+      })
 
-        // Map click to set position
-        document.getElementById('map').addEventListener('click', (e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            selectedPosition = {
-                x: ((e.clientX - rect.left) / rect.width) * 100,
-                y: ((e.clientY - rect.top) / rect.height) * 100
-            };
-        });
+      // Map click to set position
+      document.getElementById('map').addEventListener('click', e => {
+        const rect = e.currentTarget.getBoundingClientRect()
+        selectedPosition = {
+          x: ((e.clientX - rect.left) / rect.width) * 100,
+          y: ((e.clientY - rect.top) / rect.height) * 100,
+        }
+      })
 
-        // Add city
-        document.getElementById('addCity').addEventListener('click', () => {
-            const name = document.getElementById('cityName').value.trim();
-            if (!name) {
-                alert('Please enter a city name!');
-                return;
-            }
+      // Add city
+      document.getElementById('addCity').addEventListener('click', () => {
+        const name = document.getElementById('cityName').value.trim()
+        if (!name) {
+          alert('Please enter a city name!')
+          return
+        }
 
-            const city = {
-                name,
-                temperature: parseFloat(document.getElementById('temperature-range').value),
-                airQuality: parseFloat(document.getElementById('airQuality-range').value),
-                fontSize: parseFloat(document.getElementById('fontSize-range').value),
-                position: { ...selectedPosition }
-            };
+        const city = {
+          name,
+          temperature: parseFloat(
+            document.getElementById('temperature-range').value
+          ),
+          airQuality: parseFloat(
+            document.getElementById('airQuality-range').value
+          ),
+          fontSize: parseFloat(document.getElementById('fontSize-range').value),
+          position: {...selectedPosition},
+        }
 
-            cities.push(city);
-            updateCityList();
-            updateCitySelectors();
+        cities.push(city)
+        updateCityList()
+        updateCitySelectors()
 
-            // Clear name input for next city
-            document.getElementById('cityName').value = '';
+        // Clear name input for next city
+        document.getElementById('cityName').value = ''
 
-            // Add marker if map is generated
-            if (mapGenerated) {
-                generateMap();
-            }
-        });
+        // Add marker if map is generated
+        if (mapGenerated) {
+          generateMap()
+        }
+      })
 
-        // Clear all cities
-        document.getElementById('clearCities').addEventListener('click', () => {
-            if (confirm('Are you sure you want to clear all cities?')) {
-                cities.length = 0;
-                connections.length = 0;
-                updateCityList();
-                updateConnectionList();
-                updateCitySelectors();
-                document.getElementById('map').innerHTML = '';
-                mapGenerated = false;
-            }
-        });
+      // Clear all cities
+      document.getElementById('clearCities').addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear all cities?')) {
+          cities.length = 0
+          connections.length = 0
+          updateCityList()
+          updateConnectionList()
+          updateCitySelectors()
+          document.getElementById('map').innerHTML = ''
+          mapGenerated = false
+        }
+      })
 
-        // Add connection
-        document.getElementById('addConnection').addEventListener('click', () => {
-            const fromIndex = parseInt(document.getElementById('cityFrom').value);
-            const toIndex = parseInt(document.getElementById('cityTo').value);
+      // Add connection
+      document.getElementById('addConnection').addEventListener('click', () => {
+        const fromIndex = parseInt(document.getElementById('cityFrom').value)
+        const toIndex = parseInt(document.getElementById('cityTo').value)
 
-            if (isNaN(fromIndex) || isNaN(toIndex)) {
-                alert('Please select both cities!');
-                return;
-            }
+        if (isNaN(fromIndex) || isNaN(toIndex)) {
+          alert('Please select both cities!')
+          return
+        }
 
-            if (fromIndex === toIndex) {
-                alert('Cannot connect a city to itself!');
-                return;
-            }
+        if (fromIndex === toIndex) {
+          alert('Cannot connect a city to itself!')
+          return
+        }
 
-            connections.push({ from: fromIndex, to: toIndex });
-            updateConnectionList();
+        connections.push({from: fromIndex, to: toIndex})
+        updateConnectionList()
 
-            if (mapGenerated) {
-                generateMap();
-            }
-        });
+        if (mapGenerated) {
+          generateMap()
+        }
+      })
 
-        // Add temperature day
-        document.getElementById('addDay').addEventListener('click', () => {
-            const name = document.getElementById('dayName').value.trim() || `Day ${temperatureDays.length + 1}`;
-            const high = parseFloat(document.getElementById('highTemp').value);
-            const low = parseFloat(document.getElementById('lowTemp').value);
+      // Add temperature day
+      document.getElementById('addDay').addEventListener('click', () => {
+        const name =
+          document.getElementById('dayName').value.trim() ||
+          `Day ${temperatureDays.length + 1}`
+        const high = parseFloat(document.getElementById('highTemp').value)
+        const low = parseFloat(document.getElementById('lowTemp').value)
 
-            if (high < low) {
-                alert('High temperature must be greater than or equal to low temperature!');
-                return;
-            }
+        if (high < low) {
+          alert(
+            'High temperature must be greater than or equal to low temperature!'
+          )
+          return
+        }
 
-            temperatureDays.push({ name, high, low });
-            updateDayList();
-            updateTemperatureChart();
+        temperatureDays.push({name, high, low})
+        updateDayList()
+        updateTemperatureChart()
 
-            document.getElementById('dayName').value = '';
-        });
+        document.getElementById('dayName').value = ''
+      })
 
-        // Clear days
-        document.getElementById('clearDays').addEventListener('click', () => {
-            if (confirm('Are you sure you want to clear all days?')) {
-                temperatureDays.length = 0;
-                updateDayList();
-                updateTemperatureChart();
-            }
-        });
+      // Clear days
+      document.getElementById('clearDays').addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear all days?')) {
+          temperatureDays.length = 0
+          updateDayList()
+          updateTemperatureChart()
+        }
+      })
 
-        // Generate map
-        document.getElementById('generateMap').addEventListener('click', () => {
-            generateMap();
-        });
+      // Generate map
+      document.getElementById('generateMap').addEventListener('click', () => {
+        generateMap()
+      })
 
-        // Mode change
-        document.querySelectorAll('input[name="mode"]').forEach(radio => {
-            radio.addEventListener('change', () => {
-                if (mapGenerated) {
-                    updateCityColors();
-                }
-            });
-        });
+      // Mode change
+      document.querySelectorAll('input[name="mode"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+          if (mapGenerated) {
+            updateCityColors()
+          }
+        })
+      })
 
-        function updateCityList() {
-            const listEl = document.getElementById('cityList');
-            listEl.innerHTML = '<h3>Cities (' + cities.length + ')</h3>';
+      function updateCityList() {
+        const listEl = document.getElementById('cityList')
+        listEl.innerHTML = '<h3>Cities (' + cities.length + ')</h3>'
 
-            cities.forEach((city, index) => {
-                const item = document.createElement('div');
-                item.className = 'city-item';
-                item.innerHTML = `
+        cities.forEach((city, index) => {
+          const item = document.createElement('div')
+          item.className = 'city-item'
+          item.innerHTML = `
                     <div>
                         <strong>${city.name}</strong><br>
                         <small>Temp: ${city.temperature}° | AQ: ${city.airQuality}</small>
                     </div>
                     <button onclick="removeCity(${index})">Remove</button>
-                `;
-                listEl.appendChild(item);
-            });
-        }
+                `
+          listEl.appendChild(item)
+        })
+      }
 
-        function updateConnectionList() {
-            const listEl = document.getElementById('connectionList');
-            listEl.innerHTML = '<h3>Connections (' + connections.length + ')</h3>';
+      function updateConnectionList() {
+        const listEl = document.getElementById('connectionList')
+        listEl.innerHTML = '<h3>Connections (' + connections.length + ')</h3>'
 
-            connections.forEach((conn, index) => {
-                const fromCity = cities[conn.from];
-                const toCity = cities[conn.to];
-                const item = document.createElement('div');
-                item.className = 'connection-item';
-                item.innerHTML = `
+        connections.forEach((conn, index) => {
+          const fromCity = cities[conn.from]
+          const toCity = cities[conn.to]
+          const item = document.createElement('div')
+          item.className = 'connection-item'
+          item.innerHTML = `
                     <div>
                         <strong>${fromCity.name} → ${toCity.name}</strong>
                     </div>
                     <button onclick="removeConnection(${index})">Remove</button>
-                `;
-                listEl.appendChild(item);
-            });
-        }
+                `
+          listEl.appendChild(item)
+        })
+      }
 
-        function updateDayList() {
-            const listEl = document.getElementById('dayList');
-            listEl.innerHTML = '<h3>Days (' + temperatureDays.length + ')</h3>';
+      function updateDayList() {
+        const listEl = document.getElementById('dayList')
+        listEl.innerHTML = '<h3>Days (' + temperatureDays.length + ')</h3>'
 
-            temperatureDays.forEach((day, index) => {
-                const item = document.createElement('div');
-                item.className = 'day-item';
-                item.innerHTML = `
+        temperatureDays.forEach((day, index) => {
+          const item = document.createElement('div')
+          item.className = 'day-item'
+          item.innerHTML = `
                     <div>
                         <strong>${day.name}</strong><br>
                         <small>High: ${day.high}° | Low: ${day.low}°</small>
                     </div>
                     <button onclick="removeDay(${index})">Remove</button>
-                `;
-                listEl.appendChild(item);
-            });
+                `
+          listEl.appendChild(item)
+        })
+      }
+
+      function updateCitySelectors() {
+        const fromSelect = document.getElementById('cityFrom')
+        const toSelect = document.getElementById('cityTo')
+
+        fromSelect.innerHTML = '<option value="">Select city...</option>'
+        toSelect.innerHTML = '<option value="">Select city...</option>'
+
+        cities.forEach((city, index) => {
+          fromSelect.innerHTML += `<option value="${index}">${city.name}</option>`
+          toSelect.innerHTML += `<option value="${index}">${city.name}</option>`
+        })
+      }
+
+      function updateTemperatureChart() {
+        const chartEl = document.getElementById('chartBars')
+
+        if (temperatureDays.length === 0) {
+          chartEl.innerHTML =
+            '<p style="color: #999; text-align: center;">Add temperature days to see the chart</p>'
+          return
         }
 
-        function updateCitySelectors() {
-            const fromSelect = document.getElementById('cityFrom');
-            const toSelect = document.getElementById('cityTo');
+        // Find the overall min and max temperatures across ALL days
+        let globalMin = Infinity
+        let globalMax = -Infinity
 
-            fromSelect.innerHTML = '<option value="">Select city...</option>';
-            toSelect.innerHTML = '<option value="">Select city...</option>';
+        temperatureDays.forEach(day => {
+          globalMin = Math.min(globalMin, day.low)
+          globalMax = Math.max(globalMax, day.high)
+        })
 
-            cities.forEach((city, index) => {
-                fromSelect.innerHTML += `<option value="${index}">${city.name}</option>`;
-                toSelect.innerHTML += `<option value="${index}">${city.name}</option>`;
-            });
+        const range = globalMax - globalMin
+
+        chartEl.innerHTML = ''
+
+        // Add scale indicator
+        const scaleDiv = document.createElement('div')
+        scaleDiv.style.cssText =
+          'display: flex; justify-content: space-between; padding: 5px 80px 10px 80px; font-size: 12px; color: #666; font-weight: bold;'
+        scaleDiv.innerHTML = `<span>← ${globalMin}° (lowest)</span><span>${globalMax}° (highest) →</span>`
+        chartEl.appendChild(scaleDiv)
+
+        temperatureDays.forEach(day => {
+          const barDiv = document.createElement('div')
+          barDiv.className = 'chart-bar'
+
+          const label = document.createElement('div')
+          label.className = 'bar-label'
+          label.textContent = day.name
+
+          const barContainer = document.createElement('div')
+          barContainer.className = 'bar-container'
+
+          const barFill = document.createElement('div')
+          barFill.className = 'bar-fill'
+
+          // Calculate position and width relative to the full temperature range
+          // The LOWEST temp across all days = 0% (left edge)
+          // The HIGHEST temp across all days = 100% (right edge)
+          if (range === 0) {
+            // All temperatures are the same
+            barFill.style.left = '0%'
+            barFill.style.width = '100%'
+          } else {
+            // Calculate where this bar starts and ends in the overall range
+            const startPercent = ((day.low - globalMin) / range) * 100
+            const endPercent = ((day.high - globalMin) / range) * 100
+            const widthPercent = endPercent - startPercent
+
+            // Set position and size
+            barFill.style.left = startPercent.toFixed(2) + '%'
+            barFill.style.width = Math.max(widthPercent, 1) + '%'
+          }
+
+          // Debug info
+          console.log(
+            `${day.name}: Low=${day.low}°, High=${day.high}°, GlobalMin=${globalMin}°, GlobalMax=${globalMax}°, Left=${barFill.style.left}, Width=${barFill.style.width}`
+          )
+
+          // Calculate average temperature for color
+          const avgTemp = (day.high + day.low) / 2
+          const color = getTemperatureColor(avgTemp)
+          barFill.style.background = color
+
+          barFill.textContent = `${day.low}° - ${day.high}°`
+
+          barContainer.appendChild(barFill)
+          barDiv.appendChild(label)
+          barDiv.appendChild(barContainer)
+          chartEl.appendChild(barDiv)
+        })
+      }
+
+      window.removeCity = function (index) {
+        cities.splice(index, 1)
+
+        // Remove connections involving this city
+        for (let i = connections.length - 1; i >= 0; i--) {
+          if (connections[i].from === index || connections[i].to === index) {
+            connections.splice(i, 1)
+          } else {
+            // Update indices for cities after the removed one
+            if (connections[i].from > index) connections[i].from--
+            if (connections[i].to > index) connections[i].to--
+          }
         }
 
-        function updateTemperatureChart() {
-            const chartEl = document.getElementById('chartBars');
+        updateCityList()
+        updateConnectionList()
+        updateCitySelectors()
+        if (mapGenerated) {
+          generateMap()
+        }
+      }
 
-            if (temperatureDays.length === 0) {
-                chartEl.innerHTML = '<p style="color: #999; text-align: center;">Add temperature days to see the chart</p>';
-                return;
-            }
+      window.removeConnection = function (index) {
+        connections.splice(index, 1)
+        updateConnectionList()
+        if (mapGenerated) {
+          generateMap()
+        }
+      }
 
-            // Find the overall min and max temperatures across ALL days
-            let globalMin = Infinity;
-            let globalMax = -Infinity;
+      window.removeDay = function (index) {
+        temperatureDays.splice(index, 1)
+        updateDayList()
+        updateTemperatureChart()
+      }
 
-            temperatureDays.forEach(day => {
-                globalMin = Math.min(globalMin, day.low);
-                globalMax = Math.max(globalMax, day.high);
-            });
+      function generateMap() {
+        const mapEl = document.getElementById('map')
+        const svgEl = document.getElementById('connectionCanvas')
+        const mapWrapper = document.getElementById('mapWrapper')
 
-            const range = globalMax - globalMin;
+        mapEl.innerHTML = ''
+        svgEl.innerHTML = ''
 
-            chartEl.innerHTML = '';
+        // Set SVG size to match map
+        const rect = mapWrapper.getBoundingClientRect()
+        svgEl.setAttribute('width', rect.width)
+        svgEl.setAttribute('height', rect.height)
+        svgEl.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`)
 
-            // Add scale indicator
-            const scaleDiv = document.createElement('div');
-            scaleDiv.style.cssText = 'display: flex; justify-content: space-between; padding: 5px 80px 10px 80px; font-size: 12px; color: #666; font-weight: bold;';
-            scaleDiv.innerHTML = `<span>← ${globalMin}° (lowest)</span><span>${globalMax}° (highest) →</span>`;
-            chartEl.appendChild(scaleDiv);
+        // Draw connection lines first (so they appear behind cities)
+        connections.forEach(conn => {
+          const fromCity = cities[conn.from]
+          const toCity = cities[conn.to]
 
-            temperatureDays.forEach(day => {
-                const barDiv = document.createElement('div');
-                barDiv.className = 'chart-bar';
+          const mapRect = mapEl.getBoundingClientRect()
+          const x1 = (fromCity.position.x / 100) * mapRect.width
+          const y1 = (fromCity.position.y / 100) * mapRect.height
+          const x2 = (toCity.position.x / 100) * mapRect.width
+          const y2 = (toCity.position.y / 100) * mapRect.height
 
-                const label = document.createElement('div');
-                label.className = 'bar-label';
-                label.textContent = day.name;
+          const line = document.createElementNS(
+            'http://www.w3.org/2000/svg',
+            'line'
+          )
+          line.setAttribute('x1', x1)
+          line.setAttribute('y1', y1)
+          line.setAttribute('x2', x2)
+          line.setAttribute('y2', y2)
+          line.setAttribute('stroke', 'rgba(0, 0, 0, 0.2)')
+          line.setAttribute('stroke-width', '2')
+          line.setAttribute('stroke-dasharray', '5,5')
 
-                const barContainer = document.createElement('div');
-                barContainer.className = 'bar-container';
+          svgEl.appendChild(line)
+        })
 
-                const barFill = document.createElement('div');
-                barFill.className = 'bar-fill';
+        // Draw city markers
+        cities.forEach(city => {
+          addCityMarker(city)
+        })
 
-                // Calculate position and width relative to the full temperature range
-                // The LOWEST temp across all days = 0% (left edge)
-                // The HIGHEST temp across all days = 100% (right edge)
-                if (range === 0) {
-                    // All temperatures are the same
-                    barFill.style.left = '0%';
-                    barFill.style.width = '100%';
-                } else {
-                    // Calculate where this bar starts and ends in the overall range
-                    const startPercent = ((day.low - globalMin) / range) * 100;
-                    const endPercent = ((day.high - globalMin) / range) * 100;
-                    const widthPercent = endPercent - startPercent;
+        mapGenerated = true
+      }
 
-                    // Set position and size
-                    barFill.style.left = startPercent.toFixed(2) + '%';
-                    barFill.style.width = Math.max(widthPercent, 1) + '%';
-                }
+      function addCityMarker(city) {
+        const mapEl = document.getElementById('map')
+        const marker = document.createElement('div')
+        marker.className = 'city-marker'
+        marker.textContent = city.name
+        marker.style.left = city.position.x + '%'
+        marker.style.top = city.position.y + '%'
+        marker.style.fontSize = city.fontSize + 'px'
 
-                // Debug info
-                console.log(`${day.name}: Low=${day.low}°, High=${day.high}°, GlobalMin=${globalMin}°, GlobalMax=${globalMax}°, Left=${barFill.style.left}, Width=${barFill.style.width}`);
+        const color = getCurrentColor(city)
+        marker.style.color = color
 
-                // Calculate average temperature for color
-                const avgTemp = (day.high + day.low) / 2;
-                const color = getTemperatureColor(avgTemp);
-                barFill.style.background = color;
+        mapEl.appendChild(marker)
+      }
 
-                barFill.textContent = `${day.low}° - ${day.high}°`;
+      function updateCityColors() {
+        const markers = document.querySelectorAll('.city-marker')
+        markers.forEach((marker, index) => {
+          if (cities[index]) {
+            const color = getCurrentColor(cities[index])
+            marker.style.color = color
+          }
+        })
+      }
 
-                barContainer.appendChild(barFill);
-                barDiv.appendChild(label);
-                barDiv.appendChild(barContainer);
-                chartEl.appendChild(barDiv);
-            });
+      function getCurrentColor(city) {
+        const mode = document.querySelector('input[name="mode"]:checked').value
+
+        if (mode === 'temperature') {
+          return getTemperatureColor(city.temperature)
+        } else {
+          return getAirQualityColor(city.airQuality)
+        }
+      }
+
+      function getTemperatureColor(temp) {
+        const stops = [
+          {temp: -100, color: [0, 0, 0]},
+          {temp: -40, color: [0, 0, 255]},
+          {temp: 0, color: [0, 128, 255]},
+          {temp: 30, color: [0, 255, 255]},
+          {temp: 60, color: [0, 255, 0]},
+          {temp: 70, color: [255, 255, 0]},
+          {temp: 80, color: [255, 128, 0]},
+          {temp: 100, color: [255, 0, 0]},
+          {temp: 130, color: [100, 0, 0]},
+          {temp: 160, color: [0, 0, 0]},
+        ]
+
+        return interpolateColor(temp, stops, 'temp')
+      }
+
+      function getAirQualityColor(aq) {
+        const stops = [
+          {aq: 0, color: [0, 255, 0]}, // green
+          {aq: 30, color: [0, 255, 0]}, // green
+          {aq: 50, color: [200, 255, 0]}, // less green, yellow
+          {aq: 75, color: [255, 255, 0]}, // yellow
+          {aq: 100, color: [255, 165, 0]}, // orange
+          {aq: 174, color: [255, 0, 0]}, // red
+          {aq: 175, color: [255, 0, 0]}, // red
+          {aq: 250, color: [128, 0, 128]}, // purple
+          {aq: 350, color: [128, 0, 0]}, // maroon
+          {aq: 500, color: [128, 0, 0]}, // maroon
+        ]
+
+        return interpolateColor(aq, stops, 'aq')
+      }
+
+      function interpolateColor(value, stops, key) {
+        // Find the two stops to interpolate between
+        let lower = stops[0]
+        let upper = stops[stops.length - 1]
+
+        for (let i = 0; i < stops.length - 1; i++) {
+          if (value >= stops[i][key] && value <= stops[i + 1][key]) {
+            lower = stops[i]
+            upper = stops[i + 1]
+            break
+          }
         }
 
-        window.removeCity = function(index) {
-            cities.splice(index, 1);
-
-            // Remove connections involving this city
-            for (let i = connections.length - 1; i >= 0; i--) {
-                if (connections[i].from === index || connections[i].to === index) {
-                    connections.splice(i, 1);
-                } else {
-                    // Update indices for cities after the removed one
-                    if (connections[i].from > index) connections[i].from--;
-                    if (connections[i].to > index) connections[i].to--;
-                }
-            }
-
-            updateCityList();
-            updateConnectionList();
-            updateCitySelectors();
-            if (mapGenerated) {
-                generateMap();
-            }
-        };
-
-        window.removeConnection = function(index) {
-            connections.splice(index, 1);
-            updateConnectionList();
-            if (mapGenerated) {
-                generateMap();
-            }
-        };
-
-        window.removeDay = function(index) {
-            temperatureDays.splice(index, 1);
-            updateDayList();
-            updateTemperatureChart();
-        };
-
-        function generateMap() {
-            const mapEl = document.getElementById('map');
-            const svgEl = document.getElementById('connectionCanvas');
-            const mapWrapper = document.getElementById('mapWrapper');
-
-            mapEl.innerHTML = '';
-            svgEl.innerHTML = '';
-
-            // Set SVG size to match map
-            const rect = mapWrapper.getBoundingClientRect();
-            svgEl.setAttribute('width', rect.width);
-            svgEl.setAttribute('height', rect.height);
-            svgEl.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
-
-            // Draw connection lines first (so they appear behind cities)
-            connections.forEach(conn => {
-                const fromCity = cities[conn.from];
-                const toCity = cities[conn.to];
-
-                const mapRect = mapEl.getBoundingClientRect();
-                const x1 = (fromCity.position.x / 100) * mapRect.width;
-                const y1 = (fromCity.position.y / 100) * mapRect.height;
-                const x2 = (toCity.position.x / 100) * mapRect.width;
-                const y2 = (toCity.position.y / 100) * mapRect.height;
-
-                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                line.setAttribute('x1', x1);
-                line.setAttribute('y1', y1);
-                line.setAttribute('x2', x2);
-                line.setAttribute('y2', y2);
-                line.setAttribute('stroke', 'rgba(0, 0, 0, 0.2)');
-                line.setAttribute('stroke-width', '2');
-                line.setAttribute('stroke-dasharray', '5,5');
-
-                svgEl.appendChild(line);
-            });
-
-            // Draw city markers
-            cities.forEach(city => {
-                addCityMarker(city);
-            });
-
-            mapGenerated = true;
+        // If exact match
+        if (lower[key] === upper[key]) {
+          return `rgb(${lower.color[0]}, ${lower.color[1]}, ${lower.color[2]})`
         }
 
-        function addCityMarker(city) {
-            const mapEl = document.getElementById('map');
-            const marker = document.createElement('div');
-            marker.className = 'city-marker';
-            marker.textContent = city.name;
-            marker.style.left = city.position.x + '%';
-            marker.style.top = city.position.y + '%';
-            marker.style.fontSize = city.fontSize + 'px';
+        // Linear interpolation
+        const ratio = (value - lower[key]) / (upper[key] - lower[key])
+        const r = Math.round(
+          lower.color[0] + (upper.color[0] - lower.color[0]) * ratio
+        )
+        const g = Math.round(
+          lower.color[1] + (upper.color[1] - lower.color[1]) * ratio
+        )
+        const b = Math.round(
+          lower.color[2] + (upper.color[2] - lower.color[2]) * ratio
+        )
 
-            const color = getCurrentColor(city);
-            marker.style.color = color;
+        return `rgb(${r}, ${g}, ${b})`
+      }
 
-            mapEl.appendChild(marker);
-        }
-
-        function updateCityColors() {
-            const markers = document.querySelectorAll('.city-marker');
-            markers.forEach((marker, index) => {
-                if (cities[index]) {
-                    const color = getCurrentColor(cities[index]);
-                    marker.style.color = color;
-                }
-            });
-        }
-
-        function getCurrentColor(city) {
-            const mode = document.querySelector('input[name="mode"]:checked').value;
-
-            if (mode === 'temperature') {
-                return getTemperatureColor(city.temperature);
-            } else {
-                return getAirQualityColor(city.airQuality);
-            }
-        }
-
-        function getTemperatureColor(temp) {
-            const stops = [
-                { temp: -100, color: [0, 0, 0] },
-                { temp: -40, color: [0, 0, 255] },
-                { temp: 0, color: [0, 128, 255] },
-                { temp: 30, color: [0, 255, 255] },
-                { temp: 60, color: [0, 255, 0] },
-                { temp: 70, color: [255, 255, 0] },
-                { temp: 80, color: [255, 128, 0] },
-                { temp: 100, color: [255, 0, 0] },
-                { temp: 130, color: [100, 0, 0] },
-                { temp: 160, color: [0, 0, 0] }
-            ];
-
-            return interpolateColor(temp, stops, 'temp');
-        }
-
-        function getAirQualityColor(aq) {
-            const stops = [
-                { aq: 0, color: [0, 255, 0] },      // green
-                { aq: 30, color: [0, 255, 0] },     // green
-                { aq: 50, color: [200, 255, 0] },   // less green, yellow
-                { aq: 75, color: [255, 255, 0] },   // yellow
-                { aq: 100, color: [255, 165, 0] },  // orange
-                { aq: 174, color: [255, 0, 0] },    // red
-                { aq: 175, color: [255, 0, 0] },    // red
-                { aq: 250, color: [128, 0, 128] },  // purple
-                { aq: 350, color: [128, 0, 0] },    // maroon
-                { aq: 500, color: [128, 0, 0] }     // maroon
-            ];
-
-            return interpolateColor(aq, stops, 'aq');
-        }
-
-        function interpolateColor(value, stops, key) {
-            // Find the two stops to interpolate between
-            let lower = stops[0];
-            let upper = stops[stops.length - 1];
-
-            for (let i = 0; i < stops.length - 1; i++) {
-                if (value >= stops[i][key] && value <= stops[i + 1][key]) {
-                    lower = stops[i];
-                    upper = stops[i + 1];
-                    break;
-                }
-            }
-
-            // If exact match
-            if (lower[key] === upper[key]) {
-                return `rgb(${lower.color[0]}, ${lower.color[1]}, ${lower.color[2]})`;
-            }
-
-            // Linear interpolation
-            const ratio = (value - lower[key]) / (upper[key] - lower[key]);
-            const r = Math.round(lower.color[0] + (upper.color[0] - lower.color[0]) * ratio);
-            const g = Math.round(lower.color[1] + (upper.color[1] - lower.color[1]) * ratio);
-            const b = Math.round(lower.color[2] + (upper.color[2] - lower.color[2]) * ratio);
-
-            return `rgb(${r}, ${g}, ${b})`;
-        }
-
-        // Initialize
-        updateCitySelectors();
+      // Initialize
+      updateCitySelectors()
     </script>
-</body>
+  </body>
 </html>
