@@ -21,12 +21,12 @@
         <div class="timer-controls">
           <div class="input-group">
             <label for="startTime">Start (seconds):</label>
-            <input type="number" id="startTime" placeholder="80" min="0" />
+            <input type="number" id="startTime" placeholder="3599" min="0" />
           </div>
 
           <div class="input-group">
             <label for="stopTime">Stop (seconds):</label>
-            <input type="number" id="stopTime" placeholder="120" min="0" />
+            <input type="number" id="stopTime" placeholder="3602" min="0" />
           </div>
 
           <button id="startBtn">Start Timer</button>
@@ -63,6 +63,7 @@
       let startSeconds = 0
       let stopSeconds = 0
       let isCountingUp = true
+      let wakeLock = null
 
       const timerDisplay = document.getElementById('timer')
       const startTimeInput = document.getElementById('startTime')
@@ -70,10 +71,38 @@
       const startBtn = document.getElementById('startBtn')
       const resetBtn = document.getElementById('resetBtn')
 
+      // Keep screen awake
+      async function requestWakeLock() {
+        try {
+          if ('wakeLock' in navigator) {
+            wakeLock = await navigator.wakeLock.request('screen')
+            wakeLock.addEventListener('release', () => {
+              console.log('Wake Lock released')
+            })
+          }
+        } catch (err) {
+          console.log('Wake Lock error:', err)
+        }
+      }
+
+      function releaseWakeLock() {
+        if (wakeLock !== null) {
+          wakeLock.release()
+          wakeLock = null
+        }
+      }
+
       function formatTime(totalSeconds) {
-        const minutes = Math.floor(totalSeconds / 60)
+        const hours = Math.floor(totalSeconds / 3600)
+        const minutes = Math.floor((totalSeconds % 3600) / 60)
         const seconds = totalSeconds % 60
-        return `${minutes}:${seconds.toString().padStart(2, '0')}`
+
+        // Show hours only when >= 3600 seconds
+        if (totalSeconds >= 3600) {
+          return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+        } else {
+          return `${minutes}:${seconds.toString().padStart(2, '0')}`
+        }
       }
 
       function updateDisplay() {
@@ -99,6 +128,7 @@
         }
 
         updateDisplay()
+        requestWakeLock()
 
         timerInterval = setInterval(() => {
           if (isCountingUp) {
@@ -106,12 +136,20 @@
             if (currentSeconds >= stopSeconds) {
               clearInterval(timerInterval)
               timerDisplay.classList.add('complete')
+              releaseWakeLock()
+              startBtn.textContent = 'Start Timer'
+              startBtn.disabled = false
+              resetBtn.disabled = false
             }
           } else {
             currentSeconds--
             if (currentSeconds <= stopSeconds) {
               clearInterval(timerInterval)
               timerDisplay.classList.add('complete')
+              releaseWakeLock()
+              startBtn.textContent = 'Start Timer'
+              startBtn.disabled = false
+              resetBtn.disabled = false
             }
           }
           updateDisplay()
@@ -120,17 +158,20 @@
         timerDisplay.classList.remove('complete')
         startBtn.textContent = 'Running...'
         startBtn.disabled = true
+        resetBtn.disabled = true
       }
 
       function resetTimer() {
         if (timerInterval) {
           clearInterval(timerInterval)
         }
+        releaseWakeLock()
         currentSeconds = 0
         updateDisplay()
         timerDisplay.classList.remove('complete')
         startBtn.textContent = 'Start Timer'
         startBtn.disabled = false
+        resetBtn.disabled = false
       }
 
       startBtn.addEventListener('click', startTimer)
@@ -262,9 +303,14 @@
         color: white;
       }
 
-      #resetBtn:hover {
+      #resetBtn:hover:not(:disabled) {
         background: #da190b;
         transform: translateY(-2px);
+      }
+
+      #resetBtn:disabled {
+        background: #999;
+        cursor: not-allowed;
       }
 
       .timer-display {
