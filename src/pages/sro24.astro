@@ -1,4 +1,6 @@
 ---
+import Menu from '@/components/menu.astro'
+
 // sro24 - Movie game with timer
 ---
 
@@ -9,6 +11,7 @@
     <title>SRO24 - Movie Game</title>
   </head>
   <body>
+    <Menu />
     <div class="container">
       <h1>this is sro24, the movie game with sro25</h1>
 
@@ -39,12 +42,7 @@
       </div>
 
       <div class="iframe-container">
-        <iframe
-          src="https://www.boodeboo.com/sro25"
-          title="SRO25 Movie"
-          allowfullscreen
-        >
-        </iframe>
+        <iframe src="/sro25" title="SRO25 Movie" allowfullscreen> </iframe>
       </div>
 
       <div class="decorations-info">

@@ -1,0 +1,4 @@
+sro25 is the very last game, so, in this game, you can see a gas valve. and this is at any angle you want. if it is 90, the point is all the way right. 180 means it is down all the way. 270 means it is all the way left, and 0 means it is streight up. and now, we have an image of a plug. 100 means it is umplugged, and 0 means it is plugged in super tightly. 5 is how plugs are normally plugged. 10 is when the far end of the plug is touching it, but not fully plugged in. so, if you let go, it'll umplug itself. the higher then 10, the further
+
+now, we have a slider. you can choose the minimum of the slider, and the max. and we will use bullets
+so, if these players let the minimum be 50, and the max 90. and the person set it like 50-60. then, you will see what you typed in your input from 50-60 by adjusting the slider. design your own, and let those controlls above be in your imagination

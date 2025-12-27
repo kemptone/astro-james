@@ -1,0 +1,829 @@
+---
+import Menu from '@/components/menu.astro'
+
+// sro25 - Interactive Controls Game
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SRO25 - Interactive Controls</title>
+  </head>
+  <body>
+    <Menu />
+    <div class="container">
+      <h1>SRO25 - Interactive Controls</h1>
+      <p class="subtitle">Control the gas valve, plug, and custom slider</p>
+
+      <div class="controls-grid">
+        <!-- Gas Valve Control -->
+        <div class="control-section">
+          <h2>Gas Valve</h2>
+          <div class="valve-container">
+            <svg class="valve-svg" viewBox="0 0 200 200">
+              <circle
+                cx="100"
+                cy="100"
+                r="80"
+                fill="#333"
+                stroke="#666"
+                stroke-width="4"></circle>
+              <circle cx="100" cy="100" r="60" fill="#555"></circle>
+              <line
+                id="valveHandle"
+                x1="100"
+                y1="100"
+                x2="100"
+                y2="30"
+                stroke="#ff6b6b"
+                stroke-width="8"
+                stroke-linecap="round"></line>
+              <circle cx="100" cy="100" r="15" fill="#ff6b6b"></circle>
+            </svg>
+            <div class="valve-labels">
+              <span class="label-up">0° Up</span>
+              <span class="label-right">90° Right</span>
+              <span class="label-down">180° Down</span>
+              <span class="label-left">270° Left</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="valveAngle">Angle (0-360°):</label>
+            <input type="number" id="valveAngle" min="0" max="360" value="0" />
+            <input type="range" id="valveSlider" min="0" max="360" value="0" />
+            <span id="valveDisplay">0°</span>
+          </div>
+        </div>
+
+        <!-- Plug Control -->
+        <div class="control-section">
+          <h2>Plug</h2>
+          <div class="plug-container">
+            <svg class="plug-svg" viewBox="0 0 300 150">
+              <!-- Outlet -->
+              <rect
+                x="200"
+                y="30"
+                width="80"
+                height="90"
+                rx="10"
+                fill="#e0e0e0"
+                stroke="#999"
+                stroke-width="2"></rect>
+              <rect x="215" y="50" width="20" height="20" rx="2" fill="#666"
+              ></rect>
+              <rect x="245" y="50" width="20" height="20" rx="2" fill="#666"
+              ></rect>
+              <rect x="230" y="80" width="20" height="30" rx="2" fill="#666"
+              ></rect>
+
+              <!-- Plug -->
+              <g id="plugGroup">
+                <rect
+                  id="plugBody"
+                  x="20"
+                  y="50"
+                  width="60"
+                  height="50"
+                  rx="5"
+                  fill="#4a4a4a"
+                  stroke="#333"
+                  stroke-width="2"></rect>
+                <rect x="80" y="55" width="15" height="10" fill="#c9b037"
+                ></rect>
+                <rect x="80" y="85" width="15" height="10" fill="#c9b037"
+                ></rect>
+                <rect x="80" y="70" width="15" height="10" fill="#c9b037"
+                ></rect>
+
+                <!-- Prongs -->
+                <rect
+                  id="prongTop"
+                  x="95"
+                  y="55"
+                  width="40"
+                  height="8"
+                  fill="#c9b037"></rect>
+                <rect
+                  id="prongBottom"
+                  x="95"
+                  y="87"
+                  width="40"
+                  height="8"
+                  fill="#c9b037"></rect>
+                <rect
+                  id="prongGround"
+                  x="95"
+                  y="71"
+                  width="40"
+                  height="8"
+                  fill="#c9b037"></rect>
+              </g>
+            </svg>
+          </div>
+          <div class="input-group">
+            <label for="plugState">State (0-100):</label>
+            <input type="number" id="plugState" min="0" max="100" value="5" />
+            <input type="range" id="plugSlider" min="0" max="100" value="5" />
+            <span id="plugDisplay">5 - Normal</span>
+          </div>
+          <div class="plug-info">
+            <small>
+              100 = Unplugged<br />
+              10 = Barely touching<br />
+              5 = Normal<br />
+              0 = Super tight
+            </small>
+          </div>
+        </div>
+
+        <!-- Custom Range Slider -->
+        <div class="control-section full-width">
+          <h2>Custom Range Slider with Labels</h2>
+
+          <div class="range-config">
+            <div class="input-group">
+              <label for="sliderMin">Slider Min:</label>
+              <input type="number" id="sliderMin" value="0" />
+            </div>
+            <div class="input-group">
+              <label for="sliderMax">Slider Max:</label>
+              <input type="number" id="sliderMax" value="100" />
+            </div>
+            <button id="applySliderRange">Apply Slider Range</button>
+          </div>
+
+          <div class="labeled-ranges">
+            <h3>Define Labeled Ranges</h3>
+            <div id="rangeInputs">
+              <div class="range-input-row">
+                <input
+                  type="text"
+                  class="range-label"
+                  placeholder="Label (e.g., Low)"
+                  value="Low"
+                />
+                <input
+                  type="number"
+                  class="range-from"
+                  placeholder="From"
+                  value="0"
+                />
+                <input
+                  type="number"
+                  class="range-to"
+                  placeholder="To"
+                  value="30"
+                />
+              </div>
+              <div class="range-input-row">
+                <input
+                  type="text"
+                  class="range-label"
+                  placeholder="Label (e.g., Medium)"
+                  value="Medium"
+                />
+                <input
+                  type="number"
+                  class="range-from"
+                  placeholder="From"
+                  value="30"
+                />
+                <input
+                  type="number"
+                  class="range-to"
+                  placeholder="To"
+                  value="70"
+                />
+              </div>
+              <div class="range-input-row">
+                <input
+                  type="text"
+                  class="range-label"
+                  placeholder="Label (e.g., High)"
+                  value="High"
+                />
+                <input
+                  type="number"
+                  class="range-from"
+                  placeholder="From"
+                  value="70"
+                />
+                <input
+                  type="number"
+                  class="range-to"
+                  placeholder="To"
+                  value="90"
+                />
+              </div>
+            </div>
+            <button id="addRange">Add Another Range</button>
+          </div>
+
+          <div class="slider-with-bullets">
+            <div id="bulletsDisplay" class="bullets-display"></div>
+            <div class="custom-slider-container">
+              <input
+                type="range"
+                id="customSlider"
+                min="0"
+                max="100"
+                value="50"
+              />
+              <div class="slider-value-display">
+                <span id="customSliderValue">50</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="range-info">
+            <p>
+              Define labeled ranges above. <strong>Ranges can overlap!</strong>
+            </p>
+            <p><strong>Example:</strong> "High" 84-90 and "Very High" 85-90</p>
+            <p>
+              At position 85-90: You'll see BOTH "High" and "Very High" on the
+              left!
+            </p>
+            <p>At position 84: You'll see only "High"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Gas Valve Control
+      const valveAngle = document.getElementById('valveAngle')
+      const valveSlider = document.getElementById('valveSlider')
+      const valveDisplay = document.getElementById('valveDisplay')
+      const valveHandle = document.getElementById('valveHandle')
+
+      function updateValve(angle) {
+        const radians = (angle * Math.PI) / 180
+        const x1 = 100
+        const y1 = 100
+        const x2 = 100 + 70 * Math.sin(radians)
+        const y2 = 100 - 70 * Math.cos(radians)
+
+        valveHandle.setAttribute('x2', x2)
+        valveHandle.setAttribute('y2', y2)
+        valveDisplay.textContent = `${angle}°`
+      }
+
+      valveAngle.addEventListener('input', e => {
+        const value = Math.max(0, Math.min(360, e.target.value))
+        valveSlider.value = value
+        updateValve(value)
+      })
+
+      valveSlider.addEventListener('input', e => {
+        valveAngle.value = e.target.value
+        updateValve(e.target.value)
+      })
+
+      // Plug Control
+      const plugState = document.getElementById('plugState')
+      const plugSlider = document.getElementById('plugSlider')
+      const plugDisplay = document.getElementById('plugDisplay')
+      const plugGroup = document.getElementById('plugGroup')
+
+      function updatePlug(state) {
+        // 100 = unplugged (far left), 0 = super tight (far right into outlet)
+        const maxDistance = 165
+        const position = 20 + (maxDistance * state) / 100
+
+        plugGroup.setAttribute('transform', `translate(${position - 20}, 0)`)
+
+        let description
+        if (state === 0) description = ' - Super tight'
+        else if (state <= 5) description = ' - Normal'
+        else if (state <= 10) description = ' - Barely touching'
+        else if (state < 100) description = ' - Unplugging...'
+        else description = ' - Unplugged'
+
+        plugDisplay.textContent = `${state}${description}`
+      }
+
+      plugState.addEventListener('input', e => {
+        const value = Math.max(0, Math.min(100, e.target.value))
+        plugSlider.value = value
+        updatePlug(value)
+      })
+
+      plugSlider.addEventListener('input', e => {
+        plugState.value = e.target.value
+        updatePlug(e.target.value)
+      })
+
+      // Custom Range Slider with Labels
+      const sliderMin = document.getElementById('sliderMin')
+      const sliderMax = document.getElementById('sliderMax')
+      const applySliderRange = document.getElementById('applySliderRange')
+      const customSlider = document.getElementById('customSlider')
+      const customSliderValue = document.getElementById('customSliderValue')
+      const bulletsDisplay = document.getElementById('bulletsDisplay')
+      const rangeInputs = document.getElementById('rangeInputs')
+      const addRange = document.getElementById('addRange')
+
+      function getLabeledRanges() {
+        const rows = rangeInputs.querySelectorAll('.range-input-row')
+        const ranges = []
+
+        rows.forEach(row => {
+          const label = row.querySelector('.range-label').value.trim()
+          const from = parseInt(row.querySelector('.range-from').value)
+          const to = parseInt(row.querySelector('.range-to').value)
+
+          if (label && !isNaN(from) && !isNaN(to) && from < to) {
+            ranges.push({label, from, to})
+          }
+        })
+
+        return ranges
+      }
+
+      function updateCustomSlider() {
+        const value = parseInt(customSlider.value)
+
+        const ranges = getLabeledRanges()
+        const matchingRanges = []
+
+        // Find ALL ranges that contain the current value
+        for (const range of ranges) {
+          if (value >= range.from && value <= range.to) {
+            matchingRanges.push(range)
+          }
+        }
+
+        // Always show just the current number
+        customSliderValue.textContent = value
+
+        if (matchingRanges.length > 0) {
+          // Show all labels without bullets
+          const labels = matchingRanges.map(range => range.label).join('\n')
+          bulletsDisplay.textContent = labels
+        } else {
+          bulletsDisplay.textContent = ''
+        }
+      }
+
+      applySliderRange.addEventListener('click', () => {
+        const min = parseInt(sliderMin.value)
+        const max = parseInt(sliderMax.value)
+
+        if (min >= max) {
+          alert('Maximum must be greater than minimum!')
+          return
+        }
+
+        customSlider.min = min
+        customSlider.max = max
+        customSlider.value = Math.floor((min + max) / 2)
+        updateCustomSlider()
+      })
+
+      addRange.addEventListener('click', () => {
+        const newRow = document.createElement('div')
+        newRow.className = 'range-input-row'
+        newRow.innerHTML = `
+          <input type="text" class="range-label" placeholder="Label" />
+          <input type="number" class="range-from" placeholder="From" />
+          <input type="number" class="range-to" placeholder="To" />
+          <button class="remove-range">Remove</button>
+        `
+        rangeInputs.appendChild(newRow)
+
+        newRow.querySelector('.remove-range').addEventListener('click', () => {
+          newRow.remove()
+          updateCustomSlider()
+        })
+      })
+
+      customSlider.addEventListener('input', updateCustomSlider)
+
+      // Initialize
+      updateValve(0)
+      updatePlug(5)
+      updateCustomSlider()
+    </script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: linear-gradient(
+          135deg,
+          #1e3c72 0%,
+          #2a5298 50%,
+          #7e22ce 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        color: #1e3c72;
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 2.5rem;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 40px;
+        font-size: 1.1rem;
+      }
+
+      .controls-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+      }
+
+      .control-section {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 25px;
+        border: 2px solid #e0e0e0;
+      }
+
+      .control-section.full-width {
+        grid-column: 1 / -1;
+      }
+
+      h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        border-bottom: 3px solid #7e22ce;
+        padding-bottom: 10px;
+      }
+
+      .valve-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .valve-svg {
+        width: 200px;
+        height: 200px;
+        margin-bottom: 15px;
+      }
+
+      .valve-labels {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin-top: -200px;
+        pointer-events: none;
+      }
+
+      .valve-labels span {
+        position: absolute;
+        font-size: 0.8rem;
+        color: #fff;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      .label-up {
+        top: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .label-right {
+        top: 50%;
+        right: 5px;
+        transform: translateY(-50%);
+      }
+      .label-down {
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .label-left {
+        top: 50%;
+        left: 5px;
+        transform: translateY(-50%);
+      }
+
+      .plug-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .plug-svg {
+        width: 300px;
+        height: 150px;
+      }
+
+      .plug-info {
+        margin-top: 15px;
+        padding: 10px;
+        background: #fff;
+        border-radius: 6px;
+        border-left: 4px solid #7e22ce;
+      }
+
+      .plug-info small {
+        color: #666;
+        line-height: 1.6;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 15px;
+      }
+
+      .input-group label {
+        font-weight: 600;
+        color: #555;
+        font-size: 0.95rem;
+      }
+
+      .input-group input[type='number'] {
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+      }
+
+      .input-group input[type='number']:focus {
+        outline: none;
+        border-color: #7e22ce;
+      }
+
+      input[type='range'] {
+        width: 100%;
+        height: 8px;
+        border-radius: 5px;
+        background: #ddd;
+        outline: none;
+        -webkit-appearance: none;
+      }
+
+      input[type='range']::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #7e22ce;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      input[type='range']::-webkit-slider-thumb:hover {
+        background: #6b1fb7;
+        transform: scale(1.2);
+      }
+
+      input[type='range']::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #7e22ce;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s;
+      }
+
+      input[type='range']::-moz-range-thumb:hover {
+        background: #6b1fb7;
+        transform: scale(1.2);
+      }
+
+      span#valveDisplay,
+      span#plugDisplay,
+      span#customSliderValue {
+        display: inline-block;
+        padding: 8px 15px;
+        background: #7e22ce;
+        color: white;
+        border-radius: 6px;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .range-config {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+
+      .range-config .input-group {
+        flex: 1;
+        min-width: 150px;
+      }
+
+      button {
+        padding: 10px 25px;
+        background: #7e22ce;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        align-self: flex-end;
+      }
+
+      button:hover {
+        background: #6b1fb7;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(126, 34, 206, 0.3);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .slider-with-bullets {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 25px;
+      }
+
+      .bullets-display {
+        min-width: 200px;
+        min-height: 40px;
+        padding: 10px;
+        background: #fff;
+        border: 2px solid #7e22ce;
+        border-radius: 6px;
+        font-size: 1.5rem;
+        color: #7e22ce;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        white-space: pre-line;
+        line-height: 1.4;
+      }
+
+      .custom-slider-container {
+        flex: 1;
+      }
+
+      .slider-value-display {
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      .range-info {
+        padding: 15px;
+        background: #fff;
+        border-radius: 6px;
+        border-left: 4px solid #7e22ce;
+      }
+
+      .range-info p {
+        margin-bottom: 8px;
+        color: #555;
+        line-height: 1.6;
+      }
+
+      .range-info p:last-child {
+        margin-bottom: 0;
+      }
+
+      .labeled-ranges {
+        margin-bottom: 25px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        border: 2px solid #e0e0e0;
+      }
+
+      .labeled-ranges h3 {
+        margin-bottom: 15px;
+        color: #555;
+        font-size: 1.1rem;
+      }
+
+      .range-input-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr auto;
+        gap: 10px;
+        margin-bottom: 10px;
+        align-items: center;
+      }
+
+      .range-input-row input {
+        padding: 8px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 0.95rem;
+      }
+
+      .range-input-row input:focus {
+        outline: none;
+        border-color: #7e22ce;
+      }
+
+      .range-input-row .remove-range {
+        padding: 8px 12px;
+        background: #f44336;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .range-input-row .remove-range:hover {
+        background: #da190b;
+      }
+
+      #addRange {
+        width: 100%;
+        margin-top: 10px;
+        background: #4caf50;
+      }
+
+      #addRange:hover {
+        background: #45a049;
+      }
+
+      @media (max-width: 968px) {
+        .controls-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .container {
+          padding: 25px;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .range-config {
+          flex-direction: column;
+        }
+
+        button {
+          width: 100%;
+        }
+
+        .slider-with-bullets {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .bullets-display {
+          min-width: 100%;
+          min-height: 60px;
+        }
+
+        .range-input-row {
+          grid-template-columns: 1fr;
+        }
+
+        .range-input-row .remove-range {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .valve-svg,
+        .plug-svg {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </body>
+</html>
