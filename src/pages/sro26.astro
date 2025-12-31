@@ -1,0 +1,620 @@
+---
+import Menu from '@/components/menu.astro'
+const title = 'Character Creator - SRO26'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main>
+      <Menu />
+      <h1>Character Creator</h1>
+
+      <div class="creator-panel">
+        <!-- Day Selection -->
+        <div class="form-group">
+          <label for="daySelect">Choose a Day (365-day year):</label>
+          <input type="number" id="daySelect" min="0" max="365" value="0" />
+          <p class="info">
+            Date: <span id="daysUntil">December 25</span>
+          </p>
+          <p class="hint">0 = Dec 25, 1 = Dec 24, 365 = Dec 26</p>
+        </div>
+
+        <!-- Height Selection -->
+        <div class="form-group">
+          <label for="heightSelect">Character Height (feet):</label>
+          <input
+            type="range"
+            id="heightSelect"
+            min="1"
+            max="10"
+            value="6"
+            step="0.5"
+          />
+          <span id="heightValue">6</span> feet
+          <p class="hint">10 feet touches the top of the map!</p>
+        </div>
+
+        <!-- Hair Selection -->
+        <div class="form-group">
+          <label for="hairStyle">Hair Style:</label>
+          <select id="hairStyle">
+            <option value="">Choose hair style...</option>
+          </select>
+        </div>
+
+        <!-- Clothing Selection -->
+        <div class="form-group">
+          <label>Clothing:</label>
+          <div class="clothing-options">
+            <div>
+              <label for="shirtSelect">Shirt:</label>
+              <select id="shirtSelect">
+                <option value="">Choose shirt...</option>
+              </select>
+            </div>
+            <div>
+              <label for="pantsSelect">Pants:</label>
+              <select id="pantsSelect">
+                <option value="">Choose pants...</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prettiness Scale -->
+        <div class="form-group">
+          <label for="prettinessScale">Prettiness Scale:</label>
+          <input
+            type="range"
+            id="prettinessScale"
+            min="0"
+            max="200"
+            value="50"
+          />
+          <div class="prettiness-display">
+            <span id="prettinessValue">50</span>
+            <span id="prettinessLabel">- Just a person</span>
+          </div>
+          <div class="prettiness-guide">
+            <small
+              >0: Neat & Handsome | 50: Average | 100: Beautiful | 150: So
+              Pretty | 200: Too Pretty</small
+            >
+          </div>
+        </div>
+
+        <!-- Eye Selection -->
+        <div class="form-group">
+          <label for="eyeStyle">Eye Style:</label>
+          <select id="eyeStyle">
+            <option value="">Choose eye style...</option>
+          </select>
+        </div>
+
+        <!-- Name Checkbox and Input -->
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="nameCheckbox" checked />
+            Enable character naming (recommended - helps the game know who this is)
+          </label>
+        </div>
+
+        <div class="form-group" id="nameInputGroup">
+          <label for="nameInput">Character Name:</label>
+          <input
+            type="text"
+            id="nameInput"
+            placeholder="Enter character name"
+          />
+        </div>
+
+        <!-- Character Preview -->
+        <div class="character-preview">
+          <h2>Character Preview</h2>
+          <div class="preview-canvas" id="previewCanvas">
+            <div class="character-sprite" id="characterSprite"></div>
+          </div>
+          <div class="character-stats">
+            <p><strong>Name:</strong> <span id="previewName">Unnamed</span></p>
+            <p>
+              <strong>Height:</strong>
+              <span id="previewHeight">6</span> feet
+            </p>
+            <p>
+              <strong>Prettiness:</strong>
+              <span id="previewPrettiness">50</span>
+            </p>
+            <p>
+              <strong>Day Number:</strong>
+              <span id="previewDays">0</span>
+            </p>
+          </div>
+        </div>
+
+        <button id="createCharacter" class="btn-create">Create Character</button
+        >
+      </div>
+    </main>
+
+    <script>
+      // Hair styles that unlock based on prettiness
+      const hairStyles = [
+        {name: 'Short', minPrettiness: 0},
+        {name: 'Medium', minPrettiness: 0},
+        {name: 'Long', minPrettiness: 0},
+        {name: 'Buzz Cut', minPrettiness: 0},
+        {name: 'Ponytail', minPrettiness: 25},
+        {name: 'Braids', minPrettiness: 25},
+        {name: 'Curly', minPrettiness: 50},
+        {name: 'Wavy', minPrettiness: 50},
+        {name: 'Spiky', minPrettiness: 50},
+        {name: 'Mohawk', minPrettiness: 75},
+        {name: 'Elegant Updo', minPrettiness: 100},
+        {name: 'Flowing Locks', minPrettiness: 100},
+        {name: 'Platinum Waves', minPrettiness: 125},
+        {name: 'Ethereal Cascade', minPrettiness: 150},
+        {name: 'Radiant Crown', minPrettiness: 150},
+        {name: 'Celestial Mane', minPrettiness: 175},
+        {name: 'Divine Luminescence', minPrettiness: 200},
+      ]
+
+      const shirts = [
+        {name: 'Plain T-Shirt', minPrettiness: 0},
+        {name: 'Polo Shirt', minPrettiness: 0},
+        {name: 'Button-Up Shirt', minPrettiness: 25},
+        {name: 'Sweater', minPrettiness: 25},
+        {name: 'Hoodie', minPrettiness: 50},
+        {name: 'Blazer', minPrettiness: 75},
+        {name: 'Elegant Blouse', minPrettiness: 100},
+        {name: 'Designer Shirt', minPrettiness: 125},
+        {name: 'Silk Top', minPrettiness: 150},
+        {name: 'Enchanted Garment', minPrettiness: 175},
+        {name: 'Celestial Robe', minPrettiness: 200},
+      ]
+
+      const pants = [
+        {name: 'Jeans', minPrettiness: 0},
+        {name: 'Sweatpants', minPrettiness: 0},
+        {name: 'Khakis', minPrettiness: 25},
+        {name: 'Dress Pants', minPrettiness: 50},
+        {name: 'Cargo Pants', minPrettiness: 25},
+        {name: 'Slacks', minPrettiness: 75},
+        {name: 'Tailored Trousers', minPrettiness: 100},
+        {name: 'Designer Pants', minPrettiness: 125},
+        {name: 'Elegant Slacks', minPrettiness: 150},
+        {name: 'Enchanted Leggings', minPrettiness: 175},
+        {name: 'Celestial Bottoms', minPrettiness: 200},
+      ]
+
+      const eyeStyles = [
+        {name: 'Brown Eyes', minPrettiness: 0},
+        {name: 'Blue Eyes', minPrettiness: 0},
+        {name: 'Green Eyes', minPrettiness: 0},
+        {name: 'Hazel Eyes', minPrettiness: 25},
+        {name: 'Gray Eyes', minPrettiness: 50},
+        {name: 'Amber Eyes', minPrettiness: 75},
+        {name: 'Emerald Eyes', minPrettiness: 100},
+        {name: 'Sapphire Eyes', minPrettiness: 125},
+        {name: 'Violet Eyes', minPrettiness: 150},
+        {name: 'Shimmering Eyes', minPrettiness: 175},
+        {name: 'Radiant Eyes', minPrettiness: 200},
+      ]
+
+      // DOM elements
+      const daySelect = document.getElementById('daySelect')
+      const daysUntil = document.getElementById('daysUntil')
+      const heightSelect = document.getElementById('heightSelect')
+      const heightValue = document.getElementById('heightValue')
+      const hairStyleSelect = document.getElementById('hairStyle')
+      const shirtSelect = document.getElementById('shirtSelect')
+      const pantsSelect = document.getElementById('pantsSelect')
+      const eyeStyleSelect = document.getElementById('eyeStyle')
+      const prettinessScale = document.getElementById('prettinessScale')
+      const prettinessValue = document.getElementById('prettinessValue')
+      const prettinessLabel = document.getElementById('prettinessLabel')
+      const nameCheckbox = document.getElementById('nameCheckbox')
+      const nameInputGroup = document.getElementById('nameInputGroup')
+      const nameInput = document.getElementById('nameInput')
+      const characterSprite = document.getElementById('characterSprite')
+      const createCharacterBtn = document.getElementById('createCharacter')
+
+      // Preview elements
+      const previewName = document.getElementById('previewName')
+      const previewHeight = document.getElementById('previewHeight')
+      const previewPrettiness = document.getElementById('previewPrettiness')
+      const previewDays = document.getElementById('previewDays')
+
+      // Calculate the actual date based on days from December 25
+      function calculateDate(dayNumber: number) {
+        // dayNumber 0 = Dec 25
+        // dayNumber 1 = Dec 24
+        // dayNumber 2 = Dec 23, etc.
+        const baseDate = new Date(2024, 11, 25) // December 25, 2024 (month is 0-indexed)
+        const targetDate = new Date(baseDate)
+        targetDate.setDate(baseDate.getDate() - dayNumber)
+
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                           'July', 'August', 'September', 'October', 'November', 'December']
+
+        return `${monthNames[targetDate.getMonth()]} ${targetDate.getDate()}`
+      }
+
+      // Update prettiness label
+      function updatePrettinessLabel(value) {
+        if (value === 0) return 'Neat & Handsome!'
+        if (value <= 25) return 'Quite neat'
+        if (value === 50) return 'Just a person'
+        if (value <= 75) return 'Good looking'
+        if (value === 100) return 'Beautiful!'
+        if (value <= 125) return 'Very beautiful'
+        if (value === 150) return 'So pretty!'
+        if (value <= 175) return 'Extremely pretty'
+        if (value === 200) return 'Too pretty!'
+        return 'Just a person'
+      }
+
+      // Populate dropdowns based on prettiness
+      function updateAvailableOptions(prettiness) {
+        // Update hair styles
+        hairStyleSelect.innerHTML =
+          '<option value="">Choose hair style...</option>'
+        hairStyles
+          .filter(h => h.minPrettiness <= prettiness)
+          .forEach(hair => {
+            const option = document.createElement('option')
+            option.value = hair.name
+            option.textContent = hair.name
+            hairStyleSelect.appendChild(option)
+          })
+
+        // Update shirts
+        shirtSelect.innerHTML = '<option value="">Choose shirt...</option>'
+        shirts
+          .filter(s => s.minPrettiness <= prettiness)
+          .forEach(shirt => {
+            const option = document.createElement('option')
+            option.value = shirt.name
+            option.textContent = shirt.name
+            shirtSelect.appendChild(option)
+          })
+
+        // Update pants
+        pantsSelect.innerHTML = '<option value="">Choose pants...</option>'
+        pants
+          .filter(p => p.minPrettiness <= prettiness)
+          .forEach(pant => {
+            const option = document.createElement('option')
+            option.value = pant.name
+            option.textContent = pant.name
+            pantsSelect.appendChild(option)
+          })
+
+        // Update eyes
+        eyeStyleSelect.innerHTML =
+          '<option value="">Choose eye style...</option>'
+        eyeStyles
+          .filter(e => e.minPrettiness <= prettiness)
+          .forEach(eye => {
+            const option = document.createElement('option')
+            option.value = eye.name
+            option.textContent = eye.name
+            eyeStyleSelect.appendChild(option)
+          })
+      }
+
+      // Update character sprite visualization
+      function updateCharacterPreview() {
+        const height = parseFloat(heightSelect.value)
+        const prettiness = parseInt(prettinessScale.value)
+        const heightPercent = (height / 10) * 100
+
+        characterSprite.style.height = `${heightPercent}%`
+
+        // Update color based on prettiness
+        const hue = (prettiness / 200) * 60 // 0 (red) to 60 (yellow/gold)
+        const saturation = 50 + (prettiness / 200) * 50
+        const lightness = 40 + (prettiness / 200) * 20
+        characterSprite.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`
+
+        // Update preview stats
+        previewHeight.textContent = height
+        previewPrettiness.textContent = prettiness
+        previewDays.textContent = (daySelect as HTMLInputElement).value
+        previewName.textContent = (nameInput as HTMLInputElement).value || 'Unnamed'
+      }
+
+      // Event listeners
+      daySelect.addEventListener('input', e => {
+        const date = calculateDate(parseInt((e.target as HTMLInputElement).value))
+        daysUntil.textContent = date
+        updateCharacterPreview()
+      })
+
+      heightSelect.addEventListener('input', e => {
+        heightValue.textContent = e.target.value
+        updateCharacterPreview()
+      })
+
+      prettinessScale.addEventListener('input', e => {
+        const value = parseInt(e.target.value)
+        prettinessValue.textContent = value
+        prettinessLabel.textContent = updatePrettinessLabel(value)
+        updateAvailableOptions(value)
+        updateCharacterPreview()
+      })
+
+      nameCheckbox.addEventListener('change', e => {
+        nameInputGroup.style.display = e.target.checked ? 'block' : 'none'
+        if (!e.target.checked) {
+          nameInput.value = ''
+          updateCharacterPreview()
+        }
+      })
+
+      nameInput.addEventListener('input', updateCharacterPreview)
+
+      createCharacterBtn.addEventListener('click', () => {
+        const character = {
+          name: (nameInput as HTMLInputElement).value || 'Unnamed Character',
+          dayNumber: parseInt((daySelect as HTMLInputElement).value),
+          date: calculateDate(parseInt((daySelect as HTMLInputElement).value)),
+          height: parseFloat((heightSelect as HTMLInputElement).value),
+          hairStyle: (hairStyleSelect as HTMLSelectElement).value,
+          shirt: (shirtSelect as HTMLSelectElement).value,
+          pants: (pantsSelect as HTMLSelectElement).value,
+          eyeStyle: (eyeStyleSelect as HTMLSelectElement).value,
+          prettiness: parseInt((prettinessScale as HTMLInputElement).value),
+          prettinessLabel: updatePrettinessLabel(
+            parseInt((prettinessScale as HTMLInputElement).value)
+          ),
+        }
+
+        console.log('Character Created:', character)
+        alert(
+          `Character "${character.name}" created successfully!\n\nHeight: ${character.height}ft\nPrettiness: ${character.prettiness} (${character.prettinessLabel})\nDate: ${character.date}`
+        )
+      })
+
+      // Initialize
+      updateAvailableOptions(50)
+      updateCharacterPreview()
+    </script>
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+          Cantarell, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        color: white;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .creator-panel {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      .form-group input[type='number'],
+      .form-group input[type='text'],
+      .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input[type='number']:focus,
+      .form-group input[type='text']:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .form-group input[type='range'] {
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: #e0e0e0;
+        outline: none;
+        -webkit-appearance: none;
+      }
+
+      .form-group input[type='range']::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #667eea;
+        cursor: pointer;
+      }
+
+      .form-group input[type='range']::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #667eea;
+        cursor: pointer;
+        border: none;
+      }
+
+      .info {
+        font-size: 1.1rem;
+        color: #667eea;
+        font-weight: 600;
+        margin-top: 0.5rem;
+      }
+
+      .hint {
+        font-size: 0.85rem;
+        color: #666;
+        font-style: italic;
+        margin-top: 0.25rem;
+      }
+
+      .clothing-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .prettiness-display {
+        margin-top: 0.5rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #667eea;
+      }
+
+      .prettiness-guide {
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: #f5f5f5;
+        border-radius: 4px;
+      }
+
+      .character-preview {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 12px;
+      }
+
+      .character-preview h2 {
+        color: #333;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .preview-canvas {
+        width: 100%;
+        height: 300px;
+        background: linear-gradient(to bottom, #87ceeb 0%, #98d8c8 100%);
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        border: 3px solid #666;
+      }
+
+      .character-sprite {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        background: #ff6b6b;
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .character-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+      }
+
+      .character-stats p {
+        background: white;
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+      }
+
+      .btn-create {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 1.5rem;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .btn-create:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-create:active {
+        transform: translateY(0);
+      }
+
+      input[type='checkbox'] {
+        margin-right: 0.5rem;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          padding: 1rem;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        .creator-panel {
+          padding: 1.5rem;
+        }
+
+        .clothing-options {
+          grid-template-columns: 1fr;
+        }
+
+        .character-stats {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </body>
+</html>
