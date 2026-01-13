@@ -8,7 +8,8 @@ import type {MemeType} from '@/components/wc-meme-item'
 d.addEventListener('DOMContentLoaded', async e => {
   const data = await getMicrosoftVoices()
   const e_list = $('#list') as HTMLFormElement
-  const e_input_area = $('#input_area') as HTMLFormElement
+  const e_main_form = $('#main_form') as HTMLFormElement
+  const e_input_area = $('#input_area') as HTMLElement
   const e_fragment = d.createDocumentFragment()
   const e_clear_all = d.getElementById('clear_all')
   const e_remove_all = d.getElementById('remove_all')
@@ -40,6 +41,10 @@ d.addEventListener('DOMContentLoaded', async e => {
   e_list.append(e_fragment)
 
   e_play_all?.addEventListener('click', async () => {
+
+    const e_reversed = $('input[name="reversed"]') as HTMLInputElement
+    const is_reversed = e_reversed?.checked
+
     e_hidden_button?.click()
     const audios: HTMLAudioElement[] = []
     const all_talkers = e_input_area.querySelectorAll(
@@ -89,6 +94,10 @@ d.addEventListener('DOMContentLoaded', async e => {
       return
     }
     */
+
+    if (is_reversed) {
+      fields.reverse()
+    }
 
     for (let x = 0; x < fields.length; x++) {
       let field = fields[x]
