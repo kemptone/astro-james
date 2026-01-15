@@ -4,6 +4,8 @@ import WCDialogWrap from '../components/WCDialogWrap.astro'
 import Menu3 from '@/components/menu.astro'
 import '../../pico.css'
 import '../core/talkers2/style.css'
+import { SettingItem } from '@/components/AllSettings'
+import ModeItem from '@/components/ModeItem'
 ---
 
 <Empty title="talkers">
@@ -31,9 +33,22 @@ import '../core/talkers2/style.css'
         </div>
       </WCDialogWrap>
     </aside>
-    <form class="rightColumn" id="input_area"></form>
+    <form class="rightColumn" id="main_form">
+      <div id="input_area"></div>
+      <div class="almost_hidden">
+        <label>
+          <input type="checkbox" name="reversed" checked> desrever
+        </label>
+      </div>
+    </form>
   </div>
 </Empty>
 
 <script src="../core/talkers2/index.ts"></script>
 <script src="../components/wc-meme-board.ts"></script>
+
+<style>
+  .almost_hidden {
+    opacity: .1;
+  }
+</style>
