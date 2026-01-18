@@ -1,0 +1,431 @@
+---
+import WCDialogWrap from '../components/WCDialogWrap.astro'
+import Menu from '@/components/menu.astro'
+import '../pico.css'
+
+const defaultCities = [
+  'Dragonspire',
+  'Moonhaven',
+  'Silvermist',
+  'Crystalbrook',
+  'Shadowfen',
+  'Sunstone',
+  'Frostpeak',
+  'Emerald Vale',
+  'Starfall',
+  'Thornwood',
+  'Golden Harbor',
+  'Mystic Falls',
+  'Iron Mountain',
+  'Azure Bay',
+  'Crimson Keep',
+  'Whispering Pines',
+  'Stormwatch',
+  'Amber Ridge',
+  'Twilight Shore',
+  "Serpent's Rest",
+]
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fantasy Temperature</title>
+    <style is:inline>
+      body {
+        padding: 2rem;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .main-grid {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 2rem;
+        align-items: start;
+      }
+      .controls {
+        background: var(--pico-card-background-color);
+        padding: 2rem;
+        border-radius: 8px;
+        border: 1px solid var(--pico-card-border-color);
+      }
+      .thermometer-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 600px;
+        position: relative;
+      }
+      #thermometer {
+        width: 240px;
+        height: auto;
+      }
+      .mercury {
+        transition:
+          height 0.5s ease,
+          fill 0.5s ease,
+          y 0.5s ease;
+      }
+      .city-name {
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 1rem;
+        color: var(--pico-primary);
+      }
+      .temp-display {
+        font-size: 1.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .button-group {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .button-group button {
+        flex: 1;
+      }
+      .city-list {
+        padding: 1rem;
+        background: var(--pico-background-color);
+        border-radius: 4px;
+        max-height: 400px;
+        overflow-y: auto;
+        margin-bottom: 1rem;
+      }
+      .city-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        margin-bottom: 0.25rem;
+        background: var(--pico-card-background-color);
+        border-radius: 4px;
+      }
+      .city-item:hover {
+        background: var(--pico-primary-hover);
+      }
+      .city-item button.remove-btn.contrast {
+        padding: 0 !important;
+        font-size: 1.2rem;
+        margin: 0 !important;
+        width: 1.5rem;
+        height: 1.5rem;
+        line-height: 1;
+        background: transparent !important;
+        border: none !important;
+        color: #dc3545 !important;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      button.remove-btn.contrast:hover {
+        color: #fff !important;
+        background: #dc3545 !important;
+        border-radius: 4px;
+      }
+      .add-city-form {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      .add-city-form input {
+        flex: 1;
+        margin: 0;
+      }
+      .add-city-form button {
+        margin: 0;
+      }
+      @media (max-width: 768px) {
+        .main-grid {
+          grid-template-columns: 1fr;
+        }
+        .thermometer-container {
+          min-height: 400px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <Menu />
+    <div class="container">
+      <div class="main-grid">
+        <div>
+          <div class="city-name" id="cityName">Dragonspire</div>
+          <div class="thermometer-container">
+            <svg
+              id="thermometer"
+              viewBox="226 93 292 832"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <!-- Background thermometer -->
+              <rect
+                style="fill:#ffffff;stroke:#000000;stroke-width:5;"
+                width="285.9653"
+                height="825.72479"
+                x="229.06459"
+                y="96.165672"
+                ry="49.999996"
+                rx="50"></rect>
+
+              <!-- Gray background column -->
+              <path
+                style="fill:#f2f2f2;fill-opacity:1;stroke:none"
+                d="m 373.56287,164.54744 c 0.30163,-0.0121 -0.2236,-0.15092 -1.90625,1.5 -1.41427,1.3876 -3.34856,4.13828 -5.375,7.65625 l 0,535.91697 c 0.004,4.58042 -3.56553,8.91087 -8.0625,9.78125 -32.9249,6.32523 -57.65625,34.63976 -57.65625,68.71875 0,38.7064 31.81286,70.0625 71.5,70.0625 39.68714,0 71.46875,-31.3514 71.46875,-70.0625 0,-33.20927 -23.46988,-60.96258 -55.125,-68.21875 -4.34251,-1.00069 -7.71326,-5.23118 -7.71875,-9.6875 l 0,-536.54197 c -2.18944,-3.82345 -4.2399,-6.65749 -5.625,-7.9375 -1.63058,-1.50687 -1.80154,-1.17539 -1.5,-1.1875 z"
+              ></path>
+
+              <!-- Clip path for mercury -->
+              <defs>
+                <clipPath id="mercury-clip">
+                  <path
+                    d="m 373.56287,164.54744 c 0.30163,-0.0121 -0.2236,-0.15092 -1.90625,1.5 -1.41427,1.3876 -3.34856,4.13828 -5.375,7.65625 l 0,535.91697 c 0.004,4.58042 -3.56553,8.91087 -8.0625,9.78125 -32.9249,6.32523 -57.65625,34.63976 -57.65625,68.71875 0,38.7064 31.81286,70.0625 71.5,70.0625 39.68714,0 71.46875,-31.3514 71.46875,-70.0625 0,-33.20927 -23.46988,-60.96258 -55.125,-68.21875 -4.34251,-1.00069 -7.71326,-5.23118 -7.71875,-9.6875 l 0,-536.54197 c -2.18944,-3.82345 -4.2399,-6.65749 -5.625,-7.9375 -1.63058,-1.50687 -1.80154,-1.17539 -1.5,-1.1875 z"
+                  ></path>
+                </clipPath>
+              </defs>
+
+              <!-- Mercury fill (dynamically sized) -->
+              <rect
+                id="mercuryFill"
+                class="mercury"
+                x="300"
+                y="464"
+                width="145"
+                height="394"
+                fill="#ff6600"
+                clip-path="url(#mercury-clip)"></rect>
+
+              <!-- Black outline thermometer -->
+              <path
+                style="fill:none;stroke:#000000;stroke-width:3"
+                d="m 373.15662,151.80816 c -5.70979,0.22926 -11.30239,5.89943 -16.8125,16.3125 l 0,541.5 c -37.4511,7.19476 -65.71875,39.59937 -65.71875,78.5 0,44.18278 36.46574,80 81.4375,80 44.97176,0 81.40625,-35.81722 81.40625,-80 0,-37.9046 -26.82231,-69.64921 -62.84375,-77.90625 l 0,-542.09375 c -5.93644,-11.33009 -11.75896,-16.54176 -17.46875,-16.3125 z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+
+        <div class="controls">
+          <h3>Temperature Control</h3>
+
+          <div>
+            <label for="tempInput">
+              Set Temperature (°F)
+              <input
+                type="number"
+                id="tempInput"
+                min="-4"
+                max="122"
+                step="0.1"
+                value="68"
+                placeholder="Enter temperature"
+              />
+            </label>
+          </div>
+
+          <div class="button-group">
+            <button id="applyTemp">Apply</button>
+            <button id="randomTemp" class="secondary">Random</button>
+          </div>
+
+          <div class="button-group">
+            <button id="coldBtn" class="contrast">Cold (14°F)</button>
+            <button id="warmBtn" class="contrast">Warm (77°F)</button>
+          </div>
+
+          <div class="button-group">
+            <button id="hotBtn" class="contrast">Hot (104°F)</button>
+            <button id="freezingBtn" class="contrast">Freezing (23°F)</button>
+          </div>
+
+          <hr />
+
+          <h3>City Selection</h3>
+          <div class="button-group">
+            <button id="randomCity" class="secondary">Random City</button>
+            <button id="manageCitiesBtn" class="secondary">Manage Cities</button
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <WCDialogWrap id="cityDialog">
+      <h2>Manage Cities</h2>
+      <div class="city-list" id="cityList"></div>
+      <div class="add-city-form">
+        <input type="text" id="newCityInput" placeholder="New city name" />
+        <button id="addCityBtn">Add</button>
+      </div>
+      <br />
+      <button class="close-dialog secondary">Close</button>
+    </WCDialogWrap>
+
+    <script define:vars={{defaultCities}}>
+      // Load cities from localStorage or use defaults
+      let cities =
+        JSON.parse(localStorage.getItem('fantasyCities') || 'null') ||
+        defaultCities
+      let currentCityIndex = 0
+      let currentTemp = 68 // Fahrenheit
+
+      const mercuryFill = document.getElementById('mercuryFill')
+      const cityName = document.getElementById('cityName')
+      const tempInput = document.getElementById('tempInput')
+      const cityList = document.getElementById('cityList')
+      const newCityInput = document.getElementById('newCityInput')
+      const cityDialogElement = document.getElementById('cityDialog')
+
+      const MIN_TEMP_F = -4 // -20°C in Fahrenheit
+      const MAX_TEMP_F = 122 // 50°C in Fahrenheit
+      const MAX_HEIGHT = 694 // Maximum height of mercury column in SVG units
+      const BASE_Y = 858 // Bottom Y position
+
+      function saveCities() {
+        localStorage.setItem('fantasyCities', JSON.stringify(cities))
+      }
+
+      function getMercuryColor(tempF) {
+        if (tempF < 32) return '#0066ff'
+        if (tempF < 50) return '#00aaff'
+        if (tempF < 68) return '#ffaa00'
+        if (tempF < 86) return '#ff6600'
+        return '#ff0000'
+      }
+
+      function setTemperature(tempF) {
+        currentTemp = Math.max(MIN_TEMP_F, Math.min(MAX_TEMP_F, tempF))
+        tempInput.value = currentTemp.toFixed(1)
+
+        // Calculate height percentage
+        const range = MAX_TEMP_F - MIN_TEMP_F
+        const tempOffset = currentTemp - MIN_TEMP_F
+        const heightPercent = tempOffset / range
+
+        // Calculate actual height and Y position
+        const height = heightPercent * MAX_HEIGHT
+        const yPos = BASE_Y - height
+
+        // Update mercury
+        mercuryFill.setAttribute('height', height.toString())
+        mercuryFill.setAttribute('y', yPos.toString())
+        mercuryFill.setAttribute('fill', getMercuryColor(currentTemp))
+      }
+
+      function setRandomTemperature() {
+        const temp = Math.random() * 126 - 4 // Range: -4 to 122
+        setTemperature(Math.round(temp * 10) / 10)
+      }
+
+      function setRandomCity() {
+        currentCityIndex = Math.floor(Math.random() * cities.length)
+        cityName.textContent = cities[currentCityIndex]
+      }
+
+      function renderCityList() {
+        cityList.innerHTML = cities
+          .map(
+            (city, index) => `
+        <div class="city-item">
+          <span>${city}</span>
+          <button class="remove-btn contrast" data-index="${index}">×</button>
+        </div>
+      `
+          )
+          .join('')
+
+        // Add click handlers for city items
+        cityList.querySelectorAll('.city-item span').forEach((span, index) => {
+          span.style.cursor = 'pointer'
+          span.addEventListener('click', () => {
+            currentCityIndex = index
+            cityName.textContent = cities[index]
+          })
+        })
+
+        // Add click handlers for remove buttons
+        cityList.querySelectorAll('.remove-btn').forEach(btn => {
+          btn.addEventListener('click', e => {
+            const index = parseInt(e.target.getAttribute('data-index'))
+            cities.splice(index, 1)
+            if (currentCityIndex >= cities.length) {
+              currentCityIndex = Math.max(0, cities.length - 1)
+            }
+            if (cities.length > 0) {
+              cityName.textContent = cities[currentCityIndex]
+            } else {
+              cityName.textContent = 'No cities'
+            }
+            saveCities()
+            renderCityList()
+          })
+        })
+      }
+
+      function addCity() {
+        const newCity = newCityInput.value.trim()
+        if (newCity && !cities.includes(newCity)) {
+          cities.push(newCity)
+          saveCities()
+          renderCityList()
+          newCityInput.value = ''
+        }
+      }
+
+      // Event listeners
+      document.getElementById('applyTemp').addEventListener('click', () => {
+        setTemperature(parseFloat(tempInput.value))
+      })
+
+      document
+        .getElementById('randomTemp')
+        .addEventListener('click', setRandomTemperature)
+      document
+        .getElementById('randomCity')
+        .addEventListener('click', setRandomCity)
+
+      document
+        .getElementById('coldBtn')
+        .addEventListener('click', () => setTemperature(14))
+      document
+        .getElementById('warmBtn')
+        .addEventListener('click', () => setTemperature(77))
+      document
+        .getElementById('hotBtn')
+        .addEventListener('click', () => setTemperature(104))
+      document
+        .getElementById('freezingBtn')
+        .addEventListener('click', () => setTemperature(23))
+
+      document
+        .getElementById('manageCitiesBtn')
+        .addEventListener('click', () => {
+          if (cityDialogElement) {
+            cityDialogElement.showModal()
+          }
+        })
+
+      document.getElementById('addCityBtn').addEventListener('click', addCity)
+
+      newCityInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+          addCity()
+        }
+      })
+
+      tempInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+          setTemperature(parseFloat(tempInput.value))
+        }
+      })
+
+      // Initialize
+      renderCityList()
+      cityName.textContent = cities[currentCityIndex]
+    </script>
+  </body>
+</html>
