@@ -57,11 +57,23 @@ const defaultCities = [
         display: flex;
         justify-content: center;
         align-items: center;
+        gap: 3rem;
         min-height: 600px;
         position: relative;
       }
-      #thermometer {
-        width: 240px;
+      .thermometer-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      .thermometer-label {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--pico-color);
+      }
+      .thermometer {
+        width: 192px;
         height: auto;
       }
       .mercury {
@@ -150,6 +162,10 @@ const defaultCities = [
           min-height: 400px;
         }
       }
+
+      .hidden {
+        display: none !important;
+      }
     </style>
   </head>
   <body>
@@ -159,58 +175,114 @@ const defaultCities = [
         <div>
           <div class="city-name" id="cityName">Dragonspire</div>
           <div class="thermometer-container">
-            <svg
-              id="thermometer"
-              viewBox="226 93 292 832"
-              preserveAspectRatio="xMidYMid meet"
-            >
-              <!-- Background thermometer -->
-              <rect
-                style="fill:#ffffff;stroke:#000000;stroke-width:5;"
-                width="285.9653"
-                height="825.72479"
-                x="229.06459"
-                y="96.165672"
-                ry="49.999996"
-                rx="50"></rect>
+            <div class="thermometer-wrapper">
+              <div class="thermometer-label">Temperature</div>
+              <svg
+                id="thermometer"
+                class="thermometer"
+                viewBox="226 93 292 832"
+                preserveAspectRatio="xMidYMid meet"
+              >
+                <!-- Background thermometer -->
+                <rect
+                  style="fill:#ffffff;stroke:#000000;stroke-width:5;"
+                  width="285.9653"
+                  height="825.72479"
+                  x="229.06459"
+                  y="96.165672"
+                  ry="49.999996"
+                  rx="50"></rect>
 
-              <!-- Gray background column -->
-              <path
-                style="fill:#f2f2f2;fill-opacity:1;stroke:none"
-                d="m 373.56287,164.54744 c 0.30163,-0.0121 -0.2236,-0.15092 -1.90625,1.5 -1.41427,1.3876 -3.34856,4.13828 -5.375,7.65625 l 0,535.91697 c 0.004,4.58042 -3.56553,8.91087 -8.0625,9.78125 -32.9249,6.32523 -57.65625,34.63976 -57.65625,68.71875 0,38.7064 31.81286,70.0625 71.5,70.0625 39.68714,0 71.46875,-31.3514 71.46875,-70.0625 0,-33.20927 -23.46988,-60.96258 -55.125,-68.21875 -4.34251,-1.00069 -7.71326,-5.23118 -7.71875,-9.6875 l 0,-536.54197 c -2.18944,-3.82345 -4.2399,-6.65749 -5.625,-7.9375 -1.63058,-1.50687 -1.80154,-1.17539 -1.5,-1.1875 z"
-              ></path>
+                <!-- Gray background column -->
+                <path
+                  style="fill:#f2f2f2;fill-opacity:1;stroke:none"
+                  d="m 373.56287,164.54744 c 0.30163,-0.0121 -0.2236,-0.15092 -1.90625,1.5 -1.41427,1.3876 -3.34856,4.13828 -5.375,7.65625 l 0,535.91697 c 0.004,4.58042 -3.56553,8.91087 -8.0625,9.78125 -32.9249,6.32523 -57.65625,34.63976 -57.65625,68.71875 0,38.7064 31.81286,70.0625 71.5,70.0625 39.68714,0 71.46875,-31.3514 71.46875,-70.0625 0,-33.20927 -23.46988,-60.96258 -55.125,-68.21875 -4.34251,-1.00069 -7.71326,-5.23118 -7.71875,-9.6875 l 0,-536.54197 c -2.18944,-3.82345 -4.2399,-6.65749 -5.625,-7.9375 -1.63058,-1.50687 -1.80154,-1.17539 -1.5,-1.1875 z"
+                ></path>
 
-              <!-- Clip path for mercury -->
-              <defs>
-                <clipPath id="mercury-clip">
-                  <path
-                    d="m 373.56287,164.54744 c 0.30163,-0.0121 -0.2236,-0.15092 -1.90625,1.5 -1.41427,1.3876 -3.34856,4.13828 -5.375,7.65625 l 0,535.91697 c 0.004,4.58042 -3.56553,8.91087 -8.0625,9.78125 -32.9249,6.32523 -57.65625,34.63976 -57.65625,68.71875 0,38.7064 31.81286,70.0625 71.5,70.0625 39.68714,0 71.46875,-31.3514 71.46875,-70.0625 0,-33.20927 -23.46988,-60.96258 -55.125,-68.21875 -4.34251,-1.00069 -7.71326,-5.23118 -7.71875,-9.6875 l 0,-536.54197 c -2.18944,-3.82345 -4.2399,-6.65749 -5.625,-7.9375 -1.63058,-1.50687 -1.80154,-1.17539 -1.5,-1.1875 z"
-                  ></path>
-                </clipPath>
-              </defs>
+                <!-- Clip path for mercury -->
+                <defs>
+                  <clipPath id="mercury-clip">
+                    <path
+                      d="m 373.56287,164.54744 c 0.30163,-0.0121 -0.2236,-0.15092 -1.90625,1.5 -1.41427,1.3876 -3.34856,4.13828 -5.375,7.65625 l 0,535.91697 c 0.004,4.58042 -3.56553,8.91087 -8.0625,9.78125 -32.9249,6.32523 -57.65625,34.63976 -57.65625,68.71875 0,38.7064 31.81286,70.0625 71.5,70.0625 39.68714,0 71.46875,-31.3514 71.46875,-70.0625 0,-33.20927 -23.46988,-60.96258 -55.125,-68.21875 -4.34251,-1.00069 -7.71326,-5.23118 -7.71875,-9.6875 l 0,-536.54197 c -2.18944,-3.82345 -4.2399,-6.65749 -5.625,-7.9375 -1.63058,-1.50687 -1.80154,-1.17539 -1.5,-1.1875 z"
+                    ></path>
+                  </clipPath>
+                </defs>
 
-              <!-- Mercury fill (dynamically sized) -->
-              <rect
-                id="mercuryFill"
-                class="mercury"
-                x="300"
-                y="464"
-                width="145"
-                height="394"
-                fill="#ff6600"
-                clip-path="url(#mercury-clip)"></rect>
+                <!-- Mercury fill (dynamically sized) -->
+                <rect
+                  id="mercuryFill"
+                  class="mercury"
+                  x="300"
+                  y="464"
+                  width="145"
+                  height="394"
+                  fill="#ff6600"
+                  clip-path="url(#mercury-clip)"></rect>
 
-              <!-- Black outline thermometer -->
-              <path
-                style="fill:none;stroke:#000000;stroke-width:3"
-                d="m 373.15662,151.80816 c -5.70979,0.22926 -11.30239,5.89943 -16.8125,16.3125 l 0,541.5 c -37.4511,7.19476 -65.71875,39.59937 -65.71875,78.5 0,44.18278 36.46574,80 81.4375,80 44.97176,0 81.40625,-35.81722 81.40625,-80 0,-37.9046 -26.82231,-69.64921 -62.84375,-77.90625 l 0,-542.09375 c -5.93644,-11.33009 -11.75896,-16.54176 -17.46875,-16.3125 z"
-              ></path>
-            </svg>
+                <!-- Black outline thermometer -->
+                <path
+                  style="fill:none;stroke:#000000;stroke-width:3"
+                  d="m 373.15662,151.80816 c -5.70979,0.22926 -11.30239,5.89943 -16.8125,16.3125 l 0,541.5 c -37.4511,7.19476 -65.71875,39.59937 -65.71875,78.5 0,44.18278 36.46574,80 81.4375,80 44.97176,0 81.40625,-35.81722 81.40625,-80 0,-37.9046 -26.82231,-69.64921 -62.84375,-77.90625 l 0,-542.09375 c -5.93644,-11.33009 -11.75896,-16.54176 -17.46875,-16.3125 z"
+                ></path>
+              </svg>
+            </div>
+
+            <div class="thermometer-wrapper">
+              <div class="thermometer-label">Air Quality (PPB)</div>
+              <svg
+                id="airQualityThermometer"
+                class="thermometer"
+                viewBox="226 93 292 832"
+                preserveAspectRatio="xMidYMid meet"
+              >
+                <!-- Background thermometer -->
+                <rect
+                  style="fill:#ffffff;stroke:#000000;stroke-width:5;"
+                  width="285.9653"
+                  height="825.72479"
+                  x="229.06459"
+                  y="96.165672"
+                  ry="49.999996"
+                  rx="50"></rect>
+
+                <!-- Gray background column -->
+                <path
+                  style="fill:#f2f2f2;fill-opacity:1;stroke:none"
+                  d="m 373.56287,164.54744 c 0.30163,-0.0121 -0.2236,-0.15092 -1.90625,1.5 -1.41427,1.3876 -3.34856,4.13828 -5.375,7.65625 l 0,535.91697 c 0.004,4.58042 -3.56553,8.91087 -8.0625,9.78125 -32.9249,6.32523 -57.65625,34.63976 -57.65625,68.71875 0,38.7064 31.81286,70.0625 71.5,70.0625 39.68714,0 71.46875,-31.3514 71.46875,-70.0625 0,-33.20927 -23.46988,-60.96258 -55.125,-68.21875 -4.34251,-1.00069 -7.71326,-5.23118 -7.71875,-9.6875 l 0,-536.54197 c -2.18944,-3.82345 -4.2399,-6.65749 -5.625,-7.9375 -1.63058,-1.50687 -1.80154,-1.17539 -1.5,-1.1875 z"
+                ></path>
+
+                <!-- Clip path for air quality mercury -->
+                <defs>
+                  <clipPath id="airquality-clip">
+                    <path
+                      d="m 373.56287,164.54744 c 0.30163,-0.0121 -0.2236,-0.15092 -1.90625,1.5 -1.41427,1.3876 -3.34856,4.13828 -5.375,7.65625 l 0,535.91697 c 0.004,4.58042 -3.56553,8.91087 -8.0625,9.78125 -32.9249,6.32523 -57.65625,34.63976 -57.65625,68.71875 0,38.7064 31.81286,70.0625 71.5,70.0625 39.68714,0 71.46875,-31.3514 71.46875,-70.0625 0,-33.20927 -23.46988,-60.96258 -55.125,-68.21875 -4.34251,-1.00069 -7.71326,-5.23118 -7.71875,-9.6875 l 0,-536.54197 c -2.18944,-3.82345 -4.2399,-6.65749 -5.625,-7.9375 -1.63058,-1.50687 -1.80154,-1.17539 -1.5,-1.1875 z"
+                    ></path>
+                  </clipPath>
+                </defs>
+
+                <!-- Air quality fill (dynamically sized) -->
+                <rect
+                  id="airQualityFill"
+                  class="mercury"
+                  x="300"
+                  y="858"
+                  width="145"
+                  height="0"
+                  fill="#00cc00"
+                  clip-path="url(#airquality-clip)"></rect>
+
+                <!-- Black outline thermometer -->
+                <path
+                  style="fill:none;stroke:#000000;stroke-width:3"
+                  d="m 373.15662,151.80816 c -5.70979,0.22926 -11.30239,5.89943 -16.8125,16.3125 l 0,541.5 c -37.4511,7.19476 -65.71875,39.59937 -65.71875,78.5 0,44.18278 36.46574,80 81.4375,80 44.97176,0 81.40625,-35.81722 81.40625,-80 0,-37.9046 -26.82231,-69.64921 -62.84375,-77.90625 l 0,-542.09375 c -5.93644,-11.33009 -11.75896,-16.54176 -17.46875,-16.3125 z"
+                ></path>
+              </svg>
+            </div>
           </div>
         </div>
 
         <div class="controls">
-          <h3>Temperature Control</h3>
+          <!-- <h3>Temperature Control</h3> -->
 
           <div>
             <label for="tempInput">
@@ -232,14 +304,54 @@ const defaultCities = [
             <button id="randomTemp" class="secondary">Random</button>
           </div>
 
-          <div class="button-group">
+          <div class="button-group hidden">
             <button id="coldBtn" class="contrast">Cold (14°F)</button>
             <button id="warmBtn" class="contrast">Warm (77°F)</button>
           </div>
 
-          <div class="button-group">
+          <div class="button-group hidden">
             <button id="hotBtn" class="contrast">Hot (104°F)</button>
             <button id="freezingBtn" class="contrast">Freezing (23°F)</button>
+          </div>
+
+          <hr />
+
+          <!-- <h3>Air Quality Control</h3> -->
+
+          <div>
+            <label for="airQualityInput">
+              Set Air Quality (PPB)
+              <input
+                type="number"
+                id="airQualityInput"
+                min="0"
+                max="500"
+                step="1"
+                value="50"
+                placeholder="Enter PPB"
+              />
+            </label>
+          </div>
+
+          <div class="button-group">
+            <button id="applyAirQuality">Apply</button>
+            <button id="randomAirQuality" class="secondary">Random</button>
+          </div>
+
+          <div class="button-group hidden">
+            <button id="goodAirBtn" class="contrast">Good (50 PPB)</button>
+            <button id="moderateAirBtn" class="contrast"
+              >Moderate (150 PPB)</button
+            >
+          </div>
+
+          <div class="button-group hidden">
+            <button id="unhealthyAirBtn" class="contrast"
+              >Unhealthy (300 PPB)</button
+            >
+            <button id="hazardousAirBtn" class="contrast"
+              >Hazardous (450 PPB)</button
+            >
           </div>
 
           <hr />
@@ -272,16 +384,21 @@ const defaultCities = [
         defaultCities
       let currentCityIndex = 0
       let currentTemp = 68 // Fahrenheit
+      let currentAirQuality = 50 // PPB
 
       const mercuryFill = document.getElementById('mercuryFill')
+      const airQualityFill = document.getElementById('airQualityFill')
       const cityName = document.getElementById('cityName')
       const tempInput = document.getElementById('tempInput')
+      const airQualityInput = document.getElementById('airQualityInput')
       const cityList = document.getElementById('cityList')
       const newCityInput = document.getElementById('newCityInput')
       const cityDialogElement = document.getElementById('cityDialog')
 
       const MIN_TEMP_F = -4 // -20°C in Fahrenheit
       const MAX_TEMP_F = 122 // 50°C in Fahrenheit
+      const MIN_AIR_QUALITY = 0 // PPB
+      const MAX_AIR_QUALITY = 500 // PPB
       const MAX_HEIGHT = 694 // Maximum height of mercury column in SVG units
       const BASE_Y = 858 // Bottom Y position
 
@@ -319,6 +436,46 @@ const defaultCities = [
       function setRandomTemperature() {
         const temp = Math.random() * 126 - 4 // Range: -4 to 122
         setTemperature(Math.round(temp * 10) / 10)
+      }
+
+      function getAirQualityColor(ppb) {
+        if (ppb <= 50) return '#00cc00' // Good - Green
+        if (ppb <= 100) return '#66ff00' // Good-Moderate - Light green
+        if (ppb <= 150) return '#ffff00' // Moderate - Yellow
+        if (ppb <= 200) return '#ffcc00' // Moderate-Unhealthy - Orange-yellow
+        if (ppb <= 300) return '#ff6600' // Unhealthy - Orange
+        if (ppb <= 400) return '#ff0000' // Very Unhealthy - Red
+        return '#990099' // Hazardous - Purple
+      }
+
+      function setAirQuality(ppb) {
+        currentAirQuality = Math.max(
+          MIN_AIR_QUALITY,
+          Math.min(MAX_AIR_QUALITY, ppb)
+        )
+        airQualityInput.value = currentAirQuality.toFixed(0)
+
+        // Calculate height percentage
+        const range = MAX_AIR_QUALITY - MIN_AIR_QUALITY
+        const ppbOffset = currentAirQuality - MIN_AIR_QUALITY
+        const heightPercent = ppbOffset / range
+
+        // Calculate actual height and Y position
+        const height = heightPercent * MAX_HEIGHT
+        const yPos = BASE_Y - height
+
+        // Update air quality fill
+        airQualityFill.setAttribute('height', height.toString())
+        airQualityFill.setAttribute('y', yPos.toString())
+        airQualityFill.setAttribute(
+          'fill',
+          getAirQualityColor(currentAirQuality)
+        )
+      }
+
+      function setRandomAirQuality() {
+        const ppb = Math.random() * 500 // Range: 0 to 500
+        setAirQuality(Math.round(ppb))
       }
 
       function setRandomCity() {
@@ -401,6 +558,36 @@ const defaultCities = [
         .getElementById('freezingBtn')
         .addEventListener('click', () => setTemperature(23))
 
+      // Air quality event listeners
+      document
+        .getElementById('applyAirQuality')
+        .addEventListener('click', () => {
+          setAirQuality(parseFloat(airQualityInput.value))
+        })
+
+      document
+        .getElementById('randomAirQuality')
+        .addEventListener('click', setRandomAirQuality)
+
+      document
+        .getElementById('goodAirBtn')
+        .addEventListener('click', () => setAirQuality(50))
+      document
+        .getElementById('moderateAirBtn')
+        .addEventListener('click', () => setAirQuality(150))
+      document
+        .getElementById('unhealthyAirBtn')
+        .addEventListener('click', () => setAirQuality(300))
+      document
+        .getElementById('hazardousAirBtn')
+        .addEventListener('click', () => setAirQuality(450))
+
+      airQualityInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+          setAirQuality(parseFloat(airQualityInput.value))
+        }
+      })
+
       document
         .getElementById('manageCitiesBtn')
         .addEventListener('click', () => {
@@ -426,6 +613,7 @@ const defaultCities = [
       // Initialize
       renderCityList()
       cityName.textContent = cities[currentCityIndex]
+      setAirQuality(50) // Initialize air quality display
     </script>
   </body>
 </html>
