@@ -439,13 +439,17 @@ const defaultCities = [
       }
 
       function getAirQualityColor(ppb) {
-        if (ppb <= 50) return '#00cc00' // Good - Green
-        if (ppb <= 100) return '#66ff00' // Good-Moderate - Light green
-        if (ppb <= 150) return '#ffff00' // Moderate - Yellow
-        if (ppb <= 200) return '#ffcc00' // Moderate-Unhealthy - Orange-yellow
-        if (ppb <= 300) return '#ff6600' // Unhealthy - Orange
-        if (ppb <= 400) return '#ff0000' // Very Unhealthy - Red
-        return '#990099' // Hazardous - Purple
+        if (ppb <= 50) return '#80ff80' // 0-50: Light green
+        if (ppb <= 100) return '#40ff40' // 50-100: Bright green
+        if (ppb <= 150) return '#ffff33' // 100-150: Yellow
+        if (ppb <= 200) return '#ff9944' // 150-200: Orange
+        if (ppb <= 250) return '#ff3333' // 200-250: Red
+        if (ppb <= 300) return '#dd2255' // 250-300: Crimson
+        if (ppb <= 350) return '#cc33cc' // 300-350: Magenta
+        if (ppb <= 400) return '#991133' // 350-400: Dark red
+        if (ppb <= 450) return '#441111' // 400-450: Very dark
+        if (ppb < 500) return '#000000' // 450-499: Black
+        return '#ffffff' // 500: White
       }
 
       function setAirQuality(ppb) {
@@ -501,6 +505,7 @@ const defaultCities = [
           span.addEventListener('click', () => {
             currentCityIndex = index
             cityName.textContent = cities[index]
+            cityDialogElement.close()
           })
         })
 
