@@ -82,6 +82,14 @@ const defaultCities = [
           fill 0.5s ease,
           y 0.5s ease;
       }
+      .air-quality-bar {
+        width: 250px;
+        height: 780px;
+        margin-top: -0px;
+      }
+      #airQualityMarker {
+        transition: transform 0.5s ease;
+      }
       .city-name {
         font-size: 2.5rem;
         font-weight: bold;
@@ -228,54 +236,106 @@ const defaultCities = [
             </div>
 
             <div class="thermometer-wrapper">
-              <div class="thermometer-label">Air Quality (PPB)</div>
               <svg
-                id="airQualityThermometer"
-                class="thermometer"
-                viewBox="226 93 292 832"
+                id="airQualityBar"
+                class="air-quality-bar"
+                viewBox="0 0 200 1000"
                 preserveAspectRatio="xMidYMid meet"
               >
-                <!-- Background thermometer -->
-                <rect
-                  style="fill:#ffffff;stroke:#000000;stroke-width:5;"
-                  width="285.9653"
-                  height="825.72479"
-                  x="229.06459"
-                  y="96.165672"
-                  ry="49.999996"
-                  rx="50"></rect>
-
-                <!-- Gray background column -->
-                <path
-                  style="fill:#f2f2f2;fill-opacity:1;stroke:none"
-                  d="m 373.56287,164.54744 c 0.30163,-0.0121 -0.2236,-0.15092 -1.90625,1.5 -1.41427,1.3876 -3.34856,4.13828 -5.375,7.65625 l 0,535.91697 c 0.004,4.58042 -3.56553,8.91087 -8.0625,9.78125 -32.9249,6.32523 -57.65625,34.63976 -57.65625,68.71875 0,38.7064 31.81286,70.0625 71.5,70.0625 39.68714,0 71.46875,-31.3514 71.46875,-70.0625 0,-33.20927 -23.46988,-60.96258 -55.125,-68.21875 -4.34251,-1.00069 -7.71326,-5.23118 -7.71875,-9.6875 l 0,-536.54197 c -2.18944,-3.82345 -4.2399,-6.65749 -5.625,-7.9375 -1.63058,-1.50687 -1.80154,-1.17539 -1.5,-1.1875 z"
-                ></path>
-
-                <!-- Clip path for air quality mercury -->
+                <!-- Define gradient with discrete bands -->
                 <defs>
-                  <clipPath id="airquality-clip">
-                    <path
-                      d="m 373.56287,164.54744 c 0.30163,-0.0121 -0.2236,-0.15092 -1.90625,1.5 -1.41427,1.3876 -3.34856,4.13828 -5.375,7.65625 l 0,535.91697 c 0.004,4.58042 -3.56553,8.91087 -8.0625,9.78125 -32.9249,6.32523 -57.65625,34.63976 -57.65625,68.71875 0,38.7064 31.81286,70.0625 71.5,70.0625 39.68714,0 71.46875,-31.3514 71.46875,-70.0625 0,-33.20927 -23.46988,-60.96258 -55.125,-68.21875 -4.34251,-1.00069 -7.71326,-5.23118 -7.71875,-9.6875 l 0,-536.54197 c -2.18944,-3.82345 -4.2399,-6.65749 -5.625,-7.9375 -1.63058,-1.50687 -1.80154,-1.17539 -1.5,-1.1875 z"
-                    ></path>
-                  </clipPath>
+                  <linearGradient
+                    id="airQualityGradient"
+                    x1="0%"
+                    y1="100%"
+                    x2="0%"
+                    y2="0%"
+                  >
+                    <!-- 0-50 PPB: Light green -->
+                    <stop offset="0%" style="stop-color:#80ff80;stop-opacity:1"
+                    ></stop>
+                    <stop offset="10%" style="stop-color:#80ff80;stop-opacity:1"
+                    ></stop>
+                    <!-- 50-100 PPB: Bright green -->
+                    <stop offset="10%" style="stop-color:#40ff40;stop-opacity:1"
+                    ></stop>
+                    <stop offset="20%" style="stop-color:#40ff40;stop-opacity:1"
+                    ></stop>
+                    <!-- 100-150 PPB: Yellow -->
+                    <stop offset="20%" style="stop-color:#ffff33;stop-opacity:1"
+                    ></stop>
+                    <stop offset="30%" style="stop-color:#ffff33;stop-opacity:1"
+                    ></stop>
+                    <!-- 150-200 PPB: Orange -->
+                    <stop offset="30%" style="stop-color:#ff9944;stop-opacity:1"
+                    ></stop>
+                    <stop offset="40%" style="stop-color:#ff9944;stop-opacity:1"
+                    ></stop>
+                    <!-- 200-250 PPB: Red -->
+                    <stop offset="40%" style="stop-color:#ff3333;stop-opacity:1"
+                    ></stop>
+                    <stop offset="50%" style="stop-color:#ff3333;stop-opacity:1"
+                    ></stop>
+                    <!-- 250-300 PPB: Crimson -->
+                    <stop offset="50%" style="stop-color:#dd2255;stop-opacity:1"
+                    ></stop>
+                    <stop offset="60%" style="stop-color:#dd2255;stop-opacity:1"
+                    ></stop>
+                    <!-- 300-350 PPB: Magenta -->
+                    <stop offset="60%" style="stop-color:#cc33cc;stop-opacity:1"
+                    ></stop>
+                    <stop offset="70%" style="stop-color:#cc33cc;stop-opacity:1"
+                    ></stop>
+                    <!-- 350-400 PPB: Dark red -->
+                    <stop offset="70%" style="stop-color:#991133;stop-opacity:1"
+                    ></stop>
+                    <stop offset="80%" style="stop-color:#991133;stop-opacity:1"
+                    ></stop>
+                    <!-- 400-450 PPB: Very dark -->
+                    <stop offset="80%" style="stop-color:#441111;stop-opacity:1"
+                    ></stop>
+                    <stop offset="90%" style="stop-color:#441111;stop-opacity:1"
+                    ></stop>
+                    <!-- 450-500 PPB: Black -->
+                    <stop offset="90%" style="stop-color:#000000;stop-opacity:1"
+                    ></stop>
+                    <stop
+                      offset="100%"
+                      style="stop-color:#000000;stop-opacity:1"></stop>
+                  </linearGradient>
                 </defs>
 
-                <!-- Air quality fill (dynamically sized) -->
-                <rect
-                  id="airQualityFill"
-                  class="mercury"
-                  x="300"
-                  y="858"
-                  width="145"
-                  height="0"
-                  fill="#00cc00"
-                  clip-path="url(#airquality-clip)"></rect>
+                <!-- Air Quality label at top -->
+                <text
+                  x="100"
+                  y="140"
+                  text-anchor="middle"
+                  font-size="20"
+                  font-weight="bold"
+                  fill="var(--pico-color)">Air Quality (PPB)</text
+                >
 
-                <!-- Black outline thermometer -->
-                <path
-                  style="fill:none;stroke:#000000;stroke-width:3"
-                  d="m 373.15662,151.80816 c -5.70979,0.22926 -11.30239,5.89943 -16.8125,16.3125 l 0,541.5 c -37.4511,7.19476 -65.71875,39.59937 -65.71875,78.5 0,44.18278 36.46574,80 81.4375,80 44.97176,0 81.40625,-35.81722 81.40625,-80 0,-37.9046 -26.82231,-69.64921 -62.84375,-77.90625 l 0,-542.09375 c -5.93644,-11.33009 -11.75896,-16.54176 -17.46875,-16.3125 z"
-                ></path>
+                <!-- Background bar with gradient -->
+                <rect
+                  x="60"
+                  y="170"
+                  width="80"
+                  height="740"
+                  rx="40"
+                  ry="40"
+                  fill="url(#airQualityGradient)"
+                  stroke="#000"
+                  stroke-width="4"></rect>
+
+                <!-- Marker indicator (triangle pointing to the bar) -->
+                <g id="airQualityMarker">
+                  <polygon
+                    points="20,540 50,520 50,560"
+                    fill="#000"
+                    stroke="#000"
+                    stroke-width="2"
+                    transform="rotate(180 35 540)"></polygon>
+                </g>
               </svg>
             </div>
           </div>
@@ -387,7 +447,7 @@ const defaultCities = [
       let currentAirQuality = 50 // PPB
 
       const mercuryFill = document.getElementById('mercuryFill')
-      const airQualityFill = document.getElementById('airQualityFill')
+      const airQualityMarker = document.getElementById('airQualityMarker')
       const cityName = document.getElementById('cityName')
       const tempInput = document.getElementById('tempInput')
       const airQualityInput = document.getElementById('airQualityInput')
@@ -438,42 +498,30 @@ const defaultCities = [
         setTemperature(Math.round(temp * 10) / 10)
       }
 
-      function getAirQualityColor(ppb) {
-        if (ppb <= 50) return '#80ff80' // 0-50: Light green
-        if (ppb <= 100) return '#40ff40' // 50-100: Bright green
-        if (ppb <= 150) return '#ffff33' // 100-150: Yellow
-        if (ppb <= 200) return '#ff9944' // 150-200: Orange
-        if (ppb <= 250) return '#ff3333' // 200-250: Red
-        if (ppb <= 300) return '#dd2255' // 250-300: Crimson
-        if (ppb <= 350) return '#cc33cc' // 300-350: Magenta
-        if (ppb <= 400) return '#991133' // 350-400: Dark red
-        if (ppb <= 450) return '#441111' // 400-450: Very dark
-        if (ppb < 500) return '#000000' // 450-499: Black
-        return '#ffffff' // 500: White
-      }
-
       function setAirQuality(ppb) {
         currentAirQuality = Math.max(
           MIN_AIR_QUALITY,
-          Math.min(MAX_AIR_QUALITY, ppb)
+          Math.min(MAX_AIR_QUALITY, ppb),
         )
         airQualityInput.value = currentAirQuality.toFixed(0)
 
-        // Calculate height percentage
+        // Calculate position on the gradient bar
+        // The bar goes from y=170 (top, HIGH) to y=910 (bottom, LOW)
+        const BAR_TOP = 170
+        const BAR_BOTTOM = 910
+        const BAR_HEIGHT = BAR_BOTTOM - BAR_TOP
+
         const range = MAX_AIR_QUALITY - MIN_AIR_QUALITY
         const ppbOffset = currentAirQuality - MIN_AIR_QUALITY
         const heightPercent = ppbOffset / range
 
-        // Calculate actual height and Y position
-        const height = heightPercent * MAX_HEIGHT
-        const yPos = BASE_Y - height
+        // Higher PPB = higher on bar (towards HIGH)
+        const markerY = BAR_BOTTOM - heightPercent * BAR_HEIGHT
 
-        // Update air quality fill
-        airQualityFill.setAttribute('height', height.toString())
-        airQualityFill.setAttribute('y', yPos.toString())
-        airQualityFill.setAttribute(
-          'fill',
-          getAirQualityColor(currentAirQuality)
+        // Move the marker to the calculated Y position
+        airQualityMarker.setAttribute(
+          'transform',
+          `translate(0, ${markerY - 540})`,
         )
       }
 
@@ -495,7 +543,7 @@ const defaultCities = [
           <span>${city}</span>
           <button class="remove-btn contrast" data-index="${index}">×</button>
         </div>
-      `
+      `,
           )
           .join('')
 
