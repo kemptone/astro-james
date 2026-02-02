@@ -1,0 +1,309 @@
+---
+import Menu from '@/components/menu.astro'
+
+const title = 'Gas Valve Game'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <Menu />
+    <main>
+      <h1>Gas Valve</h1>
+
+      <div class="valve-container">
+        <div class="valve" id="valve">
+          <div class="valve-handle"></div>
+          <div class="valve-center"></div>
+        </div>
+        <div class="direction-labels">
+          <span class="label left">0 Left</span>
+          <span class="label up">1 Up</span>
+          <span class="label right">2 Right</span>
+          <span class="label down">3 Down</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="input-group">
+          <label for="currentPos">Current Position</label>
+          <input
+            type="number"
+            id="currentPos"
+            value="0"
+            step="0.01"
+            min="0"
+            max="4"
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="twistTo">Twist To</label>
+          <input
+            type="number"
+            id="twistTo"
+            value="0"
+            step="0.01"
+            min="0"
+            max="4"
+          />
+        </div>
+
+        <button id="twistBtn">Twist Valve</button>
+      </div>
+
+      <div class="info" id="info"></div>
+    </main>
+
+    <script>
+      const valve = document.getElementById('valve') as HTMLElement
+      const currentPosInput = document.getElementById(
+        'currentPos',
+      ) as HTMLInputElement
+      const twistToInput = document.getElementById(
+        'twistTo',
+      ) as HTMLInputElement
+      const twistBtn = document.getElementById('twistBtn') as HTMLButtonElement
+      const info = document.getElementById('info') as HTMLElement
+
+      function positionToDegrees(pos: number): number {
+        // 0=left (0°), 1=up (90°), 2=right (180°), 3=down (270°), 4=left (360°)
+        return pos * 90
+      }
+
+      function getDirectionName(pos: number): string {
+        const normalized = pos % 4
+        if (normalized === 0) return 'Left'
+        if (normalized === 1) return 'Up'
+        if (normalized === 2) return 'Right'
+        if (normalized === 3) return 'Down'
+
+        // For decimals, show between positions
+        const floor = Math.floor(normalized)
+        const ceil = (floor + 1) % 4
+        const directions = ['Left', 'Up', 'Right', 'Down']
+        return `Between ${directions[floor]} and ${directions[ceil]}`
+      }
+
+      function updateValve(position: number) {
+        const degrees = positionToDegrees(position)
+        valve.style.transform = `rotate(${degrees}deg)`
+      }
+
+      function updateInfo(from: number, to: number) {
+        const diff = to - from
+        const direction = diff > 0 ? 'clockwise' : 'counter-clockwise'
+        const amount = Math.abs(diff)
+        info.textContent = `Twisted ${amount.toFixed(2)} units ${direction} → Now at: ${getDirectionName(to)}`
+      }
+
+      // Initialize valve position
+      updateValve(parseFloat(currentPosInput.value))
+
+      currentPosInput.addEventListener('input', () => {
+        let val = parseFloat(currentPosInput.value) || 0
+        // Normalize to 0-4 range
+        val = ((val % 4) + 4) % 4
+        updateValve(val)
+      })
+
+      twistBtn.addEventListener('click', () => {
+        const currentPos = parseFloat(currentPosInput.value) || 0
+        const twistTo = parseFloat(twistToInput.value) || 0
+
+        // Normalize twist target
+        const normalizedTarget = ((twistTo % 4) + 4) % 4
+
+        // Update the current position input
+        currentPosInput.value = normalizedTarget.toFixed(2)
+
+        // Animate the valve
+        updateValve(normalizedTarget)
+        updateInfo(currentPos, twistTo)
+      })
+    </script>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #1a1a2e;
+        color: #eee;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+      }
+
+      main {
+        max-width: 500px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      h1 {
+        color: #ffd700;
+        margin-bottom: 30px;
+      }
+
+      .valve-container {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin: 0 auto 40px;
+      }
+
+      .valve {
+        width: 150px;
+        height: 150px;
+        background: linear-gradient(145deg, #444, #222);
+        border-radius: 50%;
+        position: absolute;
+        top: 29px;
+        left: 25px;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        transition: transform 0.5s ease-out;
+      }
+
+      .valve-handle {
+        position: absolute;
+        width: 20px;
+        height: 60px;
+        background: linear-gradient(90deg, #c0392b, #e74c3c, #c0392b);
+        border-radius: 5px;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .valve-center {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(145deg, #666, #333);
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 3px solid #555;
+      }
+
+      .direction-labels {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+
+      .label {
+        position: absolute;
+        font-size: 12px;
+        color: #888;
+        white-space: nowrap;
+      }
+
+      .label.left {
+        left: -40px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .label.right {
+        right: -45px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .label.up {
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .label.down {
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+        max-width: 200px;
+      }
+
+      .input-group label {
+        font-size: 14px;
+        color: #aaa;
+      }
+
+      .input-group input {
+        padding: 12px;
+        font-size: 18px;
+        text-align: center;
+        border: 2px solid #444;
+        border-radius: 8px;
+        background: #2a2a4a;
+        color: #fff;
+      }
+
+      .input-group input:focus {
+        outline: none;
+        border-color: #ffd700;
+      }
+
+      button {
+        padding: 15px 40px;
+        font-size: 18px;
+        background: linear-gradient(145deg, #ffd700, #ffaa00);
+        color: #1a1a2e;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition:
+          transform 0.1s,
+          box-shadow 0.1s;
+      }
+
+      button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+      }
+
+      button:active {
+        transform: scale(0.98);
+      }
+
+      .info {
+        margin-top: 30px;
+        padding: 15px;
+        background: #2a2a4a;
+        border-radius: 8px;
+        font-size: 16px;
+        min-height: 50px;
+      }
+    </style>
+  </body>
+</html>
