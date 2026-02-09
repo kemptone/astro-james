@@ -1,81 +1,87 @@
 ---
 export const prerender = false
 
-// Menu links configuration
-const menuLinks = [
-  {href: '/temperature', label: 'Set Temperature'},
-  {href: '/minmax', label: 'Min Max'},
-  {href: '/sro29', label: 'sro29'},
-  {href: '/sro29', label: 'sro29'},
-  {href: '/sro27', label: 'sro27'},
-  {href: '/sro26', label: 'sro26'},
-  {href: '/sro25', label: 'sro25'},
-  {href: '/sro24', label: 'sro24'},
-  {href: '/sro23', label: 'sro23'},
-  {href: '/extraspecial', label: 'extra special'},
-  {href: '/air', label: 'air'},
-  {href: '/ampm', label: 'ampm'},
-  {href: '/fan', label: 'fan'},
-  {href: '/badtomgoodtom', label: 'badtomgoodtom'},
-  {href: '/bignumbers', label: 'bignumbers'},
-  {href: '/brownthing', label: 'brownthing'},
-  {href: '/calculator', label: 'calculator'},
-  {href: '/characters', label: 'characters'},
-  {href: '/code/more', label: 'more'},
-  {href: '/code/metas', label: 'metas'},
-  {href: '/code/textareas', label: 'textareas'},
-  {href: '/colorfinder', label: 'colorfinder'},
-  {href: '/colorthing', label: 'colorthing'},
-  {href: '/countries', label: 'countries'},
-  {href: '/decibel', label: 'decibel'},
-  {href: '/dictionary', label: 'dictionary'},
-  {href: '/exam', label: 'exam'},
-  {href: '/girls', label: 'girls'},
-  {href: '/grok', label: 'grok'},
-  {href: '/hamster', label: 'hamster'},
-  {href: '/heatergame', label: 'heatergame'},
-  {href: '/kidthing', label: 'kidthing'},
-  {href: '/lasko', label: 'lasko'},
-  {href: '/learncode', label: 'learncode'},
-  {href: '/live', label: 'live'},
-  {href: '/mina', label: 'mina'},
-  {href: '/music2', label: 'music2'},
-  {href: '/nightnight', label: 'nightnight'},
-  {href: '/polkis', label: 'polkis'},
-  {href: '/punishments', label: 'punishments'},
-  {href: '/reject', label: 'reject'},
-  {href: '/reinstall', label: 'reinstall'},
-  {href: '/special sro', label: 'special sro'},
-  {href: '/speedup', label: 'speedup'},
-  {href: '/spinners', label: 'spinners'},
-  {href: '/sro', label: 'sro'},
-  {href: '/sro10', label: 'sro10'},
-  {href: '/sro12', label: 'sro12'},
-  {href: '/sro13', label: 'sro13'},
-  {href: '/sro14', label: 'sro14'},
-  {href: '/sro15', label: 'sro15'},
-  {href: '/sro15new', label: 'sro15new'},
-  {href: '/sro16', label: 'sro16'},
-  {href: '/sro19', label: 'sro19'},
-  {href: '/sro2', label: 'sro2'},
-  {href: '/sro20', label: 'sro20'},
-  {href: '/sro22', label: 'sro22'},
-  {href: '/sro3', label: 'sro3'},
-  {href: '/sro4', label: 'sro4'},
-  {href: '/sro5', label: 'sro5'},
-  {href: '/sro6', label: 'sro6'},
-  {href: '/sro8', label: 'sro8'},
-  {href: '/sro9', label: 'sro9'},
-  {href: '/talkers', label: 'talkers'},
-  {href: '/talkers2', label: 'talkers2'},
-  {href: '/talkers3', label: 'talkers3'},
-  {href: '/texttospeech', label: 'texttospeech'},
-  {href: '/tide', label: 'tide'},
-  {href: '/timer2', label: 'timer2'},
-  {href: '/timer3', label: 'timer3'},
-  {href: '/timer4', label: 'timer4'},
-  {href: '/voicemaker', label: 'voicemaker'},
-  {href: '/wordsearch', label: 'wordsearch'},
+// Menu links configuration with parental control codes
+interface MenuLink {
+  href: string
+  label: string
+  code?: string  // Optional 6-digit code for restricted pages
+}
+
+const menuLinks: MenuLink[] = [
+  {href: '/temperature', label: 'Set Temperature', code: '847293'},
+  {href: '/minmax', label: 'Min Max', code: '562018'},
+  {href: '/sro29', label: 'sro29', code: '394756'},
+  {href: '/sro29', label: 'sro29', code: '394756'},
+  {href: '/sro27', label: 'sro27', code: '681425'},
+  {href: '/sro26', label: 'sro26', code: '237849'},
+  {href: '/sro25', label: 'sro25', code: '915634'},
+  {href: '/sro24', label: 'sro24', code: '426781'},
+  {href: '/sro23', label: 'sro23', code: '758390'},
+  {href: '/extraspecial', label: 'extra special', code: '103625'},
+  {href: '/air', label: 'air', code: '642897'},
+  {href: '/ampm', label: 'ampm', code: '871546'},
+  {href: '/fan', label: 'fan', code: '529384'},
+  {href: '/badtomgoodtom', label: 'badtomgoodtom', code: '346912'},
+  {href: '/bignumbers', label: 'bignumbers', code: '795268'},
+  {href: '/brownthing', label: 'brownthing', code: '412657'},
+  {href: '/calculator', label: 'calculator', code: '983416'},
+  {href: '/characters', label: 'characters', code: '267593'},
+  {href: '/code/more', label: 'more', code: '538947'},
+  {href: '/code/metas', label: 'metas', code: '674821'},
+  {href: '/code/textareas', label: 'textareas', code: '925374'},
+  {href: '/colorfinder', label: 'colorfinder', code: '184629'},
+  {href: '/colorthing', label: 'colorthing', code: '739851'},
+  {href: '/countries', label: 'countries', code: '461782'},
+  {href: '/decibel', label: 'decibel', code: '852936'},
+  {href: '/dictionary', label: 'dictionary', code: '396174'},
+  {href: '/exam', label: 'exam', code: '714258'},
+  {href: '/girls', label: 'girls', code: '258619'},
+  {href: '/grok', label: 'grok', code: '947382'},
+  {href: '/hamster', label: 'hamster', code: '631947'},
+  {href: '/heatergame', label: 'heatergame', code: '487523'},
+  {href: '/kidthing', label: 'kidthing', code: '825146'},
+  {href: '/lasko', label: 'lasko', code: '159374'},
+  {href: '/learncode', label: 'learncode', code: '743892'},
+  {href: '/live', label: 'live', code: '362715'},
+  {href: '/mina', label: 'mina', code: '916428'},
+  {href: '/music2', label: 'music2', code: '573961'},
+  {href: '/nightnight', label: 'nightnight', code: '248157'},
+  {href: '/polkis', label: 'polkis', code: '687234'},
+  {href: '/punishments', label: 'punishments', code: '419658'},
+  {href: '/reject', label: 'reject', code: '892743'},
+  {href: '/reinstall', label: 'reinstall', code: '134896'},
+  {href: '/special sro', label: 'special sro', code: '765219'},
+  {href: '/speedup', label: 'speedup', code: '521783'},
+  {href: '/spinners', label: 'spinners', code: '349872'},
+  {href: '/sro', label: 'sro', code: '687195'},
+  {href: '/sro10', label: 'sro10', code: '915263'},
+  {href: '/sro12', label: 'sro12', code: '473589'},
+  {href: '/sro13', label: 'sro13', code: '821467'},
+  {href: '/sro14', label: 'sro14', code: '264718'},
+  {href: '/sro15', label: 'sro15', code: '739124'},
+  {href: '/sro15new', label: 'sro15new', code: '156842'},
+  {href: '/sro16', label: 'sro16', code: '594326'},
+  {href: '/sro19', label: 'sro19', code: '418957'},
+  {href: '/sro2', label: 'sro2', code: '762581'},
+  {href: '/sro20', label: 'sro20', code: '328946'},
+  {href: '/sro22', label: 'sro22', code: '891637'},
+  {href: '/sro3', label: 'sro3', code: '657219'},
+  {href: '/sro4', label: 'sro4', code: '943876'},
+  {href: '/sro5', label: 'sro5', code: '216453'},
+  {href: '/sro6', label: 'sro6', code: '584791'},
+  {href: '/sro8', label: 'sro8', code: '731264'},
+  {href: '/sro9', label: 'sro9', code: '469582'},
+  {href: '/talkers', label: 'talkers', code: '812395'},
+  {href: '/talkers2', label: 'talkers2', code: '357146'},
+  {href: '/talkers3', label: 'talkers3', code: '926817'},
+  {href: '/texttospeech', label: 'texttospeech', code: '183674'},
+  {href: '/tide', label: 'tide', code: '649231'},
+  {href: '/timer2', label: 'timer2', code: '571894'},
+  {href: '/timer3', label: 'timer3', code: '924658'},
+  {href: '/timer4', label: 'timer4', code: '386429'},
+  {href: '/voicemaker', label: 'voicemaker', code: '752963'},
+  {href: '/wordsearch', label: 'wordsearch', code: '415287'},
 ]
 ---
 
@@ -92,7 +98,11 @@ const menuLinks = [
       {
         menuLinks.map(link => (
           <li class="menu-item">
-            <a href={link.href} class="menu-link">
+            <a
+              href={link.href}
+              class="menu-link"
+              data-code={link.code || ''}
+            >
               {link.label}
             </a>
           </li>
@@ -103,12 +113,19 @@ const menuLinks = [
 </nav>
 
 <script>
+  import { isPageUnlocked } from '@/core/parental-control'
+  import '@/components/wc-parental-gate'
+
   document.addEventListener('DOMContentLoaded', () => {
     const hamburgerNav = document.querySelector('.hamburger-nav')
     const hamburgerBtn = document.querySelector('.hamburger-btn')
     const menuOverlay = document.querySelector('.menu-overlay')
     const menuLinks = document.querySelectorAll('.menu-link')
     const menuReinstall = document.querySelector('.reinstall')
+
+    // Create parental gate component
+    const parentalGate = document.createElement('wc-parental-gate') as any
+    document.body.appendChild(parentalGate)
 
     if (hamburgerBtn && hamburgerNav) {
       hamburgerBtn.addEventListener('click', () => {
@@ -122,10 +139,41 @@ const menuLinks = [
         }
       })
 
-      // Close menu when clicking on a link
+      // Handle menu link clicks with parental control
       menuLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          hamburgerNav.classList.remove('active')
+        link.addEventListener('click', e => {
+          const htmlLink = link as HTMLAnchorElement
+          const code = htmlLink.dataset.code
+          const href = htmlLink.getAttribute('href')
+
+          // Check if this link requires a code and is not unlocked
+          if (code && !isPageUnlocked(href, code)) {
+            e.preventDefault()
+
+            // Show parental gate dialog
+            parentalGate.show(href, code)
+
+            // Listen for successful validation
+            const handleValidation = (event: CustomEvent) => {
+              hamburgerNav.classList.remove('active')
+              window.location.href = event.detail.route
+            }
+
+            // Listen for cancellation
+            const handleCancel = () => {
+              hamburgerNav.classList.remove('active')
+            }
+
+            parentalGate.addEventListener('code-validated', handleValidation, {
+              once: true,
+            })
+            parentalGate.addEventListener('code-cancelled', handleCancel, {
+              once: true,
+            })
+          } else {
+            // No code required or already unlocked, just close menu
+            hamburgerNav.classList.remove('active')
+          }
         })
       })
 
@@ -146,6 +194,38 @@ const menuLinks = [
         })
       }
     }
+
+    // Page-level protection: Check if current page requires a code on load
+    const currentPath = window.location.pathname
+
+    // Find if current page has a code requirement
+    menuLinks.forEach(link => {
+      const htmlLink = link as HTMLAnchorElement
+      const href = htmlLink.getAttribute('href')
+      const code = htmlLink.dataset.code
+
+      if (href === currentPath && code && !isPageUnlocked(currentPath, code)) {
+        // Show parental gate for direct navigation to protected page
+        parentalGate.show(currentPath, code)
+
+        // Listen for successful validation
+        const handleValidation = () => {
+          // Page is now unlocked, dialog will close automatically
+        }
+
+        // Listen for cancellation - redirect to home
+        const handleCancel = () => {
+          window.location.href = '/'
+        }
+
+        parentalGate.addEventListener('code-validated', handleValidation, {
+          once: true,
+        })
+        parentalGate.addEventListener('code-cancelled', handleCancel, {
+          once: true,
+        })
+      }
+    })
   })
 </script>
 
