@@ -105,7 +105,7 @@ if (typeof window !== 'undefined') {
           this.dialog?.close()
           this.dispatchEvent(
             new CustomEvent('code-validated', {
-              detail: { route: this.route, isMaster: result.isMaster },
+              detail: { route: this.route },
             })
           )
         } else {

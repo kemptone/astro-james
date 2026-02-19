@@ -1,0 +1,151 @@
+---
+interface PasscodeItem {
+  label: string;
+  code: string;
+}
+
+const passcodes: PasscodeItem[] = [
+  {label: 'Set Temperature', code: '847293'},
+  {label: 'Min Max', code: '562018'},
+  {label: 'sro29', code: '394756'},
+  {label: 'sro27', code: '681425'},
+  {label: 'sro26', code: '237849'},
+  {label: 'sro25', code: '915634'},
+  {label: 'sro24', code: '426781'},
+  {label: 'sro23', code: '758390'},
+  {label: 'extra special', code: '103625'},
+  {label: 'air', code: '642897'},
+  {label: 'ampm', code: '871546'},
+  {label: 'fan', code: '529384'},
+  {label: 'badtomgoodtom', code: '346912'},
+  {label: 'bignumbers', code: '795268'},
+  {label: 'brownthing', code: '412657'},
+  {label: 'calculator', code: '983416'},
+  {label: 'characters', code: '267593'},
+  {label: 'more', code: '538947'},
+  {label: 'metas', code: '674821'},
+  {label: 'textareas', code: '925374'},
+  {label: 'colorfinder', code: '184629'},
+  {label: 'colorthing', code: '739851'},
+  {label: 'countries', code: '461782'},
+  {label: 'decibel', code: '852936'},
+  {label: 'dictionary', code: '396174'},
+  {label: 'exam', code: '714258'},
+  {label: 'girls', code: '258619'},
+  {label: 'grok', code: '947382'},
+  {label: 'hamster', code: '631947'},
+  {label: 'heatergame', code: '487523'},
+  {label: 'kidthing', code: '825146'},
+  {label: 'lasko', code: '159374'},
+  {label: 'learncode', code: '743892'},
+  {label: 'live', code: '362715'},
+  {label: 'mina', code: '916428'},
+  {label: 'music2', code: '573961'},
+  {label: 'nightnight', code: '248157'},
+  {label: 'polkis', code: '687234'},
+  {label: 'reject', code: '892743'},
+  {label: 'reinstall', code: '134896'},
+  {label: 'special sro', code: '765219'},
+  {label: 'speedup', code: '521783'},
+  {label: 'spinners', code: '349872'},
+  {label: 'sro', code: '687195'},
+  {label: 'sro10', code: '915263'},
+  {label: 'sro12', code: '473589'},
+  {label: 'sro13', code: '821467'},
+  {label: 'sro14', code: '264718'},
+  {label: 'sro15', code: '739124'},
+  {label: 'sro15new', code: '156842'},
+  {label: 'sro16', code: '594326'},
+  {label: 'sro19', code: '418957'},
+  {label: 'sro2', code: '762581'},
+  {label: 'sro20', code: '328946'},
+  {label: 'sro22', code: '891637'},
+  {label: 'sro3', code: '657219'},
+  {label: 'sro4', code: '943876'},
+  {label: 'sro5', code: '216453'},
+  {label: 'sro6', code: '584791'},
+  {label: 'sro8', code: '731264'},
+  {label: 'sro9', code: '469582'},
+  {label: 'tide', code: '649231'},
+  {label: 'timer2', code: '571894'},
+  {label: 'timer3', code: '924658'},
+  {label: 'timer4', code: '386429'},
+  {label: 'wordsearch', code: '415287'},
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Passcodes</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      padding: 2rem;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .code {
+      font-family: 'Courier New', monospace;
+      font-size: 1.5rem;
+      color: #0066cc;
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Passcodes</h1>
+  <div class="grid">
+    {passcodes.map(item => (
+      <div class="card">
+        <div class="label">{item.label}</div>
+        <div class="code">{item.code}</div>
+      </div>
+    ))}
+  </div>
+</body>
+</html>

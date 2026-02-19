@@ -2,6 +2,7 @@
 // Provides code-based access control for restricted routes
 
 export const MASTER_CODE = '202603' // Master code that works for all pages
+export const SRO_CODE = '909099'
 const STORAGE_PREFIX = 'JAMES_PARENTAL_' // Prefix for localStorage keys
 
 /**
@@ -48,10 +49,12 @@ export function validateCode(
   requiredCode: string,
   route: string
 ): { valid: boolean; isMaster: boolean } {
+  const isSRORoute = route.indexOf('sro') > -1
   const isMaster = inputCode === MASTER_CODE
   const isCorrect = inputCode === requiredCode
+  const isSROCode = inputCode === SRO_CODE
 
-  if (isMaster || isCorrect) {
+  if (isMaster || isCorrect || (isSROCode && isSRORoute)) {
     // Always store the page's actual required code in localStorage
     unlockPage(route, requiredCode)
     return { valid: true, isMaster }

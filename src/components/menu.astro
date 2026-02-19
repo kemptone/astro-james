@@ -291,16 +291,21 @@ const menuLinks: MenuLink[] = [
     align-items: center;
     justify-content: center;
     z-index: 999;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .menu-list {
     list-style: none;
-    padding: 0;
+    padding: 4rem 2rem;
     margin: 0;
     text-align: center;
     display: flex;
     flex-wrap: wrap;
-    padding: 4rem;
+    width: 100%;
+    max-width: 1200px;
+    align-content: flex-start;
+    min-height: min-content;
   }
 
   .menu-item {
@@ -340,9 +345,42 @@ const menuLinks: MenuLink[] = [
   }
 
   /* Responsive adjustments */
+  @media (max-width: 1024px) {
+    .menu-link {
+      font-size: 1.3rem;
+    }
+    .menu-list {
+      padding: 3rem 1.5rem;
+    }
+  }
+
   @media (max-width: 768px) {
     .menu-link {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
+      padding: 0.15rem 0.4rem;
+    }
+    .menu-list {
+      padding: 3rem 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .menu-link {
+      font-size: 0.95rem;
+      padding: 0.1rem 0.3rem;
+    }
+    .menu-list {
+      padding: 2.5rem 0.5rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .menu-link {
+      font-size: 0.85rem;
+      padding: 0.08rem 0.25rem;
+    }
+    .menu-list {
+      padding: 2rem 0.5rem;
     }
   }
 </style>
