@@ -1,0 +1,50 @@
+---
+/**
+ * ParentalGate Component
+ * Add this to any page that requires parental code protection
+ * The code should match the code in menu.astro for this route
+ */
+interface Props {
+  code: string
+}
+
+const { code } = Astro.props
+const currentRoute = Astro.url.pathname
+---
+
+<script define:vars={{ currentRoute, code }}>
+  import { isPageUnlocked } from '@/core/parental-control'
+  import '@/components/wc-parental-gate'
+
+  // Check on page load if this page is unlocked
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!isPageUnlocked(currentRoute, code)) {
+      // Create or get parental gate component
+      let parentalGate = document.querySelector('wc-parental-gate')
+      if (!parentalGate) {
+        parentalGate = document.createElement('wc-parental-gate')
+        document.body.appendChild(parentalGate)
+      }
+
+      // Show the gate
+      ;(parentalGate as any).show(currentRoute, code)
+
+      // Listen for successful validation
+      const handleValidation = () => {
+        // Page is now unlocked, dialog will close automatically
+      }
+
+      // Listen for cancellation - redirect back
+      const handleCancel = () => {
+        window.history.back()
+      }
+
+      parentalGate.addEventListener('code-validated', handleValidation, {
+        once: true,
+      })
+      parentalGate.addEventListener('code-cancelled', handleCancel, {
+        once: true,
+      })
+    }
+  })
+</script>

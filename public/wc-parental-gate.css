@@ -1,0 +1,121 @@
+.parental-gate-dialog {
+  border: 2px solid #333;
+  border-radius: 16px;
+  padding: 2rem;
+  background: white;
+  color: black;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  margin: auto;
+  position: fixed;
+  /* top: 50%; */
+  /* left: 50%; */
+  /* transform: translate(-50%, -50%); */
+}
+
+@media only screen and (prefers-color-scheme: dark) {
+  .parental-gate-dialog {
+    background: #1a1a1a;
+    color: white;
+    border-color: #555;
+  }
+}
+
+.parental-gate-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.parental-gate-dialog h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.parental-gate-dialog p {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.code-input {
+  width: 100%;
+  font-size: 2rem;
+  text-align: center;
+  letter-spacing: 0.5rem;
+  padding: 0.75rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-family: monospace;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+@media only screen and (prefers-color-scheme: dark) {
+  .code-input {
+    background: #2a2a2a;
+    color: white;
+    border-color: #555;
+  }
+}
+
+.code-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.error-message {
+  color: #dc3545;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1rem;
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancel-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: #5a6268;
+}
+
+.submit-btn {
+  background: #007bff;
+  color: white;
+}
+
+.submit-btn:hover {
+  background: #0056b3;
+}

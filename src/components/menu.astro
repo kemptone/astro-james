@@ -1,82 +1,89 @@
 ---
 export const prerender = false
 
-// Menu links configuration
-const menuLinks = [
-  {href: '/temperature', label: 'Set Temperature'},
-  {href: '/minmax', label: 'Min Max'},
-  {href: '/sro29', label: 'sro29'},
-  {href: '/sro29', label: 'sro29'},
-  {href: '/sro30', label: 'sro30'},
-  {href: '/sro27', label: 'sro27'},
-  {href: '/sro26', label: 'sro26'},
-  {href: '/sro25', label: 'sro25'},
-  {href: '/sro24', label: 'sro24'},
-  {href: '/sro23', label: 'sro23'},
-  {href: '/extraspecial', label: 'extra special'},
-  {href: '/air', label: 'air'},
-  {href: '/ampm', label: 'ampm'},
-  {href: '/fan', label: 'fan'},
-  {href: '/badtomgoodtom', label: 'badtomgoodtom'},
-  {href: '/bignumbers', label: 'bignumbers'},
-  {href: '/brownthing', label: 'brownthing'},
-  {href: '/calculator', label: 'calculator'},
-  {href: '/characters', label: 'characters'},
-  {href: '/code/more', label: 'more'},
-  {href: '/code/metas', label: 'metas'},
-  {href: '/code/textareas', label: 'textareas'},
-  {href: '/colorfinder', label: 'colorfinder'},
-  {href: '/colorthing', label: 'colorthing'},
-  {href: '/countries', label: 'countries'},
-  {href: '/decibel', label: 'decibel'},
-  {href: '/dictionary', label: 'dictionary'},
-  {href: '/exam', label: 'exam'},
-  {href: '/girls', label: 'girls'},
-  {href: '/grok', label: 'grok'},
-  {href: '/hamster', label: 'hamster'},
-  {href: '/heatergame', label: 'heatergame'},
-  {href: '/kidthing', label: 'kidthing'},
-  {href: '/lasko', label: 'lasko'},
-  {href: '/learncode', label: 'learncode'},
-  {href: '/live', label: 'live'},
-  {href: '/mina', label: 'mina'},
-  {href: '/music2', label: 'music2'},
-  {href: '/nightnight', label: 'nightnight'},
-  {href: '/polkis', label: 'polkis'},
-  {href: '/punishments', label: 'punishments'},
-  {href: '/reject', label: 'reject'},
-  {href: '/reinstall', label: 'reinstall'},
-  {href: '/special sro', label: 'special sro'},
-  {href: '/speedup', label: 'speedup'},
-  {href: '/spinners', label: 'spinners'},
-  {href: '/sro', label: 'sro'},
-  {href: '/sro10', label: 'sro10'},
-  {href: '/sro12', label: 'sro12'},
-  {href: '/sro13', label: 'sro13'},
-  {href: '/sro14', label: 'sro14'},
-  {href: '/sro15', label: 'sro15'},
-  {href: '/sro15new', label: 'sro15new'},
-  {href: '/sro16', label: 'sro16'},
-  {href: '/sro19', label: 'sro19'},
-  {href: '/sro2', label: 'sro2'},
-  {href: '/sro20', label: 'sro20'},
-  {href: '/sro22', label: 'sro22'},
-  {href: '/sro3', label: 'sro3'},
-  {href: '/sro4', label: 'sro4'},
-  {href: '/sro5', label: 'sro5'},
-  {href: '/sro6', label: 'sro6'},
-  {href: '/sro8', label: 'sro8'},
-  {href: '/sro9', label: 'sro9'},
-  {href: '/talkers', label: 'talkers'},
-  {href: '/talkers2', label: 'talkers2'},
-  {href: '/talkers3', label: 'talkers3'},
-  {href: '/texttospeech', label: 'texttospeech'},
-  {href: '/tide', label: 'tide'},
-  {href: '/timer2', label: 'timer2'},
-  {href: '/timer3', label: 'timer3'},
-  {href: '/timer4', label: 'timer4'},
-  {href: '/voicemaker', label: 'voicemaker'},
-  {href: '/wordsearch', label: 'wordsearch'},
+// Menu links configuration with parental control codes
+interface MenuLink {
+  href: string
+  label: string
+  code?: string // Optional 6-digit code for restricted pages
+}
+
+const menuLinks: MenuLink[] = [
+  {href: '/code/badideas', label: 'Bad Ideas', code: ''},
+  {href: '/citytemperature', label: 'City Temperature Game', code: ''},
+  {href: '/temperature', label: 'Set Temperature', code: ''},
+  {href: '/minmax', label: 'Min Max', code: ''},
+  {href: '/sro29', label: 'sro29', code: ''},
+  {href: '/sro29', label: 'sro29', code: ''},
+  {href: '/sro27', label: 'sro27', code: ''},
+  {href: '/sro26', label: 'sro26', code: ''},
+  {href: '/sro25', label: 'sro25', code: ''},
+  {href: '/sro24', label: 'sro24', code: ''},
+  {href: '/sro23', label: 'sro23', code: ''},
+  {href: '/extraspecial', label: 'extra special', code: ''},
+  {href: '/air', label: 'air', code: ''},
+  {href: '/ampm', label: 'ampm', code: ''},
+  {href: '/fan', label: 'fan', code: ''},
+  {href: '/badtomgoodtom', label: 'badtomgoodtom', code: ''},
+  {href: '/bignumbers', label: 'bignumbers', code: ''},
+  {href: '/brownthing', label: 'brownthing', code: ''},
+  {href: '/calculator', label: 'calculator', code: ''},
+  {href: '/characters', label: 'characters', code: ''},
+  {href: '/code/more', label: 'more', code: ''},
+  {href: '/code/metas', label: 'metas', code: ''},
+  {href: '/code/textareas', label: 'textareas', code: ''},
+  {href: '/colorfinder', label: 'colorfinder', code: ''},
+  {href: '/colorthing', label: 'colorthing', code: ''},
+  {href: '/countries', label: 'countries', code: ''},
+  {href: '/decibel', label: 'decibel', code: ''},
+  {href: '/dictionary', label: 'dictionary', code: ''},
+  {href: '/exam', label: 'exam', code: ''},
+  {href: '/girls', label: 'girls', code: ''},
+  {href: '/grok', label: 'grok', code: ''},
+  {href: '/hamster', label: 'hamster', code: ''},
+  {href: '/heatergame', label: 'heatergame', code: ''},
+  {href: '/kidthing', label: 'kidthing', code: ''},
+  {href: '/lasko', label: 'lasko', code: ''},
+  {href: '/learncode', label: 'learncode', code: ''},
+  {href: '/live', label: 'live', code: '362715'},
+  {href: '/mina', label: 'mina', code: '916428'},
+  {href: '/music2', label: 'music2', code: ''},
+  {href: '/nightnight', label: 'nightnight', code: ''},
+  {href: '/polkis', label: 'polkis', code: ''},
+  {href: '/punishments', label: 'punishments', code: '419658'},
+  {href: '/reject', label: 'reject', code: '892743'},
+  {href: '/reinstall', label: 'reinstall', code: '134896'},
+  {href: '/special sro', label: 'special sro', code: ''},
+  {href: '/speedup', label: 'speedup', code: ''},
+  {href: '/spinners', label: 'spinners', code: ''},
+  {href: '/sro', label: 'sro', code: ''},
+  {href: '/sro10', label: 'sro10', code: ''},
+  {href: '/sro12', label: 'sro12', code: ''},
+  {href: '/sro13', label: 'sro13', code: ''},
+  {href: '/sro14', label: 'sro14', code: ''},
+  {href: '/sro15', label: 'sro15', code: ''},
+  {href: '/sro15new', label: 'sro15new', code: ''},
+  {href: '/sro16', label: 'sro16', code: ''},
+  {href: '/sro19', label: 'sro19', code: ''},
+  {href: '/sro2', label: 'sro2', code: ''},
+  {href: '/sro20', label: 'sro20', code: ''},
+  {href: '/sro22', label: 'sro22', code: ''},
+  {href: '/sro3', label: 'sro3', code: ''},
+  {href: '/sro4', label: 'sro4', code: ''},
+  {href: '/sro5', label: 'sro5', code: ''},
+  {href: '/sro6', label: 'sro6', code: ''},
+  {href: '/sro8', label: 'sro8', code: ''},
+  {href: '/sro9', label: 'sro9', code: ''},
+  {href: '/talkers', label: 'talkers', code: '812395'},
+  {href: '/talkers2', label: 'talkers2', code: '357146'},
+  {href: '/talkers3', label: 'talkers3', code: '926817'},
+  {href: '/texttospeech', label: 'texttospeech', code: '183674'},
+  {href: '/tide', label: 'tide', code: ''},
+  {href: '/timer2', label: 'timer2', code: ''},
+  {href: '/timer3', label: 'timer3', code: ''},
+  {href: '/timer4', label: 'timer4', code: ''},
+  {href: '/voicemaker', label: 'voicemaker', code: '752963'},
+  {href: '/wordsearch', label: 'wordsearch', code: ''},
 ]
 ---
 
@@ -93,7 +100,7 @@ const menuLinks = [
       {
         menuLinks.map(link => (
           <li class="menu-item">
-            <a href={link.href} class="menu-link">
+            <a href={link.href} class="menu-link" data-code={link.code || ''}>
               {link.label}
             </a>
           </li>
@@ -104,12 +111,19 @@ const menuLinks = [
 </nav>
 
 <script>
+  import {isPageUnlocked} from '@/core/parental-control'
+  import '@/components/wc-parental-gate'
+
   document.addEventListener('DOMContentLoaded', () => {
     const hamburgerNav = document.querySelector('.hamburger-nav')
     const hamburgerBtn = document.querySelector('.hamburger-btn')
     const menuOverlay = document.querySelector('.menu-overlay')
     const menuLinks = document.querySelectorAll('.menu-link')
     const menuReinstall = document.querySelector('.reinstall')
+
+    // Create parental gate component
+    const parentalGate = document.createElement('wc-parental-gate') as any
+    document.body.appendChild(parentalGate)
 
     if (hamburgerBtn && hamburgerNav) {
       hamburgerBtn.addEventListener('click', () => {
@@ -123,10 +137,41 @@ const menuLinks = [
         }
       })
 
-      // Close menu when clicking on a link
+      // Handle menu link clicks with parental control
       menuLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          hamburgerNav.classList.remove('active')
+        link.addEventListener('click', e => {
+          const htmlLink = link as HTMLAnchorElement
+          const code = htmlLink.dataset.code
+          const href = htmlLink.getAttribute('href')
+
+          // Check if this link requires a code and is not unlocked
+          if (code && !isPageUnlocked(href, code)) {
+            e.preventDefault()
+
+            // Show parental gate dialog
+            parentalGate.show(href, code)
+
+            // Listen for successful validation
+            const handleValidation = (event: CustomEvent) => {
+              hamburgerNav.classList.remove('active')
+              window.location.href = event.detail.route
+            }
+
+            // Listen for cancellation
+            const handleCancel = () => {
+              hamburgerNav.classList.remove('active')
+            }
+
+            parentalGate.addEventListener('code-validated', handleValidation, {
+              once: true,
+            })
+            parentalGate.addEventListener('code-cancelled', handleCancel, {
+              once: true,
+            })
+          } else {
+            // No code required or already unlocked, just close menu
+            hamburgerNav.classList.remove('active')
+          }
         })
       })
 
@@ -147,6 +192,38 @@ const menuLinks = [
         })
       }
     }
+
+    // Page-level protection: Check if current page requires a code on load
+    const currentPath = window.location.pathname
+
+    // Find if current page has a code requirement
+    menuLinks.forEach(link => {
+      const htmlLink = link as HTMLAnchorElement
+      const href = htmlLink.getAttribute('href')
+      const code = htmlLink.dataset.code
+
+      if (href === currentPath && code && !isPageUnlocked(currentPath, code)) {
+        // Show parental gate for direct navigation to protected page
+        parentalGate.show(currentPath, code)
+
+        // Listen for successful validation
+        const handleValidation = () => {
+          // Page is now unlocked, dialog will close automatically
+        }
+
+        // Listen for cancellation - redirect to home
+        const handleCancel = () => {
+          window.location.href = '/'
+        }
+
+        parentalGate.addEventListener('code-validated', handleValidation, {
+          once: true,
+        })
+        parentalGate.addEventListener('code-cancelled', handleCancel, {
+          once: true,
+        })
+      }
+    })
   })
 </script>
 
@@ -212,16 +289,21 @@ const menuLinks = [
     align-items: center;
     justify-content: center;
     z-index: 999;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .menu-list {
     list-style: none;
-    padding: 0;
+    padding: 4rem 2rem;
     margin: 0;
     text-align: center;
     display: flex;
     flex-wrap: wrap;
-    padding: 4rem;
+    width: 100%;
+    max-width: 1200px;
+    align-content: flex-start;
+    min-height: min-content;
   }
 
   .menu-item {
@@ -261,9 +343,42 @@ const menuLinks = [
   }
 
   /* Responsive adjustments */
+  @media (max-width: 1024px) {
+    .menu-link {
+      font-size: 1.3rem;
+    }
+    .menu-list {
+      padding: 3rem 1.5rem;
+    }
+  }
+
   @media (max-width: 768px) {
     .menu-link {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
+      padding: 0.15rem 0.4rem;
+    }
+    .menu-list {
+      padding: 3rem 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .menu-link {
+      font-size: 0.95rem;
+      padding: 0.1rem 0.3rem;
+    }
+    .menu-list {
+      padding: 2.5rem 0.5rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .menu-link {
+      font-size: 0.85rem;
+      padding: 0.08rem 0.25rem;
+    }
+    .menu-list {
+      padding: 2rem 0.5rem;
     }
   }
 </style>

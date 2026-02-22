@@ -5,17 +5,32 @@ const noteLetters = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
 
 const allNotes = []
 
-// Add 20 notes below C3 (D0 through B2)
+// Add 79 notes below D0 in ascending order (A-11 through C0) for . -A to -Z, -a to -z, a to z
+// Starting from A (index 5 in noteLetters) at octave -11
+for (let idx = 0; idx < 79; idx++) {
+  const noteLetter = noteLetters[(idx + 5) % 7]
+  const octave = -11 + Math.floor((idx + 5) / 7)
+  allNotes.push(`${noteLetter}${octave}`)
+}
+
+// Add 20 notes (D0 through B2) - now indices 79-98
 for (let stepsBack = 20; stepsBack >= 1; stepsBack--) {
   const noteIndex = (7 - (stepsBack % 7)) % 7
   const octave = 2 - Math.floor((stepsBack - 1) / 7)
   allNotes.push(`${noteLetters[noteIndex]}${octave}`)
 }
 
-// Add 36 notes for a-z and +1 through +0 (C3 through C8)
+// Add 36 notes for A-Z and digits (C3 through C8) - now indices 99-134
 for (let idx = 0; idx < 36; idx++) {
   const noteLetter = noteLetters[idx % 7]
   const octave = 3 + Math.floor(idx / 7)
+  allNotes.push(`${noteLetter}${octave}`)
+}
+
+// Add 53 notes above C8 (D8 through B13) for +a to +z, +A to +Z, +.
+for (let idx = 0; idx < 53; idx++) {
+  const noteLetter = noteLetters[(idx + 1) % 7]
+  const octave = 8 + Math.floor((idx + 1) / 7)
   allNotes.push(`${noteLetter}${octave}`)
 }
 
@@ -107,41 +122,110 @@ class MusicApp extends HTMLElement {
     e.preventDefault()
     await Tone.start()
 
-    const input = this.shadowRoot
-      .getElementById('sentenceInput')
-      .value.toUpperCase()
+    const input = this.shadowRoot.getElementById('sentenceInput').value
     const newSequence = []
     for (let i = 0; i < input.length; i++) {
       const char = input[i]
-      if (char >= 'A' && char <= 'Z') {
-        // Letters a-z map to indices 20-45
-        const idx = char.charCodeAt(0) - 'A'.charCodeAt(0) + 20
-        newSequence.push({note: allNotes[idx], duration: '8n'})
-      } else if (char === ' ') {
+
+      // Handle space
+      if (char === ' ') {
         newSequence.push({note: null, duration: '8n'})
-      } else if (char === '+' && i + 1 < input.length) {
+        continue
+      }
+
+      // Handle . (dot) - lowest note (index 0 = A-11)
+      if (char === '.') {
+        newSequence.push({note: allNotes[0], duration: '8n'})
+        continue
+      }
+
+      // Handle + prefix patterns
+      if (char === '+' && i + 1 < input.length) {
         const nextChar = input[i + 1]
-        if (nextChar >= '0' && nextChar <= '9') {
-          // +1 to +9 map to indices 46-54, +0 maps to index 55
-          const digitValue = nextChar === '0' ? 10 : parseInt(nextChar)
-          const idx = 45 + digitValue
-          newSequence.push({note: allNotes[idx], duration: '8n'})
-          i++ // Skip the next character since we've already processed it
+
+        // +. (plus dot) - highest note (index 187)
+        if (nextChar === '.') {
+          newSequence.push({note: allNotes[187], duration: '8n'})
+          i++
+          continue
         }
-      } else if (char === '-' && i + 1 < input.length) {
+
+        // +A to +Z (plus uppercase) - indices 161-186
+        if (nextChar >= 'A' && nextChar <= 'Z') {
+          const idx = nextChar.charCodeAt(0) - 'A'.charCodeAt(0) + 161
+          newSequence.push({note: allNotes[idx], duration: '8n'})
+          i++
+          continue
+        }
+
+        // +a to +z (plus lowercase) - indices 135-160
+        if (nextChar >= 'a' && nextChar <= 'z') {
+          const idx = nextChar.charCodeAt(0) - 'a'.charCodeAt(0) + 135
+          newSequence.push({note: allNotes[idx], duration: '8n'})
+          i++
+          continue
+        }
+
+        // +0 to +9 (plus digits) - indices 125-134
+        if (nextChar >= '0' && nextChar <= '9') {
+          const digitValue = nextChar === '0' ? 10 : parseInt(nextChar)
+          const idx = 124 + digitValue
+          newSequence.push({note: allNotes[idx], duration: '8n'})
+          i++
+          continue
+        }
+      }
+
+      // Handle - prefix patterns
+      if (char === '-' && i + 1 < input.length) {
         const nextChar = input[i + 1]
-        if (nextChar >= '0' && nextChar <= '9') {
-          // -1 to -9 map to indices 9-1, -0 maps to index 0
-          const digitValue = nextChar === '0' ? 10 : parseInt(nextChar)
-          const idx = 10 - digitValue
+
+        // -A to -Z (negative uppercase) - indices 26 down to 1 (descending from -z)
+        if (nextChar >= 'A' && nextChar <= 'Z') {
+          const idx = 26 - (nextChar.charCodeAt(0) - 'A'.charCodeAt(0))
           newSequence.push({note: allNotes[idx], duration: '8n'})
-          i++ // Skip the next character since we've already processed it
+          i++
+          continue
         }
-      } else if (char >= '0' && char <= '9') {
-        // Standalone digits 0-9 map to indices 10-19
-        const digitValue = parseInt(char)
-        const idx = 10 + digitValue
+
+        // -a to -z (negative lowercase) - indices 52 down to 27 (descending from z)
+        if (nextChar >= 'a' && nextChar <= 'z') {
+          const idx = 52 - (nextChar.charCodeAt(0) - 'a'.charCodeAt(0))
+          newSequence.push({note: allNotes[idx], duration: '8n'})
+          i++
+          continue
+        }
+
+        // -0 to -9 (negative digits) - indices 79-88
+        if (nextChar >= '0' && nextChar <= '9') {
+          const digitValue = nextChar === '0' ? 10 : parseInt(nextChar)
+          const idx = 88 - digitValue
+          newSequence.push({note: allNotes[idx], duration: '8n'})
+          i++
+          continue
+        }
+      }
+
+      // Uppercase A-Z - indices 99-124
+      if (char >= 'A' && char <= 'Z') {
+        const idx = char.charCodeAt(0) - 'A'.charCodeAt(0) + 99
         newSequence.push({note: allNotes[idx], duration: '8n'})
+        continue
+      }
+
+      // Lowercase a-z - indices 78 down to 53 (descending from -0)
+      if (char >= 'a' && char <= 'z') {
+        const idx = 78 - (char.charCodeAt(0) - 'a'.charCodeAt(0))
+        newSequence.push({note: allNotes[idx], duration: '8n'})
+        continue
+      }
+
+      // Standalone digits 0-9 - indices 89-98
+      if (char >= '0' && char <= '9') {
+        const digitValue = parseInt(char)
+        const idx = 89 + digitValue
+        newSequence.push({note: allNotes[idx], duration: '8n'})
+        continue
       }
     }
 

@@ -57,6 +57,26 @@ const title = 'Gas Valve Game'
       </div>
 
       <div class="info" id="info"></div>
+
+      <section class="word-slider-section">
+        <h2 id="sliderTitle">Stiffness</h2>
+
+        <div class="add-word-form">
+          <input type="text" id="wordInput" placeholder="Type a word" />
+          <input type="number" id="numberInput" placeholder="Max" min="1" />
+          <button id="addWordBtn">Add</button>
+        </div>
+
+        <div class="min-input-row">
+          <label for="minInput">Min:</label>
+          <input type="number" id="minInput" value="0" min="0" />
+        </div>
+
+        <div class="slider-container">
+          <input type="range" id="wordSlider" min="0" max="100" value="0" />
+          <div class="slider-value"><span id="sliderValue">0</span></div>
+        </div>
+      </section>
     </main>
 
     <script>
@@ -124,6 +144,53 @@ const title = 'Gas Valve Game'
         // Animate the valve
         updateValve(normalizedTarget)
         updateInfo(currentPos, twistTo)
+      })
+
+      // Word Slider functionality
+      const wordInput = document.getElementById('wordInput') as HTMLInputElement
+      const numberInput = document.getElementById('numberInput') as HTMLInputElement
+      const minInput = document.getElementById('minInput') as HTMLInputElement
+      const addWordBtn = document.getElementById('addWordBtn') as HTMLButtonElement
+      const wordSlider = document.getElementById('wordSlider') as HTMLInputElement
+      const sliderValue = document.getElementById('sliderValue') as HTMLElement
+      const sliderTitle = document.getElementById('sliderTitle') as HTMLElement
+
+      function updateValveStiffness() {
+        const stiffness = parseInt(wordSlider.value) || 0
+        // Higher stiffness = slower transition (more resistance)
+        const transitionTime = 0.5 + (stiffness / 20)
+        valve.style.transition = `transform ${transitionTime}s ease-out`
+      }
+
+      addWordBtn.addEventListener('click', () => {
+        const word = wordInput.value.trim()
+        const num = parseInt(numberInput.value)
+
+        if (!word || isNaN(num) || num < 1) return
+
+        // Update title with the word
+        sliderTitle.textContent = word
+
+        // Update slider max
+        wordSlider.max = String(num)
+
+        wordInput.value = ''
+        numberInput.value = ''
+      })
+
+      minInput.addEventListener('input', () => {
+        const minVal = parseInt(minInput.value) || 0
+        wordSlider.min = String(minVal)
+        if (parseInt(wordSlider.value) < minVal) {
+          wordSlider.value = String(minVal)
+          sliderValue.textContent = String(minVal)
+          updateValveStiffness()
+        }
+      })
+
+      wordSlider.addEventListener('input', () => {
+        sliderValue.textContent = wordSlider.value
+        updateValveStiffness()
       })
     </script>
 
@@ -303,6 +370,98 @@ const title = 'Gas Valve Game'
         border-radius: 8px;
         font-size: 16px;
         min-height: 50px;
+      }
+
+      .word-slider-section {
+        margin-top: 50px;
+        padding-top: 30px;
+        border-top: 1px solid #444;
+      }
+
+      .word-slider-section h2 {
+        color: #ffd700;
+        margin-bottom: 20px;
+      }
+
+      .add-word-form {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      .add-word-form input[type="text"],
+      .add-word-form input[type="number"] {
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #444;
+        border-radius: 8px;
+        background: #2a2a4a;
+        color: #fff;
+        width: 150px;
+      }
+
+      .add-word-form input:focus {
+        outline: none;
+        border-color: #ffd700;
+      }
+
+      .slider-container {
+        margin: 30px 0;
+      }
+
+      #wordSlider {
+        width: 100%;
+        height: 20px;
+        -webkit-appearance: none;
+        background: #2a2a4a;
+        border-radius: 10px;
+        outline: none;
+      }
+
+      #wordSlider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(145deg, #ffd700, #ffaa00);
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .slider-value {
+        margin-top: 10px;
+        font-size: 24px;
+        color: #ffd700;
+      }
+
+      .min-input-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .min-input-row label {
+        color: #aaa;
+        font-size: 14px;
+      }
+
+      .min-input-row input {
+        width: 80px;
+        padding: 8px;
+        font-size: 16px;
+        border: 2px solid #444;
+        border-radius: 8px;
+        background: #2a2a4a;
+        color: #fff;
+        text-align: center;
+      }
+
+      .min-input-row input:focus {
+        outline: none;
+        border-color: #ffd700;
       }
     </style>
   </body>
