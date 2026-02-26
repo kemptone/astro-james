@@ -200,27 +200,27 @@ import Menu from '@/components/menu.astro'
       <div class="input-section">
         <div class="input-group">
           <label for="minInput">Minimum Input</label>
-          <input type="number" id="minInput" value="0" />
+          <input type="number" id="minInput" value="125" />
         </div>
 
         <div class="input-group">
           <label for="maxInput">Maximum Input</label>
-          <input type="number" id="maxInput" value="100" />
+          <input type="number" id="maxInput" value="250" />
         </div>
 
         <button id="submitBtn">Submit</button>
       </div>
 
       <div class="slider-section">
-        <div class="value-display" id="valueDisplay">18</div>
+        <div class="value-display" id="valueDisplay">125</div>
 
         <div class="slider-container">
-          <input type="range" id="rangeSlider" min="18" max="118" value="18" />
+          <input type="range" id="rangeSlider" min="0" max="125" value="0" />
         </div>
 
         <div class="range-labels">
-          <span id="minLabel">18</span>
-          <span id="maxLabel">118</span>
+          <span id="minLabel">125</span>
+          <span id="maxLabel">0</span>
         </div>
       </div>
     </div>
@@ -229,20 +229,28 @@ import Menu from '@/components/menu.astro'
       const minInput = document.getElementById('minInput') as HTMLInputElement
       const maxInput = document.getElementById('maxInput') as HTMLInputElement
       const submitBtn = document.getElementById(
-        'submitBtn'
+        'submitBtn',
       ) as HTMLButtonElement
       const rangeSlider = document.getElementById(
-        'rangeSlider'
+        'rangeSlider',
       ) as HTMLInputElement
       const valueDisplay = document.getElementById(
-        'valueDisplay'
+        'valueDisplay',
       ) as HTMLElement
       const minLabel = document.getElementById('minLabel') as HTMLElement
       const maxLabel = document.getElementById('maxLabel') as HTMLElement
 
+      // Inverted display: left = high value, right = low value
+      function getDisplayValue() {
+        const sliderMin = parseInt(rangeSlider.min)
+        const sliderMax = parseInt(rangeSlider.max)
+        const sliderVal = parseInt(rangeSlider.value)
+        return sliderMin + sliderMax - sliderVal
+      }
+
       // Update display when slider changes
       rangeSlider.addEventListener('input', () => {
-        valueDisplay.textContent = rangeSlider.value
+        valueDisplay.textContent = getDisplayValue().toString()
       })
 
       // Submit button handler
@@ -250,30 +258,34 @@ import Menu from '@/components/menu.astro'
         const minValue = parseInt(minInput.value)
         const maxValue = parseInt(maxInput.value)
 
-        // Calculate with +18
-        const calculatedMin = minValue + 18
-        const calculatedMax = maxValue + 18
-
         // Validate
         if (isNaN(minValue) || isNaN(maxValue)) {
           alert('Please enter valid numbers')
           return
         }
 
-        if (calculatedMin >= calculatedMax) {
-          alert('Minimum must be less than maximum')
+        // Calculate with -125 (125 = 0)
+        const calculatedMin = minValue - 125
+        const calculatedMax = maxValue - 125
+
+        if (calculatedMin === calculatedMax) {
+          alert('Minimum and maximum cannot be equal')
           return
         }
 
-        // Update slider
-        rangeSlider.min = calculatedMin.toString()
-        rangeSlider.max = calculatedMax.toString()
-        rangeSlider.value = calculatedMin.toString()
+        // Sort so slider HTML min <= max
+        const sliderMin = Math.min(calculatedMin, calculatedMax)
+        const sliderMax = Math.max(calculatedMin, calculatedMax)
 
-        // Update labels
-        minLabel.textContent = calculatedMin.toString()
-        maxLabel.textContent = calculatedMax.toString()
-        valueDisplay.textContent = calculatedMin.toString()
+        // Update slider — start at leftmost (shows high value)
+        rangeSlider.min = sliderMin.toString()
+        rangeSlider.max = sliderMax.toString()
+        rangeSlider.value = sliderMin.toString()
+
+        // Labels: left = high value, right = low value
+        minLabel.textContent = sliderMax.toString()
+        maxLabel.textContent = sliderMin.toString()
+        valueDisplay.textContent = sliderMax.toString()
       })
     </script>
   </body>
