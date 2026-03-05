@@ -43,7 +43,9 @@ d.addEventListener('DOMContentLoaded', async e => {
   e_play_all?.addEventListener('click', async () => {
 
     const e_reversed = $('input[name="reversed"]') as HTMLInputElement
+    const e_textreversed = $('input[name="textreversed"]') as HTMLInputElement
     const is_reversed = e_reversed?.checked
+    const is_textreversed = e_textreversed?.checked
 
     e_hidden_button?.click()
     const audios: HTMLAudioElement[] = []
@@ -107,10 +109,17 @@ d.addEventListener('DOMContentLoaded', async e => {
         audios.push(audio)
         // audios.push(field.audio)
       } else {
+
+        let text_to_say = field.text
+
+        if (is_textreversed) {
+          text_to_say = field.text.split(" ").reverse().join(" ")
+        }
+
         let audio = await playTextAzure(
           {
             values: {
-              text: field.text,
+              text: text_to_say,
               ShortName: field.ShortName,
               Gender: field.Gender,
               Locale: field.Locale,
