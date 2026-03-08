@@ -1,4 +1,4 @@
-import {playTextAzure} from './wc-talkers.helpers'
+import {playTextAzure, compressWordGaps} from './wc-talkers.helpers'
 import {type AzureVoiceInfo} from './types'
 import '../../components/wc-texarea-sizer'
 
@@ -106,7 +106,7 @@ if (typeof window != 'undefined')
 
         e_wrapper
           .querySelector('button.play_sample')
-          ?.addEventListener('click', e => {
+          ?.addEventListener('click', async e => {
             const inputs = e_wrapper.querySelectorAll('input, select, textarea')
             const values = {}
             // @ts-ignore
@@ -116,7 +116,23 @@ if (typeof window != 'undefined')
             })
 
             // @ts-ignore
-            playTextAzure({values}, true)
+            let audio = await playTextAzure({values}, false)
+
+            const e_gap_percent = document.querySelector(
+              'input[name="gap_percent"]'
+            ) as HTMLInputElement | null
+            const gapRaw = e_gap_percent?.value?.trim?.() || ''
+
+            if (gapRaw.length > 0) {
+              const parsed = Number(gapRaw)
+              if (Number.isFinite(parsed)) {
+                audio = await compressWordGaps(audio, {
+                  percent: Math.max(0, Math.min(100, parsed)),
+                })
+              }
+            }
+
+            audio.play()
           })
 
         shadow.appendChild(e_wrapper)

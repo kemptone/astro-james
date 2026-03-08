@@ -1,4 +1,9 @@
-import {playTextAzure, getMicrosoftVoices, playMeme} from './wc-talkers.helpers'
+import {
+  playTextAzure,
+  getMicrosoftVoices,
+  playMeme,
+  compressWordGaps,
+} from './wc-talkers.helpers'
 import type {Talkers2VoiceDetails as VoiceDetails} from './types'
 import './wc-talker-azure'
 import '../../components/wc-meme-item'
@@ -41,11 +46,23 @@ d.addEventListener('DOMContentLoaded', async e => {
   e_list.append(e_fragment)
 
   e_play_all?.addEventListener('click', async () => {
-
     const e_reversed = $('input[name="reversed"]') as HTMLInputElement
     const e_textreversed = $('input[name="textreversed"]') as HTMLInputElement
+    const e_gap_percent = $('input[name="gap_percent"]') as HTMLInputElement
     const is_reversed = e_reversed?.checked
     const is_textreversed = e_textreversed?.checked
+    const gapPercentRaw = e_gap_percent?.value?.trim?.() || ''
+    const hasGapPercent = gapPercentRaw.length > 0
+    const parsedGapPercent = Number(gapPercentRaw)
+
+    if (hasGapPercent && !Number.isFinite(parsedGapPercent)) {
+      alert('Gap % must be a number from 0 to 100')
+      return
+    }
+
+    const gapPercent = hasGapPercent
+      ? Math.max(0, Math.min(100, parsedGapPercent))
+      : null
 
     e_hidden_button?.click()
     const audios: HTMLAudioElement[] = []
@@ -109,7 +126,6 @@ d.addEventListener('DOMContentLoaded', async e => {
         audios.push(audio)
         // audios.push(field.audio)
       } else {
-
         let text_to_say = field.text
 
         if (is_textreversed) {
@@ -128,6 +144,11 @@ d.addEventListener('DOMContentLoaded', async e => {
           },
           false
         )
+
+        if (gapPercent !== null) {
+          audio = await compressWordGaps(audio, {percent: gapPercent})
+        }
+
         audios.push(audio)
       }
     }

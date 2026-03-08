@@ -74,6 +74,22 @@
   align-items: center;
 }
 
+.gap_input {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: 0.8rem;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.gap_input input {
+  width: 8.6rem;
+  margin-bottom: 0;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.9rem;
+}
+
 .buttons button {
   margin-left: 10px;
   padding: 0.5rem 1rem;
@@ -304,6 +320,15 @@ dialog wc-meme-board wc-meme-item button {
   #remove_all,
   #clear_all {
     display: none;
+  }
+
+  .gap_input {
+    margin-left: 0.4rem;
+  }
+
+  .gap_input input {
+    width: 6.2rem;
+    font-size: 0.8rem;
   }
   wc-talker-azure {
     width: fit-content;

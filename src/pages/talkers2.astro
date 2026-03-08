@@ -13,6 +13,18 @@ import '../core/talkers2/style.css'
       <div class="buttons">
         <button id="add_sound">Sounds</button>
         <span class="spacer"></span>
+        <label class="gap_input">
+          Gap %
+          <input
+            type="number"
+            name="gap_percent"
+            id="gap_percent"
+            min="0"
+            max="100"
+            step="1"
+            placeholder="(blank = off)"
+          />
+        </label>
         <button id="remove_all">Remove All</button>
         <button id="clear_all">Clear</button>
         <button id="play_all">Play</button>

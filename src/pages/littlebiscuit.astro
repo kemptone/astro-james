@@ -1,0 +1,652 @@
+---
+import Empty from '../layouts/Empty.astro'
+import Menu from '@/components/menu.astro'
+---
+
+<Empty title="Little Biscuit">
+  <main class="page">
+    <section class="panel">
+      <div class="panel-copy">
+        <p class="eyebrow">Title Game</p>
+        <h1>Big timed titles.</h1>
+        <p class="description">
+          Add each title with the second when it should end. Example: Rain ends at 5,
+          Biscuit ends at 9. Rain shows from 0 to 5 seconds, Biscuit shows from 5 to 9,
+          then the titles are over.
+        </p>
+      </div>
+
+      <form id="title-form" class="entry-form" autocomplete="off">
+        <label>
+          Title
+          <input
+            id="title-input"
+            name="title"
+            type="text"
+            placeholder="Rain"
+            maxlength="60"
+            required
+          />
+        </label>
+
+        <label>
+          Ends at second
+          <input
+            id="title-end-input"
+            name="endAt"
+            type="number"
+            min="1"
+            step="1"
+            placeholder="5"
+            required
+          />
+        </label>
+
+        <button type="submit">Add title</button>
+      </form>
+
+      <div class="actions">
+        <button id="title-start" type="button">Start titles</button>
+        <button id="title-clear" type="button" class="secondary">Clear titles</button>
+      </div>
+
+      <p id="title-status" class="status">No titles added yet.</p>
+      <ol id="title-list" class="sequence-list"></ol>
+    </section>
+
+    <section class="panel panel-bottom">
+      <div class="panel-copy">
+        <p class="eyebrow">Color Fader</p>
+        <h2>Blank color only.</h2>
+        <p class="description">
+          It starts white for 5 seconds, then fades to the color you picked for 5 seconds.
+          Each next color keeps the last color for 5 seconds, then fades to the new one for
+          5 seconds. While it runs, the screen is just the color and the tabs disappear.
+        </p>
+      </div>
+
+      <form id="color-form" class="entry-form rgb-form" autocomplete="off">
+        <label>
+          Red
+          <input id="red-input" name="red" type="number" min="0" max="255" value="255" />
+        </label>
+
+        <label>
+          Green
+          <input
+            id="green-input"
+            name="green"
+            type="number"
+            min="0"
+            max="255"
+            value="255"
+          />
+        </label>
+
+        <label>
+          Blue
+          <input id="blue-input" name="blue" type="number" min="0" max="255" value="255" />
+        </label>
+
+        <button type="submit">Add color</button>
+      </form>
+
+      <div class="actions">
+        <button id="color-start" type="button">Start color fader</button>
+        <button id="color-clear" type="button" class="secondary">Clear colors</button>
+      </div>
+
+      <p id="color-status" class="status">No colors queued yet.</p>
+      <div id="color-list" class="color-list"></div>
+    </section>
+
+    <p class="footer-note">Press Escape while a title or color run is playing to end it and bring everything back.</p>
+  </main>
+
+  <div id="playback-stage" class="playback-stage" aria-live="polite" aria-atomic="true">
+    <div id="playback-title" class="playback-title"></div>
+  </div>
+
+  <Menu />
+</Empty>
+
+<script is:inline>
+  const titleForm = document.querySelector('#title-form')
+  const titleInput = document.querySelector('#title-input')
+  const titleEndInput = document.querySelector('#title-end-input')
+  const titleList = document.querySelector('#title-list')
+  const titleStatus = document.querySelector('#title-status')
+  const titleStartButton = document.querySelector('#title-start')
+  const titleClearButton = document.querySelector('#title-clear')
+
+  const colorForm = document.querySelector('#color-form')
+  const redInput = document.querySelector('#red-input')
+  const greenInput = document.querySelector('#green-input')
+  const blueInput = document.querySelector('#blue-input')
+  const colorList = document.querySelector('#color-list')
+  const colorStatus = document.querySelector('#color-status')
+  const colorStartButton = document.querySelector('#color-start')
+  const colorClearButton = document.querySelector('#color-clear')
+
+  const playbackStage = document.querySelector('#playback-stage')
+  const playbackTitle = document.querySelector('#playback-title')
+
+  const titleEntries = []
+  const colorEntries = []
+  const activeTimeouts = []
+
+  let playbackMode = null
+  let playbackToken = 0
+
+  const delay = ms => new Promise(resolve => window.setTimeout(resolve, ms))
+
+  const escapeHtml = value =>
+    String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;')
+
+  const clampRgb = value => {
+    const parsed = Number.parseInt(value, 10)
+    if (Number.isNaN(parsed)) {
+      return 0
+    }
+    return Math.min(255, Math.max(0, parsed))
+  }
+
+  const rgbToCss = color => `rgb(${color.red}, ${color.green}, ${color.blue})`
+
+  const rgbToHex = color =>
+    `#${[color.red, color.green, color.blue]
+      .map(channel => channel.toString(16).padStart(2, '0'))
+      .join('')
+      .toUpperCase()}`
+
+  const updateButtons = () => {
+    const isRunning = playbackMode !== null
+
+    titleStartButton.disabled = isRunning || titleEntries.length === 0
+    titleClearButton.disabled = isRunning || titleEntries.length === 0
+    colorStartButton.disabled = isRunning || colorEntries.length === 0
+    colorClearButton.disabled = isRunning || colorEntries.length === 0
+  }
+
+  const renderTitles = () => {
+    if (titleEntries.length === 0) {
+      titleList.innerHTML = ''
+      titleStatus.textContent = 'No titles added yet.'
+      updateButtons()
+      return
+    }
+
+    titleList.innerHTML = titleEntries
+      .map(
+        (entry, index) => `
+          <li>
+            <span class="sequence-index">${index + 1}.</span>
+            <span class="sequence-name">${escapeHtml(entry.title)}</span>
+            <span class="sequence-meta">ends at ${entry.endAt}s</span>
+          </li>
+        `
+      )
+      .join('')
+
+    titleStatus.textContent = `${titleEntries.length} title${titleEntries.length === 1 ? '' : 's'} queued.`
+    updateButtons()
+  }
+
+  const renderColors = () => {
+    if (colorEntries.length === 0) {
+      colorList.innerHTML = ''
+      colorStatus.textContent = 'No colors queued yet.'
+      updateButtons()
+      return
+    }
+
+    colorList.innerHTML = colorEntries
+      .map(
+        (color, index) => `
+          <article class="color-card">
+            <div class="color-swatch" style="background:${rgbToCss(color)};"></div>
+            <div class="color-details">
+              <strong>${index + 1}. ${rgbToHex(color)}</strong>
+              <span>rgb(${color.red}, ${color.green}, ${color.blue})</span>
+            </div>
+          </article>
+        `
+      )
+      .join('')
+
+    colorStatus.textContent = `${colorEntries.length} color${colorEntries.length === 1 ? '' : 's'} queued.`
+    updateButtons()
+  }
+
+  const clearPlaybackTimers = () => {
+    while (activeTimeouts.length > 0) {
+      window.clearTimeout(activeTimeouts.pop())
+    }
+  }
+
+  const stopPlayback = () => {
+    playbackToken += 1
+    playbackMode = null
+    clearPlaybackTimers()
+    playbackStage.classList.remove('is-visible', 'title-mode', 'color-mode')
+    playbackTitle.textContent = ''
+    playbackStage.style.transition = ''
+    playbackStage.style.backgroundColor = ''
+    document.body.classList.remove('playback-active')
+    updateButtons()
+  }
+
+  const startTitlePlayback = () => {
+    if (titleEntries.length === 0) {
+      return
+    }
+
+    stopPlayback()
+    playbackMode = 'titles'
+    const token = playbackToken
+
+    titleStatus.textContent = 'Titles are running.'
+    playbackStage.classList.add('is-visible', 'title-mode')
+    playbackStage.classList.remove('color-mode')
+    document.body.classList.add('playback-active')
+    playbackTitle.textContent = titleEntries[0].title
+    updateButtons()
+
+    for (let index = 1; index < titleEntries.length; index += 1) {
+      const previousEntry = titleEntries[index - 1]
+      const timeoutId = window.setTimeout(() => {
+        if (token !== playbackToken || playbackMode !== 'titles') {
+          return
+        }
+        playbackTitle.textContent = titleEntries[index].title
+      }, previousEntry.endAt * 1000)
+      activeTimeouts.push(timeoutId)
+    }
+
+    const endTimeoutId = window.setTimeout(() => {
+      if (token !== playbackToken || playbackMode !== 'titles') {
+        return
+      }
+      titleStatus.textContent = 'Titles are over.'
+      stopPlayback()
+    }, titleEntries[titleEntries.length - 1].endAt * 1000)
+
+    activeTimeouts.push(endTimeoutId)
+  }
+
+  const startColorPlayback = async () => {
+    if (colorEntries.length === 0) {
+      return
+    }
+
+    stopPlayback()
+    playbackMode = 'colors'
+    const token = playbackToken
+    let currentColor = {red: 255, green: 255, blue: 255}
+
+    colorStatus.textContent = 'Color fader is running.'
+    playbackStage.classList.add('is-visible', 'color-mode')
+    playbackStage.classList.remove('title-mode')
+    playbackStage.style.backgroundColor = rgbToCss(currentColor)
+    document.body.classList.add('playback-active')
+    updateButtons()
+
+    for (const nextColor of colorEntries) {
+      await delay(5000)
+      if (token !== playbackToken || playbackMode !== 'colors') {
+        return
+      }
+
+      playbackStage.style.transition = 'background-color 5s linear'
+      window.requestAnimationFrame(() => {
+        playbackStage.style.backgroundColor = rgbToCss(nextColor)
+      })
+
+      await delay(5000)
+      if (token !== playbackToken || playbackMode !== 'colors') {
+        return
+      }
+
+      currentColor = nextColor
+      playbackStage.style.transition = ''
+      playbackStage.style.backgroundColor = rgbToCss(currentColor)
+    }
+
+    if (token !== playbackToken || playbackMode !== 'colors') {
+      return
+    }
+
+    colorStatus.textContent = 'Color fader is over.'
+    stopPlayback()
+  }
+
+  titleForm?.addEventListener('submit', event => {
+    event.preventDefault()
+
+    const title = String(titleInput?.value || '').trim()
+    const endAt = Number.parseInt(String(titleEndInput?.value || ''), 10)
+    const lastEndAt = titleEntries.at(-1)?.endAt ?? 0
+
+    if (!title || Number.isNaN(endAt) || endAt <= lastEndAt) {
+      titleStatus.textContent = `Use a title and an end time bigger than ${lastEndAt}.`
+      return
+    }
+
+    titleEntries.push({title, endAt})
+    renderTitles()
+    titleForm.reset()
+    titleInput?.focus()
+  })
+
+  colorForm?.addEventListener('submit', event => {
+    event.preventDefault()
+
+    colorEntries.push({
+      red: clampRgb(redInput?.value),
+      green: clampRgb(greenInput?.value),
+      blue: clampRgb(blueInput?.value),
+    })
+
+    renderColors()
+    redInput?.focus()
+  })
+
+  titleStartButton?.addEventListener('click', startTitlePlayback)
+  colorStartButton?.addEventListener('click', () => {
+    void startColorPlayback()
+  })
+
+  titleClearButton?.addEventListener('click', () => {
+    titleEntries.length = 0
+    titleStatus.textContent = 'Titles cleared.'
+    renderTitles()
+  })
+
+  colorClearButton?.addEventListener('click', () => {
+    colorEntries.length = 0
+    colorStatus.textContent = 'Colors cleared.'
+    renderColors()
+  })
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && playbackMode) {
+      if (playbackMode === 'titles') {
+        titleStatus.textContent = 'Titles stopped.'
+      }
+      if (playbackMode === 'colors') {
+        colorStatus.textContent = 'Color fader stopped.'
+      }
+      stopPlayback()
+    }
+  })
+
+  renderTitles()
+  renderColors()
+</script>
+
+<style>
+  :global(html),
+  :global(body) {
+    min-height: 100%;
+    background:
+      radial-gradient(circle at top, rgba(255, 255, 255, 0.6), transparent 35%),
+      linear-gradient(180deg, #fff9ed 0%, #ffd65c 100%);
+  }
+
+  :global(body) {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #111;
+  }
+
+  :global(body.playback-active) {
+    overflow: hidden;
+  }
+
+  :global(body.playback-active .hamburger-nav) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .page {
+    width: min(980px, calc(100vw - 2rem));
+    margin: 0 auto;
+    padding: 3rem 0 5rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .panel {
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.88);
+    border: 2px solid rgba(17, 17, 17, 0.08);
+    box-shadow: 0 18px 60px rgba(85, 61, 0, 0.12);
+  }
+
+  .panel-bottom {
+    margin-top: 1rem;
+  }
+
+  .panel-copy {
+    display: grid;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .eyebrow {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8c5b00;
+  }
+
+  h1,
+  h2 {
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 0.95;
+    font-weight: 700;
+  }
+
+  .description,
+  .footer-note,
+  .status,
+  .sequence-meta,
+  .color-details span {
+    font-size: 1.05rem;
+    line-height: 1.45;
+    color: rgba(17, 17, 17, 0.72);
+  }
+
+  .entry-form {
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: end;
+  }
+
+  .rgb-form {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  label {
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  input,
+  button {
+    margin: 0;
+    border-radius: 999px;
+  }
+
+  input {
+    height: 3.2rem;
+    border: 2px solid rgba(17, 17, 17, 0.15);
+    background: rgba(255, 255, 255, 0.96);
+    padding: 0 1rem;
+    font-size: 1.05rem;
+    font-family: inherit;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #111;
+  }
+
+  button {
+    height: 3.2rem;
+    border: none;
+    background: #111;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  button.secondary {
+    background: #fff;
+    color: #111;
+    border: 2px solid rgba(17, 17, 17, 0.14);
+  }
+
+  button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 1rem 0 0.8rem;
+  }
+
+  .status {
+    min-height: 1.6rem;
+  }
+
+  .sequence-list {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sequence-list li,
+  .color-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.95rem 1rem;
+    border-radius: 1rem;
+    background: rgba(255, 249, 237, 0.92);
+    border: 1px solid rgba(17, 17, 17, 0.08);
+  }
+
+  .sequence-index,
+  .sequence-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .color-list {
+    display: grid;
+    gap: 0.85rem;
+    margin-top: 1rem;
+  }
+
+  .color-card {
+    grid-template-columns: 74px 1fr;
+  }
+
+  .color-swatch {
+    width: 74px;
+    height: 74px;
+    border-radius: 1rem;
+    border: 2px solid rgba(17, 17, 17, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+
+  .color-details {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .footer-note {
+    text-align: center;
+    padding: 0.4rem 1rem 0;
+  }
+
+  .playback-stage {
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+  }
+
+  .playback-stage.is-visible {
+    display: flex;
+  }
+
+  .playback-stage.title-mode {
+    background: #fff;
+  }
+
+  .playback-stage.color-mode {
+    background: #fff;
+  }
+
+  .playback-title {
+    width: min(92vw, 1200px);
+    text-align: center;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: min(100pt, 22vw);
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    color: #111;
+    text-wrap: balance;
+  }
+
+  @media (max-width: 760px) {
+    .page {
+      width: min(100vw - 1rem, 980px);
+      padding: 1rem 0 4rem;
+    }
+
+    .panel {
+      padding: 1rem;
+      border-radius: 1.1rem;
+    }
+
+    .entry-form,
+    .rgb-form {
+      grid-template-columns: 1fr;
+    }
+
+    .sequence-list li {
+      grid-template-columns: auto 1fr;
+    }
+
+    .sequence-meta {
+      grid-column: 1 / -1;
+    }
+
+    .playback-title {
+      font-size: min(100pt, 27vw);
+    }
+  }
+</style>
