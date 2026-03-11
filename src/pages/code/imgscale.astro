@@ -1,0 +1,132 @@
+---
+import Menu from '@/components/menu.astro'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <Menu />
+    <div style="height: 200px;"></div>
+    <h1>Image Scaler</h1>
+
+    <input type="file" id="picker" accept="image/*" />
+
+    <div
+      id="controls"
+      style="display:none; margin: 1rem 0; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;"
+    >
+      <label>
+        Width:
+        <input
+          type="number"
+          id="width-val"
+          value="300"
+          min="0"
+          style="width: 80px;"
+        />
+      </label>
+
+      <label>
+        Height:
+        <input
+          type="number"
+          id="height-val"
+          value="200"
+          min="0"
+          style="width: 80px;"
+        />
+      </label>
+
+      <label>
+        Unit:
+        <select id="unit">
+          <option value="px" selected>px</option>
+          <option value="%">%</option>
+          <option value="vw">vw</option>
+          <option value="vh">vh</option>
+          <option value="em">em</option>
+          <option value="rem">rem</option>
+          <option value="pt">pt</option>
+          <option value="cm">cm</option>
+          <option value="mm">mm</option>
+          <option value="in">in</option>
+        </select>
+      </label>
+
+      <label style="display: flex; align-items: center; gap: 0.3rem;">
+        <input type="checkbox" id="lock-ratio" checked />
+        Lock ratio
+      </label>
+    </div>
+
+    <div id="img-wrap" style="margin-top: 1rem;">
+      <img id="preview" style="display:none; max-width:100%;" alt="preview" />
+    </div>
+
+    <p id="size-info" style="color: gray; font-size: 0.9em;"></p>
+
+    <script>
+      const picker = document.getElementById('picker')
+      const preview = document.getElementById('preview')
+      const controls = document.getElementById('controls')
+      const widthInput = document.getElementById('width-val')
+      const heightInput = document.getElementById('height-val')
+      const unitSelect = document.getElementById('unit')
+      const lockRatio = document.getElementById('lock-ratio')
+      const sizeInfo = document.getElementById('size-info')
+
+      let naturalW = 0
+      let naturalH = 0
+
+      picker.addEventListener('change', e => {
+        const file = e.target.files[0]
+        if (!file) return
+        const url = URL.createObjectURL(file)
+        preview.src = url
+        preview.onload = () => {
+          naturalW = preview.naturalWidth
+          naturalH = preview.naturalHeight
+          widthInput.value = naturalW
+          heightInput.value = naturalH
+          applySize()
+          preview.style.display = 'block'
+          controls.style.display = 'flex'
+          sizeInfo.textContent = `Natural size: ${naturalW} × ${naturalH} px`
+        }
+      })
+
+      function applySize() {
+        const unit = unitSelect.value
+        const w = widthInput.value
+        const h = heightInput.value
+        preview.style.width = w + unit
+        preview.style.height = h + unit
+      }
+
+      widthInput.addEventListener('input', () => {
+        if (lockRatio.checked && naturalW && naturalH) {
+          heightInput.value = Math.round(
+            (widthInput.value / naturalW) * naturalH,
+          )
+        }
+        applySize()
+      })
+
+      heightInput.addEventListener('input', () => {
+        if (lockRatio.checked && naturalW && naturalH) {
+          widthInput.value = Math.round(
+            (heightInput.value / naturalH) * naturalW,
+          )
+        }
+        applySize()
+      })
+
+      unitSelect.addEventListener('change', applySize)
+    </script>
+  </body>
+</html>
