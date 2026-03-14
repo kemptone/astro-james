@@ -1,0 +1,342 @@
+---
+const title = "Number Scale";
+---
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #1a1a2e;
+      color: #eee;
+      padding: 2rem;
+    }
+
+    #word-display {
+      font-size: clamp(60pt, 15vw, 160pt);
+      font-weight: 900;
+      text-align: center;
+      min-height: 160px;
+      transition: color 0.2s;
+      user-select: none;
+      word-break: break-word;
+    }
+
+    #slider-pos {
+      font-size: 1.4rem;
+      color: #888;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 90vw;
+      max-width: 600px;
+      height: 12px;
+      border-radius: 6px;
+      background: #333;
+      outline: none;
+      margin-bottom: 3rem;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #e94560;
+      cursor: pointer;
+      border: 3px solid #fff;
+    }
+
+    #slider-section {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #slider-section.active {
+      display: flex;
+    }
+
+    .setup {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .setup.hidden {
+      display: none;
+    }
+
+    .setup h2 {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .entry-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      align-items: center;
+    }
+
+    .entry-row input[type="text"] {
+      flex: 1;
+      font-size: 1.1rem;
+      padding: 0.5rem 0.75rem;
+      border: 2px solid #444;
+      border-radius: 8px;
+      background: #16213e;
+      color: #eee;
+    }
+
+    .entry-row input[type="number"] {
+      width: 90px;
+      font-size: 1.1rem;
+      padding: 0.5rem;
+      border: 2px solid #444;
+      border-radius: 8px;
+      background: #16213e;
+      color: #eee;
+      text-align: center;
+    }
+
+    .entry-row input:focus {
+      border-color: #e94560;
+      outline: none;
+    }
+
+    .entry-row button {
+      background: #e94560;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    #entries-list {
+      margin-bottom: 1.5rem;
+    }
+
+    .entry-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.75rem;
+      background: #16213e;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .entry-item .remove-btn {
+      background: none;
+      border: none;
+      color: #e94560;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0 0.3rem;
+    }
+
+    .btn {
+      font-size: 1.1rem;
+      padding: 0.6rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #e94560;
+      color: #fff;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .btn.secondary {
+      background: #333;
+    }
+
+    #bracket-display {
+      margin-top: 2rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .bracket {
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      background: #16213e;
+      border: 1px solid #333;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .bracket.active {
+      background: #e94560;
+      border-color: #e94560;
+      color: #fff;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="setup" id="setup">
+    <h2>Number Scale</h2>
+
+    <div class="entry-row">
+      <label style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em;color:#aaa;">Slider Minimum</label>
+      <input type="number" id="min-input" value="0" min="0" style="width:100px;" />
+    </div>
+
+    <div id="entries-list"></div>
+
+    <div class="entry-row">
+      <input type="text" id="word-input" placeholder="Word" />
+      <input type="number" id="end-input" placeholder="Ends at" min="1" />
+      <button id="add-btn">+</button>
+    </div>
+
+    <br />
+    <div class="btn-row">
+      <button class="btn" id="start-btn">Start</button>
+    </div>
+  </div>
+
+  <div id="slider-section">
+    <div id="word-display"></div>
+    <div id="slider-pos"></div>
+    <input type="range" id="slider" min="0" max="100" value="0" />
+    <br />
+    <button class="btn secondary" id="reset-btn">Reset</button>
+  </div>
+
+  <script>
+    const entriesList = document.getElementById('entries-list')!;
+    const minInput = document.getElementById('min-input') as HTMLInputElement;
+    const wordInput = document.getElementById('word-input') as HTMLInputElement;
+    const endInput = document.getElementById('end-input') as HTMLInputElement;
+    const addBtn = document.getElementById('add-btn')!;
+    const startBtn = document.getElementById('start-btn')!;
+    const resetBtn = document.getElementById('reset-btn')!;
+    const setup = document.getElementById('setup')!;
+    const sliderSection = document.getElementById('slider-section')!;
+    const slider = document.getElementById('slider') as HTMLInputElement;
+    const wordDisplay = document.getElementById('word-display')!;
+    const sliderPos = document.getElementById('slider-pos')!;
+
+    interface Entry { word: string; end: number; }
+    let entries: Entry[] = [];
+
+    function getMin() {
+      return Math.max(0, parseInt(minInput.value) || 0);
+    }
+
+    function renderEntries() {
+      entriesList.innerHTML = '';
+      entries.forEach((e, i) => {
+        const prev = i === 0 ? getMin() : entries[i - 1].end + 1;
+        const item = document.createElement('div');
+        item.className = 'entry-item';
+        item.innerHTML = `
+          <span><strong>${e.word}</strong> &nbsp; ${prev}–${e.end}</span>
+          <button class="remove-btn" data-idx="${i}">&times;</button>
+        `;
+        entriesList.appendChild(item);
+      });
+
+      entriesList.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt((btn as HTMLElement).dataset.idx!);
+          entries.splice(idx, entries.length);
+          renderEntries();
+        });
+      });
+
+      if (entries.length > 0) {
+        endInput.min = String(entries[entries.length - 1].end + 1);
+      } else {
+        endInput.min = String(getMin() + 1);
+      }
+    }
+
+    addBtn.addEventListener('click', addEntry);
+    wordInput.addEventListener('keydown', e => { if (e.key === 'Enter') addEntry(); });
+    endInput.addEventListener('keydown', e => { if (e.key === 'Enter') addEntry(); });
+    minInput.addEventListener('input', renderEntries);
+
+    function addEntry() {
+      const word = wordInput.value.trim();
+      const end = parseInt(endInput.value);
+      if (!word || isNaN(end)) return;
+
+      const minEnd = entries.length > 0 ? entries[entries.length - 1].end + 1 : getMin() + 1;
+      if (end < minEnd) return;
+
+      entries.push({ word, end });
+      wordInput.value = '';
+      endInput.value = '';
+      renderEntries();
+      wordInput.focus();
+    }
+
+    startBtn.addEventListener('click', () => {
+      if (entries.length === 0) return;
+      setup.classList.add('hidden');
+      sliderSection.classList.add('active');
+
+      const min = getMin();
+      const max = entries[entries.length - 1].end;
+      slider.min = String(min);
+      slider.max = String(max);
+      slider.value = String(min);
+
+      updateDisplay();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      sliderSection.classList.remove('active');
+      setup.classList.remove('hidden');
+    });
+
+    function updateDisplay() {
+      const val = parseInt(slider.value);
+
+      let activeIdx = 0;
+      for (let i = 0; i < entries.length; i++) {
+        if (val <= entries[i].end) {
+          activeIdx = i;
+          break;
+        }
+      }
+
+      wordDisplay.textContent = entries[activeIdx].word;
+      sliderPos.textContent = String(val);
+    }
+
+    slider.addEventListener('input', updateDisplay);
+  </script>
+</body>
+</html>

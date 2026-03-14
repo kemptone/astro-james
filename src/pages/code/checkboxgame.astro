@@ -1,0 +1,220 @@
+---
+const title = "Checkbox Game";
+---
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    #title-display {
+      font-size: 100pt;
+      font-weight: bold;
+      min-height: 140px;
+      margin-bottom: 2rem;
+    }
+
+    .setup-section {
+      margin-bottom: 2rem;
+    }
+
+    .setup-section label {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .setup-section select {
+      font-size: 1.2rem;
+      padding: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .combinations {
+      margin-top: 2rem;
+    }
+
+    .combination-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .combination-row .state-label {
+      font-weight: bold;
+      min-width: 40px;
+    }
+
+    .combination-row input[type="text"] {
+      font-size: 1.2rem;
+      padding: 0.5rem;
+      flex: 1;
+    }
+
+    .checkboxes {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .checkboxes input[type="checkbox"] {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    button {
+      font-size: 1.2rem;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      margin-right: 1rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="setup-phase">
+    <div class="setup-section">
+      <label for="checkbox-count">Number of Checkboxes:</label>
+      <select id="checkbox-count">
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+
+    <h3>Define Titles for Each Combination</h3>
+    <div id="combinations" class="combinations"></div>
+
+    <button id="submit-btn">Submit</button>
+  </div>
+
+  <div id="play-phase" class="hidden">
+    <div id="title-display"></div>
+    <div id="checkboxes" class="checkboxes"></div>
+    <button id="reset-btn">Reset</button>
+  </div>
+
+  <script>
+    const setupPhase = document.getElementById('setup-phase')!;
+    const playPhase = document.getElementById('play-phase')!;
+    const checkboxCountSelect = document.getElementById('checkbox-count') as HTMLSelectElement;
+    const combinationsDiv = document.getElementById('combinations')!;
+    const checkboxesDiv = document.getElementById('checkboxes')!;
+    const titleDisplay = document.getElementById('title-display')!;
+    const submitBtn = document.getElementById('submit-btn')!;
+    const resetBtn = document.getElementById('reset-btn')!;
+
+    let checkboxCount = 2;
+    let titleMap: Map<string, string> = new Map();
+    let checkboxes: HTMLInputElement[] = [];
+
+    function generateCombinations(n: number): string[] {
+      const total = Math.pow(2, n);
+      const combinations: string[] = [];
+
+      for (let i = 0; i < total; i++) {
+        let binary = i.toString(2).padStart(n, '0');
+        combinations.push(binary);
+      }
+
+      return combinations;
+    }
+
+    function getCombinationLabel(combination: string, n: number): string {
+      if (n === 1) {
+        return combination === '1' ? '1 only' : 'none';
+      }
+
+      const bits = combination.split('');
+      const checkedIndices = bits
+        .map((bit, idx) => bit === '1' ? idx + 1 : null)
+        .filter(idx => idx !== null);
+
+      if (checkedIndices.length === 0) return 'none';
+      if (checkedIndices.length === n) return 'all';
+      return checkedIndices.join(' & ') + ' only';
+    }
+
+    function renderSetup() {
+      checkboxCount = parseInt(checkboxCountSelect.value);
+      combinationsDiv.innerHTML = '';
+
+      const combinations = generateCombinations(checkboxCount);
+
+      combinations.forEach((combo, idx) => {
+        const row = document.createElement('div');
+        row.className = 'combination-row';
+
+        const label = document.createElement('span');
+        label.className = 'state-label';
+        label.textContent = `${idx + 1}:`;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = `combo-${combo}`;
+        input.placeholder = `${getCombinationLabel(combo, checkboxCount)} (${combo})`;
+
+        row.appendChild(label);
+        row.appendChild(input);
+        combinationsDiv.appendChild(row);
+      });
+    }
+
+    function startGame() {
+      titleMap.clear();
+      const combinations = generateCombinations(checkboxCount);
+
+      combinations.forEach(combo => {
+        const input = document.getElementById(`combo-${combo}`) as HTMLInputElement;
+        titleMap.set(combo, input.value || '');
+      });
+
+      checkboxesDiv.innerHTML = '';
+      checkboxes = [];
+
+      for (let i = 0; i < checkboxCount; i++) {
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.id = `cb-${i}`;
+        cb.addEventListener('change', updateTitle);
+        checkboxes.push(cb);
+        checkboxesDiv.appendChild(cb);
+      }
+
+      setupPhase.classList.add('hidden');
+      playPhase.classList.remove('hidden');
+      updateTitle();
+    }
+
+    function updateTitle() {
+      const state = checkboxes.map(cb => cb.checked ? '1' : '0').join('');
+      titleDisplay.textContent = titleMap.get(state) || '';
+    }
+
+    function resetGame() {
+      playPhase.classList.add('hidden');
+      setupPhase.classList.remove('hidden');
+    }
+
+    checkboxCountSelect.addEventListener('change', renderSetup);
+    submitBtn.addEventListener('click', startGame);
+    resetBtn.addEventListener('click', resetGame);
+
+    renderSetup();
+  </script>
+</body>
+</html>
