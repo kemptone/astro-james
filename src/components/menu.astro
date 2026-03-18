@@ -10,6 +10,8 @@ interface MenuLink {
 
 const menuLinks: MenuLink[] = [
   {href: '/storybook', label: 'Story Book', code: ''},
+  {href: '/code/carolanne', label: 'Carol Anne', code: ''},
+  {href: '/code/Alora', label: 'Alora', code: ''},
   {href: '/code/mila', label: 'Mila', code: ''},
   {href: '/code/checkboxgame', label: 'Check Box Game', code: ''},
   {href: '/code/imgscale', label: 'Image Scaler', code: ''},
@@ -314,18 +316,21 @@ const menuLinks: MenuLink[] = [
   }
 
   .menu-item {
-    margin: 0;
+    margin: 4px 0 !important;
+    padding: 2px 6px !important;
+    line-height: 1.4 !important;
   }
 
   .menu-link {
     color: var(--pico-color);
     text-decoration: none;
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: 300;
     font-family: system-ui, sans-serif;
+    line-height: 1.2 !important;
     transition: color 0.3s ease;
     display: block;
-    padding: 0.2rem 0.5rem;
+    padding: 2px 8px !important;
   }
 
   .menu-link:hover {
@@ -352,7 +357,7 @@ const menuLinks: MenuLink[] = [
   /* Responsive adjustments */
   @media (max-width: 1024px) {
     .menu-link {
-      font-size: 1.3rem;
+      font-size: 21px;
     }
     .menu-list {
       padding: 3rem 1.5rem;
@@ -361,8 +366,8 @@ const menuLinks: MenuLink[] = [
 
   @media (max-width: 768px) {
     .menu-link {
-      font-size: 1.1rem;
-      padding: 0.15rem 0.4rem;
+      font-size: 18px;
+      padding: 2px 6px !important;
     }
     .menu-list {
       padding: 3rem 1rem;
@@ -371,8 +376,8 @@ const menuLinks: MenuLink[] = [
 
   @media (max-width: 480px) {
     .menu-link {
-      font-size: 0.95rem;
-      padding: 0.1rem 0.3rem;
+      font-size: 15px;
+      padding: 1px 5px !important;
     }
     .menu-list {
       padding: 2.5rem 0.5rem;
@@ -381,8 +386,8 @@ const menuLinks: MenuLink[] = [
 
   @media (max-width: 360px) {
     .menu-link {
-      font-size: 0.85rem;
-      padding: 0.08rem 0.25rem;
+      font-size: 14px;
+      padding: 1px 4px !important;
     }
     .menu-list {
       padding: 2rem 0.5rem;
