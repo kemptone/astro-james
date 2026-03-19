@@ -27,8 +27,8 @@ for (let idx = 0; idx < 36; idx++) {
   allNotes.push(`${noteLetter}${octave}`)
 }
 
-// Add 53 notes above C8 (D8 through B13) for +a to +z, +A to +Z, +.
-for (let idx = 0; idx < 53; idx++) {
+// Add 54 notes above C8 for +a to +z, +A to +Z, +., ++
+for (let idx = 0; idx < 54; idx++) {
   const noteLetter = noteLetters[(idx + 1) % 7]
   const octave = 8 + Math.floor((idx + 1) / 7)
   allNotes.push(`${noteLetter}${octave}`)
@@ -143,9 +143,16 @@ class MusicApp extends HTMLElement {
       if (char === '+' && i + 1 < input.length) {
         const nextChar = input[i + 1]
 
-        // +. (plus dot) - highest note (index 187)
+        // ++ (plus plus) - highest note
+        if (nextChar === '+') {
+          newSequence.push({note: allNotes[allNotes.length - 1], duration: '8n'})
+          i++
+          continue
+        }
+
+        // +. (plus dot) - second highest note
         if (nextChar === '.') {
-          newSequence.push({note: allNotes[187], duration: '8n'})
+          newSequence.push({note: allNotes[allNotes.length - 2], duration: '8n'})
           i++
           continue
         }
@@ -206,16 +213,16 @@ class MusicApp extends HTMLElement {
         }
       }
 
-      // Uppercase A-Z - indices 99-124
+      // Uppercase A-Z descend below C3, so A = B2 and Z = D0
       if (char >= 'A' && char <= 'Z') {
-        const idx = char.charCodeAt(0) - 'A'.charCodeAt(0) + 99
+        const idx = 98 - (char.charCodeAt(0) - 'A'.charCodeAt(0))
         newSequence.push({note: allNotes[idx], duration: '8n'})
         continue
       }
 
-      // Lowercase a-z - indices 78 down to 53 (descending from -0)
+      // Lowercase a-z ascend from C3, so a = C3
       if (char >= 'a' && char <= 'z') {
-        const idx = 78 - (char.charCodeAt(0) - 'a'.charCodeAt(0))
+        const idx = 99 + (char.charCodeAt(0) - 'a'.charCodeAt(0))
         newSequence.push({note: allNotes[idx], duration: '8n'})
         continue
       }
