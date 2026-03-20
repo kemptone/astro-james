@@ -1,71 +1,399 @@
-html, body {
-  background-color: white;
+:root {
+  --mina-bg: #f6efe2;
+  --mina-paper: #fffaf2;
+  --mina-ink: #1e2430;
+  --mina-muted: #5e6773;
+  --mina-line: rgba(30, 36, 48, 0.14);
+  --mina-accent: #d4682e;
+  --mina-accent-strong: #b74e18;
+  --mina-secondary: #255f5a;
+  --mina-secondary-soft: #dff0ec;
+  --mina-danger: #b53d3d;
+  --mina-shadow: 0 20px 55px rgba(53, 36, 15, 0.14);
 }
 
-h1 {
-  text-align: left;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+html,
+body {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top, rgba(212, 104, 46, 0.18), transparent 32%),
+    linear-gradient(180deg, #f7ecd8 0%, #f3e8d8 42%, #efe3d2 100%);
+  color: var(--mina-ink);
 }
-.container {
-  max-width: 503px;
+
+body {
+  margin: 0;
+}
+
+body.playback-active {
+  overflow: hidden;
+}
+
+body.playback-active .hamburger-nav {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mina-page {
+  min-height: 100vh;
+  padding: 2.25rem 1.1rem 5rem;
+}
+
+.mina-shell {
+  max-width: 1160px;
   margin: 0 auto;
 }
-.controls {
-  margin-top: .4rem;
+
+.mina-hero {
+  max-width: 700px;
+  margin-bottom: 1.75rem;
 }
-.scale-controls {
+
+.mina-kicker,
+.mina-panel-label,
+.mina-output-label,
+.mina-group-meta {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.mina-kicker,
+.mina-panel-label,
+.mina-output-label {
+  color: var(--mina-secondary);
+}
+
+.mina-hero h1,
+.mina-panel h2,
+.mina-output h3 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.mina-hero h1 {
+  font-size: clamp(2.5rem, 7vw, 4.4rem);
+  line-height: 0.95;
+}
+
+.mina-intro {
+  max-width: 52ch;
+  margin: 0.85rem 0 0;
+  font-size: 1.08rem;
+  line-height: 1.6;
+  color: var(--mina-muted);
+}
+
+.mina-layout {
+  display: grid;
+  gap: 1.2rem;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  align-items: start;
+}
+
+.mina-panel {
+  background: linear-gradient(180deg, rgba(255, 250, 242, 0.94), rgba(255, 248, 239, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 28px;
+  box-shadow: var(--mina-shadow);
+  padding: 1.35rem;
+  backdrop-filter: blur(12px);
+}
+
+.mina-panel-head {
   display: flex;
-  align-items: center;
-  gap: .5rem;
-  flex-wrap: wrap;
-  justify-items: stretch;
+  gap: 0.9rem;
   justify-content: space-between;
+  align-items: flex-start;
 }
-.scale-controls label {
-  font-weight: bold;
-  white-space: nowrap;
+
+.mina-panel-copy {
+  margin: 0.9rem 0 1.1rem;
+  color: var(--mina-muted);
+  line-height: 1.55;
 }
-.scale-controls select {
-  padding: 0.25rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: white;
-  font-size: 0.9rem;
+
+.mina-button,
+.mina-remove {
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    opacity 180ms ease;
 }
-grid-game {
+
+.mina-button {
+  padding: 0.78rem 1.1rem;
+}
+
+.mina-button:hover,
+.mina-remove:hover {
+  transform: translateY(-1px);
+}
+
+.mina-button:disabled,
+.mina-remove:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
+}
+
+.mina-button.primary {
+  background: var(--mina-accent);
+  color: #fff8f0;
+  box-shadow: 0 10px 24px rgba(212, 104, 46, 0.28);
+}
+
+.mina-button.primary:hover {
+  background: var(--mina-accent-strong);
+}
+
+.mina-button.secondary {
+  background: var(--mina-secondary-soft);
+  color: var(--mina-secondary);
+}
+
+.mina-button.tertiary {
+  background: transparent;
+  border: 1px solid var(--mina-line);
+  color: var(--mina-ink);
+}
+
+.mina-button.danger,
+.mina-remove {
+  background: rgba(181, 61, 61, 0.1);
+  color: var(--mina-danger);
+}
+
+.mina-rows,
+.mina-groups {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.mina-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 0.85rem;
+  align-items: end;
+  padding: 0.95rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(37, 95, 90, 0.1);
+}
+
+.mina-row.is-partial {
+  border-color: rgba(212, 104, 46, 0.55);
+  background: rgba(255, 243, 234, 0.96);
+}
+
+.mina-row-number {
+  width: 2.2rem;
+  height: 2.2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--mina-secondary);
+  color: white;
+  font-weight: 700;
+}
+
+.mina-field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.mina-field span {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.mina-field input {
+  width: 100%;
+  border: 1px solid rgba(30, 36, 48, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--mina-ink);
+  font: inherit;
+  padding: 0.9rem 0.95rem;
+}
+
+.mina-field input:focus {
+  outline: 2px solid rgba(212, 104, 46, 0.28);
+  border-color: var(--mina-accent);
+}
+
+.mina-toolbar,
+.mina-playback {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.mina-toolbar {
+  justify-content: space-between;
   margin-top: 1rem;
 }
-.play-button {
-  padding: 0.2rem 1rem;
-  font-size: 1rem;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+
+.mina-status {
+  margin: 0;
+  color: var(--mina-muted);
+  line-height: 1.5;
+  flex: 1;
+  min-width: 220px;
 }
-.play-button:hover {
-  background: #0056b3;
+
+.mina-preview {
+  display: grid;
+  gap: 1rem;
 }
-.stop-button {
-  padding: 0.2rem 1rem;
-  font-size: 1rem;
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+
+.mina-output,
+.mina-now-playing {
+  padding: 1.05rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(30, 36, 48, 0.08);
 }
-.stop-button:hover {
-  background: #c82333;
+
+.mina-sentence-panel {
+  background:
+    linear-gradient(135deg, rgba(37, 95, 90, 0.1), transparent 48%),
+    rgba(255, 255, 255, 0.76);
 }
-form.mina-form {
+
+.mina-now-playing {
+  background:
+    linear-gradient(135deg, rgba(212, 104, 46, 0.14), transparent 48%),
+    rgba(255, 252, 246, 0.94);
+}
+
+.mina-now-playing h3 {
+  margin: 0.45rem 0 0;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: min(100pt, 18vw);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.mina-sentence {
+  margin: 0.7rem 0 0;
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
+
+.mina-group {
+  border-radius: 22px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(30, 36, 48, 0.08);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.mina-group h4,
+.mina-group p {
+  margin: 0;
+}
+
+.mina-group h4 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.35rem;
+}
+
+.mina-group p:nth-child(2) {
+  margin-top: 0.45rem;
+  line-height: 1.5;
+}
+
+.mina-group.is-active {
+  border-color: rgba(212, 104, 46, 0.8);
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 16px 28px rgba(212, 104, 46, 0.18);
+}
+
+.mina-empty {
+  margin: 0;
+  color: var(--mina-muted);
+  line-height: 1.5;
+}
+
+.mina-playback-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #fff;
+}
+
+.mina-playback-stage.is-visible {
   display: flex;
-  justify-items: stretch;
-  padding: .4rem 0;
-  gap:.4rem;
 }
-form.mina-form input {
-  flex:1;
+
+.mina-playback-title {
+  width: min(92vw, 1200px);
+  text-align: center;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: min(100pt, 22vw);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: #111;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .mina-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .mina-page {
+    padding-inline: 0.85rem;
+  }
+
+  .mina-panel {
+    border-radius: 22px;
+    padding: 1rem;
+  }
+
+  .mina-row {
+    grid-template-columns: 1fr;
+  }
+
+  .mina-row-number {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .mina-remove {
+    width: 100%;
+    padding: 0.8rem 0.95rem;
+  }
+
+  .mina-now-playing h3 {
+    font-size: min(64pt, 20vw);
+  }
+
+  .mina-playback-title {
+    font-size: min(100pt, 27vw);
+  }
 }

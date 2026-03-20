@@ -1,57 +1,134 @@
 ---
-import {getAvailableKeys, getAvailableScaleTypes} from '@/core/mina/play-notes'
 import Layout from '../layouts/Layout.astro'
 import '../core/mina/mina-page.css'
-
-const keys = getAvailableKeys()
-const scaleTypes = getAvailableScaleTypes()
 ---
 
 <Layout title="mina">
-  <h1>Mina Game</h1>
-  <div class="container">
-    <form class="mina-form">
-      <input type="number" min="1" max="64" placeholder="Enter number 1-64">
-      <button type="submit">Submit</button>
-    </form>
-    <grid-game style="--shape-color:black; --cursor-color:red; --background-color:#efefef"></grid-game>
-    <div class="controls">
-      <div class="scale-controls">
-        <label for="key-select"
-          >Key:
-          <select id="key-select">
-            {
-              keys.map(key => (
-                <option value={key} selected={key === 'C'}>
-                  {key}
-                </option>
-              ))
-            }
-          </select>
-        </label>
+  <main class="mina-page">
+    <section class="mina-shell">
+      <header class="mina-hero">
+        <p class="mina-kicker">Sentence builder</p>
+        <h1>Mina</h1>
+        <p class="mina-intro">
+          Add one word at a time, give it a title card, and Mina will read the
+          sentence back in grouped chunks. Matching titles stay together, and
+          Submit shows only the title on screen while Mina reads.
+        </p>
+      </header>
 
-        <label for="scale-select"
-          >Scale:
-          <select id="scale-select">
-            {
-              scaleTypes.map(scaleType => (
-                <option value={scaleType} selected={scaleType === 'Major'}>
-                  {scaleType}
-                </option>
-              ))
-            }
-          </select>
-        </label>
-        <label for="loop-checkbox">
-          <input type="checkbox" id="loop-checkbox"> Loop
-        </label>
-        <button class="play-button" type="button">Play</button>
-        <button class="stop-button" type="button">Stop</button>
-      </div>
-    </div>
+      <section class="mina-layout">
+        <section
+          class="mina-panel mina-composer"
+          aria-labelledby="mina-composer-title"
+        >
+          <div class="mina-panel-head">
+            <div>
+              <p class="mina-panel-label">Build</p>
+              <h2 id="mina-composer-title">Word list</h2>
+            </div>
+            <button id="add-row-button" class="mina-button secondary" type="button">
+              Add word
+            </button>
+          </div>
+
+          <p class="mina-panel-copy">
+            Each row has a spoken word and the title card that should show while
+            that word is read.
+          </p>
+
+          <div id="mina-rows" class="mina-rows" aria-live="polite"></div>
+
+          <template id="mina-row-template">
+            <article class="mina-row">
+              <div class="mina-row-number" aria-hidden="true"></div>
+
+              <label class="mina-field">
+                <span>Word</span>
+                <input
+                  name="word"
+                  type="text"
+                  placeholder="that's"
+                  autocomplete="off"
+                />
+              </label>
+
+              <label class="mina-field">
+                <span>Title</span>
+                <input
+                  name="title"
+                  type="text"
+                  placeholder="Reading"
+                  autocomplete="off"
+                />
+              </label>
+
+              <button class="mina-remove" type="button" aria-label="Remove word">
+                Remove
+              </button>
+            </article>
+          </template>
+
+          <div class="mina-toolbar">
+            <button id="reset-button" class="mina-button tertiary" type="button">
+              Reset example
+            </button>
+            <p id="mina-status" class="mina-status" role="status">
+              Start with a word and a title card.
+            </p>
+          </div>
+        </section>
+
+        <section
+          class="mina-panel mina-preview"
+          aria-labelledby="mina-preview-title"
+        >
+          <div class="mina-panel-head">
+            <div>
+              <p class="mina-panel-label">Preview</p>
+              <h2 id="mina-preview-title">Reading flow</h2>
+            </div>
+            <div class="mina-playback">
+              <button id="play-button" class="mina-button primary" type="button">
+                Submit
+              </button>
+              <button id="stop-button" class="mina-button danger" type="button">
+                Stop
+              </button>
+            </div>
+          </div>
+
+          <section
+            class="mina-output mina-sentence-panel"
+            aria-labelledby="mina-sentence-title"
+          >
+            <p class="mina-output-label">Full sentence</p>
+            <h3 id="mina-sentence-title">Sentence preview</h3>
+            <p id="sentence-preview" class="mina-sentence"></p>
+          </section>
+
+          <section class="mina-now-playing" aria-live="polite">
+            <p class="mina-output-label">Title preview</p>
+            <h3 id="now-playing-title"></h3>
+          </section>
+
+          <section class="mina-output" aria-labelledby="mina-groups-title">
+            <p class="mina-output-label">Grouped cards</p>
+            <h3 id="mina-groups-title">Cards Mina will read</h3>
+            <div id="group-preview" class="mina-groups"></div>
+          </section>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <div
+    id="mina-playback-stage"
+    class="mina-playback-stage"
+    aria-live="polite"
+    aria-atomic="true"
+  >
+    <div id="mina-playback-title" class="mina-playback-title"></div>
   </div>
 </Layout>
 
 <script src="../core/mina/mina-page.ts"></script>
-
-
