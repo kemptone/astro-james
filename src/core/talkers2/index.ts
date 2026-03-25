@@ -21,6 +21,8 @@ d.addEventListener('DOMContentLoaded', async e => {
   const e_play_all = d.getElementById('play_all')
   const e_hidden_button = d.getElementById('hidden_button')
   const e_sounds_dialog = d.getElementById('sounds') as HTMLDialogElement
+  const searchParams = new URLSearchParams(window.location.search)
+  const prefilledText = searchParams.get('text')?.trim()
 
   d.getElementById('back_to_site')?.addEventListener('click', e => {
     location.href = '/'
@@ -44,6 +46,19 @@ d.addEventListener('DOMContentLoaded', async e => {
   })
 
   e_list.append(e_fragment)
+
+  if (prefilledText && data[0]) {
+    const element = d.createElement('wc-talker-azure')
+    element.setAttribute('data-info', JSON.stringify(data[0]))
+    e_input_area.appendChild(element)
+    element.querySelector('textarea')?.setAttribute('rows', '4')
+    const textarea = element.querySelector('textarea') as HTMLTextAreaElement | null
+
+    if (textarea) {
+      textarea.value = prefilledText
+      textarea.dispatchEvent(new Event('input', {bubbles: true}))
+    }
+  }
 
   e_play_all?.addEventListener('click', async () => {
     const e_reversed = $('input[name="reversed"]') as HTMLInputElement

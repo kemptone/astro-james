@@ -1,0 +1,500 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const hourOptions = Array.from({ length: 12 }, (_, index) => index + 1);
+const minuteOptions = Array.from({ length: 60 }, (_, index) => index);
+---
+
+<Layout title="Backwords Clock">
+  <main class="backwords-clock">
+    <section class="intro">
+      <p class="eyebrow">Backwords Time</p>
+      <h1>Backwords Clock</h1>
+      <p class="lede">
+        Pick when the time starts and when it ends. This page only shows the
+        backwords version of the time.
+      </p>
+    </section>
+
+    <section class="display-panel">
+      <div class="digital-block">
+        <span class="digital-label">Backwords Start</span>
+        <strong class="digital-time" id="start-backwards-time">--:--:-- --</strong>
+      </div>
+
+      <div class="digital-divider" aria-hidden="true">to</div>
+
+      <div class="digital-block">
+        <span class="digital-label">Backwords End</span>
+        <strong class="digital-time" id="end-backwards-time">--:--:-- --</strong>
+      </div>
+    </section>
+
+    <section class="controls-grid">
+      <article class="panel">
+        <div class="panel-heading">
+          <h2>Start Time</h2>
+          <button type="button" id="set-start-now">Use Now</button>
+        </div>
+
+        <form class="time-form" id="start-form">
+          <label>
+            <span>Hour</span>
+            <select id="start-hour" name="hour">
+              {
+                hourOptions.map(value => (
+                  <option value={value}>{String(value).padStart(2, "0")}</option>
+                ))
+              }
+            </select>
+          </label>
+
+          <label>
+            <span>Minute</span>
+            <select id="start-minute" name="minute">
+              {
+                minuteOptions.map(value => (
+                  <option value={value}>{String(value).padStart(2, "0")}</option>
+                ))
+              }
+            </select>
+          </label>
+
+          <label>
+            <span>Second</span>
+            <select id="start-second" name="second">
+              {
+                minuteOptions.map(value => (
+                  <option value={value}>{String(value).padStart(2, "0")}</option>
+                ))
+              }
+            </select>
+          </label>
+
+          <label>
+            <span>AM / PM</span>
+            <select id="start-meridiem" name="meridiem">
+              <option value="AM">AM</option>
+              <option value="PM">PM</option>
+            </select>
+          </label>
+        </form>
+      </article>
+
+      <article class="panel">
+        <div class="panel-heading">
+          <h2>End Time</h2>
+          <div class="button-row">
+            <button type="button" id="copy-start-to-end" class="secondary">Match Start</button>
+            <button type="button" id="set-end-now">Use Now</button>
+          </div>
+        </div>
+
+        <form class="time-form" id="end-form">
+          <label>
+            <span>Hour</span>
+            <select id="end-hour" name="hour">
+              {
+                hourOptions.map(value => (
+                  <option value={value}>{String(value).padStart(2, "0")}</option>
+                ))
+              }
+            </select>
+          </label>
+
+          <label>
+            <span>Minute</span>
+            <select id="end-minute" name="minute">
+              {
+                minuteOptions.map(value => (
+                  <option value={value}>{String(value).padStart(2, "0")}</option>
+                ))
+              }
+            </select>
+          </label>
+
+          <label>
+            <span>Second</span>
+            <select id="end-second" name="second">
+              {
+                minuteOptions.map(value => (
+                  <option value={value}>{String(value).padStart(2, "0")}</option>
+                ))
+              }
+            </select>
+          </label>
+
+          <label>
+            <span>AM / PM</span>
+            <select id="end-meridiem" name="meridiem">
+              <option value="AM">AM</option>
+              <option value="PM">PM</option>
+            </select>
+          </label>
+        </form>
+      </article>
+    </section>
+
+    <section class="summary-panel">
+      <article class="summary-card">
+        <p class="summary-label">Time Direction</p>
+        <h2 id="time-direction">Present</h2>
+        <p id="time-summary">
+          Backwords time starts at --:--:-- -- and ends at --:--:-- --.
+        </p>
+      </article>
+
+      <article class="summary-card">
+        <p class="summary-label">Talkers Link</p>
+        <a id="talkers-link" class="talkers-link" href="/talkers2">
+          Send to Talkers 2
+        </a>
+        <p id="talkers-preview">
+          A sentence about the start and end time will open in Talkers 2.
+        </p>
+      </article>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  const DAY_SECONDS = 24 * 60 * 60;
+  const HOUR_SECONDS = 60 * 60;
+
+  const startBackwardsTime = document.querySelector("#start-backwards-time");
+  const endBackwardsTime = document.querySelector("#end-backwards-time");
+  const timeDirection = document.querySelector("#time-direction");
+  const timeSummary = document.querySelector("#time-summary");
+  const talkersLink = document.querySelector("#talkers-link");
+  const talkersPreview = document.querySelector("#talkers-preview");
+
+  const startInputs = {
+    hour: document.querySelector("#start-hour"),
+    minute: document.querySelector("#start-minute"),
+    second: document.querySelector("#start-second"),
+    meridiem: document.querySelector("#start-meridiem"),
+  };
+
+  const endInputs = {
+    hour: document.querySelector("#end-hour"),
+    minute: document.querySelector("#end-minute"),
+    second: document.querySelector("#end-second"),
+    meridiem: document.querySelector("#end-meridiem"),
+  };
+
+  const setStartNowButton = document.querySelector("#set-start-now");
+  const setEndNowButton = document.querySelector("#set-end-now");
+  const copyStartToEndButton = document.querySelector("#copy-start-to-end");
+
+  const pad = value => String(value).padStart(2, "0");
+
+  const reverseDaySeconds = totalSeconds => {
+    const normalized = ((totalSeconds % DAY_SECONDS) + DAY_SECONDS) % DAY_SECONDS;
+    return (DAY_SECONDS - normalized) % DAY_SECONDS;
+  };
+
+  const formatParts = parts =>
+    `${pad(parts.hour12)}:${pad(parts.minutes)}:${pad(parts.seconds)} ${parts.meridiem}`;
+
+  const daySecondsToParts = totalSeconds => {
+    const normalized = ((totalSeconds % DAY_SECONDS) + DAY_SECONDS) % DAY_SECONDS;
+    const hours24 = Math.floor(normalized / HOUR_SECONDS);
+    const minutes = Math.floor((normalized % HOUR_SECONDS) / 60);
+    const seconds = normalized % 60;
+    const meridiem = hours24 >= 12 ? "PM" : "AM";
+    const hour12 = hours24 % 12 || 12;
+
+    return { hour12, minutes, seconds, meridiem };
+  };
+
+  const formToDaySeconds = inputs => {
+    const selectedHour = Number(inputs.hour.value);
+    const selectedMinute = Number(inputs.minute.value);
+    const selectedSecond = Number(inputs.second.value);
+    const meridiemOffset = inputs.meridiem.value === "PM" ? 12 * HOUR_SECONDS : 0;
+    const hour24 = selectedHour % 12;
+
+    return hour24 * HOUR_SECONDS + selectedMinute * 60 + selectedSecond + meridiemOffset;
+  };
+
+  const setInputsFromDate = (inputs, date) => {
+    const hours24 = date.getHours();
+    inputs.hour.value = String(hours24 % 12 || 12);
+    inputs.minute.value = String(date.getMinutes());
+    inputs.second.value = String(date.getSeconds());
+    inputs.meridiem.value = hours24 >= 12 ? "PM" : "AM";
+  };
+
+  const copyInputs = (fromInputs, toInputs) => {
+    toInputs.hour.value = fromInputs.hour.value;
+    toInputs.minute.value = fromInputs.minute.value;
+    toInputs.second.value = fromInputs.second.value;
+    toInputs.meridiem.value = fromInputs.meridiem.value;
+  };
+
+  const getDirection = (startSeconds, endSeconds) => {
+    if (endSeconds === startSeconds) {
+      return "Present";
+    }
+
+    return endSeconds > startSeconds ? "Future" : "Past";
+  };
+
+  const buildTalkersMessage = (startText, endText, direction) =>
+    `Backwords time starts at ${startText} and ends at ${endText}. That is ${direction.toLowerCase()}.`;
+
+  const updateView = () => {
+    const startSeconds = formToDaySeconds(startInputs);
+    const endSeconds = formToDaySeconds(endInputs);
+
+    const backwardsStart = daySecondsToParts(reverseDaySeconds(startSeconds));
+    const backwardsEnd = daySecondsToParts(reverseDaySeconds(endSeconds));
+
+    const backwardsStartText = formatParts(backwardsStart);
+    const backwardsEndText = formatParts(backwardsEnd);
+    const direction = getDirection(startSeconds, endSeconds);
+    const summaryText = buildTalkersMessage(backwardsStartText, backwardsEndText, direction);
+
+    startBackwardsTime.textContent = backwardsStartText;
+    endBackwardsTime.textContent = backwardsEndText;
+    timeDirection.textContent = direction;
+    timeSummary.textContent = summaryText;
+    talkersPreview.textContent = summaryText;
+    talkersLink.href = `/talkers2?text=${encodeURIComponent(summaryText)}`;
+  };
+
+  setStartNowButton.addEventListener("click", () => {
+    setInputsFromDate(startInputs, new Date());
+    updateView();
+  });
+
+  setEndNowButton.addEventListener("click", () => {
+    setInputsFromDate(endInputs, new Date());
+    updateView();
+  });
+
+  copyStartToEndButton.addEventListener("click", () => {
+    copyInputs(startInputs, endInputs);
+    updateView();
+  });
+
+  [...Object.values(startInputs), ...Object.values(endInputs)].forEach(input => {
+    input.addEventListener("input", updateView);
+    input.addEventListener("change", updateView);
+  });
+
+  const now = new Date();
+  setInputsFromDate(startInputs, now);
+  setInputsFromDate(endInputs, now);
+  updateView();
+</script>
+
+<style>
+  .backwords-clock {
+    --page-ink: #16213d;
+    --page-soft: #5b6988;
+    --page-shell: rgba(255, 249, 241, 0.88);
+    --page-line: rgba(22, 33, 61, 0.12);
+    --page-accent: #ef7757;
+    min-height: 100vh;
+    padding: 5rem 1.25rem 6rem;
+    color: var(--page-ink);
+    background:
+      radial-gradient(circle at top left, rgba(255, 207, 122, 0.72), transparent 34%),
+      radial-gradient(circle at bottom right, rgba(95, 181, 176, 0.26), transparent 28%),
+      linear-gradient(180deg, #fff4d0 0%, #ffe2c6 48%, #ffd6cc 100%);
+  }
+
+  .intro,
+  .display-panel,
+  .controls-grid,
+  .summary-panel {
+    width: min(74rem, 100%);
+    margin: 0 auto;
+  }
+
+  .intro {
+    margin-bottom: 1.6rem;
+  }
+
+  .eyebrow,
+  .summary-label,
+  .digital-label,
+  .time-form span {
+    color: var(--page-soft);
+    font-size: 0.84rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin-bottom: 0.7rem;
+    font-size: clamp(2.6rem, 6vw, 4.8rem);
+    line-height: 1;
+  }
+
+  .lede {
+    max-width: 45rem;
+    font-size: 1.15rem;
+    color: var(--page-soft);
+  }
+
+  .display-panel,
+  .panel,
+  .summary-card {
+    border: 1px solid var(--page-line);
+    border-radius: 1.7rem;
+    background: var(--page-shell);
+    box-shadow: 0 1rem 2.5rem rgba(80, 55, 17, 0.12);
+    backdrop-filter: blur(10px);
+  }
+
+  .display-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 1.2rem;
+    align-items: center;
+    padding: 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .digital-block {
+    display: grid;
+    gap: 0.6rem;
+    min-width: 0;
+  }
+
+  .digital-time {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 100pt;
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.06em;
+    overflow-wrap: anywhere;
+  }
+
+  .digital-divider {
+    color: var(--page-accent);
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .controls-grid,
+  .summary-panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.2rem;
+  }
+
+  .panel,
+  .summary-card {
+    padding: 1.35rem;
+  }
+
+  .panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .button-row {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .time-form {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .time-form label {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  select,
+  button,
+  .talkers-link {
+    font: inherit;
+  }
+
+  select {
+    width: 100%;
+    min-width: 0;
+    padding: 0.85rem 0.9rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(22, 33, 61, 0.14);
+    background: rgba(255, 255, 255, 0.82);
+  }
+
+  button,
+  .talkers-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.9rem;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 999px;
+    background: var(--page-ink);
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  button.secondary {
+    background: rgba(22, 33, 61, 0.12);
+    color: var(--page-ink);
+  }
+
+  h2 {
+    margin-bottom: 0.7rem;
+    font-size: 1.7rem;
+    line-height: 1.05;
+  }
+
+  #time-direction {
+    margin-bottom: 0.5rem;
+    color: var(--page-accent);
+  }
+
+  #time-summary,
+  #talkers-preview {
+    color: var(--page-soft);
+    font-size: 1rem;
+  }
+
+  @media (max-width: 1100px) {
+    .display-panel,
+    .controls-grid,
+    .summary-panel {
+      grid-template-columns: 1fr;
+    }
+
+    .digital-divider {
+      justify-self: start;
+    }
+  }
+
+  @media (max-width: 820px) {
+    .digital-time {
+      font-size: clamp(3.4rem, 16vw, 100pt);
+    }
+
+    .time-form {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .panel-heading {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>
