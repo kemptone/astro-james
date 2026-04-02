@@ -120,25 +120,11 @@ footer select {
   /* margin:0 0 0 -200px; */
 }
 
-.started .innerwrap svg,
-.started .innerwrap img {
-  transform: rotate(var(--rotations_speedup));
-  transition: transform ease-in;
-  transition-duration: var(--speedup);
-}
-
-.middle .innerwrap svg,
-.middle .innerwrap img {
+.spinning .innerwrap svg,
+.spinning .innerwrap img {
   transform: rotate(var(--rotations_runtime));
   transition: transform linear;
   transition-duration: var(--runtime);
-}
-
-.ending .innerwrap svg,
-.ending .innerwrap img {
-  transform: rotate(var(--rotations_slowdown));
-  transition: transform ease-out;
-  transition-duration: var(--slowdown);
 }
 
 .controls {
@@ -226,6 +212,41 @@ form>fieldset:first-of-type {
   width: 100%;
 }
 
+.audio-rate-editor p {
+  margin: 0 0 1rem;
+}
+
+.audio-rate-segments {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.audio-rate-segment {
+  display: grid;
+  grid-template-columns: minmax(100px, 130px) minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.audio-rate-segment > span {
+  font-weight: 700;
+}
+
+.audio-rate-segment label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.audio-rate-segment input {
+  width: 100%;
+}
+
+.audio-rate-editor > button {
+  margin-top: 1rem;
+}
+
 #timersettings {
   padding-top: max(env(safe-area-inset-top), 13px);
   font-size: 21px;
@@ -241,4 +262,10 @@ form>fieldset:first-of-type {
 
 .setting-item:has(input[type=checkbox]) {
   padding-right: 5px;
+}
+
+@media (max-width: 720px) {
+  .audio-rate-segment {
+    grid-template-columns: 1fr;
+  }
 }
