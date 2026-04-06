@@ -1,0 +1,670 @@
+---
+const title = 'Open Close Game'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f3efe4;
+        --paper-deep: #ddd1b7;
+        --ink: #1d1b19;
+        --accent: #b55d2d;
+        --accent-deep: #7f3e1a;
+        --card: rgba(255, 252, 245, 0.8);
+        --hole: #060606;
+        --steel: #504b45;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: 'Trebuchet MS', 'Avenir Next', 'Segoe UI', sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top, rgba(255, 255, 255, 0.7), transparent 34%),
+          linear-gradient(180deg, #efe6d1 0%, #e5d7b7 42%, #d2bc92 100%);
+      }
+
+      .page {
+        width: min(1120px, calc(100% - 2rem));
+        margin: 0 auto;
+        padding: 2rem 0 3rem;
+      }
+
+      .hero {
+        margin-bottom: 1.75rem;
+        padding: 1.5rem;
+        border: 2px solid rgba(29, 27, 25, 0.12);
+        border-radius: 26px;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.75), rgba(255, 246, 228, 0.68)),
+          rgba(255, 255, 255, 0.45);
+        box-shadow: 0 22px 60px rgba(79, 53, 19, 0.12);
+      }
+
+      .eyebrow {
+        margin: 0 0 0.4rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--accent-deep);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 3.4rem);
+        line-height: 0.95;
+      }
+
+      .lede {
+        max-width: 56rem;
+        margin: 0.9rem 0 0;
+        font-size: 1.02rem;
+        line-height: 1.55;
+      }
+
+      .preset-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.2rem;
+      }
+
+      .preset {
+        border: 0;
+        border-radius: 999px;
+        background: var(--ink);
+        color: white;
+        padding: 0.7rem 1rem;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .preset:hover {
+        background: var(--accent-deep);
+      }
+
+      .launch-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.85rem;
+        margin-top: 1rem;
+      }
+
+      .submit-button {
+        border: 0;
+        border-radius: 999px;
+        background: var(--accent);
+        color: white;
+        padding: 0.9rem 1.35rem;
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 12px 28px rgba(127, 62, 26, 0.2);
+      }
+
+      .submit-button:hover:not(:disabled) {
+        background: var(--accent-deep);
+      }
+
+      .submit-button:disabled {
+        cursor: wait;
+        opacity: 0.72;
+      }
+
+      .launch-note {
+        margin: 0;
+        font-size: 0.96rem;
+        color: #5f513d;
+        font-weight: 700;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .thing-card {
+        --hole-height: 58px;
+        --cover-shift: 0px;
+        --ladder-opacity: 0;
+        --ladder-shift: 26px;
+        --attic-tilt: 0deg;
+        --attic-lift: 0px;
+        --attic-opacity: 1;
+        --door-shift: 0px;
+        --door-scale: 1;
+        --door-opacity: 1;
+        padding: 1rem;
+        border-radius: 24px;
+        border: 2px solid rgba(29, 27, 25, 0.12);
+        background: var(--card);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 18px 44px rgba(79, 53, 19, 0.1);
+      }
+
+      .card-head {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      .kicker {
+        margin: 0 0 0.35rem;
+        color: #74644b;
+        font-size: 0.84rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 1.45rem;
+        line-height: 1.08;
+      }
+
+      .status {
+        margin: 0;
+        white-space: nowrap;
+        padding: 0.45rem 0.75rem;
+        border-radius: 999px;
+        background: rgba(181, 93, 45, 0.12);
+        color: var(--accent-deep);
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      .description {
+        min-height: 4.5rem;
+        margin: 0.9rem 0 1rem;
+        font-size: 0.98rem;
+        line-height: 1.45;
+      }
+
+      .field {
+        display: grid;
+        gap: 0.45rem;
+        margin-bottom: 0.35rem;
+        font-weight: 700;
+      }
+
+      .field span {
+        font-size: 0.94rem;
+      }
+
+      .field input {
+        width: 100%;
+        padding: 0.85rem 0.95rem;
+        border-radius: 16px;
+        border: 2px solid rgba(29, 27, 25, 0.16);
+        background: rgba(255, 255, 255, 0.78);
+        color: var(--ink);
+        font: inherit;
+        font-size: 1.15rem;
+        font-weight: 700;
+      }
+
+      .field input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(181, 93, 45, 0.14);
+      }
+
+      .hint {
+        margin: 0 0 1rem;
+        font-size: 0.88rem;
+        color: #655740;
+      }
+
+      .stage {
+        position: relative;
+        min-height: 260px;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 2px solid rgba(29, 27, 25, 0.08);
+        background: linear-gradient(180deg, #eee3c8 0%, #ddcba2 100%);
+      }
+
+      .stage::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at top right, rgba(255, 255, 255, 0.4), transparent 34%),
+          linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.06) 100%);
+        pointer-events: none;
+      }
+
+      .ladder-stage {
+        background:
+          linear-gradient(180deg, #f5ecd9 0%, #ddc89a 70%, #b08e58 70%, #9a7844 100%);
+      }
+
+      .ladder-stage .ladder-hole {
+        position: absolute;
+        left: 50%;
+        bottom: 18px;
+        width: 118px;
+        height: var(--hole-height);
+        transform: translateX(-50%);
+        border-radius: 8px 8px 4px 4px;
+        border: 4px solid rgba(74, 61, 43, 0.9);
+        background: linear-gradient(180deg, #1a1a1a 0%, var(--hole) 100%);
+        overflow: hidden;
+        box-shadow: inset 0 18px 30px rgba(255, 255, 255, 0.08);
+        transition: height 0.72s ease;
+      }
+
+      .ladder-stage .ladder-hole::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 24%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 16%);
+      }
+
+      .ladder-stage .ladder {
+        position: absolute;
+        left: 50%;
+        bottom: 12px;
+        width: 46px;
+        height: calc(var(--hole-height) - 22px);
+        transform: translateX(-50%) translateY(var(--ladder-shift));
+        opacity: var(--ladder-opacity);
+        background:
+          repeating-linear-gradient(
+            to bottom,
+            transparent 0 10px,
+            #d7c089 10px 14px
+          );
+        transition: height 0.72s ease, transform 0.72s ease, opacity 0.72s ease;
+      }
+
+      .ladder-stage .ladder::before,
+      .ladder-stage .ladder::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: #d7c089;
+      }
+
+      .ladder-stage .ladder::before {
+        left: 0;
+      }
+
+      .ladder-stage .ladder::after {
+        right: 0;
+      }
+
+      .ladder-stage .ladder-cover {
+        position: absolute;
+        left: 50%;
+        bottom: 18px;
+        width: 126px;
+        height: 82px;
+        transform: translateX(-50%) translateY(var(--cover-shift));
+        border-radius: 10px;
+        border: 4px solid rgba(88, 55, 26, 0.8);
+        background:
+          linear-gradient(180deg, #da9555 0%, #bf7336 100%);
+        box-shadow:
+          inset 0 8px 0 rgba(255, 255, 255, 0.24),
+          0 10px 18px rgba(66, 41, 14, 0.22);
+        transition: transform 0.72s ease;
+      }
+
+      .attic-stage {
+        background:
+          linear-gradient(180deg, #e6d9b8 0%, #d0bb89 100%);
+      }
+
+      .attic-stage::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          repeating-linear-gradient(
+            90deg,
+            transparent 0 32px,
+            rgba(107, 80, 47, 0.16) 32px 35px
+          );
+        opacity: 0.65;
+      }
+
+      .attic-frame {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 156px;
+        height: 156px;
+        transform: translate(-50%, -50%);
+      }
+
+      .attic-hole,
+      .attic-lid {
+        position: absolute;
+        inset: 0;
+        border-radius: 10px;
+      }
+
+      .attic-hole {
+        border: 4px solid rgba(75, 59, 33, 0.78);
+        background: linear-gradient(180deg, #111 0%, #000 100%);
+        box-shadow: inset 0 18px 24px rgba(255, 255, 255, 0.06);
+      }
+
+      .attic-lid {
+        border: 4px solid rgba(83, 61, 34, 0.9);
+        background:
+          linear-gradient(180deg, #dbc186 0%, #c59f59 100%);
+        transform-origin: top center;
+        transform:
+          perspective(420px)
+          translateY(var(--attic-lift))
+          rotateX(var(--attic-tilt));
+        opacity: var(--attic-opacity);
+        box-shadow: inset 0 8px 0 rgba(255, 255, 255, 0.28);
+        transition: transform 0.72s ease, opacity 0.72s ease;
+      }
+
+      .split-stage {
+        background:
+          linear-gradient(180deg, #efe4d0 0%, #dcc9ab 100%);
+      }
+
+      .split-frame {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 170px;
+        height: 170px;
+        transform: translate(-50%, -50%);
+        border-radius: 10px;
+        border: 4px solid rgba(78, 67, 51, 0.85);
+        overflow: hidden;
+        background: var(--hole);
+        box-shadow: inset 0 18px 28px rgba(255, 255, 255, 0.08);
+      }
+
+      .split-hole {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at top center, rgba(255, 255, 255, 0.07), transparent 25%),
+          linear-gradient(180deg, #1a1a1a 0%, #000 100%);
+      }
+
+      .split-door {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 50%;
+        background:
+          linear-gradient(180deg, #d7aa68 0%, #bf8343 100%);
+        opacity: var(--door-opacity);
+        box-shadow: inset 0 8px 0 rgba(255, 255, 255, 0.25);
+        transition: transform 0.72s ease, opacity 0.72s ease;
+      }
+
+      .split-door.left {
+        left: 0;
+        border-right: 3px solid rgba(84, 59, 32, 0.9);
+        transform-origin: left center;
+        transform:
+          translateX(calc(var(--door-shift) * -1))
+          scaleX(var(--door-scale));
+      }
+
+      .split-door.right {
+        right: 0;
+        border-left: 3px solid rgba(84, 59, 32, 0.9);
+        transform-origin: right center;
+        transform:
+          translateX(var(--door-shift))
+          scaleX(var(--door-scale));
+      }
+
+      @media (max-width: 920px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .description {
+          min-height: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <p class="eyebrow">Open Close Game</p>
+        <h1>Type numbers to open and close the shapes.</h1>
+        <p class="lede">
+          Each thing uses a number from <strong>0</strong> to <strong>100</strong>.
+          Use <strong>0</strong> for closed, <strong>50</strong> for partly open,
+          and <strong>100</strong> for completely open.
+        </p>
+
+        <div class="preset-row">
+          <button type="button" class="preset" data-preset="0">Set All To 0</button>
+          <button type="button" class="preset" data-preset="50">Set All To 50</button>
+          <button type="button" class="preset" data-preset="100">Set All To 100</button>
+        </div>
+
+        <div class="launch-row">
+          <button type="button" class="submit-button" data-submit>Submit</button>
+          <p class="launch-note" data-launch-note>
+            Type the numbers first. After submit, the game waits 1 second and then opens.
+          </p>
+        </div>
+      </header>
+
+      <section class="grid">
+        <article class="thing-card" data-card>
+          <div class="card-head">
+            <div>
+              <p class="kicker">1. Rectangle Into A Hole</p>
+              <h2>Opening With Ladder</h2>
+            </div>
+            <p class="status" data-status>Closed</p>
+          </div>
+
+          <p class="description">
+            Closed is a rectangle. As it opens, the hole grows taller and a ladder
+            appears inside.
+          </p>
+
+          <label class="field" for="opening-1">
+            <span>Open amount</span>
+            <input id="opening-1" data-input type="number" min="0" max="100" step="1" value="0" />
+          </label>
+          <p class="hint">Starts at 0. Submit makes it open.</p>
+
+          <div class="stage ladder-stage" data-stage aria-hidden="true">
+            <div class="ladder-hole">
+              <div class="ladder"></div>
+            </div>
+            <div class="ladder-cover"></div>
+          </div>
+        </article>
+
+        <article class="thing-card" data-card>
+          <div class="card-head">
+            <div>
+              <p class="kicker">2. Square Panel</p>
+              <h2>Attic Access Panel</h2>
+            </div>
+            <p class="status" data-status>Closed</p>
+          </div>
+
+          <p class="description">
+            Closed is a square. When it opens, the square turns black like an attic
+            opening.
+          </p>
+
+          <label class="field" for="opening-2">
+            <span>Open amount</span>
+            <input id="opening-2" data-input type="number" min="0" max="100" step="1" value="0" />
+          </label>
+          <p class="hint">Starts at 0. Submit makes it open.</p>
+
+          <div class="stage attic-stage" data-stage aria-hidden="true">
+            <div class="attic-frame">
+              <div class="attic-hole"></div>
+              <div class="attic-lid"></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="thing-card" data-card>
+          <div class="card-head">
+            <div>
+              <p class="kicker">3. Split Rectangle</p>
+              <h2>Two Doors In A Square</h2>
+            </div>
+            <p class="status" data-status>Closed</p>
+          </div>
+
+          <p class="description">
+            Closed is a square split in half. When it opens, the middle turns black
+            and the two rectangles move away.
+          </p>
+
+          <label class="field" for="opening-3">
+            <span>Open amount</span>
+            <input id="opening-3" data-input type="number" min="0" max="100" step="1" value="0" />
+          </label>
+          <p class="hint">Starts at 0. Submit makes it open.</p>
+
+          <div class="stage split-stage" data-stage aria-hidden="true">
+            <div class="split-frame">
+              <div class="split-hole"></div>
+              <div class="split-door left"></div>
+              <div class="split-door right"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      const cards = Array.from(document.querySelectorAll('[data-card]'))
+      const presetButtons = Array.from(document.querySelectorAll('[data-preset]'))
+      const submitButton = document.querySelector('[data-submit]')
+      const launchNote = document.querySelector('[data-launch-note]')
+      let launchTimer = 0
+
+      const clampValue = value => {
+        const parsed = Number(value)
+
+        if (!Number.isFinite(parsed))
+          return 0
+
+        return Math.max(0, Math.min(100, Math.round(parsed)))
+      }
+
+      const getLabel = value => {
+        if (value <= 0)
+          return 'Closed'
+
+        if (value >= 100)
+          return 'Completely Open'
+
+        return 'Partly Open'
+      }
+
+      const setInputValue = (input, nextValue) => {
+        input.value = String(clampValue(nextValue))
+      }
+
+      const renderValue = (card, nextValue, statusLabel = getLabel(nextValue)) => {
+        const status = card.querySelector('[data-status]')
+        const open = nextValue / 100
+
+        status.textContent = statusLabel
+
+        card.style.setProperty('--hole-height', `${58 + open * 86}px`)
+        card.style.setProperty('--cover-shift', `${open * -82}px`)
+        card.style.setProperty('--ladder-opacity', String(Math.min(1, open * 1.3)))
+        card.style.setProperty('--ladder-shift', `${(1 - open) * 26}px`)
+        card.style.setProperty('--attic-tilt', `${open * 88}deg`)
+        card.style.setProperty('--attic-lift', `${open * -14}px`)
+        card.style.setProperty('--attic-opacity', String(Math.max(0, 1 - open)))
+        card.style.setProperty('--door-shift', `${open * 46}px`)
+        card.style.setProperty('--door-scale', String(Math.max(0, 1 - open * 0.92)))
+        card.style.setProperty('--door-opacity', String(Math.max(0, 1 - open * 0.9)))
+      }
+
+      cards.forEach(card => {
+        const input = card.querySelector('[data-input]')
+
+        input.addEventListener('input', () => {
+          setInputValue(input, input.value)
+        })
+
+        input.addEventListener('change', () => {
+          setInputValue(input, input.value)
+        })
+
+        setInputValue(input, 0)
+        renderValue(card, 0)
+      })
+
+      presetButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const presetValue = clampValue(button.dataset.preset)
+
+          cards.forEach(card => {
+            const input = card.querySelector('[data-input]')
+            setInputValue(input, presetValue)
+          })
+        })
+      })
+
+      submitButton?.addEventListener('click', () => {
+        const targetValues = cards.map(card => {
+          const input = card.querySelector('[data-input]')
+          const nextValue = clampValue(input.value)
+
+          setInputValue(input, nextValue)
+          renderValue(card, 0, 'Waiting...')
+          return nextValue
+        })
+
+        window.clearTimeout(launchTimer)
+        submitButton.disabled = true
+        submitButton.textContent = 'Waiting...'
+        launchNote.textContent = '1 second delay... then they open up.'
+
+        launchTimer = window.setTimeout(() => {
+          cards.forEach((card, index) => {
+            renderValue(card, targetValues[index])
+          })
+
+          submitButton.disabled = false
+          submitButton.textContent = 'Submit'
+          launchNote.textContent = 'Type the numbers first. After submit, the game waits 1 second and then opens.'
+        }, 1000)
+      })
+    </script>
+  </body>
+</html>
