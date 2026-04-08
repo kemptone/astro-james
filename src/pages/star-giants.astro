@@ -1,0 +1,710 @@
+---
+import Layout from '../layouts/Layout.astro'
+import {largestStars, largestStarsSource} from '@/core/star-giants/largestStars'
+
+const initialStar = largestStars[0]
+const initialEarthsAcross = Math.round(initialStar.radiusSolar * 109.1)
+---
+
+<Layout title="Star Giants">
+  <main class="star-page">
+    <div class="starfield" aria-hidden="true">
+      <span class="twinkle twinkle-a"></span>
+      <span class="twinkle twinkle-b"></span>
+      <span class="twinkle twinkle-c"></span>
+    </div>
+
+    <section class="viewer panel">
+      <header class="control-dock">
+        <div class="title-block">
+          <p class="eyebrow">Education Game</p>
+          <h1>Star Giants</h1>
+          <p class="lede">
+            Choose one of the 100 largest stars, then grow it from 1 Sun up to
+            its published size.
+          </p>
+        </div>
+
+        <label class="control-block">
+          <span class="control-label">Choose a star</span>
+          <select id="star-select">
+            {
+              largestStars.map((star, index) => (
+                <option value={index}>
+                  #{star.rank} {star.name} • {star.radiusSolar.toLocaleString()} suns
+                </option>
+              ))
+            }
+          </select>
+        </label>
+
+        <label class="control-block">
+          <div class="control-head">
+            <span class="control-label">Scale the star</span>
+            <output id="growth-output">
+              {initialStar.radiusSolar.toLocaleString()} suns
+            </output>
+          </div>
+          <input
+            id="growth-slider"
+            type="range"
+            min="1"
+            max={initialStar.radiusSolar}
+            value={initialStar.radiusSolar}
+          />
+        </label>
+      </header>
+
+      <div id="sky-stage" class="sky-stage">
+        <div class="stage-floor"></div>
+
+        <div class="reference-cluster">
+          <div class="marker earth-marker">
+            <div id="earth-body" class="body earth-body"></div>
+            <span>Earth</span>
+          </div>
+
+          <div class="marker sun-marker">
+            <div id="sun-body" class="body sun-body"></div>
+            <span>Sun</span>
+          </div>
+        </div>
+
+        <div class="giant-cluster">
+          <div id="star-body" class="body giant-body"></div>
+          <p id="star-label" class="star-label">{initialStar.name}</p>
+        </div>
+      </div>
+
+      <footer class="info-dock">
+        <article class="info-chip info-chip--hero">
+          <span class="info-label">Selected giant</span>
+          <strong id="selected-name">{initialStar.name}</strong>
+          <small id="selected-meta">#{initialStar.rank} in {initialStar.galaxy}</small>
+        </article>
+
+        <article class="info-chip">
+          <span class="info-label">Published size</span>
+          <strong id="selected-radius">{initialStar.radiusText} R☉</strong>
+        </article>
+
+        <article class="info-chip">
+          <span class="info-label">Showing now</span>
+          <strong id="selected-scale">
+            {initialStar.radiusSolar.toLocaleString()} suns wide
+          </strong>
+        </article>
+
+        <article class="info-chip">
+          <span class="info-label">Earths across</span>
+          <strong id="selected-earths">
+            {initialEarthsAcross.toLocaleString()} Earths
+          </strong>
+        </article>
+
+        <p class="source-line">
+          Source:
+          <a href={largestStarsSource.url} target="_blank" rel="noreferrer">
+            {largestStarsSource.label}
+          </a>
+          · accessed {largestStarsSource.accessedOn}
+        </p>
+      </footer>
+    </section>
+  </main>
+
+  <script define:vars={{largestStars}}>
+    const EARTHS_PER_SUN = 109.1
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+    const stars = largestStars
+    const numberFormatter = new Intl.NumberFormat()
+
+    const stage = document.querySelector('#sky-stage')
+    const starSelect = document.querySelector('#star-select')
+    const growthSlider = document.querySelector('#growth-slider')
+    const growthOutput = document.querySelector('#growth-output')
+    const selectedName = document.querySelector('#selected-name')
+    const selectedMeta = document.querySelector('#selected-meta')
+    const selectedRadius = document.querySelector('#selected-radius')
+    const selectedScale = document.querySelector('#selected-scale')
+    const selectedEarths = document.querySelector('#selected-earths')
+    const earthBody = document.querySelector('#earth-body')
+    const sunBody = document.querySelector('#sun-body')
+    const starBody = document.querySelector('#star-body')
+    const starLabel = document.querySelector('#star-label')
+
+    const state = {
+      selectedIndex: 0,
+      displayedScale: stars[0].radiusSolar,
+      animationFrame: 0,
+    }
+
+    const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
+
+    const stopAnimation = () => {
+      if (state.animationFrame) {
+        cancelAnimationFrame(state.animationFrame)
+        state.animationFrame = 0
+      }
+    }
+
+    const sizeStageBodies = currentScale => {
+      const stageBox = stage.getBoundingClientRect()
+      const giantMax = Math.min(
+        Math.max(Math.max(stageBox.width, stageBox.height) * 1.55, 760),
+        window.innerWidth < 900 ? 1800 : 2600
+      )
+      const baseSun = Math.min(
+        stageBox.width * 0.24,
+        stageBox.height * 0.46,
+        window.innerWidth < 900 ? 180 : 300
+      )
+
+      let sunSize = baseSun
+      let giantSize = baseSun * currentScale
+
+      if (giantSize > giantMax) {
+        const fit = giantMax / giantSize
+        giantSize = giantMax
+        sunSize = baseSun * fit
+      }
+
+      sunSize = Math.max(sunSize, 4)
+      const earthSize = Math.max(
+        1,
+        Math.min(sunSize / EARTHS_PER_SUN, sunSize * 0.3)
+      )
+      const glowSize = Math.max(48, giantSize * 0.45)
+      const haloSize = Math.max(giantSize * 1.38, giantSize + 48)
+
+      earthBody.style.width = `${earthSize}px`
+      earthBody.style.height = `${earthSize}px`
+      sunBody.style.width = `${sunSize}px`
+      sunBody.style.height = `${sunSize}px`
+      starBody.style.width = `${giantSize}px`
+      starBody.style.height = `${giantSize}px`
+      starBody.style.setProperty('--star-glow', `${glowSize}px`)
+      starBody.style.setProperty('--star-halo', `${haloSize}px`)
+    }
+
+    const render = () => {
+      const star = stars[state.selectedIndex]
+      const currentScale = clamp(
+        Math.round(state.displayedScale),
+        1,
+        star.radiusSolar
+      )
+
+      starSelect.value = String(state.selectedIndex)
+      growthSlider.max = String(star.radiusSolar)
+      growthSlider.value = String(currentScale)
+      growthOutput.textContent = `${numberFormatter.format(currentScale)} suns`
+
+      selectedName.textContent = star.name
+      selectedMeta.textContent = `#${star.rank} in ${star.galaxy}`
+      selectedRadius.textContent = `${star.radiusText} R☉`
+      selectedScale.textContent = `${numberFormatter.format(currentScale)} suns wide`
+      selectedEarths.textContent = `${numberFormatter.format(
+        Math.round(currentScale * EARTHS_PER_SUN)
+      )} Earths`
+      starLabel.textContent = star.name
+
+      sizeStageBodies(currentScale)
+    }
+
+    const animateTo = targetScale => {
+      const star = stars[state.selectedIndex]
+      const boundedTarget = clamp(Math.round(targetScale), 1, star.radiusSolar)
+
+      stopAnimation()
+
+      if (prefersReducedMotion) {
+        state.displayedScale = boundedTarget
+        render()
+        return
+      }
+
+      const startScale = clamp(
+        Math.round(state.displayedScale),
+        1,
+        star.radiusSolar
+      )
+      const delta = boundedTarget - startScale
+
+      if (!delta) {
+        render()
+        return
+      }
+
+      const duration = 1100
+      const startTime = performance.now()
+
+      const tick = now => {
+        const progress = Math.min((now - startTime) / duration, 1)
+        const eased = 1 - Math.pow(1 - progress, 3)
+        state.displayedScale = startScale + delta * eased
+        render()
+
+        if (progress < 1) {
+          state.animationFrame = requestAnimationFrame(tick)
+        } else {
+          state.animationFrame = 0
+          state.displayedScale = boundedTarget
+          render()
+        }
+      }
+
+      state.animationFrame = requestAnimationFrame(tick)
+    }
+
+    const selectStar = index => {
+      state.selectedIndex = clamp(index, 0, stars.length - 1)
+      state.displayedScale = 1
+      render()
+      animateTo(stars[state.selectedIndex].radiusSolar)
+    }
+
+    starSelect.addEventListener('change', event => {
+      selectStar(Number(event.target.value))
+    })
+
+    growthSlider.addEventListener('input', event => {
+      stopAnimation()
+      state.displayedScale = Number(event.target.value)
+      render()
+    })
+
+    window.addEventListener('resize', render)
+
+    state.displayedScale = 1
+    render()
+    animateTo(stars[0].radiusSolar)
+  </script>
+</Layout>
+
+<style>
+  :global(body) {
+    margin: 0;
+    background:
+      radial-gradient(circle at top, #10182e 0%, #05070d 35%, #020307 70%, #000 100%);
+    color: #f8f6ef;
+    font-family: 'Avenir Next', 'Trebuchet MS', 'Segoe UI', sans-serif;
+  }
+
+  :global(html) {
+    color-scheme: dark;
+  }
+
+  .star-page {
+    --panel: rgba(9, 13, 24, 0.84);
+    --panel-border: rgba(145, 165, 255, 0.18);
+    --panel-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+    --soft-text: rgba(240, 244, 255, 0.72);
+    --earth-ocean: #4fa6ff;
+    --earth-land: #2fd680;
+    min-height: 100vh;
+    padding: 0 0 4.25rem;
+    position: relative;
+    overflow: clip;
+  }
+
+  .starfield,
+  .starfield::before,
+  .starfield::after {
+    inset: 0;
+    position: fixed;
+    pointer-events: none;
+  }
+
+  .starfield {
+    background-image:
+      radial-gradient(circle at 10% 18%, rgba(255, 255, 255, 0.8) 0 1px, transparent 1.4px),
+      radial-gradient(circle at 80% 14%, rgba(255, 255, 255, 0.55) 0 1px, transparent 1.6px),
+      radial-gradient(circle at 21% 68%, rgba(157, 210, 255, 0.75) 0 1px, transparent 1.7px),
+      radial-gradient(circle at 67% 76%, rgba(255, 226, 170, 0.75) 0 1px, transparent 1.6px),
+      radial-gradient(circle at 91% 44%, rgba(255, 255, 255, 0.45) 0 1px, transparent 1.4px);
+    opacity: 0.9;
+  }
+
+  .starfield::before,
+  .starfield::after {
+    content: '';
+    background-repeat: repeat;
+  }
+
+  .starfield::before {
+    background-image:
+      radial-gradient(circle at 25% 35%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.4px),
+      radial-gradient(circle at 75% 30%, rgba(255, 213, 151, 0.15) 0 1px, transparent 1.4px),
+      radial-gradient(circle at 50% 75%, rgba(158, 202, 255, 0.14) 0 1px, transparent 1.2px);
+    background-size: 220px 220px;
+    animation: drift 34s linear infinite;
+  }
+
+  .starfield::after {
+    background:
+      radial-gradient(circle at center, rgba(255, 170, 84, 0.06), transparent 52%);
+    mix-blend-mode: screen;
+  }
+
+  .twinkle {
+    position: fixed;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.55);
+    animation: twinkle 4.6s ease-in-out infinite;
+  }
+
+  .twinkle-a {
+    top: 13%;
+    left: 18%;
+    width: 3px;
+    height: 3px;
+  }
+
+  .twinkle-b {
+    top: 31%;
+    right: 21%;
+    width: 4px;
+    height: 4px;
+    animation-delay: 1.2s;
+  }
+
+  .twinkle-c {
+    bottom: 22%;
+    left: 73%;
+    width: 2px;
+    height: 2px;
+    animation-delay: 2.4s;
+  }
+
+  .panel {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    background: linear-gradient(180deg, rgba(16, 23, 39, 0.92), var(--panel));
+    border: 1px solid var(--panel-border);
+    border-radius: 0;
+    box-shadow: var(--panel-shadow);
+    backdrop-filter: blur(18px);
+  }
+
+  .viewer {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    min-height: 100vh;
+    overflow: hidden;
+    border-left: none;
+    border-right: none;
+  }
+
+  .eyebrow {
+    margin: 0 0 0.55rem;
+    color: #aabafc;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+
+  .title-block h1 {
+    margin: 0;
+    font-family: 'Gill Sans', 'Trebuchet MS', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    font-size: clamp(2.6rem, 6vw, 4.7rem);
+    line-height: 0.94;
+  }
+
+  .lede,
+  .source-line {
+    margin: 0;
+    color: var(--soft-text);
+    line-height: 1.6;
+  }
+
+  .control-dock {
+    display: grid;
+    gap: 1rem;
+    padding: 1.2rem 1.25rem 0.8rem;
+  }
+
+  .sky-stage {
+    position: relative;
+    min-height: clamp(420px, 62vh, 1000px);
+    height: 100%;
+    padding: 0.4rem 0 1.35rem;
+    overflow: hidden;
+  }
+
+  .stage-floor {
+    position: absolute;
+    inset: auto 0 1.35rem;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(132, 151, 214, 0) 0%,
+      rgba(132, 151, 214, 0.55) 18%,
+      rgba(132, 151, 214, 0.45) 82%,
+      rgba(132, 151, 214, 0) 100%
+    );
+  }
+
+  .reference-cluster,
+  .giant-cluster {
+    position: relative;
+    z-index: 1;
+  }
+
+  .reference-cluster {
+    position: absolute;
+    left: clamp(0.85rem, 4vw, 3.5rem);
+    bottom: 1.65rem;
+    display: grid;
+    align-items: end;
+    gap: 1.4rem;
+  }
+
+  .giant-cluster {
+    position: absolute;
+    right: 0;
+    bottom: 1.65rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+    transform: translateX(22%);
+  }
+
+  .marker {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    font-size: 0.95rem;
+    color: #f8f6ef;
+  }
+
+  .body {
+    flex: none;
+    border-radius: 999px;
+    transition:
+      width 540ms cubic-bezier(0.22, 1, 0.36, 1),
+      height 540ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 540ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .earth-body {
+    width: 10px;
+    height: 10px;
+    background:
+      radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.45), transparent 33%),
+      radial-gradient(circle at 58% 58%, var(--earth-land) 0 30%, transparent 32%),
+      radial-gradient(circle at 36% 62%, rgba(55, 204, 132, 0.8) 0 14%, transparent 16%),
+      linear-gradient(135deg, #175dd1, var(--earth-ocean));
+    box-shadow: 0 0 20px rgba(79, 166, 255, 0.45);
+  }
+
+  .sun-body {
+    width: 86px;
+    height: 86px;
+    background:
+      radial-gradient(circle at 32% 30%, #fff7d0 0 18%, #ffd870 20%, #ffae47 58%, #ff7b1e 100%);
+    box-shadow:
+      0 0 26px rgba(255, 185, 72, 0.88),
+      0 0 80px rgba(255, 149, 46, 0.33);
+  }
+
+  .giant-body {
+    width: 320px;
+    height: 320px;
+    position: relative;
+    background:
+      radial-gradient(circle at 30% 28%, #fff7de 0 12%, #ffd38a 18%, #ffa647 42%, #f75d18 78%, #5a1506 100%);
+    box-shadow:
+      0 0 var(--star-glow, 110px) rgba(255, 163, 80, 0.46),
+      0 0 calc(var(--star-glow, 110px) * 1.8) rgba(255, 107, 40, 0.24);
+    animation: starPulse 5.2s ease-in-out infinite;
+  }
+
+  .giant-body::before {
+    content: '';
+    position: absolute;
+    inset: 50%;
+    width: var(--star-halo, 420px);
+    height: var(--star-halo, 420px);
+    transform: translate(-50%, -50%);
+    border-radius: inherit;
+    background: radial-gradient(circle, rgba(255, 191, 121, 0.22), transparent 67%);
+    z-index: -1;
+  }
+
+  .star-label {
+    margin: 1rem 0 0;
+    text-align: center;
+    font-size: clamp(1rem, 2vw, 1.18rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .control-block {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .control-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .control-label {
+    font-size: 0.88rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #cfd8ff;
+  }
+
+  select,
+  input[type='range'],
+  output {
+    font: inherit;
+  }
+
+  select {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    color: #f8f6ef;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 16px;
+  }
+
+  input[type='range'] {
+    width: 100%;
+    accent-color: #ffbf67;
+  }
+
+  .info-dock {
+    display: grid;
+    gap: 0.8rem;
+    padding: 0 1.25rem 1.2rem;
+  }
+
+  .info-chip {
+    padding: 0.9rem 1rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .info-label {
+    display: block;
+    color: var(--soft-text);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .info-chip strong,
+  .info-chip small {
+    display: block;
+  }
+
+  .info-chip strong {
+    margin-top: 0.3rem;
+    font-size: clamp(1rem, 2vw, 1.35rem);
+  }
+
+  .info-chip small {
+    margin-top: 0.25rem;
+    color: var(--soft-text);
+    line-height: 1.5;
+  }
+
+  .source-line a {
+    color: #ffd58a;
+  }
+
+  @media (min-width: 980px) {
+    .control-dock {
+      grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr) minmax(300px, 0.9fr);
+      align-items: end;
+    }
+
+    .info-dock {
+      grid-template-columns: minmax(260px, 1.2fr) repeat(3, minmax(180px, 1fr));
+      align-items: start;
+    }
+
+    .source-line {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 979px) {
+    .viewer {
+      min-height: 100vh;
+    }
+
+    .control-dock {
+      padding-bottom: 0.4rem;
+    }
+
+    .reference-cluster {
+      left: 1rem;
+    }
+
+    .giant-cluster {
+      right: 0;
+      transform: translateX(28%);
+    }
+
+    .title-block h1 {
+      font-size: clamp(2.1rem, 8vw, 3.6rem);
+    }
+  }
+
+  @keyframes starPulse {
+    0%,
+    100% {
+      transform: scale(1);
+      filter: saturate(1);
+    }
+
+    50% {
+      transform: scale(1.015);
+      filter: saturate(1.06);
+    }
+  }
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.25;
+      transform: scale(0.8);
+    }
+
+    50% {
+      opacity: 1;
+      transform: scale(1.25);
+    }
+  }
+
+  @keyframes drift {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+
+    to {
+      transform: translate3d(-80px, 40px, 0);
+    }
+  }
+</style>
