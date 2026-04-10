@@ -1,0 +1,984 @@
+---
+import Layout from '../layouts/Layout.astro'
+
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+const reverseLetters = [...letters].reverse()
+const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
+---
+
+<Layout title="Daphne">
+  <main class="daphne-page" data-mode="numbers-basic">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Secret Message Game</p>
+        <h1>Daphne</h1>
+        <p class="lede">
+          Daphne has <strong>2 options</strong> and <strong>3 modes</strong>.
+          Option 1 is <strong>Numbers</strong> with two number codes. Option 2 is
+          <strong>Backwords Alphabet</strong>.
+        </p>
+        <p class="note">
+          You can write your own messages, decode them, and try challenge rounds
+          in every mode.
+        </p>
+      </div>
+
+      <div class="options-grid">
+        <section class="option-card">
+          <p class="option-label">Option 1</p>
+          <h2>Numbers</h2>
+          <p class="option-copy">
+            Use numbers for letters in two different ways.
+          </p>
+          <div class="mode-switch" role="group" aria-label="Number modes">
+            <button
+              type="button"
+              class="mode-button is-active"
+              data-mode-button="numbers-basic"
+              aria-pressed="true"
+            >
+              Mode 1: A=1
+            </button>
+            <button
+              type="button"
+              class="mode-button"
+              data-mode-button="numbers-ranking"
+              aria-pressed="false"
+            >
+              Mode 2: Ranking
+            </button>
+          </div>
+        </section>
+
+        <section class="option-card">
+          <p class="option-label">Option 2</p>
+          <h2>Backwords Alphabet</h2>
+          <p class="option-copy">
+            Flip each letter to the matching letter on the other side of the
+            alphabet.
+          </p>
+          <div class="mode-switch" role="group" aria-label="Backwords mode">
+            <button
+              type="button"
+              class="mode-button"
+              data-mode-button="backwords"
+              aria-pressed="false"
+            >
+              Mode 3: A=Z
+            </button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <article class="panel intro-panel">
+        <p class="panel-kicker">How To Play</p>
+        <p id="mode-option" class="option-pill">Option 1</p>
+        <h2 id="mode-title">Numbers: A=1</h2>
+        <p id="mode-description" class="panel-copy">
+          Turn each letter into a number. Put spaces between each number and use
+          a slash between words so you can build a whole sentence.
+        </p>
+        <div class="tip-box">
+          <p class="tip-label">Current rule</p>
+          <p id="mode-rule" class="tip-text">A=1, B=2, C=3 ... Z=26</p>
+        </div>
+        <div class="tip-box">
+          <p class="tip-label">Try this</p>
+          <p id="mode-example" class="tip-text">23 5 / 12 9 11 5 / 3 15 4 5 19</p>
+        </div>
+      </article>
+
+      <article class="panel translator-panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-kicker">Make Your Own Message</p>
+            <h2>Write, code, and read</h2>
+          </div>
+          <button id="use-encoded" type="button" class="ghost-button">
+            Send code down
+          </button>
+        </div>
+
+        <label class="field">
+          <span>Plain message</span>
+          <textarea
+            id="plain-input"
+            rows="4"
+            spellcheck="false"
+            placeholder="WE LIKE CODES"
+          >WE LIKE CODES</textarea>
+        </label>
+
+        <div class="output-box">
+          <p class="output-label">Secret code</p>
+          <div id="encoded-output" class="output-text" aria-live="polite"></div>
+        </div>
+
+        <label class="field">
+          <span id="coded-input-label">Type number code to read it</span>
+          <textarea
+            id="coded-input"
+            rows="4"
+            spellcheck="false"
+            placeholder="23 5 / 12 9 11 5 / 3 15 4 5 19"
+          ></textarea>
+        </label>
+
+        <div class="output-box decoded-box">
+          <p class="output-label">Decoded message</p>
+          <div id="decoded-output" class="output-text" aria-live="polite"></div>
+        </div>
+      </article>
+
+      <article class="panel challenge-panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-kicker">Challenge</p>
+            <h2>Crack the message</h2>
+          </div>
+          <button id="new-challenge" type="button" class="ghost-button">
+            New code
+          </button>
+        </div>
+
+        <div class="score-row">
+          <div class="score-chip">
+            <span>Solved</span>
+            <strong id="solved-count">0</strong>
+          </div>
+          <div class="score-chip">
+            <span>Streak</span>
+            <strong id="streak-count">0</strong>
+          </div>
+        </div>
+
+        <div class="challenge-box">
+          <p class="output-label">Decode this</p>
+          <div id="challenge-code" class="challenge-code" aria-live="polite"></div>
+        </div>
+
+        <label class="field">
+          <span>Your answer</span>
+          <input
+            id="guess-input"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Type the message"
+          />
+        </label>
+
+        <div class="button-row">
+          <button id="check-answer" type="button" class="primary-button">
+            Check answer
+          </button>
+          <button id="show-answer" type="button" class="secondary-button">
+            Show answer
+          </button>
+        </div>
+
+        <p id="challenge-feedback" class="feedback" aria-live="polite">
+          Read the code and type the message.
+        </p>
+      </article>
+    </section>
+
+    <section class="panel key-panel">
+      <div class="panel-head">
+        <div>
+          <p class="panel-kicker">Code Key</p>
+          <h2>Letter map</h2>
+        </div>
+      </div>
+
+      <div id="numbers-basic-key" class="key-grid">
+        {
+          letters.map((letter, index) => (
+            <div class="key-card">
+              <strong>{letter}</strong>
+              <span>{index + 1}</span>
+            </div>
+          ))
+        }
+      </div>
+
+      <div id="numbers-ranking-key" class="key-grid" hidden>
+        {
+          rankingLetters.map((letter, index) => (
+            <div class="key-card">
+              <strong>{index + 1}</strong>
+              <span>{letter}</span>
+            </div>
+          ))
+        }
+      </div>
+
+      <div id="backwords-key" class="key-grid" hidden>
+        {
+          letters.map((letter, index) => (
+            <div class="key-card">
+              <strong>{letter}</strong>
+              <span>{reverseLetters[index]}</span>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    const reversedAlphabet = alphabet.split('').reverse().join('')
+    const rankingAlphabet = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'
+
+    const modeConfig = {
+      'numbers-basic': {
+        option: 'Option 1',
+        name: 'Numbers: A=1',
+        description:
+          'Turn each letter into a number. Put spaces between each number and use a slash between words so you can build a whole sentence.',
+        rule: 'A=1, B=2, C=3 ... Z=26',
+        example: '23 5 / 12 9 11 5 / 3 15 4 5 19',
+        plainPlaceholder: 'WE LIKE CODES',
+        codedLabel: 'Type number code to read it',
+        codedPlaceholder: '23 5 / 12 9 11 5 / 3 15 4 5 19',
+        challengeAnswers: [
+          'FIND THE KEY',
+          'MAKE A SECRET NOTE',
+          'WE LIKE CODES',
+          'DAPHNE IS READY',
+          'READ THE MESSAGE',
+          'OPEN THE DOOR',
+        ],
+      },
+      'numbers-ranking': {
+        option: 'Option 1',
+        name: 'Numbers: Ranking',
+        description:
+          'Use the ranking of common English letters. Number 1 is the most usual letter, and 26 is the most unusual letter.',
+        rule: '1=E, 2=T, 3=A ... 26=Z',
+        example: '15 1 / 11 5 22 1 / 12 4 10 1 7',
+        plainPlaceholder: 'WE LIKE CODES',
+        codedLabel: 'Type ranking code to read it',
+        codedPlaceholder: '15 1 / 11 5 22 1 / 12 4 10 1 7',
+        challengeAnswers: [
+          'SECRET MESSAGE',
+          'WE LIKE CODES',
+          'DAPHNE HAS THREE MODES',
+          'CRACK THE CLUE',
+          'FIND THE NOTE',
+          'READ THE SECRET',
+        ],
+      },
+      backwords: {
+        option: 'Option 2',
+        name: 'Backwords Alphabet',
+        description:
+          'Flip every letter to the letter at the other end of the alphabet. A becomes Z, B becomes Y, and the same rule works backwards to decode it.',
+        rule: 'A=Z, B=Y, C=X ... Z=A',
+        example: 'DV ORPV XLWVH',
+        plainPlaceholder: 'WE LIKE CODES',
+        codedLabel: 'Type backwords alphabet code to read it',
+        codedPlaceholder: 'DV ORPV XLWVH',
+        challengeAnswers: [
+          'SECRET MESSAGE',
+          'MAKE YOUR CODE',
+          'DAPHNE LOVES PUZZLES',
+          'WE CAN READ THIS',
+          'HIDE THE NOTE',
+          'SOLVE THE CLUE',
+        ],
+      },
+    }
+
+      const page = document.querySelector('.daphne-page')
+
+      if (page) {
+      const modeOption = document.querySelector('#mode-option')
+      const modeTitle = document.querySelector('#mode-title')
+      const modeDescription = document.querySelector('#mode-description')
+      const modeRule = document.querySelector('#mode-rule')
+      const modeExample = document.querySelector('#mode-example')
+      const plainInput = document.querySelector('#plain-input')
+      const codedInput = document.querySelector('#coded-input')
+      const codedInputLabel = document.querySelector('#coded-input-label')
+      const encodedOutput = document.querySelector('#encoded-output')
+      const decodedOutput = document.querySelector('#decoded-output')
+      const useEncodedButton = document.querySelector('#use-encoded')
+      const modeButtons = document.querySelectorAll('[data-mode-button]')
+      const newChallengeButton = document.querySelector('#new-challenge')
+      const showAnswerButton = document.querySelector('#show-answer')
+      const checkAnswerButton = document.querySelector('#check-answer')
+      const challengeCode = document.querySelector('#challenge-code')
+      const guessInput = document.querySelector('#guess-input')
+      const challengeFeedback = document.querySelector('#challenge-feedback')
+      const solvedCount = document.querySelector('#solved-count')
+      const streakCount = document.querySelector('#streak-count')
+      const numbersBasicKey = document.querySelector('#numbers-basic-key')
+      const numbersRankingKey = document.querySelector('#numbers-ranking-key')
+      const backwordsKey = document.querySelector('#backwords-key')
+
+      let solved = 0
+      let streak = 0
+      let currentAnswer = ''
+
+      const encodeNumbersBasic = text => {
+        const tokens = []
+
+        for (const character of text.toUpperCase()) {
+          if (character >= 'A' && character <= 'Z') {
+            tokens.push(String(alphabet.indexOf(character) + 1))
+            continue
+          }
+
+          if (character === ' ') {
+            tokens.push('/')
+            continue
+          }
+
+          if (character === '\n') {
+            tokens.push('//')
+            continue
+          }
+
+          tokens.push(character)
+        }
+
+        return tokens.join(' ')
+      }
+
+      const decodeNumbersBasic = text => {
+        if (!text.trim()) return ''
+
+        return text
+          .trim()
+          .split(/\s+/)
+          .map(token => {
+            if (token === '/') return ' '
+            if (token === '//') return '\n'
+
+            const parsed = Number(token)
+
+            if (Number.isInteger(parsed) && parsed >= 1 && parsed <= 26) {
+              return alphabet[parsed - 1]
+            }
+
+            return token.toUpperCase()
+          })
+          .join('')
+      }
+
+      const encodeNumbersRanking = text => {
+        const tokens = []
+
+        for (const character of text.toUpperCase()) {
+          if (character >= 'A' && character <= 'Z') {
+            tokens.push(String(rankingAlphabet.indexOf(character) + 1))
+            continue
+          }
+
+          if (character === ' ') {
+            tokens.push('/')
+            continue
+          }
+
+          if (character === '\n') {
+            tokens.push('//')
+            continue
+          }
+
+          tokens.push(character)
+        }
+
+        return tokens.join(' ')
+      }
+
+      const decodeNumbersRanking = text => {
+        if (!text.trim()) return ''
+
+        return text
+          .trim()
+          .split(/\s+/)
+          .map(token => {
+            if (token === '/') return ' '
+            if (token === '//') return '\n'
+
+            const parsed = Number(token)
+
+            if (Number.isInteger(parsed) && parsed >= 1 && parsed <= 26) {
+              return rankingAlphabet[parsed - 1]
+            }
+
+            return token.toUpperCase()
+          })
+          .join('')
+      }
+
+      const flipCharacter = character => {
+        const upper = character.toUpperCase()
+        const index = alphabet.indexOf(upper)
+
+        if (index === -1) return character
+
+        return reversedAlphabet[index]
+      }
+
+      const encodeBackwords = text =>
+        text
+          .split('')
+          .map(character => flipCharacter(character))
+          .join('')
+
+      const decodeBackwords = text => encodeBackwords(text)
+
+      const normalizeMessage = value =>
+        value
+          .toUpperCase()
+          .replace(/\s+/g, ' ')
+          .trim()
+
+      const getMode = () => page.dataset.mode || 'numbers-basic'
+
+      const encodeForMode = (mode, text) => {
+        if (mode === 'numbers-basic') return encodeNumbersBasic(text)
+        if (mode === 'numbers-ranking') return encodeNumbersRanking(text)
+        return encodeBackwords(text.toUpperCase())
+      }
+
+      const decodeForMode = (mode, text) => {
+        if (mode === 'numbers-basic') return decodeNumbersBasic(text)
+        if (mode === 'numbers-ranking') return decodeNumbersRanking(text)
+        return decodeBackwords(text.toUpperCase())
+      }
+
+      const updateTranslator = () => {
+        const mode = getMode()
+        encodedOutput.textContent = encodeForMode(mode, plainInput.value)
+        decodedOutput.textContent = decodeForMode(mode, codedInput.value)
+      }
+
+      const drawChallenge = () => {
+        const mode = getMode()
+        const answers = modeConfig[mode].challengeAnswers
+        const randomAnswer = answers[Math.floor(Math.random() * answers.length)]
+
+        currentAnswer = randomAnswer
+        challengeCode.textContent = encodeForMode(mode, randomAnswer)
+        guessInput.value = ''
+        challengeFeedback.textContent = 'Read the code and type the message.'
+        challengeFeedback.dataset.tone = 'neutral'
+      }
+
+      const setMode = mode => {
+        page.dataset.mode = mode
+
+        const config = modeConfig[mode]
+
+        modeOption.textContent = config.option
+        modeTitle.textContent = config.name
+        modeDescription.textContent = config.description
+        modeRule.textContent = config.rule
+        modeExample.textContent = config.example
+        plainInput.placeholder = config.plainPlaceholder
+        codedInputLabel.textContent = config.codedLabel
+        codedInput.placeholder = config.codedPlaceholder
+        codedInput.value = encodeForMode(mode, plainInput.value)
+
+        modeButtons.forEach(button => {
+          const isActive = button.dataset.modeButton === mode
+          button.classList.toggle('is-active', isActive)
+          button.setAttribute('aria-pressed', String(isActive))
+        })
+
+        numbersBasicKey.hidden = mode !== 'numbers-basic'
+        numbersRankingKey.hidden = mode !== 'numbers-ranking'
+        backwordsKey.hidden = mode !== 'backwords'
+
+        updateTranslator()
+        drawChallenge()
+      }
+
+      modeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const nextMode = button.dataset.modeButton
+
+          if (!nextMode || nextMode === getMode()) return
+
+          setMode(nextMode)
+        })
+      })
+
+      plainInput.addEventListener('input', updateTranslator)
+      codedInput.addEventListener('input', updateTranslator)
+
+      useEncodedButton.addEventListener('click', () => {
+        codedInput.value = encodedOutput.textContent || ''
+        updateTranslator()
+        codedInput.focus()
+      })
+
+      newChallengeButton.addEventListener('click', drawChallenge)
+
+      showAnswerButton.addEventListener('click', () => {
+        streak = 0
+        streakCount.textContent = String(streak)
+        challengeFeedback.textContent = `Answer: ${currentAnswer}`
+        challengeFeedback.dataset.tone = 'answer'
+      })
+
+      checkAnswerButton.addEventListener('click', () => {
+        const guess = normalizeMessage(guessInput.value)
+        const answer = normalizeMessage(currentAnswer)
+
+        if (!guess) {
+          challengeFeedback.textContent = 'Type a message first.'
+          challengeFeedback.dataset.tone = 'warning'
+          return
+        }
+
+        if (guess === answer) {
+          solved += 1
+          streak += 1
+          solvedCount.textContent = String(solved)
+          streakCount.textContent = String(streak)
+          challengeFeedback.textContent = 'Correct. You cracked the code.'
+          challengeFeedback.dataset.tone = 'success'
+          return
+        }
+
+        streak = 0
+        streakCount.textContent = String(streak)
+        challengeFeedback.textContent = 'Not yet. Check the code key and try again.'
+        challengeFeedback.dataset.tone = 'danger'
+      })
+
+      guessInput.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+          event.preventDefault()
+          checkAnswerButton.click()
+        }
+      })
+
+      setMode(getMode())
+      codedInput.value = encodeForMode(getMode(), plainInput.value)
+      updateTranslator()
+    }
+  </script>
+</Layout>
+
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #f7f0dc;
+    --paper-deep: #e8d8ad;
+    --ink: #1e1b18;
+    --ink-soft: #5f564b;
+    --sun: #f1a83b;
+    --sun-deep: #c77711;
+    --sky: #dff2ef;
+    --moss: #4b705e;
+    --berry: #923d2f;
+    --card: rgba(255, 251, 244, 0.82);
+    --line: rgba(30, 27, 24, 0.14);
+    --shadow: rgba(77, 48, 18, 0.16);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  :global(body) {
+    margin: 0;
+    color: var(--ink);
+    font-family: 'Avenir Next', 'Gill Sans', 'Trebuchet MS', sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(255, 249, 224, 0.92), transparent 28%),
+      radial-gradient(circle at top right, rgba(223, 242, 239, 0.8), transparent 30%),
+      linear-gradient(180deg, #f5ead3 0%, #eadab2 42%, #dcc38f 100%);
+  }
+
+  .daphne-page {
+    width: min(1120px, calc(100% - 1.4rem));
+    margin: 0 auto;
+    padding: 1.25rem 0 6rem;
+  }
+
+  .hero,
+  .panel {
+    border: 2px solid var(--line);
+    border-radius: 28px;
+    background:
+      linear-gradient(140deg, rgba(255, 255, 255, 0.78), rgba(255, 247, 230, 0.55)),
+      var(--card);
+    box-shadow: 0 20px 48px var(--shadow);
+    backdrop-filter: blur(8px);
+  }
+
+  .hero {
+    display: grid;
+    gap: 1.4rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .eyebrow,
+  .panel-kicker,
+  .tip-label,
+  .output-label {
+    margin: 0 0 0.45rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sun-deep);
+  }
+
+  h1,
+  h2,
+  p {
+    margin-top: 0;
+  }
+
+  h1 {
+    margin-bottom: 0.6rem;
+    font-size: clamp(2.4rem, 6vw, 4.6rem);
+    line-height: 0.92;
+  }
+
+  h2 {
+    margin-bottom: 0.45rem;
+    font-size: clamp(1.45rem, 3vw, 2rem);
+    line-height: 1.02;
+  }
+
+  .lede,
+  .panel-copy,
+  .note,
+  .tip-text,
+  .feedback {
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .note {
+    margin-bottom: 0;
+    color: var(--ink-soft);
+  }
+
+  .mode-switch {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .option-card {
+    padding: 1rem;
+    border: 2px solid rgba(30, 27, 24, 0.08);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.64);
+  }
+
+  .option-label {
+    margin: 0 0 0.35rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--berry);
+  }
+
+  .option-copy {
+    margin: 0 0 0.85rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  .option-pill {
+    display: inline-flex;
+    margin: 0 0 0.6rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(75, 112, 94, 0.14);
+    color: var(--moss);
+    font-size: 0.86rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .mode-button,
+  .ghost-button,
+  .primary-button,
+  .secondary-button {
+    border: 0;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+      transform 120ms ease,
+      background-color 120ms ease,
+      color 120ms ease,
+      box-shadow 120ms ease;
+  }
+
+  .mode-button,
+  .ghost-button {
+    padding: 0.8rem 1.15rem;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: inset 0 0 0 2px rgba(30, 27, 24, 0.08);
+  }
+
+  .mode-button.is-active {
+    color: white;
+    background: linear-gradient(135deg, var(--berry), #bb6643);
+    box-shadow: 0 12px 24px rgba(146, 61, 47, 0.24);
+  }
+
+  .ghost-button:hover,
+  .mode-button:hover,
+  .primary-button:hover,
+  .secondary-button:hover {
+    transform: translateY(-1px);
+  }
+
+  .workspace {
+    display: grid;
+    grid-template-columns: 0.9fr 1.15fr 0.95fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .panel {
+    padding: 1.2rem;
+  }
+
+  .panel-head {
+    display: flex;
+    gap: 0.8rem;
+    align-items: start;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+  }
+
+  .tip-box,
+  .output-box,
+  .challenge-box,
+  .score-chip,
+  .key-card {
+    border: 2px solid rgba(30, 27, 24, 0.08);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.72);
+  }
+
+  .tip-box {
+    padding: 0.95rem 1rem;
+    margin-top: 0.8rem;
+  }
+
+  .tip-text {
+    margin-bottom: 0;
+    font-weight: 700;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.45rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  .field span {
+    font-size: 0.95rem;
+  }
+
+  .field textarea,
+  .field input {
+    width: 100%;
+    border: 2px solid rgba(30, 27, 24, 0.12);
+    border-radius: 18px;
+    padding: 0.9rem 1rem;
+    font: inherit;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.84);
+  }
+
+  .field textarea:focus,
+  .field input:focus {
+    outline: none;
+    border-color: var(--sun-deep);
+    box-shadow: 0 0 0 4px rgba(241, 168, 59, 0.18);
+  }
+
+  .output-box,
+  .challenge-box {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .output-text,
+  .challenge-code {
+    min-height: 4.7rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 1.08rem;
+    line-height: 1.55;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+  }
+
+  .decoded-box .output-text {
+    color: var(--moss);
+    letter-spacing: 0.02em;
+  }
+
+  .challenge-code {
+    color: var(--berry);
+  }
+
+  .score-row,
+  .button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .score-row {
+    margin-bottom: 1rem;
+  }
+
+  .score-chip {
+    min-width: 110px;
+    padding: 0.8rem 0.95rem;
+  }
+
+  .score-chip span {
+    display: block;
+    margin-bottom: 0.15rem;
+    font-size: 0.84rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+  }
+
+  .score-chip strong {
+    font-size: 1.5rem;
+  }
+
+  .primary-button,
+  .secondary-button {
+    padding: 0.9rem 1.15rem;
+  }
+
+  .primary-button {
+    color: white;
+    background: linear-gradient(135deg, var(--sun-deep), #da8b1f);
+    box-shadow: 0 14px 24px rgba(199, 119, 17, 0.24);
+  }
+
+  .secondary-button {
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: inset 0 0 0 2px rgba(30, 27, 24, 0.08);
+  }
+
+  .feedback {
+    min-height: 2.3rem;
+    margin: 1rem 0 0;
+    font-weight: 700;
+  }
+
+  .feedback[data-tone='success'] {
+    color: #1e6b45;
+  }
+
+  .feedback[data-tone='danger'] {
+    color: #962f29;
+  }
+
+  .feedback[data-tone='warning'],
+  .feedback[data-tone='answer'] {
+    color: #8a5711;
+  }
+
+  .key-panel {
+    margin-top: 1rem;
+  }
+
+  .key-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+    gap: 0.7rem;
+  }
+
+  .key-card {
+    padding: 0.85rem 0.7rem;
+    text-align: center;
+  }
+
+  .key-card strong,
+  .key-card span {
+    display: block;
+  }
+
+  .key-card strong {
+    font-size: 1.25rem;
+  }
+
+  .key-card span {
+    margin-top: 0.2rem;
+    font-weight: 800;
+    color: var(--moss);
+  }
+
+  @media (max-width: 920px) {
+    .options-grid,
+    .workspace {
+      grid-template-columns: 1fr;
+    }
+
+    .panel-head {
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .daphne-page {
+      width: min(100%, calc(100% - 0.8rem));
+      padding-top: 0.8rem;
+    }
+
+    .hero,
+    .panel {
+      border-radius: 22px;
+      padding: 1rem;
+    }
+
+    .mode-switch,
+    .button-row,
+    .score-row {
+      flex-direction: column;
+    }
+
+    .mode-button,
+    .ghost-button,
+    .primary-button,
+    .secondary-button {
+      width: 100%;
+    }
+
+    .key-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
