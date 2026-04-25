@@ -2,494 +2,490 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Mila's Interactive Tool">
+<Layout title="Mila Weekday Game">
   <style>
+    :root {
+      --ink: #1f2a37;
+      --paper: #fffdf7;
+      --sky: #dff1ff;
+      --sky-strong: #4f8fc8;
+      --gold: #ffe59a;
+      --peach: #ffe3cf;
+      --line: #cbd5e1;
+      --panel: rgba(255, 255, 255, 0.9);
+      --shadow: 0 20px 45px rgba(60, 90, 120, 0.16);
+    }
+
     main {
-      max-width: 1200px;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 2rem;
-      font-family: system-ui, sans-serif;
+      padding: 2rem 1.25rem 3rem;
+      color: var(--ink);
+      font-family:
+        "Avenir Next",
+        "Trebuchet MS",
+        sans-serif;
     }
 
-    h1 {
-      color: #333;
-      margin-bottom: 1rem;
-    }
-
-    .container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      margin-bottom: 2rem;
-    }
-
-    .section {
-      padding: 1.5rem;
-      background: #f5f5f5;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-    }
-
-    .section h2 {
-      margin-top: 0;
-      color: #222;
-      font-size: 1.2rem;
-      border-bottom: 2px solid #007acc;
-      padding-bottom: 0.5rem;
-    }
-
-    /* Schedule Section */
-    .schedule-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .day-btn {
-      padding: 0.75rem;
-      border: 2px solid #007acc;
-      background: white;
-      color: #007acc;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.2s;
-    }
-
-    .day-btn:hover {
-      background: #e3f2fd;
-    }
-
-    .day-btn.active {
-      background: #007acc;
-      color: white;
-    }
-
-    .day-label {
-      font-size: 0.8rem;
-      color: #666;
-      margin-top: 0.25rem;
-    }
-
-    .button-group {
-      display: flex;
-      gap: 1rem;
+    .hero {
+      padding: 1.75rem;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.95), transparent 36%),
+        linear-gradient(135deg, var(--sky), var(--gold));
+      box-shadow: var(--shadow);
       margin-bottom: 1.5rem;
     }
 
-    .reset-btn {
-      flex: 1;
-      padding: 0.75rem;
-      border: none;
-      background: #28a745;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.2s;
+    h1 {
+      margin: 0 0 0.75rem;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
     }
 
-    .reset-btn:hover {
-      background: #218838;
+    .hero p,
+    .rules li {
+      font-size: 1.05rem;
+      line-height: 1.55;
     }
 
-    /* Color Bar Section */
-    .color-entry {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      align-items: center;
+    .rules {
+      margin: 1rem 0 0;
+      padding-left: 1.1rem;
     }
 
-    .color-input {
-      flex: 1;
-      padding: 0.5rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-
-    .percentage-input {
-      width: 80px;
-      padding: 0.5rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-
-    .add-color-btn {
-      padding: 0.5rem 1rem;
-      background: #007acc;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .add-color-btn:hover {
-      background: #005a9c;
-    }
-
-    .color-bar-container {
-      background: white;
-      height: 60px;
-      border: 2px solid #ddd;
-      border-radius: 4px;
-      position: relative;
-      overflow: hidden;
-      margin-top: 1rem;
-    }
-
-    .color-segment {
-      position: absolute;
-      height: 100%;
-      opacity: 0.8;
-      transition: width 0.3s;
-    }
-
-    .color-marker {
-      position: absolute;
-      width: 2px;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.3);
-      top: 0;
-    }
-
-    .color-list {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid #ddd;
-    }
-
-    .color-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
-    }
-
-    .color-box {
-      width: 24px;
-      height: 24px;
-      border-radius: 2px;
-      border: 1px solid #ccc;
-    }
-
-    /* Switches Section */
-    .switch-group {
-      margin-bottom: 2rem;
-    }
-
-    .switch-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-      color: #222;
-    }
-
-    .switch-input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 1rem;
-    }
-
-    .switch-explanation {
-      margin-top: 0.75rem;
-      padding: 0.75rem;
-      background: white;
-      border-left: 4px solid #007acc;
-      font-size: 0.9rem;
-      color: #555;
-    }
-
-    .switch-state {
+    .layout {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-top: 1rem;
+      gap: 1.25rem;
+      grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+      align-items: start;
     }
 
-    .switch-indicator {
-      padding: 0.75rem;
-      border-radius: 4px;
-      text-align: center;
-      font-weight: bold;
+    .panel {
+      background: var(--panel);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      border-radius: 24px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .panel h2 {
+      margin: 0 0 1rem;
+      font-size: 1.25rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    label {
+      display: grid;
+      gap: 0.45rem;
+      font-weight: 700;
+    }
+
+    input[type='text'] {
+      width: 100%;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      padding: 0.85rem 1rem;
+      font-size: 1rem;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    input[type='text']:focus {
+      outline: none;
+      border-color: var(--sky-strong);
+      box-shadow: 0 0 0 4px rgba(79, 143, 200, 0.16);
+    }
+
+    .helper {
+      margin: 0;
+      color: #475569;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 0.85rem 1.2rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #102033;
+      background: linear-gradient(135deg, #9fd3ff, #ffe08b);
+      box-shadow: 0 10px 24px rgba(79, 143, 200, 0.2);
+    }
+
+    button.secondary {
+      background: linear-gradient(135deg, #ffd2ba, #ffeec0);
+    }
+
+    .message {
+      min-height: 1.5rem;
+      margin: 0;
+      font-weight: 700;
+      color: #b45309;
+    }
+
+    .name-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .name-card {
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      border-radius: 18px;
+      padding: 0.85rem 1rem;
+      background: linear-gradient(180deg, #ffffff, #fff7e8);
+    }
+
+    .name-card strong {
+      display: block;
+      font-size: 1.02rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .name-card span {
+      display: block;
+      color: #475569;
+      font-size: 0.94rem;
+    }
+
+    .weekday-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .weekday-card {
+      border-radius: 20px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(253, 248, 238, 0.95));
+      overflow: hidden;
+      min-height: 280px;
+    }
+
+    .weekday-card h3 {
+      margin: 0;
+      padding: 1rem;
+      font-size: 1rem;
+      background: linear-gradient(135deg, #4f8fc8, #70a9dd);
       color: white;
     }
 
-    .switch-on {
-      background: #28a745;
+    .weekday-card ul {
+      list-style: none;
+      margin: 0;
+      padding: 0.9rem;
+      display: grid;
+      gap: 0.65rem;
     }
 
-    .switch-off {
-      background: #dc3545;
+    .weekday-card li {
+      border-radius: 14px;
+      padding: 0.65rem 0.75rem;
+      background: var(--paper);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      font-weight: 700;
     }
 
-    .footer-note {
-      grid-column: 1 / -1;
-      padding: 1rem;
-      background: #fff3cd;
-      border-radius: 4px;
-      color: #856404;
-      font-size: 0.9rem;
+    .weekday-card a {
+      color: #1d4ed8;
+      text-decoration: underline;
+      font-weight: 700;
     }
 
-    @media (max-width: 768px) {
-      .container {
+    .empty {
+      color: #64748b;
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    @media (max-width: 1024px) {
+      .layout {
         grid-template-columns: 1fr;
       }
 
-      .schedule-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .weekday-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      main {
+        padding-inline: 0.9rem;
+      }
+
+      .hero,
+      .panel {
+        border-radius: 20px;
+      }
+
+      .weekday-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 
   <main>
-    <h1>Mila's Interactive Game</h1>
+    <section class="hero">
+      <h1>Mila's Weekday Game</h1>
+      <p>
+        Add a name, then type which weekdays it is not there. This game only
+        uses the five weekdays: Monday, Tuesday, Wednesday, Thursday, and
+        Friday.
+      </p>
+      <ul class="rules">
+        <li><strong>1</strong> is Monday, <strong>2</strong> is Tuesday, <strong>3</strong> is Wednesday, <strong>4</strong> is Thursday, and <strong>5</strong> is Friday.</li>
+        <li>Leave weekdays blank to put a name on all five weekdays.</li>
+        <li>If a number is there, that means the name is not there on that weekday.</li>
+        <li><strong>12345</strong> means the name is out of all weekdays but still stays in the full name list.</li>
+        <li><strong>123456</strong> is not available because this game only uses 1 to 5.</li>
+        <li><strong>Add Name</strong> stores what you made. <strong>Submit</strong> shows the full list and generates the weekdays from everything you made.</li>
+      </ul>
+    </section>
 
-    <div class="container">
-      <!-- Schedule Section -->
-      <div class="section">
-        <h2>Weekly Schedule</h2>
-        <div class="button-group">
-          <button class="reset-btn" id="resetWeek">Reset Week Schedule</button>
-          <button class="reset-btn" id="resetColors">Reset Colors</button>
-        </div>
+    <div class="layout">
+      <section class="panel">
+        <h2>Add A Name</h2>
+        <div class="form-grid">
+          <label for="nameInput">
+            Name
+            <input
+              id="nameInput"
+              type="text"
+              placeholder="Type a name"
+              autocomplete="off"
+            />
+          </label>
 
-        <p>Select days for activities (like train rides):</p>
-        <div class="schedule-grid" id="scheduleGrid"></div>
+          <label for="weekdayInput">
+            Weekdays Not There
+            <input
+              id="weekdayInput"
+              type="text"
+              inputmode="numeric"
+              placeholder="Blank, 3, 15, or 12345"
+              autocomplete="off"
+            />
+          </label>
 
-        <div id="selectedDays" style="margin-top: 1rem; padding: 1rem; background: white; border-radius: 4px;">
-          <strong>Selected:</strong> <span id="selectedDaysText">None</span>
-        </div>
-      </div>
+          <p class="helper">
+            Use only the numbers 1, 2, 3, 4, and 5. Example: <strong>3</strong>
+            means not there on Wednesday.
+          </p>
 
-      <!-- Color Bar Section -->
-      <div class="section">
-        <h2>Color Bar System</h2>
-        <p>Add colors and percentages to create a visualization:</p>
-
-        <div class="color-entry">
-          <input type="color" id="colorInput" class="color-input" value="#FF0000">
-          <input type="number" id="percentageInput" class="percentage-input" min="0" max="100" placeholder="0-100">
-          <button class="add-color-btn" id="addColorBtn">Add</button>
-        </div>
-
-        <div class="color-bar-container" id="colorBar"></div>
-
-        <div class="color-list" id="colorList"></div>
-      </div>
-    </div>
-
-    <!-- Switches Section -->
-    <div class="section">
-      <h2>Switch Controls</h2>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-        <div class="switch-group">
-          <label class="switch-label">Left Input (Controls Switches 1 & 2)</label>
-          <input type="number" class="switch-input" id="leftSwitch" min="1" max="4" value="1">
-          <div class="switch-explanation">
-            <strong>1:</strong> Switch 1 ON, Switch 2 OFF<br>
-            <strong>2:</strong> Switch 1 ON, Switch 2 ON<br>
-            <strong>3:</strong> Switch 1 OFF, Switch 2 ON<br>
-            <strong>4:</strong> Switch 1 OFF, Switch 2 OFF
+          <div class="button-row">
+            <button id="addNameButton" type="button">Add Name</button>
+            <button id="submitWeekButton" type="button">Submit</button>
+            <button id="resetButton" class="secondary" type="button">Reset Game</button>
           </div>
 
-          <div class="switch-state">
-            <div>
-              <strong>Switch 1</strong>
-              <div class="switch-indicator switch-on" id="switch1">ON</div>
-            </div>
-            <div>
-              <strong>Switch 2</strong>
-              <div class="switch-indicator switch-off" id="switch2">OFF</div>
-            </div>
-          </div>
+          <p class="message" id="messageText"></p>
         </div>
 
-        <div class="switch-group">
-          <label class="switch-label">Right Input (Controls Switches 3 & 4)</label>
-          <input type="number" class="switch-input" id="rightSwitch" min="1" max="4" value="1">
-          <div class="switch-explanation">
-            <strong>1:</strong> Switch 3 ON, Switch 4 OFF<br>
-            <strong>2:</strong> Switch 3 ON, Switch 4 ON<br>
-            <strong>3:</strong> Switch 3 OFF, Switch 4 ON<br>
-            <strong>4:</strong> Switch 3 OFF, Switch 4 OFF
-          </div>
+        <section id="allNamesSection" class="hidden" style="margin-top: 1.5rem;">
+          <h2>Every Name You Made</h2>
+          <ul class="name-list" id="allNamesList">
+            <li class="empty">No names yet.</li>
+          </ul>
+        </section>
+      </section>
 
-          <div class="switch-state">
-            <div>
-              <strong>Switch 3</strong>
-              <div class="switch-indicator switch-on" id="switch3">ON</div>
-            </div>
-            <div>
-              <strong>Switch 4</strong>
-              <div class="switch-indicator switch-off" id="switch4">OFF</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-note">
-        Talk to Mr. Grok! These switches are fake but fun to control.
-      </div>
+      <section class="panel hidden" id="weekdaySection">
+        <h2>Weekday Lists</h2>
+        <div class="weekday-grid" id="weekdayGrid"></div>
+      </section>
     </div>
   </main>
 
   <script>
-    const days = [
-      { num: 1, name: 'Monday' },
-      { num: 2, name: 'Tuesday' },
-      { num: 3, name: 'Wednesday' },
-      { num: 4, name: 'Thursday' },
-      { num: 5, name: 'Friday' },
-      { num: 6, name: 'Saturday' },
-      { num: 7, name: 'Sunday' },
-      { num: 8, name: 'Snuggleday' }
-    ];
+    const weekdayMap = {
+      '1': 'Monday',
+      '2': 'Tuesday',
+      '3': 'Wednesday',
+      '4': 'Thursday',
+      '5': 'Friday',
+    };
 
-    let selectedDays = new Set();
-    let colors = [];
+    const allWeekdays = Object.keys(weekdayMap);
+    const entries = [];
 
-    // Initialize schedule grid
-    const scheduleGrid = document.getElementById('scheduleGrid');
-    days.forEach(day => {
-      const btn = document.createElement('button');
-      btn.className = 'day-btn';
-      btn.innerHTML = `<div>${day.num}</div><div class="day-label">${day.name}</div>`;
-      btn.addEventListener('click', () => toggleDay(day.num, btn));
-      scheduleGrid.appendChild(btn);
-    });
+    const nameInput = document.getElementById('nameInput');
+    const weekdayInput = document.getElementById('weekdayInput');
+    const addNameButton = document.getElementById('addNameButton');
+    const submitWeekButton = document.getElementById('submitWeekButton');
+    const resetButton = document.getElementById('resetButton');
+    const messageText = document.getElementById('messageText');
+    const allNamesSection = document.getElementById('allNamesSection');
+    const allNamesList = document.getElementById('allNamesList');
+    const weekdaySection = document.getElementById('weekdaySection');
+    const weekdayGrid = document.getElementById('weekdayGrid');
+    let weekHasBeenSubmitted = false;
 
-    function toggleDay(dayNum, btn) {
-      if (selectedDays.has(dayNum)) {
-        selectedDays.delete(dayNum);
-        btn.classList.remove('active');
-      } else {
-        selectedDays.add(dayNum);
-        btn.classList.add('active');
+    function normalizeWeekdays(value) {
+      const compact = value.replace(/\s+/g, '');
+
+      if (!compact) {
+        return {
+          ok: true,
+          weekdays: [...allWeekdays],
+        };
       }
-      updateSelectedDaysDisplay();
+
+      if (!/^[1-5]+$/.test(compact)) {
+        return {
+          ok: false,
+          error: 'Use only 1, 2, 3, 4, and 5. 6 is not available in this game.',
+        };
+      }
+
+      const missingDays = [...new Set(compact.split(''))].sort();
+      const weekdays = allWeekdays.filter(day => !missingDays.includes(day));
+
+      return {
+        ok: true,
+        weekdays,
+      };
     }
 
-    function updateSelectedDaysDisplay() {
-      const sorted = Array.from(selectedDays).sort((a, b) => a - b);
-      const dayNames = sorted.map(num => {
-        const day = days.find(d => d.num === num);
-        return day.name;
-      }).join(', ');
-
-      document.getElementById('selectedDaysText').textContent = dayNames || 'None';
+    function setMessage(text) {
+      messageText.textContent = text;
     }
 
-    // Reset buttons
-    document.getElementById('resetWeek').addEventListener('click', () => {
-      selectedDays.clear();
-      document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
-      updateSelectedDaysDisplay();
-    });
+    function escapeHtml(value) {
+      return value
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
 
-    document.getElementById('resetColors').addEventListener('click', () => {
-      colors = [];
-      document.getElementById('colorBar').innerHTML = '';
-      document.getElementById('colorList').innerHTML = '';
-    });
-
-    // Color bar functionality
-    document.getElementById('addColorBtn').addEventListener('click', addColor);
-
-    function addColor() {
-      const color = document.getElementById('colorInput').value;
-      const percentage = parseInt(document.getElementById('percentageInput').value);
-
-      if (isNaN(percentage) || percentage < 0 || percentage > 100) {
-        alert('Please enter a valid percentage (0-100)');
+    function renderAllNames() {
+      if (entries.length === 0) {
+        allNamesList.innerHTML = '<li class="empty">No names yet.</li>';
         return;
       }
 
-      colors.push({ color, percentage });
-      colors.sort((a, b) => a.percentage - b.percentage);
-
-      updateColorBar();
-      updateColorList();
-      document.getElementById('percentageInput').value = '';
+      allNamesList.innerHTML = entries
+        .map(entry => {
+          return `
+            <li class="name-card">
+              <strong>${escapeHtml(entry.name)}</strong>
+            </li>
+          `;
+        })
+        .join('');
     }
 
-    function updateColorBar() {
-      const bar = document.getElementById('colorBar');
-      bar.innerHTML = '';
+    function renderWeekdays() {
+      weekdayGrid.innerHTML = allWeekdays
+        .map(dayNumber => {
+          const names = entries.filter(entry => entry.weekdays.includes(dayNumber));
+          const listMarkup = names.length
+            ? names.map(entry => `<li>${escapeHtml(entry.name)}</li>`).join('')
+            : '<li><a href="/bible">Bible</a></li>';
 
-      if (colors.length === 0) return;
+          return `
+            <section class="weekday-card">
+              <h3>${weekdayMap[dayNumber]}</h3>
+              <ul>${listMarkup}</ul>
+            </section>
+          `;
+        })
+        .join('');
+    }
 
-      let lastPercentage = 0;
-      colors.forEach((item, index) => {
-        const segment = document.createElement('div');
-        segment.className = 'color-segment';
-        segment.style.background = item.color;
-        segment.style.left = lastPercentage + '%';
-        segment.style.width = (item.percentage - lastPercentage) + '%';
-        bar.appendChild(segment);
+    function renderGame() {
+      allNamesSection.classList.toggle('hidden', !weekHasBeenSubmitted);
+      weekdaySection.classList.toggle('hidden', !weekHasBeenSubmitted);
+      renderAllNames();
 
-        const marker = document.createElement('div');
-        marker.className = 'color-marker';
-        marker.style.left = item.percentage + '%';
-        bar.appendChild(marker);
+      if (weekHasBeenSubmitted) {
+        renderWeekdays();
+      } else {
+        weekdayGrid.innerHTML = '';
+      }
+    }
 
-        lastPercentage = item.percentage;
+    function addEntry() {
+      const name = nameInput.value.trim();
+      const normalized = normalizeWeekdays(weekdayInput.value);
+
+      if (!name) {
+        setMessage('Type a name before adding it.');
+        nameInput.focus();
+        return;
+      }
+
+      if (!normalized.ok) {
+        setMessage(normalized.error);
+        weekdayInput.focus();
+        return;
+      }
+
+      entries.push({
+        id: Date.now(),
+        name,
+        weekdays: normalized.weekdays,
       });
+
+      weekHasBeenSubmitted = false;
+      nameInput.value = '';
+      weekdayInput.value = '';
+      setMessage(`${name} was added. Press Submit to generate the weekdays.`);
+      renderGame();
+      nameInput.focus();
     }
 
-    function updateColorList() {
-      const list = document.getElementById('colorList');
-      list.innerHTML = '';
+    function submitWeek() {
+      weekHasBeenSubmitted = true;
+      setMessage('The weekdays were generated.');
+      renderGame();
+    }
 
-      colors.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'color-item';
-        div.innerHTML = `
-          <div class="color-box" style="background: ${item.color}"></div>
-          <span>${item.color} at ${item.percentage}%</span>
-        `;
-        list.appendChild(div);
+    addNameButton.addEventListener('click', addEntry);
+    submitWeekButton.addEventListener('click', submitWeek);
+
+    [nameInput, weekdayInput].forEach(input => {
+      input.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+          addEntry();
+        }
       });
-    }
-
-    // Switch functionality
-    function updateSwitches(inputId, switch1Id, switch2Id) {
-      const input = document.getElementById(inputId);
-      const value = parseInt(input.value) || 1;
-
-      const switches = {
-        1: { [switch1Id]: true, [switch2Id]: false },
-        2: { [switch1Id]: true, [switch2Id]: true },
-        3: { [switch1Id]: false, [switch2Id]: true },
-        4: { [switch1Id]: false, [switch2Id]: false }
-      };
-
-      const state = switches[Math.min(Math.max(value, 1), 4)];
-
-      Object.entries(state).forEach(([switchId, isOn]) => {
-        const element = document.getElementById(switchId);
-        element.textContent = isOn ? 'ON' : 'OFF';
-        element.className = `switch-indicator ${isOn ? 'switch-on' : 'switch-off'}`;
-      });
-    }
-
-    document.getElementById('leftSwitch').addEventListener('change', () => {
-      updateSwitches('leftSwitch', 'switch1', 'switch2');
     });
 
-    document.getElementById('rightSwitch').addEventListener('change', () => {
-      updateSwitches('rightSwitch', 'switch3', 'switch4');
+    resetButton.addEventListener('click', () => {
+      entries.length = 0;
+      weekHasBeenSubmitted = false;
+      nameInput.value = '';
+      weekdayInput.value = '';
+      setMessage('The weekday game was reset.');
+      renderGame();
+      nameInput.focus();
     });
 
-    // Initialize switches
-    updateSwitches('leftSwitch', 'switch1', 'switch2');
-    updateSwitches('rightSwitch', 'switch3', 'switch4');
+    renderGame();
   </script>
 </Layout>
