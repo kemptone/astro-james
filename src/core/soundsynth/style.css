@@ -1,0 +1,529 @@
+.soundsynth-shell {
+  --paper: #f5f1e8;
+  --ink: #0f2430;
+  --ink-soft: #38525f;
+  --teal: #8bf6cf;
+  --teal-deep: #247a66;
+  --sun: #ffd166;
+  --ember: #ff8c61;
+  --panel: rgba(255, 250, 242, 0.84);
+  --panel-strong: rgba(255, 250, 242, 0.94);
+  --line: rgba(15, 36, 48, 0.12);
+  --shadow: 0 22px 60px rgba(12, 26, 35, 0.16);
+  min-height: 100vh;
+  padding: 24px 18px calc(320px + env(safe-area-inset-bottom, 0px));
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(139, 246, 207, 0.6), transparent 28%),
+    radial-gradient(circle at 82% 10%, rgba(255, 209, 102, 0.72), transparent 30%),
+    linear-gradient(180deg, #f9f5ec 0%, #f1f8ff 52%, #eff6f0 100%);
+}
+
+.soundsynth-shell * {
+  box-sizing: border-box;
+}
+
+.soundsynth-shell button,
+.soundsynth-shell input,
+.soundsynth-shell select {
+  font: inherit;
+}
+
+.soundsynth-shell button {
+  border: 1px solid rgba(15, 36, 48, 0.14);
+  background: linear-gradient(180deg, #fffef8 0%, #f3ede3 100%);
+  color: var(--ink);
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 10px 24px rgba(22, 41, 49, 0.08);
+}
+
+.soundsynth-shell button.danger {
+  color: #7d2d1f;
+}
+
+.soundsynth-shell button.ghost {
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: none;
+}
+
+.soundsynth-shell input,
+.soundsynth-shell select {
+  border-radius: 12px;
+  border: 1px solid rgba(15, 36, 48, 0.16);
+  padding: 0.75rem 0.9rem;
+  background: rgba(255, 255, 255, 0.84);
+  color: var(--ink);
+}
+
+.soundsynth-shell label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.soundsynth-eyebrow {
+  margin: 0 0 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  background: rgba(36, 122, 102, 0.12);
+  color: var(--teal-deep);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+}
+
+.soundsynth-hero {
+  width: min(1240px, 100%);
+  margin: 0 auto 1.25rem;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 28px;
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+}
+
+.soundsynth-hero h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 4.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.soundsynth-status {
+  margin: 0.8rem 0 0;
+  max-width: 56rem;
+  color: var(--ink-soft);
+  font-size: 1rem;
+}
+
+.soundsynth-live-strip {
+  margin-top: 1.35rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.soundsynth-range-label strong,
+.soundsynth-note-pill strong {
+  font-size: 1rem;
+}
+
+.soundsynth-note-pill {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 18px;
+  padding: 0.95rem 1rem;
+  background: linear-gradient(135deg, rgba(139, 246, 207, 0.2), rgba(255, 209, 102, 0.26));
+  border: 1px solid rgba(15, 36, 48, 0.08);
+}
+
+.soundsynth-visualizer-wrap {
+  margin-top: 1rem;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(13, 31, 41, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.soundsynth-visualizer {
+  display: block;
+  width: 100%;
+  height: 150px;
+  background: #0d1f29;
+}
+
+.soundsynth-actions,
+.soundsynth-card-actions,
+.soundsynth-section-title-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.soundsynth-actions {
+  margin-top: 1rem;
+}
+
+.soundsynth-section-title-row {
+  justify-content: space-between;
+}
+
+.soundsynth-layer-grid {
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.soundsynth-layer-card,
+.soundsynth-empty-card,
+.soundsynth-current-setup-card,
+.soundsynth-saved-card,
+.soundsynth-note-range-card {
+  border-radius: 24px;
+  padding: 1rem;
+  background: var(--panel-strong);
+  border: 1px solid rgba(15, 36, 48, 0.08);
+  box-shadow: 0 14px 36px rgba(15, 36, 48, 0.08);
+}
+
+.soundsynth-layer-heading,
+.soundsynth-layer-editor-header,
+.soundsynth-dialog-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.soundsynth-layer-heading h2,
+.soundsynth-empty-card h2,
+.soundsynth-layer-editor h4,
+.soundsynth-dialog-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.soundsynth-layer-heading p,
+.soundsynth-saved-card p,
+.soundsynth-current-setup-card p {
+  margin: 0.3rem 0 0;
+  color: var(--ink-soft);
+}
+
+.soundsynth-inline-toggle {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.soundsynth-layer-meta {
+  margin-top: 0.85rem;
+  display: grid;
+  gap: 0.4rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.soundsynth-layer-preview {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.soundsynth-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(36, 122, 102, 0.12);
+  color: var(--teal-deep);
+  font-size: 0.9rem;
+}
+
+.soundsynth-chip-muted {
+  background: rgba(15, 36, 48, 0.08);
+  color: var(--ink-soft);
+}
+
+.soundsynth-keyboard-section {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  width: min(1240px, calc(100% - 8px));
+  margin: 1.25rem auto 0;
+  padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px));
+  border-radius: 28px 28px 0 0;
+  background: rgba(13, 31, 41, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 -18px 48px rgba(12, 26, 35, 0.22);
+  backdrop-filter: blur(12px);
+}
+
+.soundsynth-keyboard-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: rgba(255, 250, 242, 0.94);
+  margin-bottom: 0.8rem;
+}
+
+.soundsynth-keyboard-meta > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.soundsynth-keyboard {
+  position: relative;
+  height: 238px;
+  user-select: none;
+  touch-action: none;
+}
+
+.soundsynth-white-keys {
+  display: flex;
+  height: 100%;
+  gap: 2px;
+}
+
+.soundsynth-key {
+  appearance: none;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    background-color 120ms ease;
+}
+
+.soundsynth-key.white {
+  position: relative;
+  flex: 1 1 0;
+  height: 100%;
+  justify-content: flex-end;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 0.9rem 0.45rem 0.75rem;
+  background: linear-gradient(180deg, #fffef8 0%, #f2ede6 100%);
+  border-radius: 0 0 16px 16px;
+  box-shadow:
+    inset 0 -10px 18px rgba(12, 26, 35, 0.08),
+    0 16px 24px rgba(0, 0, 0, 0.12);
+}
+
+.soundsynth-key.black {
+  position: absolute;
+  top: 0;
+  width: calc((100% / 21) * 0.72);
+  height: 58%;
+  transform: translateX(-44%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.65rem 0.3rem;
+  border-radius: 0 0 14px 14px;
+  background: linear-gradient(180deg, #365060 0%, #122533 78%, #07131b 100%);
+  color: #f6f0e8;
+  box-shadow:
+    0 12px 18px rgba(0, 0, 0, 0.32),
+    inset 0 -8px 14px rgba(255, 255, 255, 0.05);
+  z-index: 2;
+}
+
+.soundsynth-key.active.white {
+  transform: translateY(6px);
+  box-shadow:
+    inset 0 -4px 12px rgba(12, 26, 35, 0.08),
+    0 8px 14px rgba(0, 0, 0, 0.16);
+  background: linear-gradient(180deg, #fff9de 0%, #f5e7cb 100%);
+}
+
+.soundsynth-key.active.black {
+  transform: translate(-44%, 4px);
+  box-shadow:
+    0 6px 10px rgba(0, 0, 0, 0.34),
+    inset 0 -6px 10px rgba(255, 255, 255, 0.04);
+}
+
+.soundsynth-key .note {
+  font-size: 0.74rem;
+  line-height: 1;
+}
+
+.soundsynth-key .hotkey {
+  margin-top: 0.18rem;
+  font-size: 0.72rem;
+  opacity: 0.76;
+}
+
+.soundsynth-dialog {
+  width: min(1120px, calc(100% - 24px));
+  height: min(88vh, 900px);
+  border: none;
+  border-radius: 30px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 28px 80px rgba(12, 26, 35, 0.28);
+  background: transparent;
+}
+
+.soundsynth-dialog::backdrop {
+  background: rgba(13, 31, 41, 0.42);
+  backdrop-filter: blur(6px);
+}
+
+.soundsynth-dialog-inner {
+  height: 100%;
+  overflow: auto;
+  padding: 1.2rem 1.2rem 2rem;
+  background:
+    radial-gradient(circle at top left, rgba(139, 246, 207, 0.3), transparent 25%),
+    linear-gradient(180deg, #fcf8ef 0%, #f5fbff 100%);
+}
+
+.soundsynth-dialog-header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  padding-bottom: 1rem;
+  background: linear-gradient(180deg, rgba(252, 248, 239, 0.96) 0%, rgba(252, 248, 239, 0.72) 100%);
+  backdrop-filter: blur(10px);
+}
+
+.soundsynth-settings-section {
+  margin-top: 1.1rem;
+  padding: 1rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 36, 48, 0.08);
+}
+
+.soundsynth-settings-section h3,
+.soundsynth-settings-section h5 {
+  margin: 0 0 0.9rem;
+}
+
+.soundsynth-field-grid {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.soundsynth-keyboard-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+}
+
+.soundsynth-layer-editor {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 22px;
+  background: rgba(15, 36, 48, 0.05);
+  border: 1px solid rgba(15, 36, 48, 0.08);
+}
+
+.soundsynth-lane-editor,
+.soundsynth-sample-editor {
+  margin-top: 1rem;
+}
+
+.soundsynth-segment-row,
+.soundsynth-sample-row {
+  display: grid;
+  gap: 0.7rem;
+  align-items: end;
+  margin-top: 0.75rem;
+  padding: 0.9rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 36, 48, 0.08);
+}
+
+.soundsynth-segment-row {
+  grid-template-columns: minmax(84px, 108px) repeat(2, minmax(0, 1fr)) auto;
+}
+
+.soundsynth-sample-row {
+  grid-template-columns:
+    auto
+    minmax(160px, 1.2fr)
+    minmax(110px, 0.8fr)
+    minmax(130px, 0.9fr)
+    auto
+    auto;
+}
+
+.soundsynth-current-setup-card,
+.soundsynth-saved-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.soundsynth-saved-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.soundsynth-empty-state {
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+@media (max-width: 1100px) {
+  .soundsynth-live-strip,
+  .soundsynth-field-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .soundsynth-sample-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 780px) {
+  .soundsynth-shell {
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: calc(270px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .soundsynth-hero {
+    padding: 18px;
+    border-radius: 24px;
+  }
+
+  .soundsynth-live-strip,
+  .soundsynth-field-grid,
+  .soundsynth-keyboard-grid,
+  .soundsynth-segment-row,
+  .soundsynth-sample-row,
+  .soundsynth-current-setup-card,
+  .soundsynth-saved-card,
+  .soundsynth-keyboard-meta {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .soundsynth-keyboard-section {
+    width: 100%;
+    border-radius: 22px 22px 0 0;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .soundsynth-keyboard {
+    height: 188px;
+  }
+
+  .soundsynth-key.black {
+    width: calc((100% / 21) * 0.82);
+  }
+
+  .soundsynth-dialog {
+    width: 100%;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .soundsynth-dialog-inner {
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
