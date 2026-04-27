@@ -1,0 +1,66 @@
+---
+import Empty from '../layouts/Empty.astro'
+---
+
+<Empty title="localStorage">
+  <pre id="local-storage-output">Loading localStorage...</pre>
+
+  <script is:inline>
+    const output = document.getElementById('local-storage-output')
+    const obj = {}
+
+    const formatValue = value => {
+      if (value === null) {
+        return value
+      }
+
+      try {
+        return JSON.parse(value)
+      } catch {
+        return value
+      }
+    }
+
+    try {
+      for (let i = 0; i < localStorage.length; i += 1) {
+        const key = localStorage.key(i)
+
+        if (key !== null) {
+          obj[key] = formatValue(localStorage.getItem(key))
+        }
+      }
+
+      output.textContent = JSON.stringify(obj, true, 2)
+    } catch (error) {
+      output.textContent = JSON.stringify(
+        {
+          error: error instanceof Error ? error.message : String(error),
+        },
+        true,
+        2
+      )
+    }
+  </script>
+</Empty>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    background: white;
+  }
+
+  pre {
+    box-sizing: border-box;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0.75rem;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #111;
+    background: white;
+    font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      'Liberation Mono', 'Courier New', monospace;
+  }
+</style>
