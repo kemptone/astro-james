@@ -342,6 +342,17 @@ import Layout from '@/layouts/Layout.astro'
       }
     }
 
+    const getAudioConstraints = () => {
+      return {
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false,
+        channelCount: { ideal: 2 },
+        sampleRate: { ideal: 48000 },
+        sampleSize: { ideal: 24 },
+      }
+    }
+
     const pickMimeType = () => {
       const choices = [
         'video/mp4',
@@ -351,6 +362,16 @@ import Layout from '@/layouts/Layout.astro'
       ]
 
       return choices.find(type => MediaRecorder.isTypeSupported(type)) || ''
+    }
+
+    const getRecorderOptions = mimeType => {
+      const options = {
+        audioBitsPerSecond: 256000,
+        videoBitsPerSecond: 8000000,
+        bitsPerSecond: 8256000,
+      }
+
+      return mimeType ? { ...options, mimeType } : options
     }
 
     const revokePlaybackUrl = () => {
@@ -455,7 +476,7 @@ import Layout from '@/layouts/Layout.astro'
       }
 
       const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
+        audio: getAudioConstraints(),
       })
 
       state.audioStream = stream
@@ -532,7 +553,7 @@ import Layout from '@/layouts/Layout.astro'
 
         state.mediaRecorder = new MediaRecorder(
           recordingStream,
-          state.mimeType ? { mimeType: state.mimeType } : undefined,
+          getRecorderOptions(state.mimeType),
         )
 
         const recordedType = state.mediaRecorder.mimeType || state.mimeType || 'video/webm'
