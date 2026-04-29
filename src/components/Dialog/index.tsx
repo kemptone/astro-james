@@ -37,24 +37,37 @@ export default (args: {
   };
 
   useEffect(() => {
-    ref_dialog?.current?.addEventListener(
-      "click",
-      (ev: PointerEvent) => {
-        ev.stopPropagation();
+    const dialog = ref_dialog.current;
 
-        const target = ev.target as HTMLDialogElement;
+    if (!dialog) {
+      return;
+    }
 
-        if (target.nodeName === "DIALOG" || target.nodeName === "BUTTON") {
-          if (
-            ev.offsetX < 0 || ev.offsetX > target.offsetWidth ||
-            ev.offsetY < 0 || ev.offsetY > target.offsetHeight
-          ) {
-            closeDialog();
-          }
-        }
-      },
-    );
-  });
+    const handleClick = (ev: MouseEvent) => {
+      ev.stopPropagation();
+
+      if (ev.target !== dialog) {
+        return;
+      }
+
+      const bounds = dialog.getBoundingClientRect();
+      const offsetX = ev.clientX - bounds.left;
+      const offsetY = ev.clientY - bounds.top;
+
+      if (
+        offsetX < 0 || offsetX > bounds.width ||
+        offsetY < 0 || offsetY > bounds.height
+      ) {
+        closeDialog();
+      }
+    };
+
+    dialog.addEventListener("click", handleClick);
+
+    return () => {
+      dialog.removeEventListener("click", handleClick);
+    };
+  }, []);
 
   return args.children({
     Dialog,
