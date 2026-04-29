@@ -10,8 +10,8 @@ import Layout from '@/layouts/Layout.astro'
       <p class="rating" aria-label="Camila rating four out of five stars">★★★★☆</p>
       <p class="intro">
         The camera is upside down on purpose, so everybody looks like they are
-        standing on the ceiling. When you save the video, it stays upside down
-        too.
+        standing on the ceiling. The live preview stays upside down, but the
+        saved film comes out right side up with sound.
       </p>
     </section>
 
@@ -60,7 +60,7 @@ import Layout from '@/layouts/Layout.astro'
         <div class="saved-header">
           <div>
             <h2>Last Video</h2>
-            <p>Your saved clip keeps the upside-down ceiling view.</p>
+            <p>Your saved clip plays right side up and keeps the sound.</p>
           </div>
         </div>
 
@@ -246,13 +246,6 @@ import Layout from '@/layouts/Layout.astro'
     .playback {
       margin: 1rem;
       width: calc(100% - 2rem);
-      transform: rotate(180deg);
-      transform-origin: center;
-    }
-
-    .playback::-webkit-media-controls-panel,
-    .playback::-webkit-media-controls-enclosure {
-      transform: rotate(180deg);
     }
 
     .controls {
@@ -327,6 +320,7 @@ import Layout from '@/layouts/Layout.astro'
 
     const state = {
       cameraStream: null,
+      audioStream: null,
       mediaRecorder: null,
       chunks: [],
       recordedBlob: null,
@@ -449,12 +443,30 @@ import Layout from '@/layouts/Layout.astro'
 
     const fullReset = () => {
       stopCameraSession()
+      stopTracks(state.audioStream)
+      state.audioStream = null
       clearRecording()
       setStatus('Ready')
     }
 
-    const buildRecordingStream = () => {
-      return previewCanvas.captureStream(30)
+    const ensureAudioStream = async () => {
+      if (state.audioStream?.getAudioTracks().some(track => track.readyState === 'live')) {
+        return state.audioStream
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      })
+
+      state.audioStream = stream
+      return stream
+    }
+
+    const buildRecordingStream = async () => {
+      const audioStream = await ensureAudioStream()
+      const videoTracks = state.cameraStream?.getVideoTracks().map(track => track.clone()) || []
+      const audioTracks = audioStream.getAudioTracks().map(track => track.clone())
+      return new MediaStream([...videoTracks, ...audioTracks])
     }
 
     const showRecording = blob => {
@@ -504,48 +516,60 @@ import Layout from '@/layouts/Layout.astro'
     const startRecording = () => {
       if (!state.cameraStream || state.isRecording) return
 
-      clearRecording()
-      state.chunks = []
-      state.mimeType = pickMimeType()
-      const recordingStream = buildRecordingStream()
-      state.mediaRecorder = new MediaRecorder(
-        recordingStream,
-        state.mimeType ? { mimeType: state.mimeType } : undefined,
-      )
+      ;(async () => {
+        clearRecording()
+        state.chunks = []
+        state.mimeType = pickMimeType()
 
-      const recordedType = state.mediaRecorder.mimeType || state.mimeType || 'video/webm'
-
-      state.mediaRecorder.ondataavailable = event => {
-        if (event.data?.size) {
-          state.chunks.push(event.data)
+        let recordingStream
+        try {
+          recordingStream = await buildRecordingStream()
+        } catch (error) {
+          console.error('Microphone start failed', error)
+          setStatus('Microphone blocked - allow mic to record sound')
+          return
         }
-      }
 
-      state.mediaRecorder.onstop = () => {
-        state.recordedBlob = new Blob(state.chunks, { type: recordedType })
-        state.mediaRecorder = null
-        state.isRecording = false
-        stopTracks(recordingStream)
-        recordButton.textContent = 'Record'
-        stopButton.disabled = true
-        recordButton.disabled = false
-        showRecording(state.recordedBlob)
-        setStatus('Video ready to save')
-      }
+        state.mediaRecorder = new MediaRecorder(
+          recordingStream,
+          state.mimeType ? { mimeType: state.mimeType } : undefined,
+        )
 
-      state.mediaRecorder.onerror = error => {
-        console.error('Recording failed', error)
-        setStatus('Recording failed')
-        resetRecorderState()
-      }
+        const recordedType = state.mediaRecorder.mimeType || state.mimeType || 'video/webm'
 
-      // We record the flipped canvas so the saved file matches the preview.
-      state.mediaRecorder.start(250)
-      state.isRecording = true
-      recordButton.textContent = 'Recording...'
-      recordButton.disabled = true
-      stopButton.disabled = false
-      setStatus('Recording upside down video')
+        state.mediaRecorder.ondataavailable = event => {
+          if (event.data?.size) {
+            state.chunks.push(event.data)
+          }
+        }
+
+        state.mediaRecorder.onstop = () => {
+          state.recordedBlob = new Blob(state.chunks, { type: recordedType })
+          state.mediaRecorder = null
+          state.isRecording = false
+          stopTracks(recordingStream)
+          recordButton.textContent = 'Record'
+          stopButton.disabled = true
+          recordButton.disabled = false
+          showRecording(state.recordedBlob)
+          setStatus('Film ready to save')
+        }
+
+        state.mediaRecorder.onerror = error => {
+          console.error('Recording failed', error)
+          setStatus('Recording failed')
+          resetRecorderState()
+          stopTracks(recordingStream)
+        }
+
+        // Record from the normal camera stream so the final film is right side up.
+        state.mediaRecorder.start(250)
+        state.isRecording = true
+        recordButton.textContent = 'Recording...'
+        recordButton.disabled = true
+        stopButton.disabled = false
+        setStatus('Recording right side up film with sound')
+      })()
     }
 
     const stopRecording = () => {
