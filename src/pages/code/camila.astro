@@ -325,6 +325,7 @@ import Layout from '@/layouts/Layout.astro'
       chunks: [],
       recordedBlob: null,
       playbackUrl: '',
+      downloadUrls: new Set(),
       drawFrameId: 0,
       isDrawing: false,
       isRecording: false,
@@ -378,6 +379,11 @@ import Layout from '@/layouts/Layout.astro'
       if (!state.playbackUrl) return
       URL.revokeObjectURL(state.playbackUrl)
       state.playbackUrl = ''
+    }
+
+    const cleanupDownloadUrls = () => {
+      state.downloadUrls.forEach(url => URL.revokeObjectURL(url))
+      state.downloadUrls.clear()
     }
 
     const stopTracks = stream => {
@@ -614,13 +620,18 @@ import Layout from '@/layouts/Layout.astro'
       if (!file) return
 
       const downloadUrl = URL.createObjectURL(file)
+      state.downloadUrls.add(downloadUrl)
       const link = document.createElement('a')
       link.href = downloadUrl
       link.download = file.name
       document.body.appendChild(link)
       link.click()
       link.remove()
-      setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000)
+      // Keep the object URL alive long enough for larger high-quality files to finish.
+      setTimeout(() => {
+        URL.revokeObjectURL(downloadUrl)
+        state.downloadUrls.delete(downloadUrl)
+      }, 60000)
       setStatus('Video saved')
     }
 
@@ -656,6 +667,9 @@ import Layout from '@/layouts/Layout.astro'
     saveButton.addEventListener('click', saveVideo)
     resetButton.addEventListener('click', fullReset)
 
-    window.addEventListener('pagehide', fullReset)
+    window.addEventListener('pagehide', () => {
+      cleanupDownloadUrls()
+      fullReset()
+    })
   </script>
 </Layout>
