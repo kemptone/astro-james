@@ -27,6 +27,7 @@ import Layout from '@/layouts/Layout.astro'
 
         <div class="stage-frame">
           <canvas id="previewCanvas" class="preview" aria-label="Camera preview"></canvas>
+          <canvas id="outputCanvas" class="output-canvas" aria-hidden="true"></canvas>
           <video id="sourceVideo" class="source-video" autoplay muted playsinline></video>
         </div>
 
@@ -211,6 +212,10 @@ import Layout from '@/layouts/Layout.astro'
       display: none;
     }
 
+    .output-canvas {
+      display: none;
+    }
+
     .camera-row {
       padding: 0.9rem 1rem 0;
     }
@@ -305,6 +310,7 @@ import Layout from '@/layouts/Layout.astro'
 
   <script>
     const previewCanvas = document.getElementById('previewCanvas')
+    const outputCanvas = document.getElementById('outputCanvas')
     const sourceVideo = document.getElementById('sourceVideo')
     const playbackVideo = document.getElementById('playbackVideo')
     const statusText = document.getElementById('statusText')
@@ -317,6 +323,7 @@ import Layout from '@/layouts/Layout.astro'
     const resetButton = document.getElementById('resetButton')
 
     const previewContext = previewCanvas.getContext('2d')
+    const outputContext = outputCanvas.getContext('2d')
 
     const state = {
       cameraStream: null,
@@ -387,7 +394,7 @@ import Layout from '@/layouts/Layout.astro'
     }
 
     const drawPreview = () => {
-      if (!previewContext || sourceVideo.readyState < 2) {
+      if (!previewContext || !outputContext || sourceVideo.readyState < 2) {
         state.drawFrameId = requestAnimationFrame(drawPreview)
         return
       }
@@ -399,6 +406,9 @@ import Layout from '@/layouts/Layout.astro'
       previewContext.rotate(Math.PI)
       previewContext.drawImage(sourceVideo, 0, 0, width, height)
       previewContext.restore()
+
+      outputContext.clearRect(0, 0, width, height)
+      outputContext.drawImage(sourceVideo, 0, 0, width, height)
       state.drawFrameId = requestAnimationFrame(drawPreview)
     }
 
@@ -413,6 +423,8 @@ import Layout from '@/layouts/Layout.astro'
       const height = sourceVideo.videoHeight || 1280
       previewCanvas.width = width
       previewCanvas.height = height
+      outputCanvas.width = width
+      outputCanvas.height = height
       startDrawing()
     }
 
@@ -443,6 +455,7 @@ import Layout from '@/layouts/Layout.astro'
       state.cameraStream = null
       sourceVideo.srcObject = null
       previewContext?.clearRect(0, 0, previewCanvas.width, previewCanvas.height)
+      outputContext?.clearRect(0, 0, outputCanvas.width, outputCanvas.height)
       startButton.disabled = false
       recordButton.disabled = true
     }
@@ -470,7 +483,8 @@ import Layout from '@/layouts/Layout.astro'
 
     const buildRecordingStream = async () => {
       const audioStream = await ensureAudioStream()
-      const videoTracks = state.cameraStream?.getVideoTracks().map(track => track.clone()) || []
+      const canvasStream = outputCanvas.captureStream(30)
+      const videoTracks = canvasStream.getVideoTracks()
       const audioTracks = audioStream.getAudioTracks().map(track => track.clone())
       return new MediaStream([...videoTracks, ...audioTracks])
     }
@@ -568,7 +582,7 @@ import Layout from '@/layouts/Layout.astro'
           stopTracks(recordingStream)
         }
 
-        // Record from the normal camera stream so the final film is right side up.
+        // Record from a non-flipped canvas so the final film is right side up.
         state.mediaRecorder.start(250)
         state.isRecording = true
         recordButton.textContent = 'Recording...'
