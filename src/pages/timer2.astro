@@ -1,4 +1,7 @@
 ---
+// Timer route notes:
+// `/timer2` renders the shared `timer4` implementation.
+// For behavior details and linked-file documentation, see `docs/timer2.md`.
 import Layout from "../layouts/Layout.astro";
 import View from "../core/timer4"
 ---
@@ -6,4 +9,3 @@ import View from "../core/timer4"
 <Layout title="ampm">
 	<View client:only="preact" />
 </Layout>
-

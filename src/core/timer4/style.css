@@ -216,6 +216,26 @@ form>fieldset:first-of-type {
   margin: 0 0 1rem;
 }
 
+.audio-rate-version {
+  margin: 0 0 1rem;
+}
+
+.audio-rate-version label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+  max-width: 220px;
+}
+
+.audio-rate-version span {
+  font-weight: 700;
+}
+
+.audio-rate-version select {
+  width: 100%;
+}
+
 .audio-rate-segments {
   display: flex;
   flex-direction: column;

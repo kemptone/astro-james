@@ -22,6 +22,7 @@ import './style.css'
 
 type TButtonStatus = 'Start' | 'Stop' | 'Waiting'
 type TTimerState = 0 | 1
+type TAudioVersion = 'version1' | 'version2'
 type TAudioRateSegment = {
   start: string
   end: string
@@ -29,18 +30,56 @@ type TAudioRateSegment = {
 
 const values = getState()
 const AUDIO_RATE_DEFAULT = 50
+const AUDIO_VERSION_2_MAX = 81920
 const FAN_SPEED = 50
 const FAN_RATE = FAN_SPEED / 20
 const MIN_DURATION = 0.01
 
-function toAudioRateValue (value: unknown) {
+function getNumericAudioRateValue (value: unknown) {
   const numeric = Number(value)
 
-  return Number.isFinite(numeric) ? numeric : AUDIO_RATE_DEFAULT
+  return Number.isFinite(numeric) ? numeric : null
+}
+
+function toAudioRateValue (value: unknown) {
+  const numeric = getNumericAudioRateValue(value)
+
+  return numeric === null ? AUDIO_RATE_DEFAULT : numeric
 }
 
 function formatAudioRateValue (value: unknown) {
   return toAudioRateValue(value).toFixed(2)
+}
+
+function getAudioVersionFromState (): TAudioVersion {
+  return values.audioVersion === 'version2' ? 'version2' : 'version1'
+}
+
+function persistAudioVersion (audioVersion: TAudioVersion) {
+  persist('audioVersion', audioVersion)
+}
+
+function toStoredAudioRateValueForVersion (
+  value: unknown,
+  audioVersion: TAudioVersion
+) {
+  const numeric = toAudioRateValue(value)
+
+  return audioVersion === 'version2'
+    ? AUDIO_VERSION_2_MAX - numeric
+    : numeric
+}
+
+function formatAudioRateValueForVersion (
+  value: unknown,
+  audioVersion: TAudioVersion
+) {
+  const numeric = toAudioRateValue(value)
+  const displayValue = audioVersion === 'version2'
+    ? AUDIO_VERSION_2_MAX - numeric
+    : numeric
+
+  return displayValue.toFixed(2)
 }
 
 function createDefaultAudioRateSegments (value?: unknown): TAudioRateSegment[] {
@@ -157,6 +196,9 @@ const InnerCore = ({ Sounds }: { Sounds: AudioThing[] }) => {
   const refAudioRateStartInputs = useRef<Array<HTMLInputElement | null>>([])
   const timerState = useRef<TTimerState>(0)
   const [bladeCount, setBladeCount] = useState(values.blades || 5)
+  const [audioVersion, setAudioVersion] = useState<TAudioVersion>(
+    getAudioVersionFromState
+  )
   const [audioRateSegments, setAudioRateSegments] = useState<TAudioRateSegment[]>(
     getAudioRateSegmentsFromState
   )
@@ -195,8 +237,15 @@ const InnerCore = ({ Sounds }: { Sounds: AudioThing[] }) => {
   function updateAudioRateSegment (
     index: number,
     field: keyof TAudioRateSegment,
-    value: string
+    value: string,
+    currentAudioVersion: TAudioVersion
   ) {
+    const numericValue = getNumericAudioRateValue(value)
+
+    if (numericValue === null) {
+      return
+    }
+
     setAudioRateSegments(current => {
       const next = current.map((segment, segmentIndex) => {
         if (segmentIndex !== index) {
@@ -205,7 +254,9 @@ const InnerCore = ({ Sounds }: { Sounds: AudioThing[] }) => {
 
         return {
           ...segment,
-          [field]: value
+          [field]: String(
+            toStoredAudioRateValueForVersion(numericValue, currentAudioVersion)
+          )
         }
       })
 
@@ -217,8 +268,19 @@ const InnerCore = ({ Sounds }: { Sounds: AudioThing[] }) => {
 
   function normalizeAudioRateSegment (
     index: number,
-    field: keyof TAudioRateSegment
+    field: keyof TAudioRateSegment,
+    currentAudioVersion: TAudioVersion,
+    input: HTMLInputElement
   ) {
+    const normalizedStoredValue = formatAudioRateValue(
+      toStoredAudioRateValueForVersion(input.value, currentAudioVersion)
+    )
+
+    input.value = formatAudioRateValueForVersion(
+      normalizedStoredValue,
+      currentAudioVersion
+    )
+
     setAudioRateSegments(current => {
       const next = current.map((segment, segmentIndex) => {
         if (segmentIndex !== index) {
@@ -227,7 +289,7 @@ const InnerCore = ({ Sounds }: { Sounds: AudioThing[] }) => {
 
         return {
           ...segment,
-          [field]: formatAudioRateValue(segment[field])
+          [field]: normalizedStoredValue
         }
       })
 
@@ -460,6 +522,29 @@ const InnerCore = ({ Sounds }: { Sounds: AudioThing[] }) => {
             <form>
               <fieldset className='audio-rate-editor'>
                 <legend>Base Audio Frequency</legend>
+                <div className='audio-rate-version'>
+                  <label>
+                    <span>Version</span>
+                    <select
+                      value={audioVersion}
+                      onInput={event => {
+                        const nextAudioVersion = event.currentTarget
+                          .value as TAudioVersion
+
+                        setAudioVersion(nextAudioVersion)
+                        persistAudioVersion(nextAudioVersion)
+                      }}
+                    >
+                      <option value='version1'>Version 1</option>
+                      <option value='version2'>Version 2</option>
+                    </select>
+                  </label>
+                  <p>
+                    Version 1 uses the value as-is. Version 2 flips the range
+                    so <code>81920</code> becomes <code>0</code> and{' '}
+                    <code>0</code> becomes <code>81920</code>.
+                  </p>
+                </div>
                 <p>
                   Each row lasts 1 second. A row like <code>25.00 -&gt;
                   15.00</code> will slow the sound from 25.00 to 15.00 over
@@ -469,7 +554,10 @@ const InnerCore = ({ Sounds }: { Sounds: AudioThing[] }) => {
 
                 <div className='audio-rate-segments'>
                   {audioRateSegments.map((segment, index) => (
-                    <div className='audio-rate-segment' key={index}>
+                    <div
+                      className='audio-rate-segment'
+                      key={`${audioVersion}-${index}`}
+                    >
                       <span>Second {index + 1}</span>
 
                       <label>
@@ -481,16 +569,25 @@ const InnerCore = ({ Sounds }: { Sounds: AudioThing[] }) => {
                           ref={element => {
                             refAudioRateStartInputs.current[index] = element
                           }}
-                          value={segment.start}
+                          defaultValue={formatAudioRateValueForVersion(
+                            segment.start,
+                            audioVersion
+                          )}
                           onInput={event => {
                             updateAudioRateSegment(
                               index,
                               'start',
-                              event.currentTarget.value
+                              event.currentTarget.value,
+                              audioVersion
                             )
                           }}
-                          onBlur={() => {
-                            normalizeAudioRateSegment(index, 'start')
+                          onBlur={event => {
+                            normalizeAudioRateSegment(
+                              index,
+                              'start',
+                              audioVersion,
+                              event.currentTarget
+                            )
                           }}
                         />
                       </label>
@@ -501,16 +598,25 @@ const InnerCore = ({ Sounds }: { Sounds: AudioThing[] }) => {
                           type='number'
                           step='0.01'
                           inputMode='decimal'
-                          value={segment.end}
+                          defaultValue={formatAudioRateValueForVersion(
+                            segment.end,
+                            audioVersion
+                          )}
                           onInput={event => {
                             updateAudioRateSegment(
                               index,
                               'end',
-                              event.currentTarget.value
+                              event.currentTarget.value,
+                              audioVersion
                             )
                           }}
-                          onBlur={() => {
-                            normalizeAudioRateSegment(index, 'end')
+                          onBlur={event => {
+                            normalizeAudioRateSegment(
+                              index,
+                              'end',
+                              audioVersion,
+                              event.currentTarget
+                            )
                           }}
                         />
                       </label>
