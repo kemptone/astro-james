@@ -1,0 +1,824 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="x8 Seconds Game">
+  <main class="x8-page">
+    <section class="hero">
+      <p class="eyebrow">Number Game</p>
+      <h1>Go one second at a time and multiply by 8.</h1>
+      <p class="lede">
+        Start with a top number and think of it like a magic gradient from
+        <strong>0</strong> up to that number. Add seconds, then submit. Every
+        second takes the top number and turns it into <strong>x8</strong>. That
+        means <strong>0 - 100</strong> can become <strong>0 - 800</strong> after
+        <strong>1 second</strong>.
+      </p>
+    </section>
+
+    <section class="game-grid">
+      <article class="panel setup-panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Setup</p>
+            <h2>Pick the top number</h2>
+          </div>
+          <p class="panel-note">The number behaves like a stretched range from 0.</p>
+        </div>
+
+        <form id="x8-form" class="setup-form">
+          <label class="field">
+            <span>Top number</span>
+            <input
+              id="start-number"
+              name="startNumber"
+              type="number"
+              step="any"
+              inputmode="decimal"
+              value="100"
+              placeholder="100"
+            />
+          </label>
+
+          <section class="seconds-box" aria-labelledby="seconds-title">
+            <div class="seconds-copy">
+              <p class="eyebrow" id="seconds-title">Seconds</p>
+              <h2 id="seconds-count">0 seconds</h2>
+              <p id="seconds-text" class="panel-note">
+                At 0 seconds, the number stays where it starts.
+              </p>
+            </div>
+
+            <div class="seconds-controls">
+              <button type="button" class="ghost-button" data-seconds-change="1">
+                Add 1 second
+              </button>
+              <button type="button" class="ghost-button" id="reset-seconds">
+                Reset seconds
+              </button>
+            </div>
+          </section>
+
+          <div class="preview-card">
+            <span class="preview-label">Magic Gradient Idea</span>
+            <strong id="preview-readout">0 - 100 now, 0 - 800 after 1 second</strong>
+            <p id="preview-note" class="preview-note">
+              It is not a real gradient bar. The number itself is what stretches.
+            </p>
+          </div>
+
+          <button type="submit" class="submit-button">Submit</button>
+        </form>
+      </article>
+
+      <article class="panel result-panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Below</p>
+            <h2>Numbers moving fast</h2>
+          </div>
+          <p class="panel-note">Submit starts the count instead of just printing the answer.</p>
+        </div>
+
+        <div id="empty-state" class="empty-state">
+          Add seconds, then press submit to make the numbers race.
+        </div>
+
+        <div id="result-shell" class="result-shell" hidden>
+          <div class="summary-grid">
+            <article class="summary-card">
+              <span class="summary-label">Start range</span>
+              <strong id="summary-start">0 - 100</strong>
+            </article>
+
+            <article class="summary-card">
+              <span class="summary-label">Seconds</span>
+              <strong id="summary-seconds">0 seconds</strong>
+            </article>
+
+            <article class="summary-card">
+              <span class="summary-label">Top range now</span>
+              <strong id="summary-top">0 - 100</strong>
+            </article>
+          </div>
+
+          <div class="live-grid">
+            <section class="track-card live-card up-card">
+              <div class="track-head">
+                <p class="eyebrow">Going Up</p>
+                <h3 id="live-step-label">Ready to count</h3>
+              </div>
+              <strong id="live-up-range" class="live-range">0 - 100</strong>
+              <div class="live-meter">
+                <span id="live-up-fill" class="live-fill up-fill"></span>
+              </div>
+            </section>
+
+            <section class="track-card live-card down-card">
+              <div class="track-head">
+                <p class="eyebrow">Going Down</p>
+                <h3 id="live-down-label">Ready to count</h3>
+              </div>
+              <strong id="live-down-range" class="live-range">0 - 100</strong>
+              <div class="live-meter">
+                <span id="live-down-fill" class="live-fill down-fill"></span>
+              </div>
+            </section>
+          </div>
+
+          <section class="track-card history-card">
+            <div class="track-head">
+              <p class="eyebrow">Reached Numbers</p>
+              <h3>It goes up to each one</h3>
+            </div>
+            <div id="step-log" class="step-log"></div>
+          </section>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script is:inline>
+    const MULTIPLIER = 8
+    const DEFAULT_TOP_NUMBER = 100
+    const MIN_SECONDS = 0
+    const MAX_SECONDS = 24
+    const MIN_STEP_DURATION_MS = 45
+    const MAX_STEP_DURATION_MS = 110
+    const MAX_TOTAL_ANIMATION_MS = 560
+
+    const state = {
+      seconds: 0,
+      animationToken: 0,
+      frameId: 0,
+    }
+
+    const form = document.querySelector('#x8-form')
+    const startNumberInput = document.querySelector('#start-number')
+    const secondsCount = document.querySelector('#seconds-count')
+    const secondsText = document.querySelector('#seconds-text')
+    const previewReadout = document.querySelector('#preview-readout')
+    const previewNote = document.querySelector('#preview-note')
+    const emptyState = document.querySelector('#empty-state')
+    const resultShell = document.querySelector('#result-shell')
+    const summaryStart = document.querySelector('#summary-start')
+    const summarySeconds = document.querySelector('#summary-seconds')
+    const summaryTop = document.querySelector('#summary-top')
+    const liveStepLabel = document.querySelector('#live-step-label')
+    const liveDownLabel = document.querySelector('#live-down-label')
+    const liveUpRange = document.querySelector('#live-up-range')
+    const liveDownRange = document.querySelector('#live-down-range')
+    const liveUpFill = document.querySelector('#live-up-fill')
+    const liveDownFill = document.querySelector('#live-down-fill')
+    const stepLog = document.querySelector('#step-log')
+    const resetSecondsButton = document.querySelector('#reset-seconds')
+    const submitButton = document.querySelector('.submit-button')
+    const secondsButtons = Array.from(document.querySelectorAll('[data-seconds-change]'))
+
+    const formatter = new Intl.NumberFormat('en-US', {
+      maximumFractionDigits: 6,
+    })
+
+    function getStartNumber() {
+      const rawText = startNumberInput.value.trim()
+
+      if (rawText === '') {
+        return DEFAULT_TOP_NUMBER
+      }
+
+      const rawValue = Number(rawText)
+
+      if (Number.isFinite(rawValue)) {
+        return rawValue
+      }
+
+      return DEFAULT_TOP_NUMBER
+    }
+
+    function normalizeStartNumberInput() {
+      if (startNumberInput.value.trim() === '') {
+        startNumberInput.value = String(DEFAULT_TOP_NUMBER)
+      }
+    }
+
+    function formatValue(value) {
+      if (!Number.isFinite(value)) {
+        return 'Too big'
+      }
+
+      const absolute = Math.abs(value)
+
+      if (absolute >= 1e12 || (absolute > 0 && absolute < 0.000001)) {
+        return value.toExponential(4)
+      }
+
+      return formatter.format(value)
+    }
+
+    function describeSeconds(seconds) {
+      return seconds === 1 ? '1 second' : `${seconds} seconds`
+    }
+
+    function formatRange(topValue) {
+      return `0 - ${formatValue(topValue)}`
+    }
+
+    function updatePreview() {
+      const start = getStartNumber()
+      const nextValue = start * MULTIPLIER
+
+      secondsCount.textContent = describeSeconds(state.seconds)
+      secondsText.textContent =
+        state.seconds === 0
+          ? 'At 0 seconds, the number stays where it starts.'
+          : state.seconds === 1
+            ? 'One jump means the top number becomes x8.'
+            : `${state.seconds} jumps keep multiplying the top number by 8.`
+      previewReadout.textContent =
+        `${formatRange(start)} now, ${formatRange(nextValue)} after 1 second`
+      previewNote.textContent =
+        state.seconds === 0
+          ? 'It is like a gradient idea, but the number is what stretches.'
+          : `Press submit to watch it race through ${describeSeconds(state.seconds)}.`
+    }
+
+    function clampSeconds(value) {
+      return Math.max(MIN_SECONDS, Math.min(MAX_SECONDS, value))
+    }
+
+    function setSeconds(nextSeconds) {
+      state.seconds = clampSeconds(nextSeconds)
+      updatePreview()
+    }
+
+    function buildRows(start, seconds) {
+      const rows = []
+
+      for (let second = 0; second <= seconds; second += 1) {
+        rows.push({
+          second,
+          up: start * (MULTIPLIER ** second),
+          down: start / (MULTIPLIER ** second),
+        })
+      }
+
+      return rows
+    }
+
+    function getStepDuration(stepCount) {
+      const rawDuration = MAX_TOTAL_ANIMATION_MS / Math.max(1, stepCount)
+
+      return Math.max(
+        MIN_STEP_DURATION_MS,
+        Math.min(MAX_STEP_DURATION_MS, rawDuration),
+      )
+    }
+
+    function stopAnimation() {
+      state.animationToken += 1
+
+      if (state.frameId) {
+        cancelAnimationFrame(state.frameId)
+        state.frameId = 0
+      }
+    }
+
+    function setLiveRanges(upValue, downValue, upPercent, downPercent) {
+      liveUpRange.textContent = formatRange(upValue)
+      liveDownRange.textContent = formatRange(downValue)
+      liveUpFill.style.width = `${Math.max(4, upPercent)}%`
+      liveDownFill.style.width = `${Math.max(4, downPercent)}%`
+    }
+
+    function addStepLog(row, active = false) {
+      const item = document.createElement('article')
+      item.className = `step-item${active ? ' active' : ''}`
+      item.innerHTML = `
+        <span class="step-second">${row.second === 0 ? 'Start' : `Second ${row.second}`}</span>
+        <strong>${formatRange(row.up)}</strong>
+        <span class="step-note">down: ${formatRange(row.down)}</span>
+      `
+      stepLog.appendChild(item)
+
+      return item
+    }
+
+    function animateValuePair(fromRow, toRow, maxUp, maxDown, duration, token) {
+      return new Promise(resolve => {
+        const startedAt = performance.now()
+
+        function tick(now) {
+          if (token !== state.animationToken) {
+            resolve()
+            return
+          }
+
+          const progress = Math.min(1, (now - startedAt) / duration)
+          const eased = progress
+          const currentUp = fromRow.up + ((toRow.up - fromRow.up) * eased)
+          const currentDown = fromRow.down + ((toRow.down - fromRow.down) * eased)
+          const upPercent = maxUp === 0 ? 100 : (Math.abs(currentUp) / maxUp) * 100
+          const downPercent = maxDown === 0 ? 100 : (Math.abs(currentDown) / maxDown) * 100
+
+          setLiveRanges(currentUp, currentDown, upPercent, downPercent)
+
+          if (progress >= 1) {
+            state.frameId = 0
+            resolve()
+            return
+          }
+
+          state.frameId = requestAnimationFrame(tick)
+        }
+
+        state.frameId = requestAnimationFrame(tick)
+      })
+    }
+
+    async function startAnimation(start, seconds) {
+      stopAnimation()
+      const token = state.animationToken
+      const rows = buildRows(start, seconds)
+      const stepDuration = getStepDuration(rows.length - 1)
+      const maxUp = Math.max(...rows.map(row => Math.abs(row.up)), 1)
+      const maxDown = Math.max(...rows.map(row => Math.abs(row.down)), 1)
+      const firstUpPercent = maxUp === 0 ? 100 : (Math.abs(rows[0].up) / maxUp) * 100
+      const firstDownPercent = maxDown === 0 ? 100 : (Math.abs(rows[0].down) / maxDown) * 100
+
+      summaryStart.textContent = formatRange(start)
+      summarySeconds.textContent = describeSeconds(seconds)
+      summaryTop.textContent = formatRange(rows[rows.length - 1].up)
+
+      emptyState.hidden = true
+      resultShell.hidden = false
+      stepLog.innerHTML = ''
+      submitButton.disabled = true
+      submitButton.textContent = 'Counting fast...'
+
+      liveStepLabel.textContent = 'Start'
+      liveDownLabel.textContent = 'Start'
+      setLiveRanges(rows[0].up, rows[0].down, firstUpPercent, firstDownPercent)
+
+      let activeItem = addStepLog(rows[0], true)
+
+      if (rows.length === 1) {
+        liveStepLabel.textContent = 'Finished going up'
+        liveDownLabel.textContent = 'Finished going down'
+        submitButton.disabled = false
+        submitButton.textContent = 'Submit'
+        return
+      }
+
+      for (let index = 1; index < rows.length; index += 1) {
+        if (token !== state.animationToken) {
+          return
+        }
+
+        const previousRow = rows[index - 1]
+        const currentRow = rows[index]
+        liveStepLabel.textContent = `Second ${currentRow.second} going up`
+        liveDownLabel.textContent = `Second ${currentRow.second} going down`
+
+        await animateValuePair(
+          previousRow,
+          currentRow,
+          maxUp,
+          maxDown,
+          stepDuration,
+          token,
+        )
+
+        if (token !== state.animationToken) {
+          return
+        }
+
+        activeItem.classList.remove('active')
+        activeItem = addStepLog(currentRow, true)
+      }
+
+      liveStepLabel.textContent = 'Finished going up'
+      liveDownLabel.textContent = 'Finished going down'
+      submitButton.disabled = false
+      submitButton.textContent = 'Submit'
+    }
+
+    secondsButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const change = Number(button.getAttribute('data-seconds-change') || '0')
+        setSeconds(state.seconds + change)
+      })
+    })
+
+    resetSecondsButton.addEventListener('click', () => {
+      stopAnimation()
+      setSeconds(0)
+      emptyState.hidden = false
+      resultShell.hidden = true
+      submitButton.disabled = false
+      submitButton.textContent = 'Submit'
+    })
+
+    startNumberInput.addEventListener('input', () => {
+      updatePreview()
+    })
+
+    form.addEventListener('submit', event => {
+      event.preventDefault()
+      normalizeStartNumberInput()
+      startAnimation(getStartNumber(), state.seconds)
+    })
+
+    updatePreview()
+  </script>
+</Layout>
+
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #f6f1e7;
+    --panel: rgba(255, 252, 246, 0.9);
+    --ink: #191510;
+    --muted: #6f6252;
+    --accent: #126e5c;
+    --accent-deep: #0c4f43;
+    --warm: #cf7b32;
+    --line: rgba(25, 21, 16, 0.1);
+    --up: #1d8f63;
+    --down: #c95f45;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at top, rgba(255, 255, 255, 0.82), transparent 30%),
+      linear-gradient(180deg, #f6efe2 0%, #ebddc5 42%, #decca8 100%);
+    font-family: 'Avenir Next', 'Trebuchet MS', 'Segoe UI', sans-serif;
+  }
+
+  .x8-page {
+    width: min(1120px, calc(100% - 2rem));
+    margin: 0 auto;
+    padding: 2rem 0 5rem;
+  }
+
+  .hero,
+  .panel {
+    border: 2px solid var(--line);
+    border-radius: 28px;
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(255, 245, 228, 0.72)),
+      var(--panel);
+    box-shadow: 0 22px 60px rgba(77, 49, 18, 0.12);
+  }
+
+  .hero {
+    padding: 1.8rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .eyebrow {
+    margin: 0 0 0.35rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--accent-deep);
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    margin: 0;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 0.94;
+  }
+
+  .lede {
+    max-width: 52rem;
+    margin-top: 0.95rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #3f352b;
+  }
+
+  .game-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .panel {
+    padding: 1.4rem;
+  }
+
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: start;
+    margin-bottom: 1rem;
+  }
+
+  .panel-head h2 {
+    font-size: 1.55rem;
+  }
+
+  .panel-note {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+
+  .setup-form,
+  .seconds-box,
+  .track-card,
+  .summary-card,
+  .preview-card,
+  .empty-state {
+    border-radius: 24px;
+    border: 1px solid rgba(18, 110, 92, 0.12);
+    background: rgba(255, 255, 255, 0.78);
+  }
+
+  .setup-form {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.45rem;
+    font-weight: 700;
+  }
+
+  .field span {
+    font-size: 0.95rem;
+  }
+
+  .field input {
+    width: 100%;
+    border: 2px solid rgba(25, 21, 16, 0.12);
+    border-radius: 18px;
+    padding: 0.95rem 1rem;
+    font: inherit;
+    font-size: 1.35rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--ink);
+  }
+
+  .field input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(18, 110, 92, 0.12);
+  }
+
+  .seconds-box {
+    padding: 1rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .seconds-copy h2 {
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    line-height: 1;
+  }
+
+  .seconds-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .ghost-button,
+  .submit-button {
+    border: 0;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+      transform 0.18s ease,
+      background 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+
+  .ghost-button {
+    padding: 0.85rem 1rem;
+    background: rgba(18, 110, 92, 0.1);
+    color: var(--accent-deep);
+  }
+
+  .ghost-button:hover,
+  .ghost-button:focus-visible {
+    background: rgba(18, 110, 92, 0.16);
+    transform: translateY(-1px);
+  }
+
+  .preview-card {
+    padding: 1rem 1.1rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .preview-label,
+  .summary-label,
+  .step-second,
+  .step-note {
+    font-size: 0.84rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .preview-card strong {
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+
+  .preview-note {
+    color: #4f4337;
+    line-height: 1.45;
+  }
+
+  .submit-button {
+    padding: 1rem 1.35rem;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--warm) 100%);
+    color: white;
+    box-shadow: 0 14px 28px rgba(18, 110, 92, 0.18);
+  }
+
+  .submit-button:hover,
+  .submit-button:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 34px rgba(18, 110, 92, 0.24);
+  }
+
+  .submit-button:disabled {
+    opacity: 0.8;
+    cursor: wait;
+    transform: none;
+  }
+
+  .empty-state {
+    padding: 1.25rem;
+    color: #4f4337;
+    line-height: 1.5;
+  }
+
+  .result-shell {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .summary-grid,
+  .live-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .live-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .summary-card,
+  .track-card {
+    padding: 1rem;
+  }
+
+  .summary-card strong {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 1.3rem;
+    line-height: 1.2;
+  }
+
+  .track-head {
+    margin-bottom: 0.9rem;
+  }
+
+  .track-head h3 {
+    font-size: 1.2rem;
+  }
+
+  .live-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .live-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  .up-card::before {
+    background: linear-gradient(135deg, #7ed9b6, transparent 65%);
+  }
+
+  .down-card::before {
+    background: linear-gradient(135deg, #efbcaa, transparent 65%);
+  }
+
+  .live-range {
+    display: block;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1;
+    margin-bottom: 0.8rem;
+    position: relative;
+    z-index: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .live-meter {
+    height: 0.9rem;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(25, 21, 16, 0.08);
+    position: relative;
+    z-index: 1;
+  }
+
+  .live-fill {
+    display: block;
+    height: 100%;
+    width: 4%;
+    border-radius: 999px;
+    transition: width 80ms linear;
+  }
+
+  .up-fill {
+    background: linear-gradient(90deg, #7ed9b6 0%, var(--up) 100%);
+  }
+
+  .down-fill {
+    background: linear-gradient(90deg, #efbcaa 0%, var(--down) 100%);
+  }
+
+  .step-log {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .step-item {
+    border-radius: 18px;
+    border: 1px solid rgba(25, 21, 16, 0.08);
+    background: #fff;
+    padding: 0.9rem 1rem;
+    display: grid;
+    gap: 0.25rem;
+    animation: rise-in 240ms ease both;
+  }
+
+  .step-item strong {
+    font-size: 1.2rem;
+    line-height: 1.1;
+  }
+
+  .step-item.active {
+    border-color: rgba(18, 110, 92, 0.35);
+    box-shadow: 0 0 0 3px rgba(18, 110, 92, 0.12);
+  }
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .game-grid,
+    .live-grid,
+    .summary-grid,
+    .seconds-controls {
+      grid-template-columns: 1fr;
+    }
+
+    .panel-head {
+      display: grid;
+    }
+  }
+</style>

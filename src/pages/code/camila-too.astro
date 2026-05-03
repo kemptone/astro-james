@@ -344,7 +344,6 @@ import Layout from '@/layouts/Layout.astro'
 
     const pickMimeType = () => {
       const choices = [
-        'video/mp4',
         'video/webm;codecs=vp9,opus',
         'video/webm;codecs=vp8,opus',
         'video/webm',
@@ -463,11 +462,11 @@ import Layout from '@/layouts/Layout.astro'
       const recordingStream = new MediaStream()
 
       state.cameraStream?.getVideoTracks().forEach(track => {
-        recordingStream.addTrack(track.clone())
+        recordingStream.addTrack(track)
       })
 
       state.micStream?.getAudioTracks().forEach(track => {
-        recordingStream.addTrack(track.clone())
+        recordingStream.addTrack(track)
       })
 
       state.recordingStream = recordingStream
@@ -568,8 +567,8 @@ import Layout from '@/layouts/Layout.astro'
         resetRecorderState()
       }
 
-      // The preview is flipped on the canvas, but the recording uses the raw camera stream.
-      state.mediaRecorder.start(250)
+      // Record one continuous WebM so browsers are less likely to write bad duration metadata.
+      state.mediaRecorder.start()
       state.isRecording = true
       recordButton.textContent = 'Recording...'
       recordButton.disabled = true
@@ -579,7 +578,6 @@ import Layout from '@/layouts/Layout.astro'
 
     const stopRecording = () => {
       if (!state.mediaRecorder || !state.isRecording) return
-      state.mediaRecorder.requestData()
       state.mediaRecorder.stop()
       setStatus('Finishing video...')
     }
