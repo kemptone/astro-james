@@ -1,280 +1,651 @@
 ---
 import Layout from '../layouts/Layout.astro'
 
-const rowNumbers = Array.from({length: 9}, (_, index) => index + 1)
+const axisNumbers = Array.from({length: 100}, (_, index) => index + 1)
 ---
 
-<Layout title="Missing Grid Game">
-  <main class="missing-grid-page">
+<Layout title="100 x 100 Photo Puzzle">
+  <main class="photo-puzzle-page">
     <section class="panel intro-panel">
-      <p class="eyebrow">Missing Grid Game</p>
-      <h1>Type the missing columns for each row, then reveal the grid.</h1>
+      <p class="eyebrow">Photo Puzzle</p>
+      <h1>Build a puzzle on a 100 x 100 picture grid.</h1>
       <p class="lede">
-        Use digits <code>1-9</code> with no spaces. A digit in a row makes that
-        column unfilled. Leave a row blank to fill the whole row.
+        The chosen photo is a square flower, so the corners stay simple:
+        <code>1,1</code> is the top left and <code>100,100</code> is the bottom
+        right. Click or drag on the board to reveal parts of the picture.
       </p>
     </section>
 
-    <section class="panel input-panel">
-      <form id="missing-grid-form" novalidate>
-        <div class="input-grid">
-          {
-            rowNumbers.map(rowNumber => (
-              <label class="row-card">
-                <span class="row-label">Row {rowNumber}</span>
-                <input
-                  data-row-input
-                  type="text"
-                  inputmode="numeric"
-                  autocomplete="off"
-                  autocapitalize="off"
-                  spellcheck="false"
-                  maxlength="9"
-                  placeholder="13579"
-                  aria-label={`Numbers to remove from row ${rowNumber}`}
-                />
-              </label>
-            ))
-          }
+    <section class="panel controls-panel">
+      <div class="controls-copy">
+        <div>
+          <p class="eyebrow">Controls</p>
+          <h2>Reveal, cover, or jump to a square.</h2>
         </div>
-
-        <div class="legend">
-          <div class="legend-item">
-            <span class="legend-swatch filled"></span>
-            <span>Filled</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-swatch unfilled"></span>
-            <span>Unfilled</span>
-          </div>
-        </div>
-
-        <p class="helper-text">
-          The grid is visible below. Press <strong>Submit</strong> to apply the
-          inputs again.
+        <p id="status-text" class="status-text" aria-live="polite">
+          0 of 10,000 squares revealed. Brush: reveal.
         </p>
+      </div>
 
-        <div class="button-row">
-          <button type="submit" class="primary-button">Submit</button>
-          <button type="button" id="clear-button" class="secondary-button">
-            Clear
+      <div class="controls-grid">
+        <div class="brush-panel">
+          <span class="section-label">Brush</span>
+          <div class="button-row">
+            <button
+              id="reveal-brush"
+              type="button"
+              class="tool-button is-active"
+              data-brush="reveal"
+              aria-pressed="true"
+            >
+              Reveal
+            </button>
+            <button
+              id="cover-brush"
+              type="button"
+              class="tool-button"
+              data-brush="cover"
+              aria-pressed="false"
+            >
+              Cover
+            </button>
+          </div>
+        </div>
+
+        <div class="photo-picker-panel">
+          <span class="section-label">Pick A Photo</span>
+          <label class="file-picker" for="photo-input">
+            <span>Choose an image file</span>
+            <input id="photo-input" type="file" accept="image/*" />
+          </label>
+          <p id="photo-help" class="picker-help">
+            Start with the flower, or pick one of your own photos.
+          </p>
+        </div>
+
+        <form id="coordinate-form" class="coordinate-form">
+          <span class="section-label">Jump To A Square</span>
+
+          <label>
+            <span>Row</span>
+            <input
+              id="row-input"
+              name="row"
+              type="number"
+              min="1"
+              max="100"
+              inputmode="numeric"
+              placeholder="1"
+              required
+            />
+          </label>
+
+          <label>
+            <span>Column</span>
+            <input
+              id="column-input"
+              name="column"
+              type="number"
+              min="1"
+              max="100"
+              inputmode="numeric"
+              placeholder="1"
+              required
+            />
+          </label>
+
+          <button type="submit" class="tool-button secondary-button">
+            Find Square
+          </button>
+        </form>
+
+        <div class="button-stack">
+          <span class="section-label">Whole Board</span>
+          <button id="reveal-all" type="button" class="tool-button secondary-button">
+            Reveal All
+          </button>
+          <button id="cover-all" type="button" class="tool-button secondary-button">
+            Cover All
           </button>
         </div>
-      </form>
+      </div>
+
+      <p class="helper-text">
+        Keyboard help: focus the board, use arrow keys to move, then press
+        <strong>Space</strong> or <strong>Enter</strong> to use the current brush.
+      </p>
     </section>
 
-    <section id="result-panel" class="panel result-panel">
-      <div class="result-copy">
+    <section class="panel puzzle-panel">
+      <div class="puzzle-copy">
         <div>
-          <p class="eyebrow">Grid Result</p>
-          <h2>Your 9 x 9 pattern</h2>
+          <p class="eyebrow">Chosen Photo</p>
+          <h2 id="photo-title">Yellow flower on a square board</h2>
         </div>
-        <p id="result-text" class="result-text" aria-live="polite"></p>
+        <p id="photo-description" class="lede">
+          This photo was picked because it is already square, so
+          <code>1,1</code>, <code>1,100</code>, <code>100,1</code>, and
+          <code>100,100</code> line up cleanly with the corners.
+        </p>
       </div>
 
-      <div id="grid" class="grid" role="img" aria-label="Submitted 9 by 9 grid"></div>
+      <figure class="whole-photo-panel">
+        <img
+          id="whole-photo-preview"
+          src="/spin/flower.jpeg"
+          alt="Yellow flower used for the 100 by 100 puzzle"
+          class="whole-photo-preview"
+        />
+      </figure>
 
-      <p id="special-text" class="special-text" hidden aria-live="polite"></p>
-
-      <div id="unlock-panel" class="unlock-panel" hidden>
-        <p>The whole grid is filled, so the story book is unlocked.</p>
-        <a class="storybook-link" href="/storybook">Open Story Book</a>
+      <div class="board-copy">
+        <div>
+          <p class="eyebrow">Puzzle Board</p>
+          <h2>100 x 100 grid view</h2>
+        </div>
+        <p class="lede">
+          The whole photo shows above. The numbered board below keeps the same
+          corners: <code>1,1</code> is top left and <code>100,100</code> is
+          bottom right.
+        </p>
       </div>
+
+      <section id="camera-preview-panel" class="camera-preview-panel" hidden>
+        <div class="camera-preview-copy">
+          <div>
+            <p class="eyebrow">Picked Camera</p>
+            <h2 id="camera-preview-title">Camera row 1, column 1</h2>
+          </div>
+          <button id="show-grid-again" type="button" class="tool-button">
+            Show Grid Again
+          </button>
+        </div>
+
+        <div id="camera-preview" class="camera-preview" aria-hidden="true"></div>
+      </section>
+
+      <div id="board-scroll" class="board-scroll">
+        <div class="board-shell">
+          <div class="board-corner" aria-hidden="true">r/c</div>
+
+          <div class="column-axis" aria-hidden="true">
+            {
+              axisNumbers.map(number => (
+                <span>{number}</span>
+              ))
+            }
+          </div>
+
+          <div class="row-axis" aria-hidden="true">
+            {
+              axisNumbers.map(number => (
+                <span>{number}</span>
+              ))
+            }
+          </div>
+
+          <div class="board-stage">
+            <img
+              src="/spin/flower.jpeg"
+              alt="Yellow flower used for the 100 by 100 puzzle"
+              class="board-photo"
+            />
+            <canvas
+              id="puzzle-canvas"
+              class="puzzle-canvas"
+              width="1000"
+              height="1000"
+              tabindex="0"
+              aria-label="100 by 100 flower puzzle board. 1 1 is top left and 100 100 is bottom right."
+            ></canvas>
+          </div>
+        </div>
+      </div>
+
+      <p id="focus-readout" class="focus-readout" aria-live="polite">
+        Hover, tap, or use the keyboard on the board to read a square.
+      </p>
     </section>
   </main>
 
   <script>
-    const ROW_COUNT = 9
-    const COLUMN_COUNT = 9
-    const TOTAL_CELLS = ROW_COUNT * COLUMN_COUNT
-    const SPECIAL_ROW = '123456789'
-    const SPECIAL_AUDIO = ''
+    const GRID_SIZE = 100
+    const TOTAL_CELLS = GRID_SIZE * GRID_SIZE
+    const BOARD_PIXELS = 1000
+    const CELL_PIXELS = BOARD_PIXELS / GRID_SIZE
 
-    const form = document.querySelector('#missing-grid-form')
-    const gridElement = document.querySelector('#grid')
-    const resultText = document.querySelector('#result-text')
-    const specialText = document.querySelector('#special-text')
-    const unlockPanel = document.querySelector('#unlock-panel')
-    const clearButton = document.querySelector('#clear-button')
-    const rowInputs = Array.from(
-      document.querySelectorAll('input[data-row-input]')
-    )
+    const canvas = document.querySelector('#puzzle-canvas')
+    const context = canvas?.getContext('2d')
+    const statusText = document.querySelector('#status-text')
+    const focusReadout = document.querySelector('#focus-readout')
+    const revealBrushButton = document.querySelector('#reveal-brush')
+    const coverBrushButton = document.querySelector('#cover-brush')
+    const revealAllButton = document.querySelector('#reveal-all')
+    const coverAllButton = document.querySelector('#cover-all')
+    const coordinateForm = document.querySelector('#coordinate-form')
+    const rowInput = document.querySelector('#row-input')
+    const columnInput = document.querySelector('#column-input')
+    const photoInput = document.querySelector('#photo-input')
+    const photoHelp = document.querySelector('#photo-help')
+    const photoTitle = document.querySelector('#photo-title')
+    const photoDescription = document.querySelector('#photo-description')
+    const boardPhoto = document.querySelector('.board-photo')
+    const wholePhotoPreview = document.querySelector('#whole-photo-preview')
+    const wholePhotoPanel = document.querySelector('.whole-photo-panel')
+    const boardCopy = document.querySelector('.board-copy')
+    const boardScroll = document.querySelector('#board-scroll')
+    const cameraPreviewPanel = document.querySelector('#camera-preview-panel')
+    const cameraPreview = document.querySelector('#camera-preview')
+    const cameraPreviewTitle = document.querySelector('#camera-preview-title')
+    const showGridAgainButton = document.querySelector('#show-grid-again')
 
-    let specialAudio
+    const revealed = new Uint8Array(TOTAL_CELLS)
 
-    const sanitizeRow = value => {
-      const seen = new Set()
+    let revealedCount = 0
+    let brushMode = 'reveal'
+    let hoveredCell = null
+    let focusedCell = {row: 1, column: 1}
+    let lastChangedCell = null
+    let isPainting = false
+    let currentObjectUrl = ''
+    let currentPhotoSrc = '/spin/flower.jpeg'
 
-      return Array.from(value)
-        .filter(character => character >= '1' && character <= '9')
-        .filter(character => {
-          if (seen.has(character)) return false
-          seen.add(character)
-          return true
-        })
-        .sort()
-        .join('')
+    const indexFor = (row, column) => ((row - 1) * GRID_SIZE) + (column - 1)
+
+    const clampCoordinate = value =>
+      Math.min(GRID_SIZE, Math.max(1, Math.round(Number(value) || 1)))
+
+    const describeCell = cell => {
+      if (!cell) return 'No square selected yet.'
+
+      const cornerName =
+        cell.row === 1 && cell.column === 1
+          ? ' This is the top-left corner.'
+          : cell.row === 100 && cell.column === 100
+            ? ' This is the bottom-right corner.'
+            : cell.row === 1 && cell.column === 100
+              ? ' This is the top-right corner.'
+              : cell.row === 100 && cell.column === 1
+                ? ' This is the bottom-left corner.'
+                : ''
+
+      return `Row ${cell.row}, column ${cell.column}.${cornerName}`
     }
 
-    const buildGrid = rows =>
-      rows.map(row => {
-        const unfilledColumns = new Set(row.split(''))
+    const syncBrushButtons = () => {
+      const isReveal = brushMode === 'reveal'
 
-        return Array.from({length: COLUMN_COUNT}, (_, index) => {
-          const column = String(index + 1)
-          return !unfilledColumns.has(column)
-        })
-      })
+      revealBrushButton?.classList.toggle('is-active', isReveal)
+      coverBrushButton?.classList.toggle('is-active', !isReveal)
+      revealBrushButton?.setAttribute('aria-pressed', String(isReveal))
+      coverBrushButton?.setAttribute('aria-pressed', String(!isReveal))
+    }
 
-    const countFilledCells = grid =>
-      grid.reduce(
-        (total, row) =>
-          total + row.reduce((rowTotal, isFilled) => rowTotal + Number(isFilled), 0),
-        0
-      )
+    const updateStatus = () => {
+      if (!statusText) return
 
-    const isAllFilled = grid => grid.every(row => row.every(Boolean))
+      const cellText = lastChangedCell
+        ? ` Last square: ${lastChangedCell.row},${lastChangedCell.column}.`
+        : ''
 
-    const isSpecialBoard = rows => rows.every(row => row === SPECIAL_ROW)
+      statusText.textContent =
+        `${revealedCount.toLocaleString()} of ${TOTAL_CELLS.toLocaleString()} squares revealed. Brush: ${brushMode}.` +
+        cellText
+    }
 
-    const playSpecialAudio = async () => {
-      if (!SPECIAL_AUDIO) return false
+    const updateReadout = cell => {
+      if (!focusReadout) return
+      focusReadout.textContent = describeCell(cell ?? focusedCell)
+    }
 
-      if (!specialAudio) specialAudio = new Audio(SPECIAL_AUDIO)
-      specialAudio.currentTime = 0
+    const hideCameraPreview = () => {
+      if (cameraPreviewPanel) cameraPreviewPanel.hidden = true
+      if (wholePhotoPanel) wholePhotoPanel.hidden = false
+      if (boardCopy) boardCopy.hidden = false
+      if (boardScroll) boardScroll.hidden = false
+      if (focusReadout) focusReadout.hidden = false
+    }
 
-      try {
-        await specialAudio.play()
-        return true
-      } catch {
-        return false
+    const showCameraPreview = cell => {
+      if (!cameraPreviewPanel || !cameraPreview || !cameraPreviewTitle) return
+
+      const rowPercent = GRID_SIZE === 1 ? 0 : ((cell.row - 1) / (GRID_SIZE - 1)) * 100
+      const columnPercent = GRID_SIZE === 1 ? 0 : ((cell.column - 1) / (GRID_SIZE - 1)) * 100
+
+      cameraPreview.style.backgroundImage = `url("${currentPhotoSrc}")`
+      cameraPreview.style.backgroundSize = `${GRID_SIZE * 100}% ${GRID_SIZE * 100}%`
+      cameraPreview.style.backgroundPosition = `${columnPercent}% ${rowPercent}%`
+      cameraPreviewTitle.textContent = `Camera row ${cell.row}, column ${cell.column}`
+
+      cameraPreviewPanel.hidden = false
+      if (wholePhotoPanel) wholePhotoPanel.hidden = true
+      if (boardCopy) boardCopy.hidden = true
+      if (boardScroll) boardScroll.hidden = true
+      if (focusReadout) focusReadout.hidden = true
+    }
+
+    const updatePhotoCopy = ({title, description, alt}) => {
+      if (photoTitle) photoTitle.textContent = title
+      if (photoDescription) photoDescription.innerHTML = description
+      if (boardPhoto) boardPhoto.alt = alt
+      if (wholePhotoPreview) wholePhotoPreview.alt = alt
+    }
+
+    const setCellState = (row, column, shouldReveal) => {
+      const cellIndex = indexFor(row, column)
+      const nextValue = shouldReveal ? 1 : 0
+
+      if (revealed[cellIndex] === nextValue) return false
+
+      revealed[cellIndex] = nextValue
+      revealedCount += shouldReveal ? 1 : -1
+      lastChangedCell = {row, column}
+      return true
+    }
+
+    const drawGridLines = () => {
+      if (!context) return
+
+      context.save()
+
+      for (let step = 0; step <= GRID_SIZE; step += 1) {
+        const pixel = step * CELL_PIXELS
+
+        context.beginPath()
+        context.moveTo(pixel, 0)
+        context.lineTo(pixel, BOARD_PIXELS)
+        context.strokeStyle = 'rgba(255, 243, 212, 0.28)'
+        context.lineWidth = 1
+        context.stroke()
+
+        context.beginPath()
+        context.moveTo(0, pixel)
+        context.lineTo(BOARD_PIXELS, pixel)
+        context.strokeStyle = 'rgba(255, 243, 212, 0.28)'
+        context.lineWidth = 1
+        context.stroke()
+      }
+
+      context.restore()
+    }
+
+    const drawHighlight = (cell, color, lineWidth) => {
+      if (!context || !cell) return
+
+      const x = (cell.column - 1) * CELL_PIXELS
+      const y = (cell.row - 1) * CELL_PIXELS
+
+      context.save()
+      context.strokeStyle = color
+      context.lineWidth = lineWidth
+      context.strokeRect(x + (lineWidth / 2), y + (lineWidth / 2), CELL_PIXELS - lineWidth, CELL_PIXELS - lineWidth)
+      context.restore()
+    }
+
+    const drawBoard = () => {
+      if (!context) return
+
+      context.clearRect(0, 0, BOARD_PIXELS, BOARD_PIXELS)
+
+      for (let row = 1; row <= GRID_SIZE; row += 1) {
+        for (let column = 1; column <= GRID_SIZE; column += 1) {
+          if (revealed[indexFor(row, column)]) continue
+
+          context.fillStyle = 'rgba(10, 19, 32, 0.92)'
+          context.fillRect(
+            (column - 1) * CELL_PIXELS,
+            (row - 1) * CELL_PIXELS,
+            CELL_PIXELS,
+            CELL_PIXELS
+          )
+        }
+      }
+
+      drawGridLines()
+      drawHighlight(focusedCell, 'rgba(255, 122, 89, 0.96)', 3)
+
+      if (hoveredCell) {
+        drawHighlight(hoveredCell, 'rgba(255, 222, 130, 0.96)', 2)
       }
     }
 
-    const renderGrid = grid => {
-      const fragment = document.createDocumentFragment()
+    const getCellFromPointer = event => {
+      if (!canvas) return null
 
-      grid.forEach((row, rowIndex) => {
-        row.forEach((isFilled, columnIndex) => {
-          const cell = document.createElement('div')
-          cell.className = `grid-cell ${isFilled ? 'is-filled' : 'is-unfilled'}`
-          cell.setAttribute('aria-hidden', 'true')
-          cell.dataset.row = String(rowIndex + 1)
-          cell.dataset.column = String(columnIndex + 1)
-          cell.textContent = isFilled ? '◼︎' : '◻︎'
-          fragment.appendChild(cell)
-        })
-      })
+      const bounds = canvas.getBoundingClientRect()
+      const x = ((event.clientX - bounds.left) / bounds.width) * BOARD_PIXELS
+      const y = ((event.clientY - bounds.top) / bounds.height) * BOARD_PIXELS
 
-      gridElement.replaceChildren(fragment)
+      if (x < 0 || y < 0 || x > BOARD_PIXELS || y > BOARD_PIXELS) return null
+
+      return {
+        row: Math.min(GRID_SIZE, Math.max(1, Math.floor(y / CELL_PIXELS) + 1)),
+        column: Math.min(GRID_SIZE, Math.max(1, Math.floor(x / CELL_PIXELS) + 1)),
+      }
     }
 
-    const readRows = () =>
-      rowInputs.map(input => {
-        const cleaned = sanitizeRow(input.value)
-        if (input.value !== cleaned) input.value = cleaned
-        return cleaned
-      })
+    const paintCell = cell => {
+      if (!cell) return
 
-    const showBoard = (rows, {submitted = false} = {}) => {
-      const grid = buildGrid(rows)
-      const filledCount = countFilledCells(grid)
+      hideCameraPreview()
+      focusedCell = cell
+      hoveredCell = cell
 
-      renderGrid(grid)
-      resultText.textContent = submitted
-        ? `${filledCount} of ${TOTAL_CELLS} squares are filled.`
-        : `Starting grid from empty inputs: ${filledCount} of ${TOTAL_CELLS} squares are filled.`
-      gridElement.setAttribute(
-        'aria-label',
-        `${submitted ? 'Submitted' : 'Starting'} 9 by 9 grid with ${filledCount} filled squares`
-      )
-      unlockPanel.hidden = !submitted || !isAllFilled(grid)
+      const changed = setCellState(cell.row, cell.column, brushMode === 'reveal')
 
-      return grid
+      if (changed) updateStatus()
+      updateReadout(cell)
+      drawBoard()
     }
 
-    const resetResult = () => {
-      unlockPanel.hidden = true
-      specialText.hidden = true
-      specialText.textContent = ''
-      showBoard(Array.from({length: ROW_COUNT}, () => ''), {submitted: false})
+    const resetBoard = ({lastCell}) => {
+      revealed.fill(0)
+      revealedCount = 0
+      lastChangedCell = lastCell
+      hoveredCell = null
+      updateStatus()
+      drawBoard()
+      updateReadout(focusedCell)
     }
 
-    rowInputs.forEach(input => {
-      input.addEventListener('input', () => {
-        const cleaned = sanitizeRow(input.value)
-        if (input.value !== cleaned) input.value = cleaned
-      })
+    revealBrushButton?.addEventListener('click', () => {
+      brushMode = 'reveal'
+      syncBrushButtons()
+      updateStatus()
     })
 
-    clearButton?.addEventListener('click', () => {
-      form?.reset()
-      rowInputs.forEach(input => {
-        input.value = ''
-      })
-      resetResult()
-      rowInputs[0]?.focus()
+    coverBrushButton?.addEventListener('click', () => {
+      brushMode = 'cover'
+      syncBrushButtons()
+      updateStatus()
     })
 
-    form?.addEventListener('submit', async event => {
+    revealAllButton?.addEventListener('click', () => {
+      hideCameraPreview()
+      revealed.fill(1)
+      revealedCount = TOTAL_CELLS
+      lastChangedCell = {row: 100, column: 100}
+      updateStatus()
+      drawBoard()
+      updateReadout(focusedCell)
+    })
+
+    coverAllButton?.addEventListener('click', () => {
+      hideCameraPreview()
+      resetBoard({lastCell: {row: 1, column: 1}})
+    })
+
+    showGridAgainButton?.addEventListener('click', () => {
+      hideCameraPreview()
+      drawBoard()
+      canvas?.focus()
+    })
+
+    photoInput?.addEventListener('change', event => {
+      const file = event.target?.files?.[0]
+      if (!file || !boardPhoto) return
+
+      if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl)
+
+      currentObjectUrl = URL.createObjectURL(file)
+      boardPhoto.src = currentObjectUrl
+      if (wholePhotoPreview) wholePhotoPreview.src = currentObjectUrl
+      currentPhotoSrc = currentObjectUrl
+
+      updatePhotoCopy({
+        title: `${file.name} on a 100 x 100 board`,
+        description:
+          'Your chosen file is now under the puzzle grid. The coordinates stay the same: <code>1,1</code> is top left and <code>100,100</code> is bottom right.',
+        alt: `Selected puzzle image ${file.name}`,
+      })
+
+      if (photoHelp) {
+        photoHelp.textContent = `Loaded ${file.name}. The board was covered again so you can start a fresh puzzle.`
+      }
+
+      resetBoard({lastCell: {row: 1, column: 1}})
+    })
+
+    coordinateForm?.addEventListener('submit', event => {
       event.preventDefault()
 
-      const rows = readRows()
-      showBoard(rows, {submitted: true})
-      const specialBoard = isSpecialBoard(rows)
+      const row = clampCoordinate(rowInput?.value)
+      const column = clampCoordinate(columnInput?.value)
 
-      if (specialBoard) {
-        const didPlay = await playSpecialAudio()
-        specialText.hidden = false
-        specialText.textContent = didPlay
-          ? 'All 9 rows were 123456789, so the 6 7 meme is playing.'
-          : 'All 9 rows were 123456789. The 6 7 meme trigger is ready, but the audio file still needs to be added.'
-      } else {
-        specialText.hidden = true
-        specialText.textContent = ''
-      }
+      if (rowInput) rowInput.value = String(row)
+      if (columnInput) columnInput.value = String(column)
+
+      focusedCell = {row, column}
+      hoveredCell = null
+      revealed.fill(0)
+      revealedCount = 0
+      setCellState(row, column, true)
+      updateStatus()
+      drawBoard()
+      updateReadout(focusedCell)
+      showCameraPreview(focusedCell)
+      canvas?.focus()
     })
 
-    resetResult()
+    canvas?.addEventListener('pointerdown', event => {
+      const cell = getCellFromPointer(event)
+      if (!cell) return
+
+      isPainting = true
+      paintCell(cell)
+      canvas.setPointerCapture(event.pointerId)
+    })
+
+    canvas?.addEventListener('pointermove', event => {
+      const cell = getCellFromPointer(event)
+      hoveredCell = cell
+
+      if (cell) {
+        focusedCell = cell
+        updateReadout(cell)
+      }
+
+      if (isPainting && cell) {
+        const changed = setCellState(cell.row, cell.column, brushMode === 'reveal')
+        if (changed) updateStatus()
+      }
+
+      drawBoard()
+    })
+
+    const stopPainting = () => {
+      isPainting = false
+    }
+
+    canvas?.addEventListener('pointerup', stopPainting)
+    canvas?.addEventListener('pointercancel', stopPainting)
+    canvas?.addEventListener('pointerleave', () => {
+      hoveredCell = null
+      stopPainting()
+      drawBoard()
+      updateReadout(focusedCell)
+    })
+
+    canvas?.addEventListener('keydown', event => {
+      if (!focusedCell) focusedCell = {row: 1, column: 1}
+
+      const nextCell = {
+        row: focusedCell.row,
+        column: focusedCell.column,
+      }
+
+      if (event.key === 'ArrowUp') nextCell.row = Math.max(1, nextCell.row - 1)
+      else if (event.key === 'ArrowDown') nextCell.row = Math.min(100, nextCell.row + 1)
+      else if (event.key === 'ArrowLeft') nextCell.column = Math.max(1, nextCell.column - 1)
+      else if (event.key === 'ArrowRight') nextCell.column = Math.min(100, nextCell.column + 1)
+      else if (event.key === 'Home') {
+        nextCell.row = 1
+        nextCell.column = 1
+      } else if (event.key === 'End') {
+        nextCell.row = 100
+        nextCell.column = 100
+      } else if (event.key === ' ' || event.key === 'Enter') {
+        event.preventDefault()
+        paintCell(focusedCell)
+        return
+      } else {
+        return
+      }
+
+      event.preventDefault()
+      focusedCell = nextCell
+      hoveredCell = null
+      drawBoard()
+      updateReadout(focusedCell)
+    })
+
+    updatePhotoCopy({
+      title: 'Yellow flower on a square board',
+      description:
+        'This photo was picked because it is already square, so <code>1,1</code>, <code>1,100</code>, <code>100,1</code>, and <code>100,100</code> line up cleanly with the corners.',
+      alt: 'Yellow flower used for the 100 by 100 puzzle',
+    })
+    syncBrushButtons()
+    updateStatus()
+    updateReadout(focusedCell)
+    drawBoard()
   </script>
 </Layout>
 
 <style>
   :root {
-    --page-shell: linear-gradient(180deg, #ffd7a8 0%, #ff9f5a 38%, #182231 100%);
-    --panel-bg: rgba(16, 22, 31, 0.84);
-    --panel-border: rgba(255, 240, 216, 0.16);
-    --ink-main: #fff7e8;
-    --ink-muted: rgba(255, 247, 232, 0.76);
-    --accent: #ffd166;
-    --accent-strong: #ff7b54;
-    --filled-cell: #203047;
-    --filled-glow: rgba(255, 209, 102, 0.24);
-    --unfilled-cell: #f7f1e6;
-    --input-bg: rgba(255, 247, 232, 0.08);
-    --input-border: rgba(255, 247, 232, 0.18);
+    --page-shell: linear-gradient(180deg, #fed27a 0%, #f4974a 34%, #10213a 100%);
+    --panel-bg: rgba(12, 18, 29, 0.86);
+    --panel-border: rgba(255, 248, 226, 0.14);
+    --ink-main: #fff6e4;
+    --ink-muted: rgba(255, 246, 228, 0.78);
+    --accent: #ffd15d;
+    --accent-strong: #ff7a59;
+    --board-size: 1000px;
+    --axis-size: 3.4rem;
+    --shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
   }
 
-  .missing-grid-page {
+  .photo-puzzle-page {
     min-height: 100vh;
     padding: clamp(1rem, 3vw, 2rem);
     display: grid;
     gap: 1rem;
     background:
-      radial-gradient(circle at top left, rgba(255, 255, 255, 0.28), transparent 35%),
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.3), transparent 34%),
       var(--page-shell);
     color: var(--ink-main);
     font-family: 'Trebuchet MS', 'Avenir Next', sans-serif;
   }
 
   .panel {
-    width: min(100%, 1020px);
+    width: min(100%, 1200px);
     margin: 0 auto;
     padding: clamp(1.1rem, 2vw, 1.75rem);
     border-radius: 24px;
     border: 1px solid var(--panel-border);
     background: var(--panel-bg);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--shadow);
     backdrop-filter: blur(12px);
   }
 
@@ -297,242 +668,326 @@ const rowNumbers = Array.from({length: 9}, (_, index) => index + 1)
     line-height: 1.05;
   }
 
-  .intro-panel {
+  .intro-panel,
+  .controls-panel,
+  .puzzle-panel {
     display: grid;
-    gap: 0.75rem;
+    gap: 1rem;
   }
 
   .intro-panel h1 {
-    max-width: 16ch;
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    max-width: 18ch;
+    font-size: clamp(2rem, 5vw, 3.4rem);
   }
 
   .lede,
   .helper-text,
-  .result-text,
-  .special-text,
-  .unlock-panel p {
+  .status-text,
+  .focus-readout {
     color: var(--ink-muted);
     line-height: 1.5;
   }
 
-  .intro-panel code {
+  code {
     padding: 0.15rem 0.35rem;
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.1);
     font-size: 0.95em;
   }
 
-  .input-panel form {
-    display: grid;
-    gap: 1rem;
-  }
-
-  .input-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  .controls-copy,
+  .puzzle-copy,
+  .board-copy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
     gap: 0.85rem;
   }
 
-  .row-card {
+  .controls-grid {
     display: grid;
-    gap: 0.45rem;
-    padding: 0.9rem;
-    border-radius: 18px;
-    background: rgba(255, 247, 232, 0.05);
-    border: 1px solid rgba(255, 247, 232, 0.08);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem;
   }
 
-  .row-label {
-    font-size: 0.92rem;
-    letter-spacing: 0.08em;
+  .brush-panel,
+  .photo-picker-panel,
+  .coordinate-form,
+  .button-stack {
+    display: grid;
+    gap: 0.7rem;
+    padding: 1rem;
+    border-radius: 18px;
+    background: rgba(255, 248, 226, 0.05);
+    border: 1px solid rgba(255, 248, 226, 0.08);
+  }
+
+  .section-label {
     text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
     color: var(--ink-muted);
   }
 
-  .row-card input {
-    width: 100%;
-    padding: 0.8rem 0.9rem;
-    border: 1px solid var(--input-border);
-    border-radius: 14px;
-    background: var(--input-bg);
-    color: var(--ink-main);
-    font: inherit;
-    font-size: 1.1rem;
-    letter-spacing: 0.22em;
+  .photo-picker-panel {
+    align-content: start;
   }
 
-  .row-card input::placeholder {
-    color: rgba(255, 247, 232, 0.35);
-  }
-
-  .row-card input:focus {
-    outline: 2px solid rgba(255, 209, 102, 0.45);
-    outline-offset: 2px;
-    border-color: rgba(255, 209, 102, 0.35);
-  }
-
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.9rem;
-    align-items: center;
-  }
-
-  .legend-item {
-    display: inline-flex;
-    align-items: center;
+  .file-picker {
+    display: grid;
     gap: 0.55rem;
+    padding: 0.95rem 1rem;
+    border-radius: 16px;
+    border: 1px dashed rgba(255, 248, 226, 0.24);
+    background: rgba(255, 248, 226, 0.06);
+    color: var(--ink-main);
+  }
+
+  .file-picker input[type='file'] {
+    width: 100%;
+    color: var(--ink-muted);
+  }
+
+  .picker-help {
     color: var(--ink-muted);
     font-size: 0.95rem;
   }
 
-  .legend-swatch {
-    width: 1rem;
-    height: 1rem;
-    border-radius: 0.2rem;
-    border: 1px solid rgba(255, 247, 232, 0.16);
-  }
-
-  .legend-swatch.filled {
-    background: var(--filled-cell);
-    box-shadow: inset 0 0 0 1px var(--filled-glow);
-  }
-
-  .legend-swatch.unfilled {
-    background: var(--unfilled-cell);
-  }
-
-  .button-row {
+  .button-row,
+  .button-stack {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
+    align-items: start;
   }
 
-  .primary-button,
-  .secondary-button,
-  .storybook-link {
+  .coordinate-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: end;
+  }
+
+  .coordinate-form .section-label {
+    grid-column: 1 / -1;
+  }
+
+  .coordinate-form label {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .coordinate-form input {
+    width: 100%;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid rgba(255, 248, 226, 0.2);
+    border-radius: 14px;
+    background: rgba(255, 248, 226, 0.08);
+    color: var(--ink-main);
+    font: inherit;
+  }
+
+  .coordinate-form input:focus,
+  .tool-button:focus,
+  .puzzle-canvas:focus {
+    outline: 2px solid rgba(255, 209, 93, 0.5);
+    outline-offset: 2px;
+  }
+
+  .tool-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: 2.9rem;
     padding: 0.85rem 1.2rem;
     border-radius: 999px;
-    border: 0;
+    border: 1px solid rgba(255, 248, 226, 0.14);
+    background: rgba(255, 248, 226, 0.1);
+    color: var(--ink-main);
     font: inherit;
     font-weight: 700;
     letter-spacing: 0.04em;
-    text-decoration: none;
     cursor: pointer;
     transition:
       transform 140ms ease,
-      box-shadow 140ms ease,
-      background 140ms ease;
+      background 140ms ease,
+      border-color 140ms ease;
   }
 
-  .primary-button:hover,
-  .secondary-button:hover,
-  .storybook-link:hover {
+  .tool-button:hover {
     transform: translateY(-1px);
   }
 
-  .primary-button {
-    color: #171b21;
-    background: linear-gradient(135deg, var(--accent), #ffe9a8);
-    box-shadow: 0 12px 30px rgba(255, 209, 102, 0.25);
-  }
-
+  .tool-button.is-active,
   .secondary-button {
-    color: var(--ink-main);
-    background: rgba(255, 247, 232, 0.12);
-    border: 1px solid rgba(255, 247, 232, 0.16);
+    background: linear-gradient(135deg, rgba(255, 209, 93, 0.9), rgba(255, 122, 89, 0.9));
+    color: #181c21;
+    border-color: transparent;
   }
 
-  .result-panel {
-    display: grid;
-    gap: 1rem;
+  .board-scroll {
+    overflow: auto;
+    padding-bottom: 0.35rem;
   }
 
-  .result-copy {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    align-items: end;
-    justify-content: space-between;
-  }
-
-  .grid {
-    width: min(100%, 420px);
-    display: grid;
-    grid-template-columns: repeat(9, minmax(0, 1fr));
-    gap: 0;
-    border-radius: 18px;
+  .whole-photo-panel {
+    margin: 0;
+    padding: 1rem;
+    border-radius: 22px;
     overflow: hidden;
-    border: 2px solid rgba(255, 247, 232, 0.18);
-    background: rgba(255, 247, 232, 0.08);
-    box-shadow: inset 0 0 0 1px rgba(255, 247, 232, 0.05);
-  }
-
-  .grid-cell {
+    border: 1px solid rgba(255, 248, 226, 0.14);
+    background: rgba(255, 248, 226, 0.04);
+    box-shadow: inset 0 0 0 1px rgba(255, 248, 226, 0.04);
     display: grid;
     place-items: center;
-    aspect-ratio: 1 / 1;
-    border: 1px solid rgba(24, 34, 49, 0.16);
-    font-family:
-      'SF Pro Display',
-      'Segoe UI Symbol',
-      'Arial Unicode MS',
-      monospace;
-    font-size: clamp(1.1rem, 3.5vw, 1.9rem);
-    line-height: 1;
   }
 
-  .grid-cell.is-filled {
-    color: var(--accent);
-    background:
-      linear-gradient(180deg, rgba(255, 209, 102, 0.08), transparent 42%),
-      rgba(32, 48, 71, 0.78);
-    box-shadow: inset 0 0 0 1px var(--filled-glow);
-  }
-
-  .grid-cell.is-unfilled {
-    color: var(--unfilled-cell);
-    background: rgba(247, 241, 230, 0.08);
-  }
-
-  .special-text {
-    padding: 0.8rem 0.95rem;
-    border-radius: 16px;
-    background: rgba(255, 123, 84, 0.12);
-    border: 1px solid rgba(255, 123, 84, 0.22);
-  }
-
-  .unlock-panel {
-    display: grid;
-    gap: 0.75rem;
-    justify-items: start;
-    padding: 1rem;
+  .whole-photo-preview {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: min(100%, 720px);
+    max-height: 520px;
+    object-fit: scale-down;
+    background: #0d1522;
     border-radius: 18px;
-    background: rgba(255, 209, 102, 0.12);
-    border: 1px solid rgba(255, 209, 102, 0.28);
   }
 
-  .storybook-link {
-    color: #171b21;
-    background: linear-gradient(135deg, #fff5cf, #ffd166);
+  .camera-preview-panel {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 22px;
+    border: 1px solid rgba(255, 248, 226, 0.12);
+    background: rgba(255, 248, 226, 0.04);
+  }
+
+  .camera-preview-copy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 0.85rem;
+  }
+
+  .camera-preview {
+    width: min(100%, 720px);
+    aspect-ratio: 1 / 1;
+    justify-self: center;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 248, 226, 0.16);
+    background-color: #0d1522;
+    background-repeat: no-repeat;
+    image-rendering: auto;
+    box-shadow: inset 0 0 0 1px rgba(255, 248, 226, 0.04);
+  }
+
+  .board-shell {
+    display: grid;
+    grid-template-columns: var(--axis-size) var(--board-size);
+    grid-template-rows: var(--axis-size) var(--board-size);
+    gap: 0;
+    width: calc(var(--axis-size) + var(--board-size));
+  }
+
+  .board-corner,
+  .column-axis,
+  .row-axis,
+  .board-stage {
+    border: 1px solid rgba(255, 248, 226, 0.12);
+    background: rgba(255, 248, 226, 0.05);
+  }
+
+  .board-corner {
+    display: grid;
+    place-items: center;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+  }
+
+  .column-axis {
+    display: grid;
+    grid-template-columns: repeat(100, 1fr);
+    height: var(--axis-size);
+    overflow: hidden;
+  }
+
+  .column-axis span {
+    display: grid;
+    place-items: center;
+    font-size: 0.5rem;
+    line-height: 1;
+    color: var(--ink-muted);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  .row-axis {
+    display: grid;
+    grid-template-rows: repeat(100, 1fr);
+    width: var(--axis-size);
+    overflow: hidden;
+  }
+
+  .row-axis span {
+    display: grid;
+    place-items: center;
+    font-size: 0.5rem;
+    line-height: 1;
+    color: var(--ink-muted);
+  }
+
+  .board-stage {
+    position: relative;
+    width: var(--board-size);
+    height: var(--board-size);
+    overflow: hidden;
+    background: #0d1522;
+  }
+
+  .board-photo,
+  .puzzle-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .board-photo {
+    object-fit: cover;
+  }
+
+  .puzzle-canvas {
+    cursor: crosshair;
+    touch-action: none;
+  }
+
+  .focus-readout {
+    padding: 0.9rem 1rem;
+    border-radius: 16px;
+    background: rgba(255, 122, 89, 0.12);
+    border: 1px solid rgba(255, 122, 89, 0.24);
+  }
+
+  @media (max-width: 960px) {
+    .controls-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .coordinate-form {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media (max-width: 720px) {
-    .missing-grid-page {
+    .photo-puzzle-page {
       padding-bottom: 6rem;
     }
 
-    .result-copy {
+    .controls-copy,
+    .puzzle-copy {
       align-items: start;
-    }
-
-    .grid {
-      width: 100%;
     }
   }
 </style>
