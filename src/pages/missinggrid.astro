@@ -249,6 +249,8 @@ const axisNumbers = Array.from({length: 100}, (_, index) => index + 1)
     let isPainting = false
     let currentObjectUrl = ''
     let currentPhotoSrc = '/spin/flower.jpeg'
+    let cameraPreviewTimer = 0
+    let cameraZoomFrame = 0
 
     const indexFor = (row, column) => ((row - 1) * GRID_SIZE) + (column - 1)
 
@@ -298,7 +300,31 @@ const axisNumbers = Array.from({length: 100}, (_, index) => index + 1)
       focusReadout.textContent = describeCell(cell ?? focusedCell)
     }
 
+    const resetWholePhotoPreview = () => {
+      if (!wholePhotoPreview) return
+
+      if (cameraZoomFrame) {
+        window.cancelAnimationFrame(cameraZoomFrame)
+        cameraZoomFrame = 0
+      }
+
+      wholePhotoPreview.style.transition = 'none'
+      wholePhotoPreview.style.transformOrigin = '50% 50%'
+      wholePhotoPreview.style.transform = 'scale(1)'
+
+      void wholePhotoPreview.offsetWidth
+
+      wholePhotoPreview.style.transition = 'transform 220ms ease'
+    }
+
     const hideCameraPreview = () => {
+      if (cameraPreviewTimer) {
+        window.clearTimeout(cameraPreviewTimer)
+        cameraPreviewTimer = 0
+      }
+
+      resetWholePhotoPreview()
+
       if (cameraPreviewPanel) cameraPreviewPanel.hidden = true
       if (wholePhotoPanel) wholePhotoPanel.hidden = false
       if (boardCopy) boardCopy.hidden = false
@@ -307,21 +333,39 @@ const axisNumbers = Array.from({length: 100}, (_, index) => index + 1)
     }
 
     const showCameraPreview = cell => {
-      if (!cameraPreviewPanel || !cameraPreview || !cameraPreviewTitle) return
+      if (!wholePhotoPreview) return
 
-      const rowPercent = GRID_SIZE === 1 ? 0 : ((cell.row - 1) / (GRID_SIZE - 1)) * 100
-      const columnPercent = GRID_SIZE === 1 ? 0 : ((cell.column - 1) / (GRID_SIZE - 1)) * 100
+      const rowPercent = ((cell.row - 0.5) / GRID_SIZE) * 100
+      const columnPercent = ((cell.column - 0.5) / GRID_SIZE) * 100
 
-      cameraPreview.style.backgroundImage = `url("${currentPhotoSrc}")`
-      cameraPreview.style.backgroundSize = `${GRID_SIZE * 100}% ${GRID_SIZE * 100}%`
-      cameraPreview.style.backgroundPosition = `${columnPercent}% ${rowPercent}%`
-      cameraPreviewTitle.textContent = `Camera row ${cell.row}, column ${cell.column}`
+      resetWholePhotoPreview()
+      wholePhotoPreview.style.transformOrigin = `${columnPercent}% ${rowPercent}%`
 
-      cameraPreviewPanel.hidden = false
-      if (wholePhotoPanel) wholePhotoPanel.hidden = true
-      if (boardCopy) boardCopy.hidden = true
-      if (boardScroll) boardScroll.hidden = true
-      if (focusReadout) focusReadout.hidden = true
+      cameraPreviewTimer = window.setTimeout(() => {
+        const zoomDuration = 5000
+        const startScale = 1
+        const endScale = GRID_SIZE
+        const startTime = performance.now()
+
+        const animateZoom = now => {
+          const rawProgress = Math.min(1, (now - startTime) / zoomDuration)
+          // Start gently, then add a clear boost as the zoom continues.
+          const easedProgress = Math.pow(rawProgress, 2.2)
+          const nextScale =
+            startScale * Math.pow(endScale / startScale, easedProgress)
+
+          wholePhotoPreview.style.transform = `scale(${nextScale})`
+
+          if (rawProgress < 1) {
+            cameraZoomFrame = window.requestAnimationFrame(animateZoom)
+            return
+          }
+
+          cameraZoomFrame = 0
+        }
+
+        cameraZoomFrame = window.requestAnimationFrame(animateZoom)
+      }, 900)
     }
 
     const updatePhotoCopy = ({title, description, alt}) => {
@@ -503,6 +547,7 @@ const axisNumbers = Array.from({length: 100}, (_, index) => index + 1)
         photoHelp.textContent = `Loaded ${file.name}. The board was covered again so you can start a fresh puzzle.`
       }
 
+      resetWholePhotoPreview()
       resetBoard({lastCell: {row: 1, column: 1}})
     })
 
@@ -523,8 +568,8 @@ const axisNumbers = Array.from({length: 100}, (_, index) => index + 1)
       updateStatus()
       drawBoard()
       updateReadout(focusedCell)
+      wholePhotoPanel?.scrollIntoView({behavior: 'smooth', block: 'center'})
       showCameraPreview(focusedCell)
-      canvas?.focus()
     })
 
     canvas?.addEventListener('pointerdown', event => {
@@ -605,6 +650,7 @@ const axisNumbers = Array.from({length: 100}, (_, index) => index + 1)
         'This photo was picked because it is already square, so <code>1,1</code>, <code>1,100</code>, <code>100,1</code>, and <code>100,100</code> line up cleanly with the corners.',
       alt: 'Yellow flower used for the 100 by 100 puzzle',
     })
+    resetWholePhotoPreview()
     syncBrushButtons()
     updateStatus()
     updateReadout(focusedCell)
@@ -843,13 +889,14 @@ const axisNumbers = Array.from({length: 100}, (_, index) => index + 1)
 
   .whole-photo-preview {
     display: block;
-    width: auto;
+    width: min(100%, 720px);
     height: auto;
-    max-width: min(100%, 720px);
-    max-height: 520px;
-    object-fit: scale-down;
+    max-height: 70vh;
+    object-fit: contain;
     background: #0d1522;
     border-radius: 18px;
+    transform-origin: center;
+    will-change: transform;
   }
 
   .camera-preview-panel {

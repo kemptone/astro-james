@@ -4,6 +4,14 @@ import Layout from '../layouts/Layout.astro'
 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 const reverseLetters = [...letters].reverse()
 const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
+const vowelMirrorMap: Record<string, string> = {
+  A: 'U',
+  E: 'O',
+  I: 'I',
+  O: 'E',
+  U: 'A',
+}
+const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? letter)
 ---
 
 <Layout title="Daphne">
@@ -13,9 +21,9 @@ const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
         <p class="eyebrow">Secret Message Game</p>
         <h1>Daphne</h1>
         <p class="lede">
-          Daphne has <strong>2 options</strong> and <strong>3 modes</strong>.
-          Option 1 is <strong>Numbers</strong> with two number codes. Option 2 is
-          <strong>Backwords Alphabet</strong>.
+          Daphne has <strong>2 options</strong> and <strong>4 modes</strong>.
+          Option 1 is <strong>Numbers</strong> with two number codes. Option 2 has
+          <strong>2 letter codes</strong>.
         </p>
         <p class="note">
           You can write your own messages, decode them, and try challenge rounds
@@ -52,12 +60,11 @@ const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
 
         <section class="option-card">
           <p class="option-label">Option 2</p>
-          <h2>Backwords Alphabet</h2>
+          <h2>Letter Codes</h2>
           <p class="option-copy">
-            Flip each letter to the matching letter on the other side of the
-            alphabet.
+            Try the full backwords alphabet or the vowel mirror code.
           </p>
-          <div class="mode-switch" role="group" aria-label="Backwords mode">
+          <div class="mode-switch" role="group" aria-label="Letter code modes">
             <button
               type="button"
               class="mode-button"
@@ -65,6 +72,14 @@ const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
               aria-pressed="false"
             >
               Mode 3: A=Z
+            </button>
+            <button
+              type="button"
+              class="mode-button"
+              data-mode-button="vowel-mirror"
+              aria-pressed="false"
+            >
+              Mode 4: A=U
             </button>
           </div>
         </section>
@@ -225,6 +240,17 @@ const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
           ))
         }
       </div>
+
+      <div id="vowel-mirror-key" class="key-grid" hidden>
+        {
+          letters.map((letter, index) => (
+            <div class="key-card">
+              <strong>{letter}</strong>
+              <span>{vowelMirrorLetters[index]}</span>
+            </div>
+          ))
+        }
+      </div>
     </section>
   </main>
 
@@ -232,6 +258,13 @@ const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     const reversedAlphabet = alphabet.split('').reverse().join('')
     const rankingAlphabet = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'
+    const vowelMirrorMap = {
+      A: 'U',
+      E: 'O',
+      I: 'I',
+      O: 'E',
+      U: 'A',
+    }
 
     const modeConfig = {
       'numbers-basic': {
@@ -266,7 +299,7 @@ const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
         challengeAnswers: [
           'SECRET MESSAGE',
           'WE LIKE CODES',
-          'DAPHNE HAS THREE MODES',
+          'DAPHNE HAS FOUR MODES',
           'CRACK THE CLUE',
           'FIND THE NOTE',
           'READ THE SECRET',
@@ -289,6 +322,25 @@ const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
           'WE CAN READ THIS',
           'HIDE THE NOTE',
           'SOLVE THE CLUE',
+        ],
+      },
+      'vowel-mirror': {
+        option: 'Option 2',
+        name: 'Vowel Mirror',
+        description:
+          'Keep the consonants the same and mirror the vowels. A becomes U, E becomes O, I stays I, O becomes E, and U becomes A.',
+        rule: 'A=U, E=O, I=I, O=E, U=A',
+        example: 'WO LIKO CEDOS',
+        plainPlaceholder: 'WE LIKE CODES',
+        codedLabel: 'Type vowel mirror code to read it',
+        codedPlaceholder: 'WO LIKO CEDOS',
+        challengeAnswers: [
+          'SECRET MESSAGE',
+          'VOWELS CAN FLIP',
+          'DAPHNE HAS FOUR MODES',
+          'WE LIKE CODES',
+          'FIND THE CLUE',
+          'MAKE A SECRET NOTE',
         ],
       },
     }
@@ -319,6 +371,7 @@ const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
       const numbersBasicKey = document.querySelector('#numbers-basic-key')
       const numbersRankingKey = document.querySelector('#numbers-ranking-key')
       const backwordsKey = document.querySelector('#backwords-key')
+      const vowelMirrorKey = document.querySelector('#vowel-mirror-key')
 
       let solved = 0
       let streak = 0
@@ -433,6 +486,19 @@ const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
 
       const decodeBackwords = text => encodeBackwords(text)
 
+      const flipVowelCharacter = character => {
+        const upper = character.toUpperCase()
+        return vowelMirrorMap[upper] ?? upper
+      }
+
+      const encodeVowelMirror = text =>
+        text
+          .split('')
+          .map(character => flipVowelCharacter(character))
+          .join('')
+
+      const decodeVowelMirror = text => encodeVowelMirror(text)
+
       const normalizeMessage = value =>
         value
           .toUpperCase()
@@ -444,12 +510,14 @@ const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
       const encodeForMode = (mode, text) => {
         if (mode === 'numbers-basic') return encodeNumbersBasic(text)
         if (mode === 'numbers-ranking') return encodeNumbersRanking(text)
+        if (mode === 'vowel-mirror') return encodeVowelMirror(text.toUpperCase())
         return encodeBackwords(text.toUpperCase())
       }
 
       const decodeForMode = (mode, text) => {
         if (mode === 'numbers-basic') return decodeNumbersBasic(text)
         if (mode === 'numbers-ranking') return decodeNumbersRanking(text)
+        if (mode === 'vowel-mirror') return decodeVowelMirror(text.toUpperCase())
         return decodeBackwords(text.toUpperCase())
       }
 
@@ -495,6 +563,7 @@ const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
         numbersBasicKey.hidden = mode !== 'numbers-basic'
         numbersRankingKey.hidden = mode !== 'numbers-ranking'
         backwordsKey.hidden = mode !== 'backwords'
+        vowelMirrorKey.hidden = mode !== 'vowel-mirror'
 
         updateTranslator()
         drawChallenge()
