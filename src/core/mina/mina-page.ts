@@ -1,3 +1,6 @@
+import {playTextAzure} from '../talkers2/wc-talkers.helpers'
+import type {AzureVoiceInfo} from '../talkers2/types'
+
 type SentenceEntry = {
   word: string
   title: string
@@ -36,14 +39,27 @@ const playbackStage = document.getElementById(
 ) as HTMLDivElement | null
 const playbackTitle = document.getElementById(
   'mina-playback-title',
-) as HTMLDivElement | null
+) as HTMLParagraphElement | null
 
-const synth = typeof window !== 'undefined' ? window.speechSynthesis : null
+const JENNY_VOICE: AzureVoiceInfo = {
+  Name: 'Microsoft Server Speech Text to Speech Voice (en-US, JennyNeural)',
+  DisplayName: 'Jenny',
+  LocalName: 'Jenny',
+  ShortName: 'en-US-JennyNeural',
+  Gender: 'Female',
+  Locale: 'en-US',
+  LocaleName: 'English (United States)',
+  SecondaryLocaleList: [],
+  SampleRateHertz: '24000',
+  VoiceType: 'Neural',
+  Status: 'GA',
+}
 
 let currentGroups: SentenceGroup[] = []
 let currentSentence = ''
 let isPlaying = false
 let playbackToken = 0
+let currentAudio: HTMLAudioElement | null = null
 
 function getWordSeparator(sentence: string, word: string): string {
   if (!sentence) return ''
@@ -181,6 +197,8 @@ function collectState() {
   const rows = getRows()
   const entries: SentenceEntry[] = []
   let partialCount = 0
+  let missingWordCount = 0
+  let missingTitleCount = 0
 
   rows.forEach(row => {
     const wordInput = row.querySelector('input[name="word"]') as HTMLInputElement | null
@@ -193,6 +211,14 @@ function collectState() {
 
     if (hasPartial) {
       partialCount += 1
+
+      if (word && !title) {
+        missingTitleCount += 1
+      }
+
+      if (!word && title) {
+        missingWordCount += 1
+      }
     }
 
     if (word && title) {
@@ -226,7 +252,7 @@ function collectState() {
     })
   })
 
-  return {entries, groups, partialCount, sentence}
+  return {entries, groups, partialCount, sentence, missingWordCount, missingTitleCount}
 }
 
 function renderGroups(groups: SentenceGroup[]) {
@@ -276,16 +302,21 @@ function hidePlaybackStage() {
 }
 
 function stopPlayback(message?: string) {
+  const {groups, partialCount, missingTitleCount} = collectState()
+
   playbackToken += 1
 
-  if (synth) {
-    synth.cancel()
+  if (currentAudio) {
+    currentAudio.pause()
+    currentAudio.currentTime = 0
+    currentAudio = null
   }
 
   isPlaying = false
 
   if (playButton) {
-    playButton.disabled = currentGroups.length === 0 || !synth
+    playButton.disabled =
+      groups.length === 0 || partialCount > 0 || missingTitleCount > 0
   }
 
   if (stopButton) {
@@ -300,25 +331,45 @@ function stopPlayback(message?: string) {
   }
 }
 
-function getGroupIndexForChar(charIndex: number): number {
-  for (let index = currentGroups.length - 1; index >= 0; index -= 1) {
-    if (charIndex >= currentGroups[index].startChar) {
-      return index
+function playAudioClip(audio: HTMLAudioElement, token: number) {
+  return new Promise<void>((resolve, reject) => {
+    audio.onended = () => {
+      if (token === playbackToken && currentAudio === audio) {
+        currentAudio = null
+      }
+      resolve()
     }
-  }
 
-  return 0
+    audio.onerror = () => {
+      if (token === playbackToken && currentAudio === audio) {
+        currentAudio = null
+      }
+      reject(new Error('Audio playback failed'))
+    }
+
+    audio.play().catch(error => {
+      if (token === playbackToken && currentAudio === audio) {
+        currentAudio = null
+      }
+      reject(error)
+    })
+  })
 }
 
-function playSequence() {
-  const {entries, groups, partialCount, sentence} = collectState()
+async function playSequence() {
+  const {entries, groups, partialCount, sentence, missingTitleCount} = collectState()
 
   currentGroups = groups
   currentSentence = sentence
   renderGroups(groups)
 
-  if (!synth) {
-    setStatus('Speech playback is not available in this browser.')
+  if (missingTitleCount > 0) {
+    setStatus('Every word needs a title before Mina can read.')
+    return
+  }
+
+  if (partialCount > 0) {
+    setStatus('Finish the incomplete rows before Mina can read.')
     return
   }
 
@@ -329,7 +380,6 @@ function playSequence() {
 
   playbackToken += 1
   const token = playbackToken
-  synth.cancel()
   isPlaying = true
 
   if (playButton) {
@@ -343,42 +393,51 @@ function playSequence() {
   showPlaybackStage()
   activateGroup(0)
 
-  if (partialCount > 0) {
-    setStatus(
-      `Submitting complete cards only. ${partialCount} ${pluralize(partialCount, 'row is', 'rows are')} still unfinished.`,
-    )
-  } else if (groups.length < entries.length) {
-    setStatus('Submitting the sentence with matching titles grouped together.')
+  const voiceNotice = 'Jenny is reading the sentence.'
+
+  if (groups.length < entries.length) {
+    setStatus(`${voiceNotice} Matching titles are staying grouped together.`)
   } else {
-    setStatus('Submitting the sentence with one title change per finished row.')
+    setStatus(`${voiceNotice} Each finished row is getting its own title change.`)
   }
 
-  const utterance = new SpeechSynthesisUtterance(sentence)
-  utterance.rate = 0.95
-  utterance.pitch = 1
-  utterance.onstart = () => {
-    if (token !== playbackToken) return
-    activateGroup(0)
-  }
-  utterance.onboundary = event => {
-    if (token !== playbackToken) return
-    const groupIndex = getGroupIndexForChar(event.charIndex)
-    activateGroup(groupIndex)
-  }
-  utterance.onend = () => {
+  try {
+    for (let index = 0; index < groups.length; index += 1) {
+      if (token !== playbackToken) return
+
+      const group = groups[index]
+      activateGroup(index)
+
+      const audio = await playTextAzure(
+        {
+          values: {
+            ...JENNY_VOICE,
+            text: group.spokenText,
+          },
+        },
+        false,
+      )
+
+      if (token !== playbackToken) {
+        audio.pause()
+        return
+      }
+
+      currentAudio = audio
+      await playAudioClip(audio, token)
+    }
+
     if (token !== playbackToken) return
     stopPlayback('Finished reading the sentence.')
-  }
-  utterance.onerror = () => {
+  } catch (error) {
     if (token !== playbackToken) return
+    console.error(error)
     stopPlayback('Mina could not speak that sentence right now.')
   }
-
-  synth.speak(utterance)
 }
 
 function syncView(stopAudio = false) {
-  const {entries, groups, partialCount, sentence} = collectState()
+  const {entries, groups, partialCount, sentence, missingTitleCount} = collectState()
 
   currentGroups = groups
   currentSentence = sentence
@@ -397,7 +456,7 @@ function syncView(stopAudio = false) {
   activateGroup(-1)
 
   if (playButton) {
-    playButton.disabled = groups.length === 0 || !synth
+    playButton.disabled = groups.length === 0 || partialCount > 0 || missingTitleCount > 0
   }
 
   if (stopButton && !isPlaying) {
@@ -409,10 +468,13 @@ function syncView(stopAudio = false) {
     return
   }
 
+  if (missingTitleCount > 0) {
+    setStatus('Every word needs a title before Mina can read.')
+    return
+  }
+
   if (partialCount > 0) {
-    setStatus(
-      `${partialCount} ${pluralize(partialCount, 'row is', 'rows are')} incomplete and will be skipped until both inputs are filled.`,
-    )
+    setStatus('Finish the incomplete rows before Mina can read.')
     return
   }
 
@@ -460,7 +522,10 @@ document.addEventListener('keydown', event => {
 })
 
 window.addEventListener('beforeunload', () => {
-  synth?.cancel()
+  if (currentAudio) {
+    currentAudio.pause()
+    currentAudio.currentTime = 0
+  }
 })
 
 resetRows(exampleRows)

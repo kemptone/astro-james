@@ -5,12 +5,12 @@ import Layout from '@/layouts/Layout.astro'
 <Layout title="Camila Too">
   <main class="camila-shell">
     <section class="hero">
-      <p class="eyebrow">Video Game</p>
+      <p class="eyebrow">Photo Game</p>
       <h1>Camila Too</h1>
       <p class="rating" aria-label="Camila Too rating four out of five stars">★★★★☆</p>
       <p class="intro">
-        The live camera is upside down on purpose, but your recorded video stays
-        right side up when you play it back, share it, or save it.
+        The live camera is upside down on purpose. When you snap a photo, it
+        spins 180 degrees back to right side up like a magic trick.
       </p>
     </section>
 
@@ -19,7 +19,7 @@ import Layout from '@/layouts/Layout.astro'
         <div class="stage-header">
           <div>
             <h2>Ceiling Camera</h2>
-            <p>Start the camera, record a clip, and preview the upside-down view.</p>
+            <p>Start the camera and snap a picture from the upside-down view.</p>
           </div>
           <p class="status" id="statusText" aria-live="polite">Ready</p>
         </div>
@@ -43,11 +43,8 @@ import Layout from '@/layouts/Layout.astro'
           <button id="startButton" class="button button-primary" type="button">
             Start Camera
           </button>
-          <button id="recordButton" class="button button-record" type="button" disabled>
-            Record
-          </button>
-          <button id="stopButton" class="button" type="button" disabled>
-            Stop
+          <button id="captureButton" class="button button-record" type="button" disabled>
+            Take Photo
           </button>
           <button id="resetButton" class="button" type="button">
             Reset
@@ -58,26 +55,20 @@ import Layout from '@/layouts/Layout.astro'
       <div class="saved-card">
         <div class="saved-header">
           <div>
-            <h2>Last Video</h2>
-            <p>Your saved clip plays back right side up.</p>
+            <h2>Magic Photo</h2>
+            <p>This photo stays on this page and does not send anywhere.</p>
           </div>
         </div>
 
-        <video
-          id="playbackVideo"
-          class="playback"
-          controls
-          playsinline
-          preload="metadata"
-        ></video>
-
-        <div class="controls">
-          <button id="shareButton" class="button button-primary" type="button" disabled>
-            Share
-          </button>
-          <button id="saveButton" class="button" type="button" disabled>
-            Save Video
-          </button>
+        <div class="playback photo-stage">
+          <img
+            id="capturedPhoto"
+            class="captured-photo"
+            alt="Latest magic photo"
+          />
+          <p id="photoPlaceholder" class="photo-placeholder">
+            Take a photo to watch it flip back upright.
+          </p>
         </div>
       </div>
     </section>
@@ -247,6 +238,62 @@ import Layout from '@/layouts/Layout.astro'
       width: calc(100% - 2rem);
     }
 
+    .photo-stage {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+
+    .captured-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+      transform-origin: center center;
+      backface-visibility: hidden;
+      filter: saturate(1.04);
+    }
+
+    .captured-photo.is-visible {
+      display: block;
+    }
+
+    .captured-photo.is-spinning {
+      animation: magic-flip 5s cubic-bezier(0.2, 0.9, 0.18, 1);
+    }
+
+    .photo-placeholder {
+      position: absolute;
+      inset: auto 1.25rem 1.25rem;
+      margin: 0;
+      padding: 0.7rem 1rem;
+      border-radius: 999px;
+      background: rgba(20, 32, 51, 0.78);
+      color: #fff7e8;
+      font-weight: 700;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(8, 18, 31, 0.2);
+    }
+
+    .photo-placeholder.is-hidden {
+      display: none;
+    }
+
+    @keyframes magic-flip {
+      0% {
+        transform: rotate(180deg) scale(0.94);
+      }
+
+      65% {
+        transform: rotate(-12deg) scale(1);
+      }
+
+      100% {
+        transform: rotate(0deg) scale(1);
+      }
+    }
+
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -305,30 +352,22 @@ import Layout from '@/layouts/Layout.astro'
   <script>
     const previewCanvas = document.getElementById('previewCanvas')
     const sourceVideo = document.getElementById('sourceVideo')
-    const playbackVideo = document.getElementById('playbackVideo')
+    const capturedPhoto = document.getElementById('capturedPhoto')
+    const photoPlaceholder = document.getElementById('photoPlaceholder')
     const statusText = document.getElementById('statusText')
     const startButton = document.getElementById('startButton')
-    const recordButton = document.getElementById('recordButton')
-    const stopButton = document.getElementById('stopButton')
+    const captureButton = document.getElementById('captureButton')
     const cameraFacingSelect = document.getElementById('cameraFacingSelect')
-    const shareButton = document.getElementById('shareButton')
-    const saveButton = document.getElementById('saveButton')
     const resetButton = document.getElementById('resetButton')
 
     const previewContext = previewCanvas.getContext('2d')
+    const snapshotCanvas = document.createElement('canvas')
+    const snapshotContext = snapshotCanvas.getContext('2d')
 
     const state = {
       cameraStream: null,
-      micStream: null,
-      mediaRecorder: null,
-      recordingStream: null,
-      chunks: [],
-      recordedBlob: null,
-      playbackUrl: '',
       drawFrameId: 0,
       isDrawing: false,
-      isRecording: false,
-      mimeType: '',
     }
 
     const setStatus = text => {
@@ -342,43 +381,14 @@ import Layout from '@/layouts/Layout.astro'
       }
     }
 
-    const pickMimeType = () => {
-      const choices = [
-        'video/webm;codecs=vp9,opus',
-        'video/webm;codecs=vp8,opus',
-        'video/webm',
-      ]
-
-      return choices.find(type => MediaRecorder.isTypeSupported(type)) || ''
-    }
-
-    const revokePlaybackUrl = () => {
-      if (!state.playbackUrl) return
-      URL.revokeObjectURL(state.playbackUrl)
-      state.playbackUrl = ''
-    }
-
     const stopTracks = stream => {
       stream?.getTracks().forEach(track => track.stop())
     }
 
-    const stopMicStream = () => {
-      stopTracks(state.micStream)
-      state.micStream = null
-    }
-
-    const stopRecordingStream = () => {
-      stopTracks(state.recordingStream)
-      state.recordingStream = null
-    }
-
-    const clearRecording = () => {
-      state.recordedBlob = null
-      shareButton.disabled = true
-      saveButton.disabled = true
-      playbackVideo.removeAttribute('src')
-      playbackVideo.load()
-      revokePlaybackUrl()
+    const clearPhoto = () => {
+      capturedPhoto.removeAttribute('src')
+      capturedPhoto.classList.remove('is-visible', 'is-spinning')
+      photoPlaceholder.classList.remove('is-hidden')
     }
 
     const stopDrawing = () => {
@@ -416,69 +426,25 @@ import Layout from '@/layouts/Layout.astro'
       const height = sourceVideo.videoHeight || 1280
       previewCanvas.width = width
       previewCanvas.height = height
+      snapshotCanvas.width = width
+      snapshotCanvas.height = height
       startDrawing()
     }
 
-    const resetRecorderState = () => {
-      if (state.mediaRecorder && state.isRecording) {
-        state.mediaRecorder.ondataavailable = null
-        state.mediaRecorder.onstop = null
-        state.mediaRecorder.onerror = null
-        try {
-          state.mediaRecorder.stop()
-        } catch {
-          // Ignore stop errors during reset.
-        }
-      }
-
-      state.mediaRecorder = null
-      state.isRecording = false
-      state.chunks = []
-      stopRecordingStream()
-      stopMicStream()
-      recordButton.textContent = 'Record'
-      recordButton.disabled = !state.cameraStream
-      stopButton.disabled = true
-    }
-
     const stopCameraSession = () => {
-      resetRecorderState()
       stopDrawing()
       stopTracks(state.cameraStream)
       state.cameraStream = null
       sourceVideo.srcObject = null
       previewContext?.clearRect(0, 0, previewCanvas.width, previewCanvas.height)
       startButton.disabled = false
-      recordButton.disabled = true
+      captureButton.disabled = true
     }
 
     const fullReset = () => {
       stopCameraSession()
-      clearRecording()
+      clearPhoto()
       setStatus('Ready')
-    }
-
-    const buildRecordingStream = () => {
-      const recordingStream = new MediaStream()
-
-      state.cameraStream?.getVideoTracks().forEach(track => {
-        recordingStream.addTrack(track)
-      })
-
-      state.micStream?.getAudioTracks().forEach(track => {
-        recordingStream.addTrack(track)
-      })
-
-      state.recordingStream = recordingStream
-      return recordingStream
-    }
-
-    const showRecording = blob => {
-      revokePlaybackUrl()
-      state.playbackUrl = URL.createObjectURL(blob)
-      playbackVideo.src = state.playbackUrl
-      shareButton.disabled = false
-      saveButton.disabled = false
     }
 
     const startCamera = async () => {
@@ -509,7 +475,7 @@ import Layout from '@/layouts/Layout.astro'
 
         configureCanvas()
         startButton.disabled = true
-        recordButton.disabled = false
+        captureButton.disabled = false
         setStatus('Camera ready upside down')
       } catch (error) {
         console.error('Camera start failed', error)
@@ -517,125 +483,38 @@ import Layout from '@/layouts/Layout.astro'
       }
     }
 
-    const startRecording = async () => {
-      if (!state.cameraStream || state.isRecording) return
-
-      clearRecording()
-      state.chunks = []
-      state.mimeType = pickMimeType()
-
-      try {
-        state.micStream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-        })
-      } catch (error) {
-        console.error('Microphone start failed', error)
-        setStatus('Microphone blocked - check browser mic permission')
+    const takePhoto = () => {
+      if (!state.cameraStream || sourceVideo.readyState < 2 || !snapshotContext) {
+        setStatus('Wait for the camera first')
         return
       }
 
-      const recordingStream = buildRecordingStream()
-      state.mediaRecorder = new MediaRecorder(
-        recordingStream,
-        state.mimeType ? { mimeType: state.mimeType } : undefined,
-      )
+      const width = snapshotCanvas.width || sourceVideo.videoWidth || 720
+      const height = snapshotCanvas.height || sourceVideo.videoHeight || 1280
+      snapshotCanvas.width = width
+      snapshotCanvas.height = height
+      snapshotContext.clearRect(0, 0, width, height)
+      snapshotContext.drawImage(sourceVideo, 0, 0, width, height)
 
-      const recordedType = state.mediaRecorder.mimeType || state.mimeType || 'video/webm'
+      const dataUrl = snapshotCanvas.toDataURL('image/jpeg', 0.92)
+      capturedPhoto.classList.remove('is-spinning')
+      capturedPhoto.src = dataUrl
+      capturedPhoto.classList.add('is-visible')
+      photoPlaceholder.classList.add('is-hidden')
 
-      state.mediaRecorder.ondataavailable = event => {
-        if (event.data?.size) {
-          state.chunks.push(event.data)
-        }
-      }
-
-      state.mediaRecorder.onstop = () => {
-        state.recordedBlob = new Blob(state.chunks, { type: recordedType })
-        state.mediaRecorder = null
-        state.isRecording = false
-        stopRecordingStream()
-        stopMicStream()
-        recordButton.textContent = 'Record'
-        stopButton.disabled = true
-        recordButton.disabled = false
-        showRecording(state.recordedBlob)
-        setStatus('Right-side-up video with sound ready to save')
-      }
-
-      state.mediaRecorder.onerror = error => {
-        console.error('Recording failed', error)
-        setStatus('Recording failed')
-        resetRecorderState()
-      }
-
-      // Record one continuous WebM so browsers are less likely to write bad duration metadata.
-      state.mediaRecorder.start()
-      state.isRecording = true
-      recordButton.textContent = 'Recording...'
-      recordButton.disabled = true
-      stopButton.disabled = false
-      setStatus('Recording right-side-up video with sound')
-    }
-
-    const stopRecording = () => {
-      if (!state.mediaRecorder || !state.isRecording) return
-      state.mediaRecorder.stop()
-      setStatus('Finishing video...')
-    }
-
-    const buildFile = () => {
-      if (!state.recordedBlob) return null
-      const extension = state.recordedBlob.type.includes('mp4') ? 'mp4' : 'webm'
-      const stamp = new Date().toISOString().replace(/[:.]/g, '-')
-      return new File([state.recordedBlob], `Camila-Too-${stamp}.${extension}`, {
-        type: state.recordedBlob.type || 'video/webm',
-      })
-    }
-
-    const saveVideo = () => {
-      const file = buildFile()
-      if (!file) return
-
-      const downloadUrl = URL.createObjectURL(file)
-      const link = document.createElement('a')
-      link.href = downloadUrl
-      link.download = file.name
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000)
-      setStatus('Video saved')
-    }
-
-    const shareVideo = async () => {
-      const file = buildFile()
-      if (!file) return
-
-      try {
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            files: [file],
-            title: 'Camila Too',
-          })
-          setStatus('Video shared')
-          return
-        }
-      } catch (error) {
-        console.error('Share failed', error)
-      }
-
-      saveVideo()
+      // Restart the flip so each new photo gets the same trick effect.
+      void capturedPhoto.offsetWidth
+      capturedPhoto.classList.add('is-spinning')
+      setStatus('Magic photo flipped right side up')
     }
 
     startButton.addEventListener('click', startCamera)
-    recordButton.addEventListener('click', startRecording)
-    stopButton.addEventListener('click', stopRecording)
+    captureButton.addEventListener('click', takePhoto)
     cameraFacingSelect.addEventListener('change', () => {
       if (state.cameraStream) {
         startCamera()
       }
     })
-    shareButton.addEventListener('click', shareVideo)
-    saveButton.addEventListener('click', saveVideo)
     resetButton.addEventListener('click', fullReset)
 
     window.addEventListener('pagehide', fullReset)
