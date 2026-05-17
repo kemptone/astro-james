@@ -15,6 +15,25 @@ wc-dictionary-item .word {
     font-family: Rockwell, 'Rockwell Nova', 'Roboto Slab', 'DejaVu Serif', 'Sitka Small', serif;
 }
 
+wc-dictionary-item .actions {
+  margin: 0.75rem 0 1.25rem;
+}
+
+wc-dictionary-item .play-hangman {
+  border: 1px solid rgba(82, 141, 154, 0.32);
+  border-radius: 999px;
+  background: rgba(233, 246, 248, 0.96);
+  color: #25515b;
+  padding: 0.65rem 1rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+wc-dictionary-item .play-hangman:hover {
+  background: rgba(216, 239, 243, 1);
+}
+
 wc-dictionary-item .pronounciation:not(:empty):before,
 wc-dictionary-item .definitions:not(:empty):before,
 wc-dictionary-item .examples:not(:empty):before,

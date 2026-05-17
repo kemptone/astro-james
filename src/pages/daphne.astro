@@ -3,7 +3,6 @@ import Layout from '../layouts/Layout.astro'
 
 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 const reverseLetters = [...letters].reverse()
-const rankingLetters = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'.split('')
 const vowelMirrorMap: Record<string, string> = {
   A: 'U',
   E: 'O',
@@ -12,252 +11,193 @@ const vowelMirrorMap: Record<string, string> = {
   U: 'A',
 }
 const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? letter)
+const consonantLetters = 'BCDFGHJKLMNPQRSTVWXYZ'.split('')
+const reverseConsonantLetters = [...consonantLetters].reverse()
+const consonantMirrorMap = Object.fromEntries(
+  consonantLetters.map((letter, index) => [letter, reverseConsonantLetters[index]])
+)
+const consonantMirrorLetters = letters.map(
+  letter => consonantMirrorMap[letter] ?? letter
+)
+
+const storyModes = [
+  {
+    mode: 'normal',
+    label: 'Normal Code',
+    storyLabel: 'Normal story',
+    placeholder: 'Write your story in normal text',
+    letters,
+  },
+  {
+    mode: 'backwords',
+    label: 'Backwords Alphabet Code',
+    storyLabel: 'Backwords alphabet story',
+    placeholder: 'Write your story for backwords alphabet',
+    letters: reverseLetters,
+  },
+  {
+    mode: 'vowel-mirror',
+    label: 'Backwords Vowels Code',
+    storyLabel: 'Backwords vowels story',
+    placeholder: 'Write your story for backwords vowels',
+    letters: vowelMirrorLetters,
+  },
+  {
+    mode: 'consonant-mirror',
+    label: 'Backwords Consonants Code',
+    storyLabel: 'Backwords consonants story',
+    placeholder: 'Write your story for backwords consonants',
+    letters: consonantMirrorLetters,
+  },
+] as const
 ---
 
 <Layout title="Daphne">
-  <main class="daphne-page" data-mode="numbers-basic">
+  <main class="daphne-page">
     <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Secret Message Game</p>
-        <h1>Daphne</h1>
-        <p class="lede">
-          Daphne has <strong>2 options</strong> and <strong>4 modes</strong>.
-          Option 1 is <strong>Numbers</strong> with two number codes. Option 2 has
-          <strong>2 letter codes</strong>.
-        </p>
-        <p class="note">
-          You can write your own messages, decode them, and try challenge rounds
-          in every mode.
-        </p>
-      </div>
-
-      <div class="options-grid">
-        <section class="option-card">
-          <p class="option-label">Option 1</p>
-          <h2>Numbers</h2>
-          <p class="option-copy">
-            Use numbers for letters in two different ways.
-          </p>
-          <div class="mode-switch" role="group" aria-label="Number modes">
-            <button
-              type="button"
-              class="mode-button is-active"
-              data-mode-button="numbers-basic"
-              aria-pressed="true"
-            >
-              Mode 1: A=1
-            </button>
-            <button
-              type="button"
-              class="mode-button"
-              data-mode-button="numbers-ranking"
-              aria-pressed="false"
-            >
-              Mode 2: Ranking
-            </button>
-          </div>
-        </section>
-
-        <section class="option-card">
-          <p class="option-label">Option 2</p>
-          <h2>Letter Codes</h2>
-          <p class="option-copy">
-            Try the full backwords alphabet or the vowel mirror code.
-          </p>
-          <div class="mode-switch" role="group" aria-label="Letter code modes">
-            <button
-              type="button"
-              class="mode-button"
-              data-mode-button="backwords"
-              aria-pressed="false"
-            >
-              Mode 3: A=Z
-            </button>
-            <button
-              type="button"
-              class="mode-button"
-              data-mode-button="vowel-mirror"
-              aria-pressed="false"
-            >
-              Mode 4: A=U
-            </button>
-          </div>
-        </section>
-      </div>
+      <p class="eyebrow">Story Codes</p>
+      <h1>Daphne</h1>
+      <p class="lede">
+        Pick <strong>1</strong> of the <strong>4</strong> story codes, write
+        your story in that box, and press <strong>Submit Story</strong> to read
+        it in that code.
+      </p>
     </section>
 
-    <section class="workspace">
-      <article class="panel intro-panel">
-        <p class="panel-kicker">How To Play</p>
-        <p id="mode-option" class="option-pill">Option 1</p>
-        <h2 id="mode-title">Numbers: A=1</h2>
-        <p id="mode-description" class="panel-copy">
-          Turn each letter into a number. Put spaces between each number and use
-          a slash between words so you can build a whole sentence.
-        </p>
-        <div class="tip-box">
-          <p class="tip-label">Current rule</p>
-          <p id="mode-rule" class="tip-text">A=1, B=2, C=3 ... Z=26</p>
-        </div>
-        <div class="tip-box">
-          <p class="tip-label">Try this</p>
-          <p id="mode-example" class="tip-text">23 5 / 12 9 11 5 / 3 15 4 5 19</p>
-        </div>
-      </article>
-
-      <article class="panel translator-panel">
-        <div class="panel-head">
-          <div>
-            <p class="panel-kicker">Make Your Own Message</p>
-            <h2>Write, code, and read</h2>
-          </div>
-          <button id="use-encoded" type="button" class="ghost-button">
-            Send code down
-          </button>
-        </div>
-
-        <label class="field">
-          <span>Plain message</span>
-          <textarea
-            id="plain-input"
-            rows="4"
-            spellcheck="false"
-            placeholder="WE LIKE CODES"
-          >WE LIKE CODES</textarea>
-        </label>
-
-        <div class="output-box">
-          <p class="output-label">Secret code</p>
-          <div id="encoded-output" class="output-text" aria-live="polite"></div>
-        </div>
-
-        <label class="field">
-          <span id="coded-input-label">Type number code to read it</span>
-          <textarea
-            id="coded-input"
-            rows="4"
-            spellcheck="false"
-            placeholder="23 5 / 12 9 11 5 / 3 15 4 5 19"
-          ></textarea>
-        </label>
-
-        <div class="output-box decoded-box">
-          <p class="output-label">Decoded message</p>
-          <div id="decoded-output" class="output-text" aria-live="polite"></div>
-        </div>
-      </article>
-
-      <article class="panel challenge-panel">
-        <div class="panel-head">
-          <div>
-            <p class="panel-kicker">Challenge</p>
-            <h2>Crack the message</h2>
-          </div>
-          <button id="new-challenge" type="button" class="ghost-button">
-            New code
-          </button>
-        </div>
-
-        <div class="score-row">
-          <div class="score-chip">
-            <span>Solved</span>
-            <strong id="solved-count">0</strong>
-          </div>
-          <div class="score-chip">
-            <span>Streak</span>
-            <strong id="streak-count">0</strong>
-          </div>
-        </div>
-
-        <div class="challenge-box">
-          <p class="output-label">Decode this</p>
-          <div id="challenge-code" class="challenge-code" aria-live="polite"></div>
-        </div>
-
-        <label class="field">
-          <span>Your answer</span>
-          <input
-            id="guess-input"
-            type="text"
-            autocomplete="off"
-            spellcheck="false"
-            placeholder="Type the message"
-          />
-        </label>
-
-        <div class="button-row">
-          <button id="check-answer" type="button" class="primary-button">
-            Check answer
-          </button>
-          <button id="show-answer" type="button" class="secondary-button">
-            Show answer
-          </button>
-        </div>
-
-        <p id="challenge-feedback" class="feedback" aria-live="polite">
-          Read the code and type the message.
-        </p>
-      </article>
-    </section>
-
-    <section class="panel key-panel">
+    <section class="panel story-panel">
       <div class="panel-head">
         <div>
-          <p class="panel-kicker">Code Key</p>
-          <h2>Letter map</h2>
+          <p class="panel-kicker">Story Maker</p>
+          <h2>Pick one code at a time</h2>
         </div>
       </div>
 
-      <div id="numbers-basic-key" class="key-grid">
+      <div class="story-picker" role="radiogroup" aria-label="Story code picker">
         {
-          letters.map((letter, index) => (
-            <div class="key-card">
-              <strong>{letter}</strong>
-              <span>{index + 1}</span>
+          storyModes.map(item => (
+            <label class="story-picker-item">
+              <input
+                type="radio"
+                name="story-mode"
+                value={item.mode}
+                data-story-mode={item.mode}
+                checked={item.mode === 'normal'}
+              />
+              <span>{item.label}</span>
+            </label>
+          ))
+        }
+      </div>
+
+      <div class="story-map-wrap">
+        <p class="panel-kicker">Letter Map</p>
+        {
+          storyModes.map(item => (
+            <div
+              class="key-grid story-key-grid"
+              data-story-key={item.mode}
+              hidden={item.mode !== 'normal'}
+            >
+              {
+                letters.map((letter, index) => (
+                  <div class="key-card">
+                    <strong>{letter}</strong>
+                    <span>{item.letters[index]}</span>
+                  </div>
+                ))
+              }
             </div>
           ))
         }
       </div>
 
-      <div id="numbers-ranking-key" class="key-grid" hidden>
+      <div class="story-grid">
         {
-          rankingLetters.map((letter, index) => (
-            <div class="key-card">
-              <strong>{index + 1}</strong>
-              <span>{letter}</span>
-            </div>
+          storyModes.map(item => (
+            <label
+              class:list={[
+                'field',
+                'story-field',
+                item.mode === 'normal' ? '' : 'is-disabled',
+              ]}
+              data-story-field={item.mode}
+            >
+              <span>{item.storyLabel}</span>
+              <textarea
+                data-story-input={item.mode}
+                rows="5"
+                spellcheck="false"
+                placeholder={item.placeholder}
+                disabled={item.mode !== 'normal'}
+              ></textarea>
+            </label>
           ))
         }
       </div>
 
-      <div id="backwords-key" class="key-grid" hidden>
-        {
-          letters.map((letter, index) => (
-            <div class="key-card">
-              <strong>{letter}</strong>
-              <span>{reverseLetters[index]}</span>
-            </div>
-          ))
-        }
+      <div class="button-row">
+        <button id="submit-story" type="button" class="primary-button">
+          Submit Story
+        </button>
+        <button id="start-hangman" type="button" class="secondary-button">
+          Hangman
+        </button>
+        <button id="reset-story" type="button" class="secondary-button">
+          Reset
+        </button>
       </div>
 
-      <div id="vowel-mirror-key" class="key-grid" hidden>
-        {
-          letters.map((letter, index) => (
-            <div class="key-card">
-              <strong>{letter}</strong>
-              <span>{vowelMirrorLetters[index]}</span>
-            </div>
-          ))
-        }
+      <div class="output-box read-box">
+        <p class="output-label">Read Story</p>
+        <div id="story-output" class="output-text" aria-live="polite"></div>
       </div>
+
+      <p id="story-feedback" class="feedback" aria-live="polite">
+        Pick a code, write your story, and press submit.
+      </p>
+
+      <section class="hangman-panel">
+        <div class="panel-head hangman-head">
+          <div>
+            <p class="panel-kicker">Hangman</p>
+            <h2>Guess the letters</h2>
+          </div>
+        </div>
+
+        <div class="output-box hangman-box">
+          <p class="output-label">Hidden Story</p>
+          <div id="hangman-puzzle" class="output-text hangman-puzzle">
+            Press Hangman to start guessing your selected story.
+          </div>
+        </div>
+
+        <div id="hangman-letters" class="hangman-letters" aria-label="Guess letters">
+          {
+            letters.map(letter => (
+              <button
+                type="button"
+                class="hangman-letter"
+                data-hangman-letter={letter}
+                disabled
+              >
+                {letter}
+              </button>
+            ))
+          }
+        </div>
+
+        <p id="hangman-feedback" class="feedback" aria-live="polite">
+          Pick a code and press Hangman to begin.
+        </p>
+      </section>
     </section>
   </main>
 
   <script>
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     const reversedAlphabet = alphabet.split('').reverse().join('')
-    const rankingAlphabet = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'
+    const consonants = 'BCDFGHJKLMNPQRSTVWXYZ'
+    const reversedConsonants = consonants.split('').reverse().join('')
     const vowelMirrorMap = {
       A: 'U',
       E: 'O',
@@ -265,374 +205,305 @@ const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? lette
       O: 'E',
       U: 'A',
     }
+    const consonantMirrorMap = Object.fromEntries(
+      consonants.split('').map((letter, index) => [letter, reversedConsonants[index]])
+    )
 
-    const modeConfig = {
-      'numbers-basic': {
-        option: 'Option 1',
-        name: 'Numbers: A=1',
-        description:
-          'Turn each letter into a number. Put spaces between each number and use a slash between words so you can build a whole sentence.',
-        rule: 'A=1, B=2, C=3 ... Z=26',
-        example: '23 5 / 12 9 11 5 / 3 15 4 5 19',
-        plainPlaceholder: 'WE LIKE CODES',
-        codedLabel: 'Type number code to read it',
-        codedPlaceholder: '23 5 / 12 9 11 5 / 3 15 4 5 19',
-        challengeAnswers: [
-          'FIND THE KEY',
-          'MAKE A SECRET NOTE',
-          'WE LIKE CODES',
-          'DAPHNE IS READY',
-          'READ THE MESSAGE',
-          'OPEN THE DOOR',
-        ],
-      },
-      'numbers-ranking': {
-        option: 'Option 1',
-        name: 'Numbers: Ranking',
-        description:
-          'Use the ranking of common English letters. Number 1 is the most usual letter, and 26 is the most unusual letter.',
-        rule: '1=E, 2=T, 3=A ... 26=Z',
-        example: '15 1 / 11 5 22 1 / 12 4 10 1 7',
-        plainPlaceholder: 'WE LIKE CODES',
-        codedLabel: 'Type ranking code to read it',
-        codedPlaceholder: '15 1 / 11 5 22 1 / 12 4 10 1 7',
-        challengeAnswers: [
-          'SECRET MESSAGE',
-          'WE LIKE CODES',
-          'DAPHNE HAS FOUR MODES',
-          'CRACK THE CLUE',
-          'FIND THE NOTE',
-          'READ THE SECRET',
-        ],
-      },
-      backwords: {
-        option: 'Option 2',
-        name: 'Backwords Alphabet',
-        description:
-          'Flip every letter to the letter at the other end of the alphabet. A becomes Z, B becomes Y, and the same rule works backwards to decode it.',
-        rule: 'A=Z, B=Y, C=X ... Z=A',
-        example: 'DV ORPV XLWVH',
-        plainPlaceholder: 'WE LIKE CODES',
-        codedLabel: 'Type backwords alphabet code to read it',
-        codedPlaceholder: 'DV ORPV XLWVH',
-        challengeAnswers: [
-          'SECRET MESSAGE',
-          'MAKE YOUR CODE',
-          'DAPHNE LOVES PUZZLES',
-          'WE CAN READ THIS',
-          'HIDE THE NOTE',
-          'SOLVE THE CLUE',
-        ],
-      },
-      'vowel-mirror': {
-        option: 'Option 2',
-        name: 'Vowel Mirror',
-        description:
-          'Keep the consonants the same and mirror the vowels. A becomes U, E becomes O, I stays I, O becomes E, and U becomes A.',
-        rule: 'A=U, E=O, I=I, O=E, U=A',
-        example: 'WO LIKO CEDOS',
-        plainPlaceholder: 'WE LIKE CODES',
-        codedLabel: 'Type vowel mirror code to read it',
-        codedPlaceholder: 'WO LIKO CEDOS',
-        challengeAnswers: [
-          'SECRET MESSAGE',
-          'VOWELS CAN FLIP',
-          'DAPHNE HAS FOUR MODES',
-          'WE LIKE CODES',
-          'FIND THE CLUE',
-          'MAKE A SECRET NOTE',
-        ],
-      },
+    type StoryMode = 'normal' | 'backwords' | 'vowel-mirror' | 'consonant-mirror'
+
+    type StoryModeConfig = {
+      label: string
     }
 
-      const page = document.querySelector('.daphne-page')
+    const storyModeConfig: Record<StoryMode, StoryModeConfig> = {
+      normal: {label: 'Normal Code'},
+      backwords: {label: 'Backwords Alphabet Code'},
+      'vowel-mirror': {label: 'Backwords Vowels Code'},
+      'consonant-mirror': {label: 'Backwords Consonants Code'},
+    }
 
-      if (page) {
-      const modeOption = document.querySelector('#mode-option')
-      const modeTitle = document.querySelector('#mode-title')
-      const modeDescription = document.querySelector('#mode-description')
-      const modeRule = document.querySelector('#mode-rule')
-      const modeExample = document.querySelector('#mode-example')
-      const plainInput = document.querySelector('#plain-input')
-      const codedInput = document.querySelector('#coded-input')
-      const codedInputLabel = document.querySelector('#coded-input-label')
-      const encodedOutput = document.querySelector('#encoded-output')
-      const decodedOutput = document.querySelector('#decoded-output')
-      const useEncodedButton = document.querySelector('#use-encoded')
-      const modeButtons = document.querySelectorAll('[data-mode-button]')
-      const newChallengeButton = document.querySelector('#new-challenge')
-      const showAnswerButton = document.querySelector('#show-answer')
-      const checkAnswerButton = document.querySelector('#check-answer')
-      const challengeCode = document.querySelector('#challenge-code')
-      const guessInput = document.querySelector('#guess-input')
-      const challengeFeedback = document.querySelector('#challenge-feedback')
-      const solvedCount = document.querySelector('#solved-count')
-      const streakCount = document.querySelector('#streak-count')
-      const numbersBasicKey = document.querySelector('#numbers-basic-key')
-      const numbersRankingKey = document.querySelector('#numbers-ranking-key')
-      const backwordsKey = document.querySelector('#backwords-key')
-      const vowelMirrorKey = document.querySelector('#vowel-mirror-key')
+    const page = document.querySelector<HTMLElement>('.daphne-page')
 
-      let solved = 0
-      let streak = 0
-      let currentAnswer = ''
-
-      const encodeNumbersBasic = text => {
-        const tokens = []
-
-        for (const character of text.toUpperCase()) {
-          if (character >= 'A' && character <= 'Z') {
-            tokens.push(String(alphabet.indexOf(character) + 1))
-            continue
-          }
-
-          if (character === ' ') {
-            tokens.push('/')
-            continue
-          }
-
-          if (character === '\n') {
-            tokens.push('//')
-            continue
-          }
-
-          tokens.push(character)
-        }
-
-        return tokens.join(' ')
+    if (page) {
+      const storyModeInputs = document.querySelectorAll<HTMLInputElement>(
+        '[data-story-mode]'
+      )
+      const storyFields = document.querySelectorAll<HTMLElement>('[data-story-field]')
+      const storyKeys = document.querySelectorAll<HTMLElement>('[data-story-key]')
+      const storyInputs = document.querySelectorAll<HTMLTextAreaElement>(
+        '[data-story-input]'
+      )
+      const submitStoryButton =
+        document.querySelector<HTMLButtonElement>('#submit-story')!
+      const startHangmanButton =
+        document.querySelector<HTMLButtonElement>('#start-hangman')!
+      const resetStoryButton =
+        document.querySelector<HTMLButtonElement>('#reset-story')!
+      const storyOutput = document.querySelector<HTMLElement>('#story-output')!
+      const storyFeedback = document.querySelector<HTMLElement>('#story-feedback')!
+      const hangmanPuzzle = document.querySelector<HTMLElement>('#hangman-puzzle')!
+      const hangmanFeedback = document.querySelector<HTMLElement>('#hangman-feedback')!
+      const hangmanLetterButtons = document.querySelectorAll<HTMLButtonElement>(
+        '[data-hangman-letter]'
+      )
+      const hangmanState = {
+        answer: '',
+        guesses: new Set<string>(),
+        active: false,
       }
 
-      const decodeNumbersBasic = text => {
-        if (!text.trim()) return ''
-
-        return text
-          .trim()
-          .split(/\s+/)
-          .map(token => {
-            if (token === '/') return ' '
-            if (token === '//') return '\n'
-
-            const parsed = Number(token)
-
-            if (Number.isInteger(parsed) && parsed >= 1 && parsed <= 26) {
-              return alphabet[parsed - 1]
-            }
-
-            return token.toUpperCase()
-          })
-          .join('')
-      }
-
-      const encodeNumbersRanking = text => {
-        const tokens = []
-
-        for (const character of text.toUpperCase()) {
-          if (character >= 'A' && character <= 'Z') {
-            tokens.push(String(rankingAlphabet.indexOf(character) + 1))
-            continue
-          }
-
-          if (character === ' ') {
-            tokens.push('/')
-            continue
-          }
-
-          if (character === '\n') {
-            tokens.push('//')
-            continue
-          }
-
-          tokens.push(character)
-        }
-
-        return tokens.join(' ')
-      }
-
-      const decodeNumbersRanking = text => {
-        if (!text.trim()) return ''
-
-        return text
-          .trim()
-          .split(/\s+/)
-          .map(token => {
-            if (token === '/') return ' '
-            if (token === '//') return '\n'
-
-            const parsed = Number(token)
-
-            if (Number.isInteger(parsed) && parsed >= 1 && parsed <= 26) {
-              return rankingAlphabet[parsed - 1]
-            }
-
-            return token.toUpperCase()
-          })
-          .join('')
-      }
-
-      const flipCharacter = character => {
+      const flipAlphabetCharacter = (character: string) => {
         const upper = character.toUpperCase()
         const index = alphabet.indexOf(upper)
 
         if (index === -1) return character
-
         return reversedAlphabet[index]
       }
 
-      const encodeBackwords = text =>
-        text
-          .split('')
-          .map(character => flipCharacter(character))
-          .join('')
-
-      const decodeBackwords = text => encodeBackwords(text)
-
-      const flipVowelCharacter = character => {
+      const flipVowelCharacter = (character: string) => {
         const upper = character.toUpperCase()
         return vowelMirrorMap[upper] ?? upper
       }
 
-      const encodeVowelMirror = text =>
-        text
+      const flipConsonantCharacter = (character: string) => {
+        const upper = character.toUpperCase()
+        return consonantMirrorMap[upper] ?? upper
+      }
+
+      const encodeForMode = (mode: StoryMode, text: string) => {
+        const upperText = text.toUpperCase()
+
+        if (mode === 'normal') return upperText
+        if (mode === 'backwords') {
+          return upperText
+            .split('')
+            .map((character: string) => flipAlphabetCharacter(character))
+            .join('')
+        }
+        if (mode === 'vowel-mirror') {
+          return upperText
+            .split('')
+            .map((character: string) => flipVowelCharacter(character))
+            .join('')
+        }
+
+        return upperText
           .split('')
-          .map(character => flipVowelCharacter(character))
+          .map((character: string) => flipConsonantCharacter(character))
           .join('')
-
-      const decodeVowelMirror = text => encodeVowelMirror(text)
-
-      const normalizeMessage = value =>
-        value
-          .toUpperCase()
-          .replace(/\s+/g, ' ')
-          .trim()
-
-      const getMode = () => page.dataset.mode || 'numbers-basic'
-
-      const encodeForMode = (mode, text) => {
-        if (mode === 'numbers-basic') return encodeNumbersBasic(text)
-        if (mode === 'numbers-ranking') return encodeNumbersRanking(text)
-        if (mode === 'vowel-mirror') return encodeVowelMirror(text.toUpperCase())
-        return encodeBackwords(text.toUpperCase())
       }
 
-      const decodeForMode = (mode, text) => {
-        if (mode === 'numbers-basic') return decodeNumbersBasic(text)
-        if (mode === 'numbers-ranking') return decodeNumbersRanking(text)
-        if (mode === 'vowel-mirror') return decodeVowelMirror(text.toUpperCase())
-        return decodeBackwords(text.toUpperCase())
+      const getStoryMode = (): StoryMode => {
+        const selected = document.querySelector<HTMLInputElement>(
+          '[data-story-mode]:checked'
+        )
+
+        return (selected?.dataset.storyMode as StoryMode) || 'normal'
       }
 
-      const updateTranslator = () => {
-        const mode = getMode()
-        encodedOutput.textContent = encodeForMode(mode, plainInput.value)
-        decodedOutput.textContent = decodeForMode(mode, codedInput.value)
-      }
-
-      const drawChallenge = () => {
-        const mode = getMode()
-        const answers = modeConfig[mode].challengeAnswers
-        const randomAnswer = answers[Math.floor(Math.random() * answers.length)]
-
-        currentAnswer = randomAnswer
-        challengeCode.textContent = encodeForMode(mode, randomAnswer)
-        guessInput.value = ''
-        challengeFeedback.textContent = 'Read the code and type the message.'
-        challengeFeedback.dataset.tone = 'neutral'
-      }
-
-      const setMode = mode => {
-        page.dataset.mode = mode
-
-        const config = modeConfig[mode]
-
-        modeOption.textContent = config.option
-        modeTitle.textContent = config.name
-        modeDescription.textContent = config.description
-        modeRule.textContent = config.rule
-        modeExample.textContent = config.example
-        plainInput.placeholder = config.plainPlaceholder
-        codedInputLabel.textContent = config.codedLabel
-        codedInput.placeholder = config.codedPlaceholder
-        codedInput.value = encodeForMode(mode, plainInput.value)
-
-        modeButtons.forEach(button => {
-          const isActive = button.dataset.modeButton === mode
-          button.classList.toggle('is-active', isActive)
-          button.setAttribute('aria-pressed', String(isActive))
+      const setStoryMode = (mode: StoryMode) => {
+        storyModeInputs.forEach(input => {
+          const isActive = input.dataset.storyMode === mode
+          input.checked = isActive
         })
 
-        numbersBasicKey.hidden = mode !== 'numbers-basic'
-        numbersRankingKey.hidden = mode !== 'numbers-ranking'
-        backwordsKey.hidden = mode !== 'backwords'
-        vowelMirrorKey.hidden = mode !== 'vowel-mirror'
+        storyFields.forEach(field => {
+          const isActive = field.dataset.storyField === mode
+          field.classList.toggle('is-disabled', !isActive)
 
-        updateTranslator()
-        drawChallenge()
+          const textarea = field.querySelector<HTMLTextAreaElement>('textarea')
+          if (textarea) {
+            textarea.disabled = !isActive
+          }
+        })
+
+        storyKeys.forEach(key => {
+          key.hidden = key.dataset.storyKey !== mode
+        })
       }
 
-      modeButtons.forEach(button => {
+      const submitStory = () => {
+        const mode = getStoryMode()
+        const textarea = document.querySelector<HTMLTextAreaElement>(
+          `[data-story-input="${mode}"]`
+        )
+        const value = textarea?.value.trim() || ''
+
+        if (!value) {
+          storyOutput.textContent = ''
+          storyFeedback.textContent = 'Write your story in the active box first.'
+          storyFeedback.dataset.tone = 'warning'
+          textarea?.focus()
+          return
+        }
+
+        storyOutput.textContent = encodeForMode(mode, value)
+        storyFeedback.textContent = `Reading your story in ${storyModeConfig[mode].label}.`
+        storyFeedback.dataset.tone = 'success'
+      }
+
+      const buildHangmanPuzzle = () => {
+        if (!hangmanState.answer) {
+          return 'Press Hangman to start guessing your selected story.'
+        }
+
+        return hangmanState.answer
+          .split('')
+          .map(character => {
+            if (character < 'A' || character > 'Z') {
+              return character
+            }
+
+            return hangmanState.guesses.has(character) ? character : '_'
+          })
+          .join(' ')
+      }
+
+      const updateHangmanButtons = () => {
+        hangmanLetterButtons.forEach(button => {
+          const letter = button.dataset.hangmanLetter || ''
+          const isGuessed = hangmanState.guesses.has(letter)
+          const isCorrect =
+            isGuessed && hangmanState.answer.includes(letter)
+          const isWrong = isGuessed && !hangmanState.answer.includes(letter)
+
+          button.hidden = isCorrect
+          button.disabled = !hangmanState.active || isGuessed
+          button.classList.toggle('is-wrong', isWrong)
+        })
+      }
+
+      const updateHangmanPuzzle = () => {
+        hangmanPuzzle.textContent = buildHangmanPuzzle()
+      }
+
+      const clearHangman = (message = 'Pick a code and press Hangman to begin.') => {
+        hangmanState.answer = ''
+        hangmanState.guesses.clear()
+        hangmanState.active = false
+        updateHangmanButtons()
+        updateHangmanPuzzle()
+        hangmanFeedback.textContent = message
+        hangmanFeedback.dataset.tone = 'neutral'
+      }
+
+      const finishHangmanIfSolved = () => {
+        const uniqueLetters = new Set(
+          hangmanState.answer.split('').filter(character => character >= 'A' && character <= 'Z')
+        )
+        const solved = Array.from(uniqueLetters).every(letter =>
+          hangmanState.guesses.has(letter)
+        )
+
+        if (!solved) return false
+
+        hangmanState.active = false
+        updateHangmanButtons()
+        hangmanFeedback.textContent = 'You guessed every letter.'
+        hangmanFeedback.dataset.tone = 'success'
+        return true
+      }
+
+      const startHangman = () => {
+        const mode = getStoryMode()
+        const textarea = document.querySelector<HTMLTextAreaElement>(
+          `[data-story-input="${mode}"]`
+        )
+        const value = textarea?.value.trim() || ''
+
+        if (!value) {
+          clearHangman('Write your story in the active box first.')
+          hangmanFeedback.textContent = 'Write your story in the active box first.'
+          hangmanFeedback.dataset.tone = 'warning'
+          textarea?.focus()
+          return
+        }
+
+        hangmanState.answer = encodeForMode(mode, value)
+        hangmanState.guesses.clear()
+        hangmanState.active = true
+        updateHangmanButtons()
+        updateHangmanPuzzle()
+        hangmanFeedback.textContent = `Hangman is on for ${storyModeConfig[mode].label}.`
+        hangmanFeedback.dataset.tone = 'neutral'
+      }
+
+      storyModeInputs.forEach(input => {
+        input.addEventListener('change', () => {
+          const nextMode = input.dataset.storyMode as StoryMode | undefined
+          if (!nextMode) return
+
+          setStoryMode(nextMode)
+          storyOutput.textContent = ''
+          storyFeedback.textContent = `Now using ${storyModeConfig[nextMode].label}.`
+          storyFeedback.dataset.tone = 'neutral'
+          clearHangman(
+            `Pick Hangman when you want to guess ${storyModeConfig[nextMode].label}.`
+          )
+
+          const textarea = document.querySelector<HTMLTextAreaElement>(
+            `[data-story-input="${nextMode}"]`
+          )
+          textarea?.focus()
+        })
+      })
+
+      storyInputs.forEach(input => {
+        input.addEventListener('keydown', (event: KeyboardEvent) => {
+          if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+            event.preventDefault()
+            submitStory()
+          }
+        })
+      })
+
+      submitStoryButton.addEventListener('click', submitStory)
+      startHangmanButton.addEventListener('click', startHangman)
+      resetStoryButton.addEventListener('click', () => {
+        storyInputs.forEach(input => {
+          input.value = ''
+        })
+
+        storyOutput.textContent = ''
+        storyFeedback.textContent = 'Everything is reset.'
+        storyFeedback.dataset.tone = 'neutral'
+        clearHangman('Everything is reset. Pick a code and press Hangman to begin.')
+
+        const mode = getStoryMode()
+        const textarea = document.querySelector<HTMLTextAreaElement>(
+          `[data-story-input="${mode}"]`
+        )
+        textarea?.focus()
+      })
+      hangmanLetterButtons.forEach(button => {
         button.addEventListener('click', () => {
-          const nextMode = button.dataset.modeButton
+          if (!hangmanState.active) return
 
-          if (!nextMode || nextMode === getMode()) return
+          const letter = button.dataset.hangmanLetter || ''
+          if (!letter || hangmanState.guesses.has(letter)) return
 
-          setMode(nextMode)
+          hangmanState.guesses.add(letter)
+          const isCorrect = hangmanState.answer.includes(letter)
+
+          updateHangmanButtons()
+          updateHangmanPuzzle()
+
+          if (isCorrect) {
+            if (finishHangmanIfSolved()) return
+
+            hangmanFeedback.textContent = `${letter} is in the story.`
+            hangmanFeedback.dataset.tone = 'success'
+            return
+          }
+
+          hangmanFeedback.textContent = `${letter} is not in the story.`
+          hangmanFeedback.dataset.tone = 'danger'
         })
       })
 
-      plainInput.addEventListener('input', updateTranslator)
-      codedInput.addEventListener('input', updateTranslator)
-
-      useEncodedButton.addEventListener('click', () => {
-        codedInput.value = encodedOutput.textContent || ''
-        updateTranslator()
-        codedInput.focus()
-      })
-
-      newChallengeButton.addEventListener('click', drawChallenge)
-
-      showAnswerButton.addEventListener('click', () => {
-        streak = 0
-        streakCount.textContent = String(streak)
-        challengeFeedback.textContent = `Answer: ${currentAnswer}`
-        challengeFeedback.dataset.tone = 'answer'
-      })
-
-      checkAnswerButton.addEventListener('click', () => {
-        const guess = normalizeMessage(guessInput.value)
-        const answer = normalizeMessage(currentAnswer)
-
-        if (!guess) {
-          challengeFeedback.textContent = 'Type a message first.'
-          challengeFeedback.dataset.tone = 'warning'
-          return
-        }
-
-        if (guess === answer) {
-          solved += 1
-          streak += 1
-          solvedCount.textContent = String(solved)
-          streakCount.textContent = String(streak)
-          challengeFeedback.textContent = 'Correct. You cracked the code.'
-          challengeFeedback.dataset.tone = 'success'
-          return
-        }
-
-        streak = 0
-        streakCount.textContent = String(streak)
-        challengeFeedback.textContent = 'Not yet. Check the code key and try again.'
-        challengeFeedback.dataset.tone = 'danger'
-      })
-
-      guessInput.addEventListener('keydown', event => {
-        if (event.key === 'Enter') {
-          event.preventDefault()
-          checkAnswerButton.click()
-        }
-      })
-
-      setMode(getMode())
-      codedInput.value = encodeForMode(getMode(), plainInput.value)
-      updateTranslator()
+      setStoryMode(getStoryMode())
+      updateHangmanButtons()
+      updateHangmanPuzzle()
     }
   </script>
 </Layout>
@@ -641,12 +512,9 @@ const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? lette
   :root {
     color-scheme: light;
     --paper: #f7f0dc;
-    --paper-deep: #e8d8ad;
     --ink: #1e1b18;
     --ink-soft: #5f564b;
-    --sun: #f1a83b;
     --sun-deep: #c77711;
-    --sky: #dff2ef;
     --moss: #4b705e;
     --berry: #923d2f;
     --card: rgba(255, 251, 244, 0.82);
@@ -686,15 +554,16 @@ const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? lette
   }
 
   .hero {
-    display: grid;
-    gap: 1.4rem;
     padding: 1.5rem;
     margin-bottom: 1rem;
   }
 
+  .panel {
+    padding: 1.2rem;
+  }
+
   .eyebrow,
   .panel-kicker,
-  .tip-label,
   .output-label {
     margin: 0 0 0.45rem;
     font-size: 0.82rem;
@@ -723,112 +592,9 @@ const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? lette
   }
 
   .lede,
-  .panel-copy,
-  .note,
-  .tip-text,
   .feedback {
     font-size: 1rem;
     line-height: 1.55;
-  }
-
-  .note {
-    margin-bottom: 0;
-    color: var(--ink-soft);
-  }
-
-  .mode-switch {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-  }
-
-  .options-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-  }
-
-  .option-card {
-    padding: 1rem;
-    border: 2px solid rgba(30, 27, 24, 0.08);
-    border-radius: 22px;
-    background: rgba(255, 255, 255, 0.64);
-  }
-
-  .option-label {
-    margin: 0 0 0.35rem;
-    font-size: 0.82rem;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--berry);
-  }
-
-  .option-copy {
-    margin: 0 0 0.85rem;
-    line-height: 1.5;
-    color: var(--ink-soft);
-  }
-
-  .option-pill {
-    display: inline-flex;
-    margin: 0 0 0.6rem;
-    padding: 0.35rem 0.7rem;
-    border-radius: 999px;
-    background: rgba(75, 112, 94, 0.14);
-    color: var(--moss);
-    font-size: 0.86rem;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .mode-button,
-  .ghost-button,
-  .primary-button,
-  .secondary-button {
-    border: 0;
-    border-radius: 999px;
-    font: inherit;
-    font-weight: 800;
-    cursor: pointer;
-    transition:
-      transform 120ms ease,
-      background-color 120ms ease,
-      color 120ms ease,
-      box-shadow 120ms ease;
-  }
-
-  .mode-button,
-  .ghost-button {
-    padding: 0.8rem 1.15rem;
-    color: var(--ink);
-    background: rgba(255, 255, 255, 0.72);
-    box-shadow: inset 0 0 0 2px rgba(30, 27, 24, 0.08);
-  }
-
-  .mode-button.is-active {
-    color: white;
-    background: linear-gradient(135deg, var(--berry), #bb6643);
-    box-shadow: 0 12px 24px rgba(146, 61, 47, 0.24);
-  }
-
-  .ghost-button:hover,
-  .mode-button:hover,
-  .primary-button:hover,
-  .secondary-button:hover {
-    transform: translateY(-1px);
-  }
-
-  .workspace {
-    display: grid;
-    grid-template-columns: 0.9fr 1.15fr 0.95fr;
-    gap: 1rem;
-    align-items: start;
-  }
-
-  .panel {
-    padding: 1.2rem;
   }
 
   .panel-head {
@@ -839,30 +605,52 @@ const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? lette
     margin-bottom: 0.8rem;
   }
 
-  .tip-box,
-  .output-box,
-  .challenge-box,
-  .score-chip,
-  .key-card {
+  .story-picker {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .story-picker-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.9rem 1rem;
     border: 2px solid rgba(30, 27, 24, 0.08);
-    border-radius: 20px;
+    border-radius: 18px;
     background: rgba(255, 255, 255, 0.72);
-  }
-
-  .tip-box {
-    padding: 0.95rem 1rem;
-    margin-top: 0.8rem;
-  }
-
-  .tip-text {
-    margin-bottom: 0;
     font-weight: 700;
+    cursor: pointer;
+  }
+
+  .story-picker-item:has(input:checked) {
+    border-color: rgba(146, 61, 47, 0.32);
+    background: rgba(255, 245, 236, 0.96);
+    box-shadow: 0 10px 20px rgba(146, 61, 47, 0.12);
+  }
+
+  .story-picker-item input {
+    margin: 0;
+  }
+
+  .story-map-wrap {
+    margin-bottom: 1rem;
+  }
+
+  .story-key-grid {
+    margin-top: 0.6rem;
+  }
+
+  .story-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
   }
 
   .field {
     display: grid;
     gap: 0.45rem;
-    margin-bottom: 1rem;
     font-weight: 700;
   }
 
@@ -870,8 +658,11 @@ const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? lette
     font-size: 0.95rem;
   }
 
-  .field textarea,
-  .field input {
+  .story-field.is-disabled {
+    opacity: 0.48;
+  }
+
+  .field textarea {
     width: 100%;
     border: 2px solid rgba(30, 27, 24, 0.12);
     border-radius: 18px;
@@ -879,74 +670,38 @@ const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? lette
     font: inherit;
     color: var(--ink);
     background: rgba(255, 255, 255, 0.84);
+    resize: vertical;
+    min-height: 10rem;
   }
 
-  .field textarea:focus,
-  .field input:focus {
+  .field textarea:focus {
     outline: none;
     border-color: var(--sun-deep);
     box-shadow: 0 0 0 4px rgba(241, 168, 59, 0.18);
   }
 
-  .output-box,
-  .challenge-box {
-    padding: 1rem;
-    margin-bottom: 1rem;
+  .field textarea:disabled {
+    cursor: not-allowed;
   }
 
-  .output-text,
-  .challenge-code {
-    min-height: 4.7rem;
-    white-space: pre-wrap;
-    word-break: break-word;
-    font-size: 1.08rem;
-    line-height: 1.55;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-  }
-
-  .decoded-box .output-text {
-    color: var(--moss);
-    letter-spacing: 0.02em;
-  }
-
-  .challenge-code {
-    color: var(--berry);
-  }
-
-  .score-row,
   .button-row {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-  }
-
-  .score-row {
-    margin-bottom: 1rem;
-  }
-
-  .score-chip {
-    min-width: 110px;
-    padding: 0.8rem 0.95rem;
-  }
-
-  .score-chip span {
-    display: block;
-    margin-bottom: 0.15rem;
-    font-size: 0.84rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-soft);
-  }
-
-  .score-chip strong {
-    font-size: 1.5rem;
+    margin-top: 1rem;
   }
 
   .primary-button,
   .secondary-button {
+    border: 0;
+    border-radius: 999px;
     padding: 0.9rem 1.15rem;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+      transform 120ms ease,
+      box-shadow 120ms ease;
   }
 
   .primary-button {
@@ -957,8 +712,39 @@ const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? lette
 
   .secondary-button {
     color: var(--ink);
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.82);
     box-shadow: inset 0 0 0 2px rgba(30, 27, 24, 0.08);
+  }
+
+  .primary-button:hover {
+    transform: translateY(-1px);
+  }
+
+  .secondary-button:hover {
+    transform: translateY(-1px);
+  }
+
+  .output-box,
+  .key-card {
+    border: 2px solid rgba(30, 27, 24, 0.08);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.72);
+  }
+
+  .output-box {
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .output-text {
+    min-height: 6rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 1.08rem;
+    line-height: 1.55;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--berry);
   }
 
   .feedback {
@@ -971,17 +757,68 @@ const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? lette
     color: #1e6b45;
   }
 
+  .feedback[data-tone='warning'] {
+    color: #8a5711;
+  }
+
   .feedback[data-tone='danger'] {
     color: #962f29;
   }
 
-  .feedback[data-tone='warning'],
-  .feedback[data-tone='answer'] {
-    color: #8a5711;
+  .hangman-panel {
+    margin-top: 1rem;
   }
 
-  .key-panel {
-    margin-top: 1rem;
+  .hangman-head {
+    margin-bottom: 0;
+  }
+
+  .hangman-box {
+    margin-bottom: 1rem;
+  }
+
+  .hangman-puzzle {
+    letter-spacing: 0.18em;
+  }
+
+  .hangman-letters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
+    gap: 0.65rem;
+  }
+
+  .hangman-letter {
+    position: relative;
+    min-height: 3rem;
+    border: 2px solid rgba(30, 27, 24, 0.1);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .hangman-letter:disabled {
+    cursor: default;
+  }
+
+  .hangman-letter.is-wrong {
+    color: #962f29;
+    border-color: rgba(150, 47, 41, 0.35);
+    background: rgba(255, 238, 238, 0.94);
+  }
+
+  .hangman-letter.is-wrong::after {
+    content: 'X';
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #c12020;
+    pointer-events: none;
   }
 
   .key-grid {
@@ -1011,8 +848,8 @@ const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? lette
   }
 
   @media (max-width: 920px) {
-    .options-grid,
-    .workspace {
+    .story-grid,
+    .story-picker {
       grid-template-columns: 1fr;
     }
 
@@ -1033,15 +870,14 @@ const vowelMirrorLetters = letters.map(letter => vowelMirrorMap[letter] ?? lette
       padding: 1rem;
     }
 
-    .mode-switch,
-    .button-row,
-    .score-row {
+    .button-row {
       flex-direction: column;
     }
 
-    .mode-button,
-    .ghost-button,
-    .primary-button,
+    .primary-button {
+      width: 100%;
+    }
+
     .secondary-button {
       width: 100%;
     }

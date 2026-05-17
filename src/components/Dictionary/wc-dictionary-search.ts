@@ -2,8 +2,7 @@ import ProtoForm from '../ProtoForm/ProtoForm'
 import '../wc-floating-label-input'
 
 type FormType = {
-  word: string
-  nummber_of_letters: string
+  missing_vowel_numbers: string
 }
 
 class WCDictionarySearch extends HTMLElement {

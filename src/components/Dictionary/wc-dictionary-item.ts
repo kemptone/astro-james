@@ -30,6 +30,9 @@ class WCDictionaryItem extends HTMLElement {
 
     this.innerHTML = `
     <h2 class="word">${word || ''}</h2>
+    <div class="actions">
+      <button type="button" class="play-hangman">Play hangman</button>
+    </div>
     <div class="pronounciation">${prounciation || ''}</div>
     <div class="definitions">${html || ''}</div>
     <div class="examples">${examples || ''}</div>
@@ -38,6 +41,18 @@ class WCDictionaryItem extends HTMLElement {
     <div class="related">${related || ''}</div>
     <div class="etymology">${etymology || ''}</div>
     `
+
+    this.querySelector('.play-hangman')?.addEventListener('click', () => {
+      this.dispatchEvent(
+        new CustomEvent('dictionary-play-hangman', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            word: word || '',
+          },
+        })
+      )
+    })
   }
 }
 

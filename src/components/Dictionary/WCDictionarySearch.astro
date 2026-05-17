@@ -1,26 +1,27 @@
 ---
 import WCFloatingLabel from '../WCFloatingLabel.astro'
-import WCFieldsetInputs from '../WCFieldsetInputs.astro'
 ---
 
 <wc-dictionary-search>
   <form>
     <fieldset>
       <legend>Find words</legend>
-        <WCFloatingLabel
-          label="search for word by letters"
-          addclear="1"
-          adderror={'1'}
-        >
-          <input type="text" name="word" placeholder="look for the name" />
-        </WCFloatingLabel>
-        <WCFieldsetInputs legend='search settings'>
-          <input type="checkbox" name="search_settings" value="start_of_word" data-label="start of word" checked>
-          <input type="checkbox" name="search_settings" value="match_whole_word" data-label="match whole word">
-        </WCFieldsetInputs>
-      <WCFloatingLabel label="search by number of letters" adderror={'1'}>
-        <input type="number" name="number_of_letters" />
+      <WCFloatingLabel label="search by missing vowel numbers" adderror={'1'}>
+        <input
+          type="text"
+          name="missing_vowel_numbers"
+          inputmode="numeric"
+          pattern="^(0|[1-5\\s]+)?$"
+          placeholder="0, 3, 12, or 12345"
+        />
       </WCFloatingLabel>
+      <p class="vowel-help">
+        <code>0</code> = has all vowels. <code>1=A</code>, <code>2=E</code>,
+        <code>3=I</code>, <code>4=O</code>, <code>5=U</code>. Numbers you type
+        mean that vowel is missing, so <code>3</code> means no <code>I</code>
+        but <code>A E O U</code> must be there, and <code>12345</code> finds
+        words like <code>fly</code> or <code>try</code>.
+      </p>
       <div class="action">
         <button type="submit">Search</button>
       </div>
@@ -42,6 +43,13 @@ import WCFieldsetInputs from '../WCFieldsetInputs.astro'
 
     .action {
       padding-block: 1rem;
+    }
+
+    .vowel-help {
+      margin: 0.5rem 0 0;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: #475569;
     }
 
     .action button {

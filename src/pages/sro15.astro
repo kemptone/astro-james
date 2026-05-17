@@ -1,638 +1,296 @@
 ---
-export const prerender = false
-
-import Menu from '@/components/menu.astro'
-import '../pico.css'
+import Menu3 from '@/components/menu.astro'
+import '@/layouts/style.css'
 ---
 
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>SRO15 - Shade Stack Game</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main>
+      <h1>SRO15 - Talk to Ivy</h1>
+      <p>Ivy from Amazon will guide you through this interactive grid game.</p>
+
+      <div class="grid-container">
+        <div class="labels">
+          <div class="corner"></div>
+          <div class="column-label">Zander</div>
+          <div class="column-label">Carmen</div>
+          <div class="column-label">Stephanie</div>
+          <div class="column-label">Xavior</div>
+          <div class="column-label">Dexter the Dog</div>
+        </div>
+
+        <div class="grid-row">
+          <div class="row-label">High-fives</div>
+          <div class="checkbox" data-row="0" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="0" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="0" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="0" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="0" data-col="4" data-disabled="true"></div>
+        </div>
+
+        <div class="grid-row">
+          <div class="row-label">Hugs</div>
+          <div class="checkbox" data-row="1" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="1" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="1" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="1" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="1" data-col="4" data-disabled="true"></div>
+        </div>
+
+        <div class="grid-row dangerous">
+          <div class="row-label">Kissing ⚠️</div>
+          <div class="checkbox" data-row="2" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="2" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="2" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="2" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="2" data-col="4" data-disabled="true"></div>
+        </div>
+
+        <div class="grid-row dangerous">
+          <div class="row-label">Sex ⚠️</div>
+          <div class="checkbox" data-row="3" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="3" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="3" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="3" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="3" data-col="4" data-disabled="true"></div>
+        </div>
+
+        <div class="grid-row dangerous">
+          <div class="row-label">Choking ⚠️</div>
+          <div class="checkbox" data-row="4" data-col="0" data-disabled="true"></div>
+          <div class="checkbox" data-row="4" data-col="1" data-disabled="true"></div>
+          <div class="checkbox" data-row="4" data-col="2" data-disabled="true"></div>
+          <div class="checkbox" data-row="4" data-col="3" data-disabled="true"></div>
+          <div class="checkbox" data-row="4" data-col="4" data-disabled="true"></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="enableBtn">Enable Checkmarks</button>
+        <button id="disableBtn">Disable Checkmarks</button>
+        <button id="submitBtn">Submit and Generate List</button>
+        <button id="ivyIntroBtn">Ivy Introduction</button>
+      </div>
+
+      <div id="output"></div>
+    </main>
+    <Menu3 />
+
     <style>
-      :root {
-        --bg-top: #fee7c7;
-        --bg-bottom: #eef4f7;
-        --panel: rgba(255, 251, 246, 0.88);
-        --ink: #30231a;
-        --muted: #6d5a4b;
-        --accent: #cb6d36;
-        --accent-strong: #9d4a1d;
-        --outline: rgba(48, 35, 26, 0.14);
-        --shadow: 0 24px 50px rgba(80, 52, 24, 0.16);
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        color: var(--ink);
-        font-family:
-          'Trebuchet MS',
-          'Avenir Next',
-          'Segoe UI',
-          sans-serif;
-        background:
-          radial-gradient(circle at top, rgba(255, 214, 153, 0.85) 0, rgba(255, 214, 153, 0.28) 20%, transparent 42%),
-          linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
-      }
-
       main {
-        max-width: 1380px;
+        max-width: 900px;
         margin: 0 auto;
-        padding: 5rem 1rem 3rem;
-      }
-
-      .hero,
-      .panel {
-        border: 2px solid rgba(157, 74, 29, 0.1);
-        border-radius: 24px;
-        background: var(--panel);
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(10px);
-      }
-
-      .hero {
-        padding: 1.5rem;
-      }
-
-      .eyebrow {
-        margin: 0 0 0.4rem;
-        color: var(--accent-strong);
-        font-size: 0.88rem;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        padding: 2rem;
       }
 
       h1 {
-        margin: 0;
-        font-size: clamp(2rem, 3.5vw, 3.5rem);
-        line-height: 1.04;
+        margin-bottom: 1rem;
       }
 
-      .hero p {
-        max-width: 72ch;
-        color: var(--muted);
-        font-size: 1.04rem;
+      .grid-container {
+        margin: 2rem 0;
       }
 
-      .example-row {
+      .labels {
+        display: grid;
+        grid-template-columns: 150px repeat(5, 100pt);
+        gap: 0;
+        margin-bottom: 0;
+      }
+
+      .corner {
+        width: 150px;
+      }
+
+      .column-label {
+        font-weight: bold;
+        text-align: center;
+        padding: 0.5rem;
+        background: #e0e0e0;
+        width: 100pt;
+      }
+
+      .grid-row {
+        display: grid;
+        grid-template-columns: 150px repeat(5, 100pt);
+        gap: 0;
+        margin-bottom: 0;
+      }
+
+      .grid-row.dangerous {
+        background-color: #ffe0e0;
+      }
+
+      .row-label {
+        font-weight: bold;
+        padding: 0.5rem;
+        background: #e0e0e0;
         display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
         align-items: center;
-        margin-top: 1rem;
       }
 
-      .example-row strong {
-        color: var(--ink);
+      .checkbox {
+        width: 100pt;
+        height: 100pt;
+        margin: 0;
+        cursor: pointer;
+        border: 2px solid #333;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        position: relative;
+        transition: all 0.2s ease;
       }
 
-      .game-layout {
-        display: grid;
-        grid-template-columns: 0.92fr 1.08fr;
-        gap: 1.1rem;
-        margin-top: 1.15rem;
+      .checkbox[data-disabled='true'] {
+        cursor: not-allowed;
+        opacity: 0.5;
+        background-color: #f0f0f0;
       }
 
-      .panel {
-        padding: 1.35rem;
+      .checkbox.checked {
+        background-color: #4caf50;
       }
 
-      .panel > p:first-of-type {
-        color: var(--muted);
-      }
-
-      .pair-list {
-        display: grid;
-        gap: 0.85rem;
-      }
-
-      .pair-row {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
-        gap: 0.8rem;
-        align-items: end;
-        padding: 1rem;
-        border-radius: 18px;
-        background: rgba(255, 255, 255, 0.75);
-        border: 1px solid var(--outline);
-      }
-
-      .pair-row label {
-        margin-bottom: 0;
-      }
-
-      .pair-row input {
-        margin-bottom: 0;
+      .checkbox.checked::after {
+        content: '✓';
+        color: white;
+        font-size: 60pt;
+        font-weight: bold;
+        line-height: 1;
       }
 
       .controls {
         display: flex;
+        gap: 1rem;
+        margin: 2rem 0;
         flex-wrap: wrap;
-        gap: 0.8rem;
-        margin-top: 1rem;
       }
 
-      .controls button,
-      .example-row button,
-      .preview-header button {
-        margin: 0;
+      button {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        cursor: pointer;
       }
 
-      .small-note {
-        margin-top: 1rem;
-        padding: 0.9rem 1rem;
-        border-radius: 16px;
-        background: rgba(255, 243, 224, 0.9);
-        border: 1px solid rgba(203, 109, 54, 0.16);
-        color: var(--muted);
-      }
-
-      .preview-header {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 0.8rem;
-        align-items: center;
-      }
-
-      .preview-board-wrap {
-        margin-top: 1rem;
-        overflow-x: auto;
-        padding: 0.35rem 0 0.5rem;
-      }
-
-      .shade-board {
-        --cell-size: 54px;
-        display: flex;
-        align-items: flex-end;
-        gap: 0;
-        min-height: 260px;
-        width: max-content;
-        padding: 0.5rem 0.35rem 0.35rem;
-      }
-
-      .column-stack {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: flex-end;
-      }
-
-      .column-stack + .column-stack {
-        margin-left: -2px;
-      }
-
-      .stack-cell {
-        width: var(--cell-size);
-        height: var(--cell-size);
-        border: 2px solid #1b1511;
-      }
-
-      .stack-cell + .stack-cell {
-        margin-top: -2px;
-      }
-
-      .stack-cell.empty {
-        background: rgb(255 255 255);
-        box-shadow: inset 0 0 0 1px rgba(48, 35, 26, 0.05);
-      }
-
-      .stack-cell.filled {
-        background: rgb(0 0 0);
-        box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.05),
-          inset 0 10px 20px rgba(255, 255, 255, 0.02);
-      }
-
-      .stack-cell.overflow {
-        background: linear-gradient(180deg, rgb(168 168 168) 0%, rgb(114 114 114) 100%);
-        border-color: #737373;
-        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
-      }
-
-      .placeholder {
-        display: grid;
-        place-items: center;
-        min-height: 280px;
-        border-radius: 22px;
-        border: 2px dashed rgba(157, 74, 29, 0.22);
-        color: var(--muted);
-        text-align: center;
+      #output {
+        margin-top: 2rem;
         padding: 1rem;
-        background: rgba(255, 255, 255, 0.45);
-      }
-
-      .link-panel {
-        margin-top: 1rem;
-        padding: 1rem;
-        border-radius: 18px;
-        background: linear-gradient(180deg, rgba(255, 244, 232, 0.98) 0%, rgba(255, 232, 214, 0.98) 100%);
-        border: 1px solid rgba(203, 109, 54, 0.2);
-      }
-
-      .link-panel a {
-        font-weight: 700;
-      }
-
-      .legend {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.8rem;
-        margin-top: 1rem;
-      }
-
-      .legend-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.55rem;
-        padding: 0.55rem 0.75rem;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.82);
-        border: 1px solid var(--outline);
-        color: var(--muted);
-      }
-
-      .legend-chip span {
-        display: inline-block;
-        width: 18px;
-        height: 18px;
+        background: #f5f5f5;
         border-radius: 4px;
-      }
-
-      .legend-empty span {
-        background: #fff;
-        border: 1px solid #1b1511;
-      }
-
-      .legend-filled span {
-        background: #000;
-      }
-
-      .legend-overflow span {
-        background: #8b8b8b;
-      }
-
-      @media (max-width: 960px) {
-        .game-layout {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      @media (max-width: 720px) {
-        main {
-          padding-top: 4.25rem;
-        }
-
-        .hero,
-        .panel {
-          padding: 1rem;
-        }
-
-        .pair-row {
-          grid-template-columns: 1fr;
-        }
-
-        .shade-board {
-          --cell-size: 44px;
-          min-height: 220px;
-        }
+        white-space: pre-wrap;
+        min-height: 2rem;
       }
     </style>
-  </head>
-  <body>
-    <Menu />
-    <main>
-      <section class="hero">
-        <p class="eyebrow">SRO15</p>
-        <h1>Shade Stack Game</h1>
-        <p>
-          Each pair is <strong>fill height</strong>. The second input sets how
-          tall that column is, and every new pair adds another column to the
-          same square board. If the left number is lower than the right one, the
-          column is not filled completely.
-        </p>
-        <div class="example-row">
-          <strong>Try:</strong>
-          <button type="button" data-example-fill="0" data-example-total="2">
-            0 2
-          </button>
-          <button type="button" data-example-fill="1" data-example-total="2">
-            1 2
-          </button>
-          <button type="button" data-example-fill="2" data-example-total="2">
-            2 2
-          </button>
-          <button type="button" data-example-fill="3" data-example-total="2">
-            3 2
-          </button>
-        </div>
-      </section>
-
-      <section class="game-layout">
-        <form id="builderForm" class="panel">
-          <h2>Inputs</h2>
-          <p>
-            There are 2 inputs in each row. The first is how much gets filled,
-            and the second is the height of that column. Keep adding rows to
-            make more columns, then press submit to show them.
-          </p>
-
-          <div id="pairList" class="pair-list"></div>
-
-          <div class="controls">
-            <button type="button" id="addPairBtn">Add Inputs</button>
-            <button type="submit" id="submitBtn" class="contrast">
-              Submit
-            </button>
-            <button type="button" id="resetBtn" class="secondary">
-              Reset
-            </button>
-          </div>
-
-          <div class="small-note">
-            `0 2` gives two unshaded squares. `1 2` leaves the top square
-            unshaded and makes the bottom black. `2 2` fills the whole column.
-            `3 2` adds a gray square above the full black column.
-          </div>
-        </form>
-
-        <section class="panel">
-          <div class="preview-header">
-            <div>
-              <h2 style="margin-bottom: 0.2rem;">Preview</h2>
-              <p style="margin: 0; color: var(--muted);">
-                Submit to redraw the shared columns board.
-              </p>
-            </div>
-          </div>
-
-          <div class="legend">
-            <div class="legend-chip legend-empty"><span></span> Unshaded</div>
-            <div class="legend-chip legend-filled"><span></span> Black</div>
-            <div class="legend-chip legend-overflow"><span></span> Gray overflow</div>
-          </div>
-
-          <div id="previewMount"></div>
-
-          <div id="linkPanel" class="link-panel" hidden>
-            <strong>Special link unlocked.</strong>
-            Overflow like `3 2` makes a gray row stick out, so this game gets a
-            link:
-            <a href="https://www.boodeboo.com/talkers2">
-              https://www.boodeboo.com/talkers2
-            </a>
-          </div>
-        </section>
-      </section>
-    </main>
 
     <script>
-      interface ShadePair {
-        id: number
-        filled: number
-        total: number
-      }
+      const enableBtn = document.getElementById(
+        'enableBtn'
+      ) as HTMLButtonElement
+      const disableBtn = document.getElementById(
+        'disableBtn'
+      ) as HTMLButtonElement
+      const submitBtn = document.getElementById(
+        'submitBtn'
+      ) as HTMLButtonElement
+      const ivyIntroBtn = document.getElementById(
+        'ivyIntroBtn'
+      ) as HTMLButtonElement
+      const output = document.getElementById('output') as HTMLDivElement
 
-      const STORAGE_KEY = 'sro15-shade-stacks'
-      const pairList = document.getElementById('pairList') as HTMLDivElement
-      const builderForm = document.getElementById('builderForm') as HTMLFormElement
-      const addPairBtn = document.getElementById('addPairBtn') as HTMLButtonElement
-      const resetBtn = document.getElementById('resetBtn') as HTMLButtonElement
-      const previewMount = document.getElementById('previewMount') as HTMLDivElement
-      const linkPanel = document.getElementById('linkPanel') as HTMLDivElement
+      const rows = ['High-fives', 'Hugs', 'Kissing', 'Sex', 'Choking']
+      const columns = [
+        'Zander',
+        'Carmen',
+        'Stephanie',
+        'Xavior',
+        'Dexter the Dog',
+      ]
 
-      function defaultPairs(): ShadePair[] {
-        return [{id: Date.now(), filled: 0, total: 2}]
-      }
-
-      function clampInteger(value: string, fallback: number) {
-        const parsed = Number.parseInt(value, 10)
-        return Number.isFinite(parsed) ? parsed : fallback
-      }
-
-      function loadPairs(): ShadePair[] {
-        const saved = localStorage.getItem(STORAGE_KEY)
-        if (!saved) return defaultPairs()
-
+      async function speakIvy(text: string) {
         try {
-          const parsed = JSON.parse(saved) as ShadePair[]
-          if (!Array.isArray(parsed) || parsed.length === 0) return defaultPairs()
-          return parsed.map(pair => ({
-            id: Number(pair.id) || Date.now() + Math.floor(Math.random() * 1000),
-            filled: Math.max(0, Number(pair.filled) || 0),
-            total: Math.max(1, Number(pair.total) || 1),
-          }))
+          const response = await fetch('/api/polly/say', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              text: text,
+              voiceId: 'Ivy',
+              engine: 'neural',
+            }),
+          })
+
+          if (response.ok) {
+            const audioBlob = await response.blob()
+            const audioUrl = URL.createObjectURL(audioBlob)
+            const audio = new Audio(audioUrl)
+            audio.play()
+          }
         } catch (error) {
-          console.error('Could not load SRO15 stacks', error)
-          return defaultPairs()
+          console.error('Error playing audio:', error)
         }
       }
 
-      function savePairs(pairs: ShadePair[]) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(pairs))
-      }
-
-      function pairRowMarkup(pair: ShadePair) {
-        return `
-          <div class="pair-row" data-pair-row="${pair.id}">
-            <label>
-              Fill
-              <input
-                type="number"
-                min="0"
-                step="1"
-                value="${pair.filled}"
-                data-field="filled"
-                inputmode="numeric"
-              />
-            </label>
-            <label>
-              Height
-              <input
-                type="number"
-                min="1"
-                step="1"
-                value="${pair.total}"
-                data-field="total"
-                inputmode="numeric"
-              />
-            </label>
-            <button type="button" class="secondary" data-remove-pair="${pair.id}">
-              Remove
-            </button>
-          </div>
-        `
-      }
-
-      function renderPairInputs(pairs: ShadePair[]) {
-        pairList.innerHTML = pairs.map(pairRowMarkup).join('')
-      }
-
-      function readPairsFromInputs(): ShadePair[] {
-        const rows = Array.from(
-          pairList.querySelectorAll<HTMLElement>('[data-pair-row]')
-        )
-
-        return rows.map(row => {
-          const filledInput = row.querySelector<HTMLInputElement>(
-            'input[data-field="filled"]'
-          )
-          const totalInput = row.querySelector<HTMLInputElement>(
-            'input[data-field="total"]'
-          )
-
-          return {
-            id: Number(row.dataset.pairRow),
-            filled: Math.max(0, clampInteger(filledInput?.value || '0', 0)),
-            total: Math.max(1, clampInteger(totalInput?.value || '1', 1)),
+      document.querySelectorAll('.checkbox').forEach(checkbox => {
+        checkbox.addEventListener('click', () => {
+          const disabled = checkbox.getAttribute('data-disabled') === 'true'
+          if (!disabled) {
+            checkbox.classList.toggle('checked')
           }
         })
-      }
-
-      function describePair(pair: ShadePair) {
-        if (pair.filled === 0) {
-          return `${pair.total} square${pair.total === 1 ? '' : 's'} stay unshaded.`
-        }
-
-        if (pair.filled < pair.total) {
-          return `${pair.total - pair.filled} top square${pair.total - pair.filled === 1 ? '' : 's'} stay unshaded, and ${pair.filled} square${pair.filled === 1 ? '' : 's'} fill from the bottom.`
-        }
-
-        if (pair.filled === pair.total) {
-          return 'The whole column is filled in black.'
-        }
-
-        return `${pair.filled - pair.total} gray overflow square${pair.filled - pair.total === 1 ? '' : 's'} stick out above the full black column.`
-      }
-
-      function renderColumnCells(pair: ShadePair) {
-        const overflowCount = Math.max(0, pair.filled - pair.total)
-        const filledCount = Math.min(pair.filled, pair.total)
-        const emptyCount = Math.max(0, pair.total - filledCount)
-        const cells: string[] = []
-
-        for (let index = 0; index < overflowCount; index++) {
-          cells.push('<div class="stack-cell overflow"></div>')
-        }
-
-        for (let index = 0; index < emptyCount; index++) {
-          cells.push('<div class="stack-cell empty"></div>')
-        }
-
-        for (let index = 0; index < filledCount; index++) {
-          cells.push('<div class="stack-cell filled"></div>')
-        }
-
-        return `<div class="column-stack">${cells.join('')}</div>`
-      }
-
-      function renderPreview(pairs: ShadePair[]) {
-        if (pairs.length === 0) {
-          previewMount.innerHTML =
-            '<div class="placeholder">Add a pair of numbers and press submit.</div>'
-          linkPanel.hidden = true
-          return
-        }
-
-        const maxVisibleHeight = Math.max(
-          ...pairs.map(pair => Math.max(pair.total, pair.filled))
-        )
-        const cellSize = Math.max(
-          24,
-          Math.min(
-            56,
-            Math.floor(
-              Math.min(260 / maxVisibleHeight, 720 / Math.max(1, pairs.length))
-            )
-          )
-        )
-
-        previewMount.innerHTML = `
-          <div class="preview-board-wrap">
-            <div class="shade-board" style="--cell-size: ${cellSize}px;">
-              ${pairs
-                .map(
-                  pair => renderColumnCells(pair)
-                )
-                .join('')}
-            </div>
-          </div>
-        `
-
-        linkPanel.hidden = !pairs.some(pair => pair.filled > pair.total)
-      }
-
-      function addPairRow(pair: ShadePair) {
-        pairList.insertAdjacentHTML('beforeend', pairRowMarkup(pair))
-      }
-
-      function createPair(filled = 0, total = 2): ShadePair {
-        return {
-          id: Date.now() + Math.floor(Math.random() * 1000),
-          filled,
-          total,
-        }
-      }
-
-      function replaceWithExample(filled: number, total: number) {
-        const pairs = [createPair(filled, total)]
-        renderPairInputs(pairs)
-        savePairs(pairs)
-        renderPreview(pairs)
-      }
-
-      pairList.addEventListener('click', event => {
-        const target = event.target as HTMLElement
-        const removeId = target.getAttribute('data-remove-pair')
-        if (!removeId) return
-
-        const currentPairs = readPairsFromInputs()
-        const nextPairs = currentPairs.filter(pair => String(pair.id) !== removeId)
-        const pairsToRender = nextPairs.length > 0 ? nextPairs : defaultPairs()
-        renderPairInputs(pairsToRender)
-        savePairs(pairsToRender)
       })
 
-      addPairBtn.addEventListener('click', () => {
-        addPairRow(createPair())
+      enableBtn.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.checkbox')
+        checkboxes.forEach(checkbox => {
+          checkbox.setAttribute('data-disabled', 'false')
+        })
+        output.textContent =
+          'Checkmarks enabled! Be careful with rows 3, 4, and 5!'
       })
 
-      resetBtn.addEventListener('click', () => {
-        const pairs = defaultPairs()
-        renderPairInputs(pairs)
-        savePairs(pairs)
-        renderPreview(pairs)
+      disableBtn.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.checkbox')
+        checkboxes.forEach(checkbox => {
+          checkbox.setAttribute('data-disabled', 'true')
+        })
+        output.textContent = 'Checkmarks disabled.'
       })
 
-      builderForm.addEventListener('submit', event => {
-        event.preventDefault()
-        const pairs = readPairsFromInputs()
-        savePairs(pairs)
-        renderPreview(pairs)
-      })
+      submitBtn.addEventListener('click', () => {
+        let result = 'Selected interactions:\n\n'
+        let hasSelections = false
 
-      document
-        .querySelectorAll<HTMLButtonElement>('[data-example-fill][data-example-total]')
-        .forEach(button => {
-          button.addEventListener('click', () => {
-            const filled = Number(button.dataset.exampleFill || '0')
-            const total = Number(button.dataset.exampleTotal || '2')
-            replaceWithExample(filled, total)
-          })
+        const checkboxes = document.querySelectorAll('.checkbox.checked')
+        checkboxes.forEach(checkbox => {
+          const row = parseInt(checkbox.getAttribute('data-row') || '0')
+          const col = parseInt(checkbox.getAttribute('data-col') || '0')
+          result += `${columns[col]} - ${rows[row]}\n`
+          hasSelections = true
         })
 
-      const initialPairs = loadPairs()
-      renderPairInputs(initialPairs)
-      renderPreview(initialPairs)
+        if (!hasSelections) {
+          result = 'No interactions selected.'
+        }
+
+        output.textContent = result
+      })
+
+      ivyIntroBtn.addEventListener('click', () => {
+        const introText =
+          "Hi, my name is Ivy. Try the 5 by 5 grid checkmarks and don't press row 3, 4, or 5. Row 1 is high-fives. Row 2 is hugs. Row 3 is kissing, which is only allowed with family members. Row 4 is sex, which is only allowed when married to get babies. Row 5 is choking, which is the worst and most dangerous. The columns are Zander, Carmen, Stephanie, Xavior, and Dexter the Dog. Be careful!"
+        speakIvy(introText)
+        output.textContent = 'Ivy is speaking...'
+      })
     </script>
   </body>
 </html>
