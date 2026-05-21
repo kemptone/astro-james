@@ -4,11 +4,13 @@ export const Format = new Intl.DateTimeFormat('en-CA', {
 })
 
 export async function getData(today = new Date(), addedDays = 7) {
-  const futureDate = new Date()
-  futureDate.setDate(today.getDate() + addedDays)
-  today.setDate(today.getDate() - PAST_DAYS)
+  const startDate = new Date(today)
+  const futureDate = new Date(today)
 
-  const begin_date = Format.format(today).replace(/-/g, '')
+  futureDate.setDate(today.getDate() + addedDays)
+  startDate.setDate(today.getDate() - PAST_DAYS)
+
+  const begin_date = Format.format(startDate).replace(/-/g, '')
   const end_date = Format.format(futureDate).replace(/-/g, '')
 
   const params = {
@@ -29,24 +31,33 @@ export async function getData(today = new Date(), addedDays = 7) {
   try {
     const cached = localStorage.getItem(urlWithParams)
     if (cached) {
-      const json = JSON.parse(cached)
-      if (Object.keys(json).length) {
-        return json
+      const parsed = JSON.parse(cached)
+      const cacheAge = Date.now() - parsed.cachedAt
+      const maxCacheAge = 1000 * 60 * 60 * 6
+
+      if (cacheAge < maxCacheAge && Object.keys(parsed.data ?? {}).length) {
+        return parsed.data
       }
     }
   } catch (error) {
-    debugger
+    console.warn('Unable to read cached tide data.', error)
   }
 
   const results = await fetch(urlWithParams)
   const json = await results.json()
-  localStorage.setItem(urlWithParams, JSON.stringify(json))
+  localStorage.setItem(
+    urlWithParams,
+    JSON.stringify({
+      cachedAt: Date.now(),
+      data: json,
+    })
+  )
   return json
 }
 
 export interface Prediction {
   t: string
-  v: number
+  v: number | string
   type: 'H' | 'L'
 }
 

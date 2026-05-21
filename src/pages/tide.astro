@@ -1,64 +1,807 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from '../layouts/Layout.astro'
 ---
 
-<Layout title="Tide game">
-    <h1 id="heading"></h1>
-    <div id="graph"></div>
-    <div id="days"></div>
+<Layout title="Tide Dashboard">
+  <main class="tide-dashboard">
+    <section
+      id="tideForecast"
+      class="tide-forecast-shell is-loading"
+      aria-label="Tide forecast chart"
+    >
+      <div class="tide-empty-state">Loading tide predictions...</div>
+    </section>
+
+    <section class="tide-today-section" aria-labelledby="tideTodayTitle">
+      <div class="tide-today-intro">
+        <h1 id="tideTodayTitle">
+          Today's tide times for Napa, Napa River, Carquinez Strait, California
+        </h1>
+        <p id="tideTodaySummary">Loading today's tide times...</p>
+      </div>
+
+      <div class="tide-today-grid">
+        <div id="tideLiveCard">
+          <div class="tide-empty-state">Loading live tide...</div>
+        </div>
+        <div id="tideTodayTable">
+          <div class="tide-empty-state">Loading today's tide table...</div>
+        </div>
+      </div>
+    </section>
+  </main>
 </Layout>
 
 <script src="../core/tide/tide.ts"></script>
 
 <style is:global>
+  :root {
+    --tide-blue: #4d88bb;
+    --tide-blue-strong: #1e86c8;
+    --tide-blue-dark: #285a82;
+    --tide-teal: #078fa1;
+    --tide-red: #ff3d3d;
+    --tide-ink: #1e2b36;
+    --tide-muted: #5d6c77;
+    --tide-line: #c8d3dc;
+    --tide-soft-line: #e7eef3;
+    --tide-surface: #ffffff;
+    --tide-page: #f2f6f9;
+  }
 
-    :root {
-        --width : 100vw;
+  html,
+  body {
+    background: var(--tide-page);
+  }
+
+  .tide-dashboard {
+    min-height: 100vh;
+    padding: 90px 0 4rem;
+    color: var(--tide-ink);
+    background: var(--tide-page);
+  }
+
+  .tide-forecast-shell {
+    position: relative;
+    z-index: 10;
+    border-bottom: 2px solid #325f83;
+    background: #f8fbfd;
+    box-shadow: 0 18px 34px rgba(42, 78, 108, 0.12);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+  }
+
+  .tide-forecast-shell.is-loading {
+    min-height: 26rem;
+    display: grid;
+    place-items: center;
+  }
+
+  .tide-forecast-board {
+    background: var(--tide-surface);
+  }
+
+  .tide-date-row,
+  .tide-weekday-row,
+  .tide-forecast-row {
+    display: grid;
+    grid-template-columns: var(--tide-grid-columns);
+  }
+
+  .tide-date-row {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    height: 50px;
+    background: var(--tide-blue);
+    color: #ffffff;
+  }
+
+  .tide-corner-cell,
+  .tide-date-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.42);
+    border-bottom: 1px solid #2f638f;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.1;
+    text-align: center;
+  }
+
+  .tide-date-cell.is-today {
+    font-size: 1.05rem;
+  }
+
+  .tide-corner-cell svg {
+    width: 26px;
+    height: 26px;
+    fill: currentColor;
+  }
+
+  .tide-corner-cell svg circle {
+    fill: var(--tide-blue);
+  }
+
+  .tide-weekday-row {
+    height: 42px;
+    background: #ffffff;
+    color: #10161b;
+    border-bottom: 1px solid #7d97aa;
+  }
+
+  .tide-weekday-spacer,
+  .tide-weekday-cell {
+    border-right: 1px solid #9db0bf;
+  }
+
+  .tide-weekday-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-size: 1.28rem;
+    font-weight: 700;
+  }
+
+  .tide-period-labels {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    height: 100%;
+  }
+
+  .tide-period-labels b {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    font-size: 1.25rem;
+    font-weight: 750;
+  }
+
+  .tide-period-labels b + b {
+    border-left: 1px solid #9db0bf;
+  }
+
+  .tide-expand-button {
+    width: 28px;
+    height: 28px;
+    display: inline-grid;
+    place-items: center;
+    padding: 0;
+    color: #1c2b34;
+    background: #ffffff;
+    border: 1px solid #8a9cab;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .tide-expand-button svg {
+    width: 17px;
+    height: 17px;
+    fill: currentColor;
+  }
+
+  .tide-graph-row {
+    display: grid;
+    grid-template-columns: var(--tide-axis-width) 1fr;
+    background: #ffffff;
+  }
+
+  .tide-y-axis {
+    position: relative;
+    border-right: 1px solid #8398a8;
+    background: #ffffff;
+  }
+
+  .tide-y-axis span {
+    position: absolute;
+    right: 7px;
+    transform: translateY(-50%);
+    color: #10161b;
+    font-size: 1rem;
+    font-weight: 650;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .tide-graph-canvas {
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+  }
+
+  .tide-graph-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .tide-day-band {
+    fill: #edf2f5;
+  }
+
+  .tide-day-line {
+    stroke: #8ca2b3;
+    stroke-width: 1;
+  }
+
+  .tide-quarter-line {
+    stroke: #e0e8ee;
+    stroke-width: 1;
+  }
+
+  .tide-height-line {
+    stroke: #e5edf2;
+    stroke-width: 1;
+  }
+
+  .tide-zero-line {
+    stroke: #284e6b;
+    stroke-width: 1.4;
+  }
+
+  .tide-area {
+    fill: url(#tideAreaFill);
+  }
+
+  .tide-line {
+    fill: none;
+    stroke: var(--tide-blue-strong);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 4;
+  }
+
+  .tide-point-stem {
+    stroke: rgba(38, 116, 162, 0.12);
+    stroke-width: 1;
+  }
+
+  .tide-point {
+    stroke: #ffffff;
+    stroke-width: 2;
+  }
+
+  .tide-point-high {
+    fill: #2d9bdd;
+  }
+
+  .tide-point-low {
+    fill: #078fa1;
+  }
+
+  .tide-now-line,
+  .tide-now-horizontal {
+    stroke: var(--tide-red);
+    stroke-dasharray: 8 8;
+    stroke-width: 1.5;
+  }
+
+  .tide-now-dot {
+    fill: var(--tide-red);
+    stroke: var(--tide-red);
+    stroke-width: 2;
+  }
+
+  .tide-now-label {
+    fill: var(--tide-red);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .tide-callout line {
+    stroke: #3aa0dd;
+    stroke-width: 1.4;
+  }
+
+  .tide-callout rect {
+    fill: rgba(255, 255, 255, 0.96);
+    stroke: #3aa0dd;
+    stroke-width: 1.3;
+  }
+
+  .tide-callout text {
+    text-anchor: middle;
+    font-weight: 800;
+  }
+
+  .tide-callout-time {
+    fill: var(--tide-blue);
+    font-size: 15px;
+  }
+
+  .tide-callout-height {
+    fill: #3e4a54;
+    font-size: 14px;
+  }
+
+  .tide-forecast-row {
+    min-height: 118px;
+    background: #ffffff;
+    border-top: 2px solid #2e5d81;
+  }
+
+  .tide-low-row {
+    border-top-width: 1px;
+  }
+
+  .tide-row-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    padding: 0.7rem 0.45rem;
+    border-right: 1px solid #8aa1b2;
+    color: var(--tide-blue);
+    text-align: center;
+  }
+
+  .tide-low-row .tide-row-label {
+    color: var(--tide-teal);
+  }
+
+  .tide-row-label strong {
+    font-size: 1.08rem;
+    line-height: 1;
+  }
+
+  .tide-row-label span {
+    color: #252c32;
+    font-size: 0.94rem;
+    line-height: 1.1;
+  }
+
+  .tide-row-icon {
+    width: 31px;
+    height: 31px;
+  }
+
+  .tide-row-icon circle {
+    fill: currentColor;
+  }
+
+  .tide-row-icon path {
+    fill: none;
+    stroke: #ffffff;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+  }
+
+  .tide-row-cell {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.62rem;
+    padding: 0.72rem 0.5rem;
+    border-right: 1px solid #a7b6c2;
+    text-align: center;
+  }
+
+  .tide-high-row .tide-row-cell {
+    background: #eef7fc;
+  }
+
+  .tide-row-event {
+    display: grid;
+    gap: 0.05rem;
+    line-height: 1.12;
+  }
+
+  .tide-row-event strong {
+    color: var(--tide-blue);
+    font-size: 1.02rem;
+    font-weight: 850;
+  }
+
+  .tide-low-row .tide-row-event strong {
+    color: var(--tide-teal);
+  }
+
+  .tide-row-event span {
+    color: #2b3137;
+    font-size: 0.98rem;
+    font-weight: 600;
+  }
+
+  .tide-empty {
+    color: #96a4ad;
+  }
+
+  .tide-today-section {
+    width: min(100% - 2rem, 1320px);
+    margin: 2rem auto 0;
+  }
+
+  .tide-today-intro {
+    margin-bottom: 1.7rem;
+  }
+
+  .tide-today-intro h1 {
+    color: var(--tide-blue);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 850;
+    letter-spacing: 0;
+    line-height: 1.05;
+  }
+
+  .tide-today-intro p {
+    max-width: 1180px;
+    margin-top: 0.85rem;
+    color: #30343a;
+    font-size: clamp(1.05rem, 2vw, 1.5rem);
+    font-weight: 560;
+    line-height: 1.45;
+  }
+
+  .tide-today-grid {
+    display: grid;
+    grid-template-columns: minmax(300px, 0.92fr) minmax(360px, 1.08fr);
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+
+  .tide-live-card,
+  .tide-times-card {
+    min-height: 28rem;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 18px 36px rgba(31, 61, 84, 0.18);
+  }
+
+  .tide-live-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    --tide-live-water-color: #4382b4;
+    color: #ffffff;
+    background: #345f8f;
+  }
+
+  .tide-live-visual {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, rgba(22, 48, 84, 0.96), rgba(65, 130, 180, 0.9)),
+      radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.15), transparent 30%);
+  }
+
+  .tide-live-visual::after {
+    content: '';
+    position: absolute;
+    inset: auto -25% 0;
+    height: calc(var(--live-water-level) + 24px);
+    background:
+      repeating-linear-gradient(
+        -8deg,
+        rgba(67, 130, 180, 0.18) 0 2px,
+        transparent 2px 42px
+      );
+    animation: tideWaterShimmer 36s linear infinite;
+    opacity: 0.36;
+    pointer-events: none;
+  }
+
+  .tide-live-water {
+    position: absolute;
+    left: -3%;
+    right: -3%;
+    bottom: 0;
+    height: var(--live-water-level);
+    background: var(--tide-live-water-color);
+    overflow: visible;
+    transform: skewY(-1deg);
+    transform-origin: left top;
+  }
+
+  .tide-live-water::before,
+  .tide-live-water::after {
+    content: '';
+    position: absolute;
+    left: -60%;
+    width: 220%;
+    background-repeat: repeat-x;
+    pointer-events: none;
+  }
+
+  .tide-live-water::before {
+    top: -36px;
+    height: 72px;
+    background-image: url("data:image/svg+xml,%3Csvg width='240' height='72' viewBox='0 0 240 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 38 C40 12 80 12 120 38 C160 64 200 64 240 38 V72 H0 Z' fill='%234382b4'/%3E%3C/svg%3E");
+    background-size: 240px 72px;
+    animation: tideWaveDrift 24s linear infinite;
+    opacity: 1;
+  }
+
+  .tide-live-water::after {
+    top: -25px;
+    height: 58px;
+    background-image: url("data:image/svg+xml,%3Csvg width='180' height='58' viewBox='0 0 180 58' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 C30 10 60 10 90 30 C120 50 150 50 180 30 V58 H0 Z' fill='%234382b4'/%3E%3C/svg%3E");
+    background-size: 180px 58px;
+    animation: tideWaveDriftReverse 34s linear infinite;
+    opacity: 1;
+  }
+
+  .tide-live-bubble {
+    position: absolute;
+    top: 24%;
+    right: 7%;
+    z-index: 1;
+    width: 92px;
+    height: 92px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.12rem;
+    border-radius: 50%;
+    color: #ffffff;
+    background: var(--tide-red);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+  }
+
+  .tide-live-direction {
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+  }
+
+  .tide-live-bubble strong {
+    font-size: 1.08rem;
+    line-height: 1;
+  }
+
+  .tide-live-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.15rem;
+    padding: clamp(1.2rem, 3vw, 2rem);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.24);
+  }
+
+  .tide-live-label {
+    width: fit-content;
+    padding: 0.55rem 0.9rem;
+    border-radius: 6px;
+    background: var(--tide-red);
+    font-size: 1.08rem;
+    font-weight: 850;
+    text-shadow: none;
+  }
+
+  .tide-live-events {
+    display: grid;
+    gap: 1rem;
+    max-width: min(34rem, calc(100% - 118px));
+  }
+
+  .tide-live-events p,
+  .tide-live-status,
+  .tide-live-time {
+    font-size: clamp(1.06rem, 2vw, 1.45rem);
+    font-weight: 650;
+    line-height: 1.55;
+  }
+
+  .tide-live-events strong,
+  .tide-live-status strong,
+  .tide-live-time strong {
+    font-weight: 900;
+  }
+
+  .tide-live-rule {
+    width: min(calc(100% - 118px), 360px);
+    height: 2px;
+    margin-top: 1.2rem;
+    background: rgba(255, 255, 255, 0.82);
+  }
+
+  @keyframes tideWaveDrift {
+    from {
+      transform: translate3d(0, 0, 0);
     }
 
-    #graph {
-        margin:0 auto;
-        max-width:var(--width);
-        margin-top: 5rem;
-        overflow-x:auto;
-        overflow-y:hidden;
-        background-color: rgba(255,255,255,.5);
-        height: 400px;
+    to {
+      transform: translate3d(-240px, 0, 0);
     }
-    #graph > svg {
-        width:fit-content;
-        height: fit-content;
-    }
-    #days {
-        display: block;
-        padding:20px;
-    }
-    #days table {
-        width: 100%;
-        max-width: 30rem;
-        margin:0 auto;
+  }
 
+  @keyframes tideWaveDriftReverse {
+    from {
+      transform: translate3d(-180px, 0, 0);
     }
 
-    #days table td:is(:nth-child(2)) {
-        text-align: center;
+    to {
+      transform: translate3d(0, 0, 0);
     }
-    #days table th:is(:nth-child(1)),
-    #days table td:is(:nth-child(1)) {
-        text-align: left;
-        padding-left:2rem;
+  }
+
+  @keyframes tideWaterShimmer {
+    from {
+      transform: translate3d(0, 0, 0);
     }
-    #days table th:is(:nth-child(3)),
-    #days table td:is(:nth-child(3)) {
-        text-align: center;
+
+    to {
+      transform: translate3d(120px, 0, 0);
     }
-    #days table td {
-        background-color: rgba(255,255,255,.5);
-        padding: .5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tide-live-visual::after,
+    .tide-live-water::before,
+    .tide-live-water::after {
+      animation: none;
     }
-    #days table tr:nth-child(odd) {
-        background-color: rgba(255,255,255,.6);
+  }
+
+  .tide-times-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tide-times-header {
+    padding: 1.1rem 1.5rem;
+    color: #ffffff;
+    background: var(--tide-blue);
+    text-align: center;
+  }
+
+  .tide-times-header h2 {
+    font-size: clamp(1.25rem, 2.5vw, 1.8rem);
+    font-weight: 850;
+    line-height: 1.15;
+  }
+
+  .tide-times-header p {
+    margin-top: 0.15rem;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .tide-times-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .tide-times-table thead {
+    color: #ffffff;
+    background: var(--tide-blue);
+    border-top: 2px solid rgba(255, 255, 255, 0.9);
+  }
+
+  .tide-times-table th,
+  .tide-times-table td {
+    padding: 1rem 0.9rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .tide-times-table thead th {
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    font-weight: 850;
+    line-height: 1.12;
+  }
+
+  .tide-times-table thead span {
+    display: block;
+  }
+
+  .tide-times-table tbody tr:nth-child(even) {
+    background: #f7f9fb;
+  }
+
+  .tide-times-table tbody th {
+    color: var(--tide-blue-dark);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 850;
+  }
+
+  .tide-times-table tbody td strong {
+    display: block;
+    color: #05090d;
+    font-size: clamp(1.05rem, 2vw, 1.32rem);
+    font-weight: 900;
+    line-height: 1.12;
+  }
+
+  .tide-times-table tbody td span {
+    display: block;
+    color: #20262b;
+    font-size: clamp(0.94rem, 1.7vw, 1.05rem);
+    font-style: italic;
+    line-height: 1.2;
+  }
+
+  .tide-datum {
+    margin-top: auto;
+    padding: 1rem;
+    color: #05090d;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .tide-empty-state {
+    width: min(100% - 2rem, 34rem);
+    margin: 2rem auto;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--tide-line);
+    border-radius: 8px;
+    color: var(--tide-muted);
+    background: #ffffff;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  @media (max-width: 820px) {
+    .tide-today-grid {
+      grid-template-columns: 1fr;
     }
-    #days {
+
+    .tide-live-card,
+    .tide-times-card {
+      min-height: 24rem;
     }
+  }
+
+  @media (max-width: 560px) {
+    .tide-date-row,
+    .tide-weekday-row,
+    .tide-forecast-row {
+      grid-template-columns: var(--tide-grid-columns);
+    }
+
+    .tide-today-section {
+      width: min(100% - 1rem, 1320px);
+      margin-top: 1.25rem;
+    }
+
+    .tide-today-intro h1 {
+      font-size: 1.72rem;
+    }
+
+    .tide-today-intro p {
+      font-size: 1rem;
+    }
+
+    .tide-live-content {
+      padding: 1.05rem;
+    }
+
+    .tide-live-bubble {
+      top: 1rem;
+      right: 1rem;
+      width: 72px;
+      height: 72px;
+    }
+
+    .tide-live-events {
+      max-width: 100%;
+      padding-top: 4.2rem;
+    }
+
+    .tide-live-rule {
+      width: min(100%, 360px);
+    }
+
+    .tide-times-table th,
+    .tide-times-table td {
+      padding: 0.82rem 0.45rem;
+    }
+  }
 </style>
