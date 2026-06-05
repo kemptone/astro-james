@@ -4,30 +4,31 @@ import {
   playTextPromise,
   TinyMarkdownFormatter,
 } from '../exam/grok.helpers'
-import {d, $, $$} from '../grok/grok.helpers'
+import {d, $} from '../grok/grok.helpers'
 import ProtoForm from '@/components/ProtoForm/ProtoForm'
 import {
-  bad_stuff,
+  behavior_choices,
   ways_to_get_caught,
-  behavior_cards,
-  behavior_score,
+  best_behavior_score,
+  style_score_default,
   randomFromArray,
 } from '@/data/bad_stuff'
 
 type FormType = {
-  girls: string
-  behavior: string
-  gets_caught: string
-  punishment_card: string
+  person_name: string
+  choice: string
+  style_score: string
+  behavior_score: string
+  what_happened: string
 }
 
 function outputRandomValue(name: string) {
   const newValues = {
-    girl: name,
-    behavior_score: randomFromArray(behavior_score),
-    bad_thing: randomFromArray(bad_stuff),
-    got_caught: randomFromArray(ways_to_get_caught),
-    punishment_card: randomFromArray(behavior_cards),
+    person_name: name,
+    style_score: style_score_default,
+    behavior_score: best_behavior_score,
+    choice: randomFromArray(behavior_choices),
+    what_happened: randomFromArray(ways_to_get_caught),
   }
   return newValues
 }
@@ -89,8 +90,22 @@ d.addEventListener('DOMContentLoaded', async e => {
         body: JSON.stringify(values),
       })
 
+      if (!response.ok) {
+        const errorText = await response.text()
+        e_story.value =
+          errorText ||
+          'The story could not load from the server, so no story was returned.'
+        e_dialog.querySelectorAll('button')?.forEach?.(item => {
+          item.removeAttribute('disabled')
+        })
+        return
+      }
+
       if (!response.body) {
-        console.error('Stream not supported.')
+        e_story.value = 'Stream not supported, so the story could not load.'
+        e_dialog.querySelectorAll('button')?.forEach?.(item => {
+          item.removeAttribute('disabled')
+        })
         return
       }
 

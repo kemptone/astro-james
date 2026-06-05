@@ -8,7 +8,7 @@ const fetchChatCompletionStream = async (body: any) => {
       {
         role: 'system',
         content:
-          'Based on a JSON prompt, build a list of punishments based on the number_punishments property. They should be silly and child friendly. Pretend they are very serious. It should be something like this. Sally, because you were caught stealing underwear from the office, you will get the following punishments. Number one, standing on one leg while reciting the star spangled banner. Number two, standing at the front of the school and saying hello to every kid. Etc etc.',
+          'Based on a JSON prompt, build a list of punishments based on the number_punishment property. They should be silly and child friendly. Pretend they are very serious. Use behavior_score as a school behavior score on a 1 to 2052 scale where 1000 is the best score. It should be something like this. Sally, because you were caught stealing underwear from the office, you will get the following punishments. Number one, standing on one leg while reciting the star spangled banner. Number two, standing at the front of the school and saying hello to every kid. Etc etc.',
       },
       {
         role: 'user',

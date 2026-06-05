@@ -10,6 +10,9 @@ import {
   ways_to_get_caught,
   behavior_cards,
   behavior_score,
+  best_behavior_score,
+  max_behavior_score,
+  punishment_count,
   randomFromArray,
 } from '@/data/bad_stuff'
 import Menu3 from '@/components/menu.astro'
@@ -19,6 +22,11 @@ import '../components/wc-texarea-sizer'
 <Empty title="punishments">
   <Menu3 />
   <main id="punishment_main">
+    <p>
+      Behavior Number Day uses {max_behavior_score} numbers. The longest
+      YouTube slideshow goes through each one, and {best_behavior_score} is the
+      best school behavior score.
+    </p>
     <details open>
       <summary>Generate story</summary>
       <form id="generate_story">
@@ -55,8 +63,8 @@ import '../components/wc-texarea-sizer'
             <input
               list="behavior_scores"
               name="behavior_score"
-              placeholder="pick a score of behavior"
-              value={randomFromArray(behavior_score)}
+              placeholder="Pick a school behavior score (1000 is best)"
+              value={best_behavior_score}
             />
             <datalist id="behavior_scores">
               {behavior_score.map(v => <option value={v} />)}
@@ -92,10 +100,10 @@ import '../components/wc-texarea-sizer'
             <input
               name="number_punishment"
               list="number_punishment"
-              value={randomFromArray(behavior_score)}
+              value={randomFromArray(punishment_count)}
             />
             <datalist id="number_punishment">
-              {behavior_score.map(name => <option value={name} />)}
+              {punishment_count.map(name => <option value={name} />)}
             </datalist>
           </WCFloatingLabel>
         </div>

@@ -6,10 +6,13 @@ import '../../pico.css'
 import WCFloatingLabel from '../components/WCFloatingLabel.astro'
 import {girls_names} from '@/data/girls_names'
 import {
-  bad_stuff,
+  behavior_choices,
   ways_to_get_caught,
-  behavior_cards,
   behavior_score,
+  best_behavior_score,
+  max_behavior_score,
+  style_score,
+  style_score_default,
   randomFromArray,
 } from '@/data/bad_stuff'
 import Menu3 from '@/components/menu.astro'
@@ -20,8 +23,13 @@ import '../components/wc-texarea-sizer'
   <Menu3 />
   <main>
     <header>
-      <h1>Girl names</h1>
+      <h1>Person names</h1>
     </header>
+    <p>
+      Behavior Number Day uses {max_behavior_score} numbers. The longest
+      YouTube slideshow goes through each one, and {best_behavior_score} is the
+      best school behavior score.
+    </p>
     <div id="filters" class="group">
       <input type="search" name="name_filter" placeholder="Filter names" />
       <input type="hidden" value="1000" name="limit" />
@@ -37,10 +45,10 @@ import '../components/wc-texarea-sizer'
         <form id="generate_story">
           <div class="grid">
             <WCFloatingLabel addclear="1">
-              <label>girls name</label>
+              <label>person name</label>
               <input
                 list="girls_list"
-                name="girl"
+                name="person_name"
                 value={randomFromArray(girls_names)}
               />
               <datalist id="girls_list">
@@ -49,27 +57,40 @@ import '../components/wc-texarea-sizer'
             </WCFloatingLabel>
 
             <WCFloatingLabel addclear="1">
-              <label>bad thing</label>
+              <label>choice</label>
               <input
-                list="bad_things"
-                name="bad_thing"
-                value={randomFromArray(bad_stuff)}
-                placeholder="What did she do?"
+                list="choices"
+                name="choice"
+                value={randomFromArray(behavior_choices)}
+                placeholder="What did they do?"
               />
-              <datalist id="bad_things">
-                {bad_stuff.map(name => <option value={name} />)}
+              <datalist id="choices">
+                {behavior_choices.map(name => <option value={name} />)}
               </datalist>
             </WCFloatingLabel>
           </div>
 
           <div class="grid">
             <WCFloatingLabel addclear="1">
+              <label>how good</label>
+              <input
+                list="style_scores"
+                name="style_score"
+                placeholder="Pick how good it is (10 is best)"
+                value={style_score_default}
+              />
+              <datalist id="style_scores">
+                {style_score.map(v => <option value={v} />)}
+              </datalist>
+            </WCFloatingLabel>
+
+            <WCFloatingLabel addclear="1">
               <label>behavior score</label>
               <input
                 list="behavior_scores"
                 name="behavior_score"
-                placeholder="pick a score of behavior"
-                value={randomFromArray(behavior_score)}
+                placeholder="Pick a school behavior score (1000 is best)"
+                value={best_behavior_score}
               />
               <datalist id="behavior_scores">
                 {behavior_score.map(v => <option value={v} />)}
@@ -77,27 +98,15 @@ import '../components/wc-texarea-sizer'
             </WCFloatingLabel>
 
             <WCFloatingLabel addclear="1">
-              <label>how she got caught</label>
+              <label>what happened next</label>
               <input
                 list="got_caught"
-                name="got_caught"
-                placeholder="How did she get caught?"
+                name="what_happened"
+                placeholder="What happened next?"
                 value={randomFromArray(ways_to_get_caught)}
               />
               <datalist id="got_caught">
                 {ways_to_get_caught.map(name => <option value={name} />)}
-              </datalist>
-            </WCFloatingLabel>
-
-            <WCFloatingLabel addclear="1">
-              <label for="punishment_card">punishment card</label>
-              <input
-                name="punishment_card"
-                list="punishment_card"
-                value={randomFromArray(behavior_cards)}
-              />
-              <datalist id="punishment_card">
-                {behavior_cards.map(name => <option value={name} />)}
               </datalist>
             </WCFloatingLabel>
           </div>

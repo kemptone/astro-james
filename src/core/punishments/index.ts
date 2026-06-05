@@ -10,7 +10,8 @@ import {
   bad_stuff,
   ways_to_get_caught,
   behavior_cards,
-  behavior_score,
+  best_behavior_score,
+  punishment_count,
   randomFromArray,
 } from '@/data/bad_stuff'
 
@@ -19,15 +20,17 @@ type FormType = {
   behavior: string
   gets_caught: string
   punishment_card: string
+  number_punishment: string
 }
 
 function outputRandomValue(name: string) {
   const newValues = {
     kid: name,
-    behavior_score: randomFromArray(behavior_score),
+    behavior_score: best_behavior_score,
     bad_thing: randomFromArray(bad_stuff),
     got_caught: randomFromArray(ways_to_get_caught),
     punishment_card: randomFromArray(behavior_cards),
+    number_punishment: randomFromArray(punishment_count),
   }
   return newValues
 }

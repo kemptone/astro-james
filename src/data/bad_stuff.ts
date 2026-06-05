@@ -45,6 +45,26 @@ export const bad_stuff = [
   'Blaming others for their own mistakes',
 ]
 
+export const good_stuff = [
+  'helping a classmate finish their work',
+  'sharing supplies politely',
+  'raising a hand before speaking',
+  'cleaning up the classroom',
+  'being kind to a new student',
+  'doing homework on time',
+  'staying focused during lessons',
+  'taking turns during activities',
+  'telling the truth right away',
+  'helping the teacher pass out papers',
+  'using respectful words',
+  'encouraging classmates',
+  'following directions carefully',
+  'being quiet during reading time',
+  'finishing classwork neatly',
+]
+
+export const behavior_choices = [...good_stuff, ...bad_stuff]
+
 export const ways_to_get_caught = [
   'CCTV cameras',
   'Witnesses reporting',
@@ -162,7 +182,15 @@ export const behavior_cards = [
   'ultra dead meat',
 ]
 
-export const behavior_score = ['1', '2', '3', '4', '5', '6']
+export const best_behavior_score = '1000'
+export const max_behavior_score = 2052
+export const behavior_score = Array.from(
+  {length: max_behavior_score},
+  (_, index) => String(index + 1)
+)
+export const style_score_default = '4'
+export const style_score = Array.from({length: 11}, (_, index) => String(index))
+export const punishment_count = ['1', '2', '3', '4', '5', '6']
 
 export function getRandomBehavior() {
   const randomIndex = Math.floor(Math.random() * bad_stuff.length)
