@@ -1,63 +1,409 @@
----
-import WCFloatingLabel from '../WCFloatingLabel.astro'
----
-
 <wc-dictionary-search>
-  <form>
-    <fieldset>
-      <legend>Find words</legend>
-      <WCFloatingLabel label="search by missing vowel numbers" adderror={'1'}>
-        <input
-          type="text"
-          name="missing_vowel_numbers"
-          inputmode="numeric"
-          pattern="^(0|[1-5\\s]+)?$"
-          placeholder="0, 3, 12, or 12345"
-        />
-      </WCFloatingLabel>
-      <p class="vowel-help">
-        <code>0</code> = has all vowels. <code>1=A</code>, <code>2=E</code>,
-        <code>3=I</code>, <code>4=O</code>, <code>5=U</code>. Numbers you type
-        mean that vowel is missing, so <code>3</code> means no <code>I</code>
-        but <code>A E O U</code> must be there, and <code>12345</code> finds
-        words like <code>fly</code> or <code>try</code>.
+  <section class="vowel-game">
+    <div class="game-head">
+      <p class="game-kicker">Vowel Levels</p>
+      <h2>Only the vowels</h2>
+      <p class="game-help">
+        Type the levels where each vowel is crossed out. <code>1</code> means
+        only level 1. <code>12345</code> means every level. Press
+        <code>Submit</code>, then press a vowel on the current level to reveal
+        an <code>X</code> or <code>O</code>.
       </p>
-      <div class="action">
-        <button type="submit">Search</button>
+    </div>
+
+    <div class="level-strip">
+      <p class="level-label">Current level</p>
+      <p class="level-value" data-current-level>Level 1 of 5</p>
+      <p class="level-note" data-level-note>
+        Type the vowel rules, then press Submit to start the game.
+      </p>
+    </div>
+
+    <div class="vowel-input-grid">
+      {
+        ['A', 'E', 'I', 'O', 'U'].map(vowel => (
+          <div class="vowel-input-card">
+            <button
+              type="button"
+              class="vowel-press-button"
+              data-vowel-card={vowel}
+              data-ready="false"
+              aria-label={`Press ${vowel} for the current level`}
+            >
+              <span class="vowel-input-letter">{vowel}</span>
+              <span class="vowel-result-mark" data-vowel-mark={vowel}></span>
+            </button>
+            <input
+              type="text"
+              class="vowel-level-input"
+              inputmode="numeric"
+              maxlength="5"
+              placeholder="1 or 12345"
+              data-vowel-input={vowel}
+              aria-label={`${vowel} crossed-out levels`}
+            />
+            <span class="vowel-input-code" data-vowel-code={vowel}>none</span>
+            <span class="vowel-input-state" data-vowel-state={vowel}>
+              type the crossed-out levels, then submit
+            </span>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="level-preview" aria-live="polite">
+      {
+        ['A', 'E', 'I', 'O', 'U'].map(vowel => (
+          <div class="preview-vowel" data-preview-vowel={vowel} data-state="hidden">
+            <span class="preview-letter">{vowel}</span>
+            <span class="preview-mark" data-preview-mark={vowel}></span>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="game-actions">
+      <p class="pressed-status" data-pressed-status>
+        Type your vowel rules, then press Submit.
+      </p>
+      <div class="action-buttons">
+        <button type="button" class="reset-button" data-reset-game>
+          Reset
+        </button>
+        <button type="button" class="submit-button" data-submit-game>
+          Submit
+        </button>
+        <button type="button" class="next-level-button" data-next-level disabled>
+          Next level
+        </button>
       </div>
-    </fieldset>
-  </form>
+    </div>
+  </section>
 
   <script src="./wc-dictionary-search"></script>
 
   <style is:inline>
-    form > fieldset {
-      background-color: white;
-      border: 1px solid #e5e7eb;
-      padding: 14px;
+    .vowel-game {
+      display: grid;
+      gap: 1.2rem;
+      padding: 1.4rem;
+      border: 1px solid #d8e3ea;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at top left, rgba(255, 240, 196, 0.82), transparent 34%),
+        radial-gradient(circle at top right, rgba(214, 237, 232, 0.78), transparent 32%),
+        linear-gradient(180deg, rgba(250, 252, 252, 0.98), rgba(255, 255, 255, 0.99));
     }
 
-    form input[type='number'] {
-      padding: 0.6rem;
+    .game-head h2 {
+      margin: 0.15rem 0 0.35rem;
     }
 
-    .action {
-      padding-block: 1rem;
+    .game-kicker,
+    .level-label {
+      margin: 0;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #537985;
     }
 
-    .vowel-help {
-      margin: 0.5rem 0 0;
-      font-size: 0.95rem;
-      line-height: 1.4;
-      color: #475569;
+    .game-help,
+    .level-note,
+    .pressed-status {
+      margin: 0;
+      color: #435560;
+      line-height: 1.45;
     }
 
-    .action button {
-      padding: 1rem;
+    .level-strip {
+      display: grid;
+      gap: 0.25rem;
+      padding: 1rem 1.1rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(61, 90, 100, 0.12);
     }
 
-    .action button:disabled {
-      opacity: 0.2;
+    .level-value {
+      margin: 0;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 800;
+      color: #18343d;
     }
-  </style></wc-dictionary-search
->
+
+    .vowel-input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .vowel-input-card {
+      display: grid;
+      gap: 0.65rem;
+      padding: 1rem 0.9rem;
+      border-radius: 20px;
+      border: 1px solid rgba(38, 84, 65, 0.15);
+      background: rgba(255, 255, 255, 0.93);
+    }
+
+    .vowel-input-card.is-pressed {
+      border-color: rgba(34, 75, 86, 0.3);
+      box-shadow: 0 0 0 3px rgba(34, 75, 86, 0.08);
+    }
+
+    .vowel-press-button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.65rem;
+      width: 100%;
+      padding: 0.45rem 0.55rem;
+      border: 1px solid rgba(34, 75, 86, 0.12);
+      border-radius: 16px;
+      background: rgba(244, 248, 249, 0.95);
+      cursor: pointer;
+      text-align: left;
+      transition:
+        background 140ms ease,
+        border-color 140ms ease,
+        box-shadow 140ms ease,
+        transform 140ms ease;
+    }
+
+    .vowel-press-button[data-ready='false'] {
+      color: #4f636c;
+    }
+
+    .vowel-press-button[data-ready='true'] {
+      border-color: rgba(34, 75, 86, 0.34);
+      background: rgba(224, 241, 246, 0.98);
+      box-shadow: 0 10px 24px rgba(34, 75, 86, 0.12);
+    }
+
+    .vowel-press-button[data-ready='true']:hover,
+    .vowel-press-button[data-ready='true']:focus-visible {
+      border-color: #224b56;
+      background: rgba(214, 236, 242, 0.98);
+      transform: translateY(-1px);
+    }
+
+    .vowel-press-button:focus-visible {
+      outline: 3px solid rgba(34, 75, 86, 0.16);
+      outline-offset: 2px;
+    }
+
+    .vowel-input-letter {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #1f3a2c;
+    }
+
+    .vowel-result-mark {
+      display: inline-flex;
+      min-width: 1.4rem;
+      justify-content: center;
+      color: #224b56;
+      font-size: 1.15rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .vowel-result-mark[data-state='circled'] {
+      color: #1d6c4c;
+    }
+
+    .vowel-result-mark[data-state='crossed'] {
+      color: #962f29;
+    }
+
+    .vowel-level-input {
+      width: 100%;
+      padding: 0.8rem 0.85rem;
+      border-radius: 14px;
+      border: 1px solid rgba(54, 80, 89, 0.16);
+      background: #fff;
+      font: inherit;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .vowel-level-input:focus {
+      outline: 3px solid rgba(34, 75, 86, 0.16);
+      border-color: #224b56;
+    }
+
+    .vowel-level-input:disabled {
+      background: rgba(233, 239, 242, 0.92);
+      color: #46616a;
+      cursor: default;
+    }
+
+    .vowel-input-code {
+      display: inline-flex;
+      width: fit-content;
+      min-width: 3.7rem;
+      justify-content: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(34, 75, 86, 0.08);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #224b56;
+      letter-spacing: 0.05em;
+    }
+
+    .vowel-input-state {
+      font-size: 0.9rem;
+      color: #5d6d76;
+    }
+
+    .level-preview {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .preview-vowel {
+      position: relative;
+      display: grid;
+      gap: 0.15rem;
+      place-items: center;
+      min-height: 84px;
+      border-radius: 22px;
+      border: 2px solid rgba(54, 80, 89, 0.14);
+      background: rgba(255, 255, 255, 0.94);
+      overflow: hidden;
+    }
+
+    .preview-letter {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #53666f;
+    }
+
+    .preview-mark {
+      font-size: 1.85rem;
+      font-weight: 900;
+      color: #53666f;
+      line-height: 1;
+    }
+
+    .preview-vowel[data-state='hidden'] .preview-mark {
+      opacity: 0;
+    }
+
+    .preview-vowel[data-state='circled'] {
+      color: #1d6c4c;
+      border-color: rgba(45, 138, 98, 0.18);
+      background: rgba(240, 251, 245, 0.96);
+    }
+
+    .preview-vowel[data-state='circled'] .preview-letter,
+    .preview-vowel[data-state='circled'] .preview-mark {
+      color: #1d6c4c;
+    }
+
+    .preview-vowel[data-state='crossed'] {
+      background: rgba(255, 240, 240, 0.96);
+      border-color: rgba(150, 47, 41, 0.22);
+    }
+
+    .preview-vowel[data-state='crossed']::before {
+      content: '';
+      inset: auto;
+      top: 50%;
+      left: 14px;
+      right: 14px;
+      height: 3px;
+      border: 0;
+      border-radius: 999px;
+      background: #c12020;
+      transform: rotate(-22deg);
+      opacity: 1;
+    }
+
+    .preview-vowel[data-state='crossed'] .preview-letter,
+    .preview-vowel[data-state='crossed'] .preview-mark {
+      color: #962f29;
+    }
+
+    .preview-vowel[data-state='crossed']::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      right: 14px;
+      height: 3px;
+      border-radius: 999px;
+      background: #c12020;
+      transform: rotate(22deg);
+    }
+
+    .game-actions {
+      display: grid;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .reset-button,
+    .submit-button,
+    .next-level-button {
+      width: fit-content;
+      padding: 0.95rem 1.3rem;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+
+    .reset-button {
+      border: 1px solid rgba(34, 75, 86, 0.16);
+      background: rgba(255, 255, 255, 0.96);
+      color: #224b56;
+    }
+
+    .submit-button {
+      border: 0;
+      background: #de8b2c;
+      color: #fff;
+    }
+
+    .next-level-button {
+      border: 0;
+      background: #224b56;
+      color: #fff;
+    }
+
+    .submit-button:disabled,
+    .next-level-button:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    @media (max-width: 720px) {
+      .vowel-game {
+        padding: 1rem;
+      }
+
+      .level-preview {
+        grid-template-columns: repeat(5, minmax(48px, 1fr));
+      }
+
+      .preview-vowel {
+        min-height: 68px;
+        font-size: 1.45rem;
+      }
+    }
+  </style>
+</wc-dictionary-search>

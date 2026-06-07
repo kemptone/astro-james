@@ -1,182 +1,24 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import WCDictionarySearch from '../components/Dictionary/WCDictionarySearch.astro'
-
-const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 ---
 
 <Layout title="dictionary">
   <div id="dictionary">
     <WCDictionarySearch />
-    <section id="hangman" class="hangman-panel">
-      <div class="hangman-head">
-        <div>
-          <p class="hangman-kicker">Hangman</p>
-          <h2>Play with a selected word</h2>
-        </div>
-      </div>
-
-      <div class="hangman-card">
-        <p class="hangman-label">Hidden word</p>
-        <div id="hangman-puzzle" class="hangman-puzzle" aria-live="polite">
-          Pick a dictionary word and press Play hangman.
-        </div>
-      </div>
-
-      <div id="hangman-letters" class="hangman-letters" aria-label="Guess letters">
-        {
-          alphabet.map(letter => (
-            <button
-              type="button"
-              class="hangman-letter"
-              data-hangman-letter={letter}
-              disabled
-            >
-              {letter}
-            </button>
-          ))
-        }
-      </div>
-
-      <p id="hangman-feedback" class="hangman-feedback" aria-live="polite">
-        Pick a dictionary word and press Play hangman.
-      </p>
-    </section>
-    <div id="list"></div>
   </div>
 </Layout>
-
-<script src="../core/dictionary/Dictionary"></script>
 
 <style is:inline>
   #dictionary {
     max-width: 890px;
     margin-inline: auto;
-    background-color: rgba(255, 255, 255, 0.9);
     padding: 2rem;
   }
 
-  .hangman-panel {
-    --hangman-letter-size: 78px;
-    --hangman-letter-gap: 0.8rem;
-    margin: 2rem 0 1rem;
-    padding: 1.5rem;
-    border: 1px solid #d7e3ea;
-    border-radius: 24px;
-    background: linear-gradient(180deg, rgba(246, 251, 252, 0.95), rgba(255, 255, 255, 0.98));
-  }
-
-  .hangman-head h2 {
-    margin-bottom: 0.25rem;
-  }
-
-  .hangman-kicker {
-    margin: 0 0 0.35rem;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    font-size: 0.8rem;
-    color: #5c8f99;
-    font-weight: 700;
-  }
-
-  .hangman-card {
-    margin: 1rem 0;
-    padding: 1rem 1.2rem;
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid #e7eef2;
-  }
-
-  .hangman-label {
-    margin: 0 0 0.45rem;
-    font-size: 0.9rem;
-    color: #58707a;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .hangman-puzzle {
-    min-height: 2.4rem;
-    font-family: Rockwell, 'Rockwell Nova', 'Roboto Slab', 'DejaVu Serif', 'Sitka Small', serif;
-    font-size: 1.4rem;
-    letter-spacing: 0.2em;
-    word-break: break-word;
-  }
-
-  .hangman-letters {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--hangman-letter-gap);
-    max-width: calc(
-      (var(--hangman-letter-size) * 7) + (var(--hangman-letter-gap) * 6)
-    );
-    margin: 0 auto;
-  }
-
-  .hangman-letter {
-    position: relative;
-    flex: 0 0 var(--hangman-letter-size);
-    width: var(--hangman-letter-size);
-    min-height: var(--hangman-letter-size);
-    border: 2px solid rgba(50, 78, 87, 0.14);
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.95);
-    color: #233037;
-    font: inherit;
-    font-weight: 800;
-    font-size: 1.35rem;
-    cursor: pointer;
-  }
-
-  .hangman-letter:disabled {
-    cursor: default;
-    opacity: 0.8;
-  }
-
-  .hangman-letter.is-correct {
-    visibility: hidden;
-  }
-
-  .hangman-letter.is-wrong {
-    color: #962f29;
-    border-color: rgba(150, 47, 41, 0.35);
-    background: rgba(255, 238, 238, 0.94);
-  }
-
-  .hangman-letter.is-wrong::after {
-    content: 'X';
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    font-size: 1.35rem;
-    font-weight: 900;
-    color: #c12020;
-    pointer-events: none;
-  }
-
-  .hangman-feedback {
-    margin: 1rem 0 0;
-    color: #56666d;
-  }
-
-  .hangman-feedback[data-tone='success'] {
-    color: #1d6c4c;
-  }
-
-  .hangman-feedback[data-tone='danger'] {
-    color: #962f29;
-  }
-
-  .hangman-feedback[data-tone='warning'] {
-    color: #8a5711;
-  }
-
   @media (max-width: 720px) {
-    .hangman-panel {
-      --hangman-letter-size: 64px;
-      --hangman-letter-gap: 0.65rem;
+    #dictionary {
+      padding: 1rem;
     }
   }
 </style>
