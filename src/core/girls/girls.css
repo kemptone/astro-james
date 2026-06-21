@@ -81,6 +81,34 @@ dialog#d_story {
   max-width: 90%;
 }
 
+#story_option_pieces,
+#story_options_preview {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: var(--pico-border-radius);
+  background: var(--pico-card-background-color);
+}
+
+#story_option_pieces {
+  margin-bottom: 1rem;
+}
+
+#story_option_pieces b {
+  display: inline-block;
+  margin-right: 0.35rem;
+}
+
+#story_option_pieces span[data-preview-option] {
+  font-weight: 600;
+}
+
+#story_options_preview p,
+.story-options-note {
+  margin: 0;
+}
+
 wc-floating-label-input {
   margin-block: 0;
 }

@@ -10,27 +10,88 @@ import {
   behavior_choices,
   ways_to_get_caught,
   best_behavior_score,
-  style_score_default,
   randomFromArray,
 } from '@/data/bad_stuff'
+import {
+  buildStoryPreviewLines,
+  getDefaultStoryOptionScores,
+} from '@/core/girls/storyOptions'
 
 type FormType = {
   person_name: string
   choice: string
-  style_score: string
   behavior_score: string
   what_happened: string
+  opening: string
+  noticeLead: string
+  notice: string
+  handling: string
+  sounded: string
+  teacher: string
+  classmates: string
+  ending: string
+}
+
+function getNamedField(
+  e_scope: ParentNode,
+  name: string
+): HTMLInputElement | HTMLSelectElement | null {
+  return e_scope.querySelector(
+    `input[name="${name}"], select[name="${name}"]`
+  ) as HTMLInputElement | HTMLSelectElement | null
 }
 
 function outputRandomValue(name: string) {
+  const storyOptions = getDefaultStoryOptionScores()
   const newValues = {
     person_name: name,
-    style_score: style_score_default,
     behavior_score: best_behavior_score,
     choice: randomFromArray(behavior_choices),
     what_happened: randomFromArray(ways_to_get_caught),
+    ...storyOptions,
   }
   return newValues
+}
+
+function updateStoryPreview(e_dialog: HTMLDialogElement) {
+  const e_person_name = e_dialog.querySelector(
+    'input[name="person_name"]'
+  ) as HTMLInputElement | null
+  const e_choice = e_dialog.querySelector(
+    'input[name="choice"]'
+  ) as HTMLInputElement | null
+  const e_behavior_score = e_dialog.querySelector(
+    'input[name="behavior_score"]'
+  ) as HTMLInputElement | null
+  const e_what_happened = e_dialog.querySelector(
+    'input[name="what_happened"]'
+  ) as HTMLInputElement | null
+  const e_lines = Array.from(
+    e_dialog.querySelectorAll('[data-preview-line]')
+  ) as HTMLParagraphElement[]
+
+  if (e_lines.length === 0) {
+    return
+  }
+
+  const lines = buildStoryPreviewLines({
+    personName: e_person_name?.value,
+    choice: e_choice?.value,
+    behaviorScore: e_behavior_score?.value,
+    whatHappened: e_what_happened?.value,
+    opening: getNamedField(e_dialog, 'opening')?.value,
+    noticeLead: getNamedField(e_dialog, 'noticeLead')?.value,
+    notice: getNamedField(e_dialog, 'notice')?.value,
+    handling: getNamedField(e_dialog, 'handling')?.value,
+    sounded: getNamedField(e_dialog, 'sounded')?.value,
+    teacher: getNamedField(e_dialog, 'teacher')?.value,
+    classmates: getNamedField(e_dialog, 'classmates')?.value,
+    ending: getNamedField(e_dialog, 'ending')?.value,
+  })
+
+  e_lines.forEach((line, index) => {
+    line.textContent = lines[index] || ''
+  })
 }
 
 function buildGirls(names: string[], e_dialog: HTMLDialogElement) {
@@ -42,11 +103,12 @@ function buildGirls(names: string[], e_dialog: HTMLDialogElement) {
     e_button.addEventListener('click', () => {
       const newValues = outputRandomValue(name)
       Object.entries(newValues).forEach(([key, value]) => {
-        const e_input = e_dialog.querySelector(
-          `input[name="${key}"]`
-        ) as HTMLInputElement
-        e_input.value = value
+        const e_field = getNamedField(e_dialog, key)
+        if (e_field) {
+          e_field.value = value
+        }
       })
+      updateStoryPreview(e_dialog)
       e_dialog.showModal()
     })
     e_fragment.appendChild(e_button)
@@ -144,6 +206,18 @@ d.addEventListener('DOMContentLoaded', async e => {
         item.removeAttribute('disabled')
       })
     },
+  })
+
+  updateStoryPreview(e_dialog)
+
+  e_form.querySelectorAll('input, select').forEach(field => {
+    field.addEventListener('input', () => {
+      updateStoryPreview(e_dialog)
+    })
+
+    field.addEventListener('change', () => {
+      updateStoryPreview(e_dialog)
+    })
   })
 
   ProtoForm<{text: string}>({

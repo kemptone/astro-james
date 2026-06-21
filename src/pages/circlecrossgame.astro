@@ -1,0 +1,819 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="Circle Cross Game">
+  <main class="choice-arcade">
+    <section class="hero-card">
+      <p class="eyebrow">Two Versions</p>
+      <h1>Circle or Cross Out Game</h1>
+      <p class="hero-copy">
+        Version 1 lets you keep adding words, then tap each one after Submit to
+        reveal the opposite result. Version 2 turns your typed text into
+        backwards-alphabet letters, one second at a time.
+      </p>
+
+      <div class="version-switch" role="tablist" aria-label="Game versions">
+        <button type="button" class="version-pill is-active" data-version="1" aria-selected="true">
+          Version 1
+        </button>
+        <button type="button" class="version-pill" data-version="2" aria-selected="false">
+          Version 2
+        </button>
+      </div>
+    </section>
+
+    <section class="game-panel is-active" data-panel="1">
+      <div class="panel-grid">
+        <article class="panel-card">
+          <p class="panel-tag">Setup</p>
+          <h2>Build your word list</h2>
+          <p class="panel-note">
+            Pick <strong>Circle</strong> or <strong>Cross out</strong> for each
+            text. The game reveals the opposite when you press the word later.
+          </p>
+
+          <div id="v1-builder" class="stack">
+            <label class="field">
+              <span>Text</span>
+              <input id="v1-text" type="text" placeholder="Type a word or short phrase" maxlength="80" />
+            </label>
+
+            <label class="field">
+              <span>Choice</span>
+              <select id="v1-choice">
+                <option value="circle">Circle</option>
+                <option value="cross">Cross out</option>
+              </select>
+            </label>
+
+            <div class="button-row">
+              <button type="button" class="primary-button" id="v1-add">Add text</button>
+              <button type="button" class="ghost-button" id="v1-clear">Clear list</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel-card">
+          <p class="panel-tag">Queue</p>
+          <div class="panel-header">
+            <h2>Saved texts</h2>
+            <span id="v1-count" class="count-badge">0 items</span>
+          </div>
+          <div id="v1-list" class="saved-list" aria-live="polite">
+            <p class="empty-state">Add a text to start the game.</p>
+          </div>
+          <div class="button-row">
+            <button type="button" class="primary-button" id="v1-submit">Submit</button>
+            <button type="button" class="ghost-button" id="v1-back" hidden>Back to setup</button>
+          </div>
+        </article>
+      </div>
+
+      <article id="v1-play-wrap" class="panel-card play-card" hidden>
+        <div class="panel-header">
+          <div>
+            <p class="panel-tag">Play</p>
+            <h2>Tap each text</h2>
+          </div>
+          <span class="count-badge inverse-badge">Opposite reveal mode</span>
+        </div>
+        <p class="panel-note">
+          If you picked circle, this word gets crossed out. If you picked cross
+          out, this word gets circled.
+        </p>
+        <div id="v1-play-board" class="play-board" aria-live="polite"></div>
+      </article>
+    </section>
+
+    <section class="game-panel" data-panel="2">
+      <div class="panel-grid single-panel">
+        <article class="panel-card">
+          <p class="panel-tag">Backwards Alphabet</p>
+          <h2>Backwards letters, one second apart</h2>
+          <p class="panel-note">
+            Your typed text gets converted with the backwards alphabet. Spaces
+            stay exactly where you typed them, and each converted character
+            appears one second after the other.
+          </p>
+
+          <div class="stack">
+            <label class="field">
+              <span>Your choice</span>
+              <input id="v2-input" type="text" placeholder="Type characters here" />
+            </label>
+
+            <div class="button-row">
+              <button type="button" class="primary-button" id="v2-start">Start typing</button>
+              <button type="button" class="ghost-button" id="v2-reset">Reset</button>
+            </div>
+          </div>
+
+          <div class="output-shell">
+            <div id="v2-output" class="letter-output" aria-live="polite"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script is:inline>
+    const versionButtons = Array.from(document.querySelectorAll('.version-pill'));
+    const panels = Array.from(document.querySelectorAll('.game-panel'));
+
+    const v1Text = document.querySelector('#v1-text');
+    const v1Choice = document.querySelector('#v1-choice');
+    const v1Add = document.querySelector('#v1-add');
+    const v1Clear = document.querySelector('#v1-clear');
+    const v1Submit = document.querySelector('#v1-submit');
+    const v1Back = document.querySelector('#v1-back');
+    const v1List = document.querySelector('#v1-list');
+    const v1Count = document.querySelector('#v1-count');
+    const v1PlayWrap = document.querySelector('#v1-play-wrap');
+    const v1PlayBoard = document.querySelector('#v1-play-board');
+    const v1Builder = document.querySelector('#v1-builder');
+
+    const v2Input = document.querySelector('#v2-input');
+    const v2Start = document.querySelector('#v2-start');
+    const v2Reset = document.querySelector('#v2-reset');
+    const v2Output = document.querySelector('#v2-output');
+
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const reversedAlphabet = alphabet.split('').reverse().join('');
+    const v1Entries = [];
+    let v2Timers = [];
+
+    const pluralize = (count, singular, plural) => `${count} ${count === 1 ? singular : plural}`;
+    const getOppositeResult = choice => (choice === 'circle' ? 'cross' : 'circle');
+
+    const stopVersion2 = () => {
+      v2Timers.forEach(timerId => window.clearTimeout(timerId));
+      v2Timers = [];
+      v2Start.disabled = false;
+    };
+
+    const setActiveVersion = version => {
+      versionButtons.forEach(button => {
+        const isActive = button.dataset.version === version;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-selected', String(isActive));
+      });
+
+      panels.forEach(panel => {
+        panel.classList.toggle('is-active', panel.dataset.panel === version);
+      });
+
+      if (version !== '2') stopVersion2();
+    };
+
+    const renderVersion1Count = () => {
+      v1Count.textContent = pluralize(v1Entries.length, 'item', 'items');
+    };
+
+    const renderVersion1List = () => {
+      renderVersion1Count();
+
+      if (!v1Entries.length) {
+        v1List.innerHTML = '<p class="empty-state">Add a text to start the game.</p>';
+        return;
+      }
+
+      v1List.innerHTML = '';
+
+      v1Entries.forEach((entry, index) => {
+        const item = document.createElement('div');
+        item.className = 'saved-item';
+
+        const textWrap = document.createElement('div');
+        textWrap.className = 'saved-copy';
+
+        const title = document.createElement('strong');
+        title.textContent = entry.text;
+
+        const sub = document.createElement('span');
+        sub.textContent = `Choice ${index + 1}: ${entry.choice === 'circle' ? 'Circle' : 'Cross out'}`;
+
+        textWrap.append(title, sub);
+
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'mini-button';
+        removeButton.textContent = 'Remove';
+        removeButton.hidden = v1Builder.hidden;
+        removeButton.addEventListener('click', () => {
+          const entryIndex = v1Entries.findIndex(itemEntry => itemEntry.id === entry.id);
+          if (entryIndex >= 0) {
+            v1Entries.splice(entryIndex, 1);
+            renderVersion1List();
+          }
+        });
+
+        item.append(textWrap, removeButton);
+        v1List.appendChild(item);
+      });
+    };
+
+    const renderVersion1Board = () => {
+      v1PlayBoard.innerHTML = '';
+
+      v1Entries.forEach(entry => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'word-chip';
+
+        const mark = document.createElement('span');
+        mark.className = 'word-chip-mark';
+
+        const label = document.createElement('span');
+        label.className = 'word-chip-text';
+        label.textContent = entry.text;
+
+        mark.appendChild(label);
+
+        const hint = document.createElement('span');
+        hint.className = 'word-chip-hint';
+
+        const applyState = () => {
+          const result = getOppositeResult(entry.choice);
+          button.classList.toggle('is-revealed', entry.revealed);
+          button.classList.toggle('is-circled', entry.revealed && result === 'circle');
+          button.classList.toggle('is-crossed', entry.revealed && result === 'cross');
+          hint.textContent = entry.revealed
+            ? result === 'circle'
+              ? 'Circled'
+              : 'Crossed out'
+            : 'Tap to reveal';
+        };
+
+        button.addEventListener('click', () => {
+          entry.revealed = !entry.revealed;
+          applyState();
+        });
+
+        button.append(mark, hint);
+        v1PlayBoard.appendChild(button);
+        applyState();
+      });
+    };
+
+    const resetVersion1Play = () => {
+      v1Entries.forEach(entry => {
+        entry.revealed = false;
+      });
+      renderVersion1Board();
+    };
+
+    const addVersion1Entry = () => {
+      const text = v1Text.value.trim();
+      const choice = v1Choice.value;
+
+      if (!text) {
+        v1Text.focus();
+        return;
+      }
+
+      v1Entries.push({
+        id: `entry-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        text,
+        choice,
+        revealed: false,
+      });
+
+      v1Text.value = '';
+      v1Text.focus();
+      renderVersion1List();
+    };
+
+    const clearVersion1Entries = () => {
+      v1Entries.length = 0;
+      renderVersion1List();
+      v1PlayBoard.innerHTML = '';
+      v1PlayWrap.hidden = true;
+      v1Back.hidden = true;
+      v1Builder.hidden = false;
+      renderVersion1List();
+      v1Text.focus();
+    };
+
+    const submitVersion1 = () => {
+      if (!v1Entries.length) {
+        v1Text.focus();
+        return;
+      }
+
+      v1Builder.hidden = true;
+      v1Back.hidden = false;
+      v1PlayWrap.hidden = false;
+      renderVersion1List();
+      resetVersion1Play();
+    };
+
+    const backToVersion1Setup = () => {
+      v1Builder.hidden = false;
+      v1Back.hidden = true;
+      v1PlayWrap.hidden = true;
+      renderVersion1List();
+      v1Text.focus();
+    };
+
+    const flipAlphabetCharacter = character => {
+      const upper = character.toUpperCase();
+      const index = alphabet.indexOf(upper);
+
+      if (index === -1) return character;
+      const flipped = reversedAlphabet[index];
+      return character === upper ? flipped : flipped.toLowerCase();
+    };
+    const convertToBackwardsAlphabet = value =>
+      Array.from(value).map(character => flipAlphabetCharacter(character));
+
+    const resetVersion2 = () => {
+      stopVersion2();
+      v2Input.value = '';
+      v2Output.innerHTML = '';
+    };
+
+    const startVersion2 = () => {
+      const typedValue = v2Input.value;
+      const convertedCharacters = convertToBackwardsAlphabet(typedValue);
+      const characterCount = convertedCharacters.length;
+      resetVersion2();
+
+      if (!characterCount) {
+        v2Input.focus();
+        return;
+      }
+
+      v2Input.value = '';
+      v2Start.disabled = true;
+
+      for (let index = 0; index < characterCount; index += 1) {
+        const timerId = window.setTimeout(() => {
+          const chip = document.createElement('span');
+          chip.className = 'letter-chip';
+          chip.textContent = convertedCharacters[index] === ' ' ? '\u00A0' : convertedCharacters[index];
+          v2Output.appendChild(chip);
+
+          const shownCount = index + 1;
+          if (shownCount === characterCount) {
+            v2Start.disabled = false;
+          }
+        }, (index + 1) * 1000);
+
+        v2Timers.push(timerId);
+      }
+    };
+
+    versionButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        setActiveVersion(button.dataset.version);
+      });
+    });
+
+    v1Add.addEventListener('click', addVersion1Entry);
+    v1Text.addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        addVersion1Entry();
+      }
+    });
+    v1Clear.addEventListener('click', clearVersion1Entries);
+    v1Submit.addEventListener('click', submitVersion1);
+    v1Back.addEventListener('click', backToVersion1Setup);
+
+    v2Start.addEventListener('click', startVersion2);
+    v2Reset.addEventListener('click', resetVersion2);
+
+    renderVersion1List();
+    setActiveVersion('1');
+  </script>
+</Layout>
+
+<style>
+  @font-face {
+    font-family: 'Fuzzy Bubbles';
+    src: url('/Fuzzy_Bubbles/FuzzyBubbles-Regular.ttf') format('truetype');
+    font-display: swap;
+  }
+
+  :global(body) {
+    margin: 0;
+    color: #1f1a12;
+    background:
+      radial-gradient(circle at top left, rgba(255, 231, 179, 0.95), transparent 34%),
+      radial-gradient(circle at 85% 12%, rgba(111, 197, 173, 0.46), transparent 27%),
+      linear-gradient(160deg, #fff5d6 0%, #ffc98d 47%, #ff9a7a 100%);
+  }
+
+  .choice-arcade {
+    width: min(1080px, calc(100% - 2rem));
+    margin: 0 auto;
+    padding: 2rem 0 7rem;
+  }
+
+  .hero-card,
+  .panel-card {
+    background: rgba(255, 249, 236, 0.86);
+    border: 1px solid rgba(110, 72, 31, 0.15);
+    border-radius: 28px;
+    box-shadow: 0 24px 80px rgba(121, 69, 18, 0.16);
+    backdrop-filter: blur(16px);
+  }
+
+  .hero-card {
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .eyebrow,
+  .panel-tag {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.78rem;
+    color: #9a5621;
+  }
+
+  h1,
+  h2 {
+    margin: 0;
+    font-family: 'Fuzzy Bubbles', 'Trebuchet MS', sans-serif;
+    line-height: 1.05;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 4.8rem);
+    color: #5b2414;
+    margin-top: 0.5rem;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    color: #5a2813;
+  }
+
+  .hero-copy,
+  .panel-note {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #61442f;
+  }
+
+  .hero-copy {
+    max-width: 60ch;
+    margin-top: 0.85rem;
+  }
+
+  .version-switch {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.25rem;
+  }
+
+  .version-pill,
+  .primary-button,
+  .ghost-button,
+  :global(.mini-button),
+  :global(.word-chip) {
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      background-color 180ms ease,
+      color 180ms ease;
+    font: inherit;
+  }
+
+  .version-pill,
+  .primary-button,
+  .ghost-button,
+  :global(.mini-button) {
+    padding: 0.9rem 1.2rem;
+    font-weight: 700;
+  }
+
+  .version-pill {
+    background: rgba(255, 255, 255, 0.6);
+    color: #7b4620;
+    box-shadow: inset 0 0 0 1px rgba(123, 70, 32, 0.14);
+  }
+
+  .version-pill.is-active,
+  .primary-button {
+    background: linear-gradient(135deg, #ff8f3f 0%, #ff5d5d 100%);
+    color: white;
+    box-shadow: 0 16px 30px rgba(207, 84, 48, 0.28);
+  }
+
+  .ghost-button {
+    background: #fff2d7;
+    color: #74431e;
+    box-shadow: inset 0 0 0 1px rgba(116, 67, 30, 0.18);
+  }
+
+  :global(.mini-button) {
+    padding: 0.6rem 0.95rem;
+    background: #5d948a;
+    color: white;
+  }
+
+  .version-pill:hover,
+  .primary-button:hover,
+  .ghost-button:hover,
+  :global(.mini-button:hover),
+  :global(.word-chip:hover) {
+    transform: translateY(-2px);
+  }
+
+  .game-panel {
+    display: none;
+  }
+
+  .game-panel.is-active {
+    display: block;
+    animation: panel-in 240ms ease;
+  }
+
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .panel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .single-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .panel-card {
+    padding: 1.4rem;
+  }
+
+  .play-card {
+    margin-top: 1.25rem;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .stack {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .field span {
+    font-weight: 700;
+    color: #7d4c24;
+  }
+
+  .field input,
+  .field select {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(122, 76, 33, 0.18);
+    background: rgba(255, 255, 255, 0.82);
+    font: inherit;
+    color: #3d291c;
+  }
+
+  .field input:focus,
+  .field select:focus {
+    outline: 2px solid rgba(255, 102, 80, 0.3);
+    border-color: rgba(255, 102, 80, 0.45);
+  }
+
+  .button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1rem;
+  }
+
+  .count-badge {
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: #fff2d9;
+    color: #91501f;
+    font-size: 0.92rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .inverse-badge {
+    background: #e2f5ef;
+    color: #24614f;
+  }
+
+  .saved-list,
+  .play-board,
+  .letter-output {
+    margin-top: 1rem;
+  }
+
+  .saved-list {
+    display: grid;
+    gap: 0.8rem;
+    min-height: 160px;
+  }
+
+  :global(.saved-item) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+    padding: 0.9rem 1rem;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(120, 77, 37, 0.12);
+  }
+
+  :global(.saved-copy) {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  :global(.saved-copy strong) {
+    font-size: 1rem;
+    color: #51250f;
+  }
+
+  :global(.saved-copy span) {
+    font-size: 0.92rem;
+    color: #7e5b43;
+  }
+
+  :global(.empty-state) {
+    margin: 0;
+    padding: 1rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.6);
+    color: #826145;
+  }
+
+  .play-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1rem;
+  }
+
+  :global(.word-chip) {
+    text-align: left;
+    align-items: flex-start;
+    justify-items: flex-start;
+    padding: 0.7rem 0.1rem;
+    background: transparent;
+    box-shadow: none;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  :global(.word-chip-mark) {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  :global(.word-chip-text) {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    padding: 0.1rem 0.15rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #492515;
+    line-height: 1.35;
+    z-index: 1;
+  }
+
+  :global(.word-chip-text)::before,
+  :global(.word-chip-text)::after {
+    content: '';
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
+  }
+
+  :global(.word-chip-hint) {
+    font-size: 0.88rem;
+    color: #8a6548;
+  }
+
+  :global(.word-chip.is-revealed.is-crossed .word-chip-text)::before,
+  :global(.word-chip.is-revealed.is-crossed .word-chip-text)::after {
+    opacity: 1;
+    top: 52%;
+    left: -0.25rem;
+    width: calc(100% + 0.5rem);
+    height: 0.24rem;
+    border-radius: 999px;
+    background: #c63c2d;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+  }
+
+  :global(.word-chip.is-revealed.is-crossed .word-chip-text)::before {
+    transform: translateY(-50%) rotate(-12deg);
+  }
+
+  :global(.word-chip.is-revealed.is-crossed .word-chip-text)::after {
+    transform: translateY(-50%) rotate(8deg);
+  }
+
+  :global(.word-chip.is-revealed.is-crossed .word-chip-text) {
+    color: #7a2a22;
+  }
+
+  :global(.word-chip.is-revealed.is-circled .word-chip-text)::after {
+    inset: -0.38rem -0.62rem;
+    opacity: 1;
+    border: 0.22rem solid #198f73;
+    border-radius: 999px;
+    transform: rotate(-5deg);
+  }
+
+  :global(.word-chip.is-revealed.is-circled .word-chip-hint) {
+    color: #146b57;
+  }
+
+  :global(.word-chip.is-revealed.is-crossed .word-chip-hint) {
+    color: #9a3128;
+  }
+
+  .output-shell {
+    margin-top: 1.25rem;
+    padding: 1.15rem;
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.82), transparent 34%),
+      linear-gradient(140deg, #4e2c69 0%, #2f5c6d 100%);
+    color: white;
+  }
+
+  .letter-output {
+    display: block;
+    min-height: 4rem;
+    margin-top: 1rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+  }
+
+  :global(.letter-chip) {
+    display: inline;
+    color: #fff7e7;
+    font-family: 'Fuzzy Bubbles', 'Trebuchet MS', sans-serif;
+    font-size: 1.45rem;
+    animation: pop-in 220ms ease;
+  }
+
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.7) translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @media (max-width: 820px) {
+    .panel-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .panel-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>

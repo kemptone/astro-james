@@ -11,12 +11,34 @@ import {
   behavior_score,
   best_behavior_score,
   max_behavior_score,
-  style_score,
-  style_score_default,
   randomFromArray,
 } from '@/data/bad_stuff'
+import {
+  buildStoryPreviewLines,
+  getDefaultStoryOptionScores,
+  storyOptionChoices,
+  storyOptionFieldOrder,
+} from '@/core/girls/storyOptions'
 import Menu3 from '@/components/menu.astro'
 import '../components/wc-texarea-sizer'
+
+const initialPersonName = randomFromArray(girls_names)
+const initialChoice = randomFromArray(behavior_choices)
+const initialWhatHappened = randomFromArray(ways_to_get_caught)
+const initialStoryOptions = getDefaultStoryOptionScores()
+const initialStoryPreviewLines = buildStoryPreviewLines({
+  personName: initialPersonName,
+  choice: initialChoice,
+  behaviorScore: best_behavior_score,
+  whatHappened: initialWhatHappened,
+  ...initialStoryOptions,
+})
+const storyOptionInputs = storyOptionFieldOrder.map(({key, label}) => ({
+  key,
+  label,
+  value: initialStoryOptions[key],
+  choices: storyOptionChoices[key],
+}))
 ---
 
 <Empty title="girls">
@@ -49,7 +71,7 @@ import '../components/wc-texarea-sizer'
               <input
                 list="girls_list"
                 name="person_name"
-                value={randomFromArray(girls_names)}
+                value={initialPersonName}
               />
               <datalist id="girls_list">
                 {girls_names.map(name => <option value={name} />)}
@@ -61,7 +83,7 @@ import '../components/wc-texarea-sizer'
               <input
                 list="choices"
                 name="choice"
-                value={randomFromArray(behavior_choices)}
+                value={initialChoice}
                 placeholder="What did they do?"
               />
               <datalist id="choices">
@@ -71,19 +93,6 @@ import '../components/wc-texarea-sizer'
           </div>
 
           <div class="grid">
-            <WCFloatingLabel addclear="1">
-              <label>how good</label>
-              <input
-                list="style_scores"
-                name="style_score"
-                placeholder="Pick how good it is (10 is best)"
-                value={style_score_default}
-              />
-              <datalist id="style_scores">
-                {style_score.map(v => <option value={v} />)}
-              </datalist>
-            </WCFloatingLabel>
-
             <WCFloatingLabel addclear="1">
               <label>behavior score</label>
               <input
@@ -103,13 +112,53 @@ import '../components/wc-texarea-sizer'
                 list="got_caught"
                 name="what_happened"
                 placeholder="What happened next?"
-                value={randomFromArray(ways_to_get_caught)}
+                value={initialWhatHappened}
               />
               <datalist id="got_caught">
                 {ways_to_get_caught.map(name => <option value={name} />)}
               </datalist>
             </WCFloatingLabel>
           </div>
+          <details open>
+            <summary>story options before generation</summary>
+            <p class="story-options-note">
+              Each narrator part is its own option now, so you can mix good and
+              bad pieces even if the story does not make sense.
+            </p>
+            <p class="story-options-note">
+              <code>notice lead option</code> starts blank and uses
+              <code>Good</code> for <code>Everyone noticed because</code> or
+              <code>Bad</code> for
+              <code>The problem grew bigger because</code>. 
+              <code>handling option</code> starts blank and uses
+              <code>Good</code> for
+              <code>handled it in a no-trouble way</code> or
+              <code>Bad</code> for
+              <code>moved through a trouble moment</code>.
+            </p>
+            <div id="story_option_pieces" class="grid">
+              {storyOptionInputs.map(item => (
+                <WCFloatingLabel addclear="1">
+                  <label>{item.label}</label>
+                  <select name={item.key}>
+                    {item.choices.map(choice => (
+                      <option value={choice} selected={choice === item.value}>
+                        {choice}
+                      </option>
+                    ))}
+                  </select>
+                </WCFloatingLabel>
+              ))}
+            </div>
+            <p class="story-options-note">
+              Full preview using the mixed options:
+            </p>
+            <div id="story_options_preview">
+              {initialStoryPreviewLines.map(line => (
+                <p data-preview-line>{line}</p>
+              ))}
+            </div>
+          </details>
           <footer>
             <button type="submit" class="outline secondary"
               >Generate main story</button
