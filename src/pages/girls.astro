@@ -52,6 +52,19 @@ const storyOptionInputs = storyOptionFieldOrder.map(({key, label}) => ({
       YouTube slideshow goes through each one, and {best_behavior_score} is the
       best school behavior score.
     </p>
+    <p>
+      Story option legend uses a full <strong>0</strong> to
+      <strong>100</strong> range. <strong>56</strong> means Best,
+      <strong>55</strong> means 10, <strong>54</strong> means 9,
+      <strong>53</strong> means 8, <strong>52</strong> means 7,
+      <strong>51</strong> means 6, <strong>50</strong> is neutral,
+      <strong>45</strong> means 0, and <strong>44</strong> means Worst.
+      Numbers above <strong>56</strong> are better than Best, and numbers below
+      <strong>44</strong> are worse than Worst. Numbers <strong>20</strong> to
+      <strong>11</strong> change very, very fast. Numbers <strong>10</strong>
+      to <strong>0</strong> are the worst ten numbers ever, and they drop
+      extremely, extremely, extremely fast.
+    </p>
     <div id="filters" class="group">
       <input type="search" name="name_filter" placeholder="Filter names" />
       <input type="hidden" value="1000" name="limit" />
@@ -135,6 +148,17 @@ const storyOptionInputs = storyOptionFieldOrder.map(({key, label}) => ({
               <code>handled it in a no-trouble way</code> or
               <code>Bad</code> for
               <code>moved through a trouble moment</code>.
+            </p>
+            <p class="story-options-note">
+              Number guide: <code>56</code> = Best, <code>55</code> = 10,
+              <code>54</code> = 9, <code>53</code> = 8, <code>52</code> = 7,
+              <code>51</code> = 6, <code>50</code> = neutral, <code>49</code> = 4,
+              <code>48</code> = 3, <code>47</code> = 2, <code>46</code> = 1,
+              <code>45</code> = 0, and <code>44</code> = Worst. <code>57</code>
+              and up are better than Best. <code>43</code> and down are worse
+              than Worst. <code>20</code> to <code>11</code> change very, very
+              fast. <code>10</code> to <code>0</code> are the worst ten numbers
+              ever, and the drop goes extremely, extremely, extremely fast.
             </p>
             <div id="story_option_pieces" class="grid">
               {storyOptionInputs.map(item => (

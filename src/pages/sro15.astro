@@ -1,147 +1,12 @@
 ---
 import Menu3 from '@/components/menu.astro'
 import '@/layouts/style.css'
+import {createBehaviorMomentDefinitions} from '@/core/behaviorNumbers'
 
-const gradeDefinitions = [
-  {
-    id: '20',
-    label: '20',
-    tone: 'best',
-    description: 'You did a great job.',
-  },
-  {
-    id: '19',
-    label: '19',
-    tone: 'best',
-    description: 'You did amazing.',
-  },
-  {
-    id: '18',
-    label: '18',
-    tone: 'best',
-    description: "You've been steller.",
-  },
-  {
-    id: '17',
-    label: '17',
-    tone: 'good',
-    description: "You'll celebrate.",
-  },
-  {
-    id: '16',
-    label: '16',
-    tone: 'good',
-    description: "You'll have a great day from now on.",
-  },
-  {
-    id: '15',
-    label: '15',
-    tone: 'good',
-    description: 'You had an awesome day.',
-  },
-  {
-    id: '14',
-    label: '14',
-    tone: 'good',
-    description: 'A high-five.',
-  },
-  {
-    id: '13',
-    label: '13',
-    tone: 'good',
-    description: 'You win a prize.',
-  },
-  {
-    id: '12',
-    label: '12',
-    tone: 'good',
-    description: 'You had a great day.',
-  },
-  {
-    id: '11',
-    label: '11',
-    tone: 'good',
-    description: 'You had a good day.',
-  },
-  {
-    id: '10',
-    label: '10',
-    tone: 'mid',
-    description: "You're okay.",
-  },
-  {
-    id: '9',
-    label: '9',
-    tone: 'mid',
-    description: "You've had a rocky day.",
-  },
-  {
-    id: '8',
-    label: '8',
-    tone: 'warn',
-    description: 'You had a bad day.',
-  },
-  {
-    id: '7',
-    label: '7',
-    tone: 'warn',
-    description: 'You had a very bad day.',
-  },
-  {
-    id: '6',
-    label: '6',
-    tone: 'warn',
-    description: 'You had an extremely bad day.',
-  },
-  {
-    id: '5',
-    label: '5',
-    tone: 'warn',
-    description: 'You had a major rocky day.',
-  },
-  {
-    id: '4',
-    label: '4',
-    tone: 'danger',
-    description: 'You had a very very rocky one.',
-  },
-  {
-    id: '3',
-    label: '3',
-    tone: 'danger',
-    description: 'You are off the menu.',
-  },
-  {
-    id: '2',
-    label: '2',
-    tone: 'danger',
-    description: 'You are out!!',
-  },
-  {
-    id: '1',
-    label: '1',
-    tone: 'danger',
-    description: 'You are completely expelled.',
-  },
-  {
-    id: '0',
-    label: '0',
-    tone: 'danger',
-    description: 'YOU HAVE ABSOLUTE ROCKINESS.',
-  },
-  {
-    id: '-0',
-    label: '-0',
-    tone: 'void',
-    description: 'You are removed from the world.',
-  },
-  {
-    id: '⬛️',
-    label: '⬛️',
-    tone: 'void',
-    description: 'You are chopped out of the ocean and never seen again.',
-  },
-]
+const gradeDefinitions = createBehaviorMomentDefinitions()
+const gradeLegendDefinitions = gradeDefinitions.filter(grade =>
+  ['100', '57', '56', '55', '50', '45', '44', '43', '0'].includes(grade.id)
+)
 
 const defaultStudents = [
   'Zander',
@@ -165,8 +30,14 @@ const defaultStudents = [
         <p class="eyebrow">SRO15</p>
         <h1>Class Grade Game</h1>
         <p class="intro">
-          Hand out class grades from <strong>20</strong> down to <strong>0</strong>, plus
-          <strong>-0</strong> and the even worse <strong>⬛️</strong>.
+          Hand out class grades from <strong>100</strong> down to <strong>0</strong>.
+          <strong>56</strong> is Best, <strong>50</strong> is neutral, and
+          <strong>44</strong> is Worst. Numbers above <strong>56</strong> are
+          better-than-Best, and numbers below <strong>44</strong> are
+          worse-than-Worst. Numbers <strong>20</strong> to <strong>11</strong>
+          change very, very fast. Numbers <strong>10</strong> to
+          <strong>0</strong> are the worst ten numbers ever and drop
+          extremely, extremely, extremely fast.
         </p>
         <p class="intro intro-small">
           Add students, choose their grade, and press <strong>Hand Out Grades</strong> to list
@@ -210,14 +81,19 @@ const defaultStudents = [
             <p class="section-kicker">Scale</p>
             <h2>Grade Meanings</h2>
           </div>
-          <p class="section-copy">20 is the best. ⬛️ is the absolute worst.</p>
+          <p class="section-copy">
+            The middle band is 56 to 44. Above 56 gets better than Best. Below
+            44 gets worse than Worst. The 20 to 11 range changes very fast, and
+            the 10 to 0 range is the worst ten-number drop.
+          </p>
         </div>
 
         <div class="scale-grid">
           {
-            gradeDefinitions.map(grade => (
+            gradeLegendDefinitions.map(grade => (
               <article class={`grade-card ${grade.tone}`}>
                 <div class="grade-badge">{grade.label}</div>
+                <p class="grade-legacy">{grade.legacyLabel}</p>
                 <p>{grade.description}</p>
               </article>
             ))
@@ -451,6 +327,14 @@ const defaultStudents = [
         margin-bottom: 0;
       }
 
+      .grade-legacy {
+        margin: 0.4rem 0 0.2rem;
+        font-size: 0.95rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
       .grade-card.best {
         background: linear-gradient(145deg, #2f9e44, #74b816);
       }
@@ -598,7 +482,7 @@ const defaultStudents = [
         const options = gradeDefinitions
           .map(grade => {
             const selected = grade.id === selectedGrade ? 'selected' : ''
-            return `<option value="${escapeHtml(grade.id)}" ${selected}>${escapeHtml(grade.label)} - ${escapeHtml(grade.description)}</option>`
+            return `<option value="${escapeHtml(grade.id)}" ${selected}>${escapeHtml(grade.label)} - ${escapeHtml(grade.legacyLabel)} - ${escapeHtml(grade.description)}</option>`
           })
           .join('')
 
@@ -619,7 +503,7 @@ const defaultStudents = [
           .map((student, index) => {
             const grade = gradeMap.get(student.grade)
             const meaning = grade
-              ? `${grade.label}: ${grade.description}`
+              ? `${grade.label} (${grade.legacyLabel}): ${grade.description}`
               : 'No grade yet.'
 
             return `
@@ -669,7 +553,7 @@ const defaultStudents = [
 
             return `
               <section class="summary-group ${grade.tone}">
-                <h4>${escapeHtml(grade.label)} - ${escapeHtml(grade.description)}</h4>
+                <h4>${escapeHtml(grade.label)} - ${escapeHtml(grade.legacyLabel)} - ${escapeHtml(grade.description)}</h4>
                 <ul>${studentItems}</ul>
               </section>
             `
@@ -777,7 +661,7 @@ const defaultStudents = [
 
       ivyIntroBtn.addEventListener('click', () => {
         const introText =
-          'Hi, my name is Ivy. Welcome to the class grade game. Twenty is the best. Zero is the worst. Minus zero is even worse, and the black square is the absolute worst. Add students, choose their grades, and press hand out grades to see who got each result.'
+          'Hi, my name is Ivy. Welcome to the class grade game. This game goes from zero to one hundred. Fifty six is Best. Fifty is neutral. Forty four is Worst. Numbers above fifty six are better than Best, and numbers below forty four are worse than Worst. Add students, choose their grades, and press hand out grades to see who got each result.'
         speakIvy(introText)
         output.innerHTML = `
           <div class="summary-group empty-report">

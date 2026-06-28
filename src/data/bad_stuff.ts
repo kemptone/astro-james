@@ -1,3 +1,5 @@
+import {createBehaviorMomentScoreOptions} from '@/core/behaviorNumbers'
+
 export const bad_stuff = [
   'passing notes in class',
   'lighting a girls hair on fire',
@@ -188,23 +190,8 @@ export const behavior_score = Array.from(
   {length: max_behavior_score},
   (_, index) => String(index + 1)
 )
-export const style_score_default = ''
-export const style_score = [
-  'Worst',
-  '0',
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '',
-  '6',
-  '7',
-  '8',
-  '9',
-  '10',
-  'Best',
-]
+export const style_score_default = '50'
+export const style_score = createBehaviorMomentScoreOptions()
 export const punishment_count = ['1', '2', '3', '4', '5', '6']
 
 export function getRandomBehavior() {

@@ -1,587 +1,853 @@
 ---
-// SRO5 - Weekly Task Scheduler with Magic Trick
-// No external dependencies - all code is self-contained
+const behaviorScale = [
+  ["A", "you graduate school forever!"],
+  ["B", "you get 2 years off!"],
+  ["C", "you get 1 year off!"],
+  ["D", "you get 6 months off."],
+  ["E", "you get 1 month off."],
+  ["F", "you get 2 weeks off."],
+  ["G", "you get 1 week off."],
+  ["H", "you get 3 days off."],
+  ["I", "you get 1 day off."],
+  ["J", "you get a high-five from the teacher."],
+  ["K", "you get to have extra recess."],
+  ["L", "you get to go home early."],
+  ["M", "you take a deep breath, and move on."],
+  ["N", "you just get a little talk after class, but nothing serious."],
+  ["O", "you have a little bit of detention for 5 minutes along with the talk."],
+  ["P", "you have detention for 1 hour."],
+  ["Q", "you have detention for 1 day."],
+  ["R", "you have detention for 1 week."],
+  ["S", "you have detention every day."],
+  ["T", "you are suspended for 1 week."],
+  ["U", "you are suspended for 1 month."],
+  ["V", "you are suspended for the rest of the year."],
+  ["W", "you are suspended and will also be arrested."],
+  ["X", "you will be suspended for 1 year, along with that, you have school all 365 days, which means no break."],
+  ["Y", "you are suspended until High School."],
+  ["Z", "you are expelled, grounded, and you are totally banned from school."],
+];
 ---
 
-<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SRO5 - Weekly Task Scheduler</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>girls2</title>
     <style>
+      :root {
+        --paper: #fff8e8;
+        --ink: #231815;
+        --pink: #ff7da8;
+        --red: #ff5f5f;
+        --gold: #f8c446;
+        --card: rgba(255, 255, 255, 0.82);
+        --line: rgba(35, 24, 21, 0.15);
+      }
+
       * {
-        margin: 0;
-        padding: 0;
         box-sizing: border-box;
       }
 
       body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: 0;
+        font-family: "Trebuchet MS", "Comic Sans MS", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top, rgba(255, 255, 255, 0.92), transparent 38%),
+          linear-gradient(180deg, #ffcadb 0%, #ffd76e 100%);
         min-height: 100vh;
-        padding: 2rem;
-        color: #333;
       }
 
-      .container {
-        /* max-width: 900px; */
+      main {
+        width: min(1100px, calc(100% - 2rem));
         margin: 0 auto;
-        background: white;
-        border-radius: 20px;
+        padding: 2rem 0 3rem;
+      }
+
+      .hero,
+      .panel {
+        background: var(--card);
+        border: 3px solid rgba(255, 255, 255, 0.75);
+        border-radius: 28px;
+        box-shadow: 0 24px 50px rgba(77, 32, 32, 0.16);
+        backdrop-filter: blur(10px);
+      }
+
+      .hero {
         padding: 2rem;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        text-align: center;
+      }
+
+      h1,
+      h2 {
+        margin: 0;
       }
 
       h1 {
-        color: #667eea;
-        text-align: center;
-        margin-bottom: 1.5rem;
-        font-size: 2.5rem;
+        font-size: clamp(2.3rem, 6vw, 4.7rem);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
       }
 
-      .intro {
-        background: #f0f4ff;
-        padding: 1.5rem;
-        border-radius: 10px;
-        margin-bottom: 2rem;
-        border-left: 5px solid #667eea;
+      .subtitle {
+        margin: 0.8rem auto 0;
+        max-width: 52rem;
+        font-size: 1.08rem;
+        line-height: 1.5;
       }
 
-      .intro h2 {
-        color: #764ba2;
-        margin-bottom: 1rem;
-      }
-
-      .cornot-section {
-        background: #fff9e6;
-        padding: 1.5rem;
-        border-radius: 10px;
-        margin-bottom: 2rem;
-        border-left: 5px solid #ffd93d;
-      }
-
-      .cornot-section h3 {
-        color: #f39c12;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .days-reference {
-        background: #e8f5e9;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-      }
-
-      .days-list {
+      .layout {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 0.5rem;
-        margin-top: 1rem;
+        gap: 1.25rem;
+        margin-top: 1.25rem;
       }
 
-      .day-item {
-        background: white;
-        padding: 0.5rem;
-        border-radius: 5px;
-        text-align: center;
-        font-weight: bold;
+      .panel {
+        padding: 1.4rem;
       }
 
-      .calendar-grid {
+      .controls {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 1rem;
-        margin-top: 2rem;
-      }
-
-      .calendar-day {
-        background: white;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        min-height: 200px;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .calendar-day-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 0.8rem;
-        text-align: center;
-        font-weight: bold;
-        border-radius: 6px 6px 0 0;
-        font-size: 0.9rem;
-      }
-
-      .calendar-day-content {
-        padding: 0.8rem;
-        flex: 1;
-        overflow-y: auto;
-      }
-
-      .calendar-task {
-        background: #f0f4ff;
-        border-left: 3px solid #667eea;
-        padding: 0.6rem;
-        margin-bottom: 0.5rem;
-        border-radius: 4px;
-        font-size: 0.85rem;
-        word-wrap: break-word;
-      }
-
-      @media (max-width: 768px) {
-        .calendar-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .task-entry {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 10px;
-        margin-bottom: 2rem;
-      }
-
-      .form-group {
-        margin-bottom: 1.5rem;
+        gap: 0.9rem;
+        grid-template-columns: 1.3fr 0.9fr 0.9fr auto auto auto;
+        align-items: end;
       }
 
       label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-        color: #555;
+        display: grid;
+        gap: 0.45rem;
+        font-weight: 700;
       }
 
-      input[type='text'],
-      input[type='number'] {
+      input,
+      select,
+      button {
+        font: inherit;
+      }
+
+      input,
+      select {
         width: 100%;
-        padding: 0.8rem;
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        font-size: 1rem;
-        transition: border-color 0.3s;
-      }
-
-      input[type='text']:focus,
-      input[type='number']:focus {
-        outline: none;
-        border-color: #667eea;
+        border: 2px solid var(--line);
+        border-radius: 16px;
+        padding: 0.8rem 0.9rem;
+        background: rgba(255, 255, 255, 0.95);
       }
 
       button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        font-size: 1.1rem;
-        font-weight: bold;
+        border: 0;
+        border-radius: 999px;
+        padding: 0.9rem 1.25rem;
+        font-weight: 800;
         cursor: pointer;
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
+        background: var(--ink);
+        color: white;
+        transition: transform 140ms ease, box-shadow 140ms ease;
       }
 
       button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 10px 24px rgba(35, 24, 21, 0.2);
       }
 
-      button:active {
-        transform: translateY(0);
+      button.secondary {
+        background: #ffffff;
+        color: var(--ink);
+        border: 2px solid var(--line);
       }
 
-      .task-list {
-        margin-top: 2rem;
+      .students {
+        display: grid;
+        gap: 0.9rem;
       }
 
-      .task-list.hidden {
-        display: none;
-      }
-
-      #huge-submit-button {
-        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-        margin-left: 1rem;
-      }
-
-      #huge-submit-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
-      }
-
-      #reset-button {
-        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-        margin-left: 1rem;
-      }
-
-      #reset-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
-      }
-
-      .magic-section {
-        background: linear-gradient(135deg, #ffd93d 0%, #f39c12 100%);
-        padding: 2rem;
-        border-radius: 10px;
-        margin-top: 2rem;
-        color: white;
-      }
-
-      .magic-section.disabled {
-        opacity: 0.5;
-        pointer-events: none;
-      }
-
-      .magic-section h2 {
-        margin-bottom: 1rem;
-      }
-
-      .magic-calculator {
-        background: rgba(255, 255, 255, 0.3);
-        padding: 1.5rem;
-        border-radius: 8px;
-        margin-top: 1rem;
-      }
-
-      .magic-result {
-        font-size: 100pt;
-        font-family: Helvetica, Arial, sans-serif;
-        font-weight: bold;
-        text-align: center;
-        margin-top: 1rem;
-        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-        min-height: 150px;
-        display: flex;
+      .student-card {
+        display: grid;
+        gap: 0.75rem;
+        grid-template-columns: minmax(0, 1fr) auto auto auto auto;
         align-items: center;
-        justify-content: center;
-      }
-
-      .helper-text {
-        font-size: 0.9rem;
-        color: #666;
-        font-style: italic;
-        margin-top: 0.5rem;
-      }
-
-      .example-box {
-        background: rgba(255, 255, 255, 0.5);
         padding: 1rem;
-        border-radius: 8px;
+        border: 2px solid rgba(35, 24, 21, 0.08);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .student-card strong {
+        font-size: 1.1rem;
+      }
+
+      .badge {
+        min-width: 3.2rem;
+        text-align: center;
+        padding: 0.7rem 0.85rem;
+        border-radius: 18px;
+        font-size: 1.2rem;
+        font-weight: 900;
+        background: linear-gradient(180deg, var(--gold), #ffefad);
+      }
+
+      .score-badge {
+        min-width: 4.2rem;
+        text-align: center;
+        padding: 0.7rem 0.85rem;
+        border-radius: 18px;
+        font-size: 1.1rem;
+        font-weight: 900;
+        border: 2px solid rgba(35, 24, 21, 0.12);
+      }
+
+      .narration-list,
+      .legend-list {
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0 0;
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .narration-list li,
+      .legend-list li {
+        padding: 0.9rem 1rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 2px solid rgba(35, 24, 21, 0.08);
+      }
+
+      .empty-state {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.6);
+        border: 2px dashed rgba(35, 24, 21, 0.16);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
         margin-top: 1rem;
       }
 
-      @media (max-width: 768px) {
-        .container {
-          padding: 1rem;
+      .tiny {
+        margin-top: 0.7rem;
+        font-size: 0.95rem;
+      }
+
+      .slideshow {
+        margin-top: 1rem;
+      }
+
+      .slideshow-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .slide-card {
+        min-height: 280px;
+        border-radius: 28px;
+        padding: 1.4rem;
+        border: 3px solid rgba(255, 255, 255, 0.5);
+        box-shadow: inset 0 0 0 1px rgba(35, 24, 21, 0.08);
+        display: grid;
+        gap: 1rem;
+        align-content: space-between;
+      }
+
+      .slide-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .slide-rank,
+      .slide-score {
+        font-size: 1rem;
+        font-weight: 800;
+      }
+
+      .slide-card h3 {
+        margin: 0;
+        font-size: clamp(2rem, 5vw, 3.6rem);
+        line-height: 1;
+      }
+
+      .slide-number {
+        font-size: clamp(2.5rem, 7vw, 5rem);
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .slide-outcome {
+        font-size: 1.05rem;
+        line-height: 1.5;
+        max-width: 45rem;
+      }
+
+      .scale-list {
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0 0;
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .scale-item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 0.75rem;
+        align-items: center;
+        padding: 0.9rem 1rem;
+        border-radius: 18px;
+        border: 2px solid rgba(35, 24, 21, 0.08);
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .swatch {
+        width: 3.25rem;
+        height: 3.25rem;
+        border-radius: 14px;
+        border: 2px solid rgba(35, 24, 21, 0.16);
+      }
+
+      @media (max-width: 820px) {
+        .controls {
+          grid-template-columns: 1fr;
         }
 
-        h1 {
-          font-size: 2rem;
+        .student-card {
+          grid-template-columns: 1fr;
         }
 
-        .magic-result {
-          font-size: 60pt;
+        .scale-item {
+          grid-template-columns: 1fr;
+        }
+
+        button {
+          width: 100%;
         }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>📅 SRO5 - Weekly Task Scheduler</h1>
-
-      <div class="intro">
-        <h2>Welcome to Version 3!</h2>
-        <p>
-          This is a game where you can write words and put them in the week you
-          like. After this update, the next update will be about changing the
-          name of the game, but we are on version 3 today!
+    <main>
+      <section class="hero">
+        <p><strong>Welcome to girls2</strong></p>
+        <h1>Behavior Letter Day</h1>
+        <p class="subtitle">
+          Add each student, choose their behavior letter, and let the narrator explain what that
+          letter means. A is the best, Z is the worst.
         </p>
-      </div>
+      </section>
 
-      <div class="cornot-section">
-        <h3>👨 Meet Cornot - Your Helper</h3>
-        <p>Cornot will help with this game! Here's how it works:</p>
+      <div class="layout">
+        <section class="panel">
+          <h2>Build The Class</h2>
+          <div class="controls">
+            <label>
+              Student name
+              <input id="studentName" type="text" placeholder="Enter a student name" maxlength="40" />
+            </label>
 
-        <div class="days-reference">
-          <strong>📋 The 7 Days of the Week:</strong>
-          <div class="days-list">
-            <div class="day-item">1️⃣ Monday</div>
-            <div class="day-item">2️⃣ Tuesday</div>
-            <div class="day-item">3️⃣ Wednesday</div>
-            <div class="day-item">4️⃣ Thursday</div>
-            <div class="day-item">5️⃣ Friday</div>
-            <div class="day-item">6️⃣ Saturday</div>
-            <div class="day-item">7️⃣ Sunday</div>
-          </div>
-        </div>
+            <label>
+              Letter
+              <select id="studentLetter">
+                {
+                  behaviorScale.map(([letter]) => (
+                    <option value={letter} selected={letter === "M"}>
+                      {letter}
+                    </option>
+                  ))
+                }
+              </select>
+            </label>
 
-        <p>
-          If you don't know and you are confused, look at the list of the 7 days
-          above!
-        </p>
+            <label>
+              Student score
+              <input
+                id="studentScore"
+                type="number"
+                min="0"
+                max="100"
+                value="50"
+                placeholder="0 to 100"
+              />
+            </label>
 
-        <div class="example-box">
-          <strong>Example from Cornot:</strong>
-          <p>
-            📝 Cornot typed <strong>135</strong> in the number input and <strong
-              >"law workers"</strong
-            > in the task input.
-          </p>
-          <p>
-            This means they did law workers on <strong
-              >Mondays, Wednesdays, and Fridays</strong
-            >.
-          </p>
-          <p>
-            <br />📦 Then Cornot did "box carrying" with number <strong
-              >1</strong
-            > only. He would do that only on Monday!
-          </p>
-        </div>
-      </div>
-
-      <div class="task-entry">
-        <h3>➕ Add Your Task</h3>
-
-        <div class="form-group">
-          <label for="day-numbers"
-            >Enter Day Numbers (1-7, can combine like 135):</label
-          >
-          <input
-            type="text"
-            id="day-numbers"
-            placeholder="e.g., 135 for Mon/Wed/Fri or 1 for Monday only"
-            maxlength="7"
-          />
-          <p class="helper-text">
-            Type the numbers for the days you want. Up to 1234567!
-          </p>
-        </div>
-
-        <div class="form-group">
-          <label for="task-description">What will you do on those days?</label>
-          <input
-            type="text"
-            id="task-description"
-            placeholder="e.g., law workers, box carrying, study time..."
-          />
-        </div>
-
-        <button id="submit-task">📌 Submit Task</button>
-        <button id="huge-submit-button">Show Schedule</button>
-        <button id="reset-button">🔄 Reset</button>
-      </div>
-
-      <div class="task-list hidden" id="task-list">
-        <h3>📝 Your Weekly Schedule</h3>
-        <div class="calendar-grid" id="calendar-container">
-          <!-- Calendar will be rendered here by JavaScript -->
-        </div>
-      </div>
-
-      <div></div>
-
-      <!-- Magic Trick Section -->
-      <div class="magic-section" id="magic-section">
-        <h2>✨ Magic Trick Feature</h2>
-
-        <div class="magic-calculator" id="magic-calculator">
-          <h3>🎩 The Magic Subtraction Trick</h3>
-          <p>This is where you type a number and it will be subtracting!</p>
-          <p>
-            <strong
-              >150 - (your secret number) = the answer in big Helvetica numbers
-              which is 100pt!!!</strong
-            >
-          </p>
-          <p style="font-size: 0.9rem; margin-top: 0.5rem;">
-            And it hides the input number so that nobody knows how the person
-            does it. It is a magic trick!
-          </p>
-
-          <div class="form-group" style="margin-top: 1rem;">
-            <label for="magic-number">Enter your secret number:</label>
-            <input
-              type="text"
-              id="magic-number"
-              min="0.000"
-              max="150000000000000.000"
-              placeholder="your secret number"
-              autocomplete="off"
-              autocapitalize="off"
-              autocorrect="off"
-            />
-            <button id="calculate-magic" style="margin-top: 0.5rem;"
-              >🎲 Calculate Magic Result</button
-            >
+            <button id="addStudent">Add Name</button>
+            <button id="handOut" class="secondary">Hand Out Results</button>
+            <button id="speakAll" class="secondary">Narrator Talk</button>
           </div>
 
-          <div class="magic-result" id="magic-result"></div>
-        </div>
-      </div>
-    </div>
+          <div class="actions">
+            <button id="clearAll" class="secondary">Clear Class</button>
+          </div>
 
-    <script>
-      // Task scheduling functionality
-      const dayNumbersInput = document.getElementById('day-numbers')
-      const taskDescInput = document.getElementById('task-description')
-      const submitTaskBtn = document.getElementById('submit-task')
-      const calendarContainer = document.getElementById('calendar-container')
-      const taskListSection = document.getElementById('task-list')
-      const showScheduleBtn = document.getElementById('huge-submit-button')
-      const resetBtn = document.getElementById('reset-button')
+          <div id="studentsWrap" class="students" aria-live="polite"></div>
+        </section>
 
-      const dayNames = {
-        '1': 'Monday',
-        '2': 'Tuesday',
-        '3': 'Wednesday',
-        '4': 'Thursday',
-        '5': 'Friday',
-        '6': 'Saturday',
-        '7': 'Sunday',
-      }
+        <section class="panel">
+          <h2>Narrator</h2>
+          <p class="tiny">
+            When you hand out results, the narrator explains every student one by one.
+          </p>
+          <ul id="narrationList" class="narration-list"></ul>
+          <div id="narrationEmpty" class="empty-state">
+            No results yet. Add students first, then press <strong>Hand Out Results</strong>.
+          </div>
+        </section>
 
-      let tasks = []
-
-      // Initialize calendar on load
-      renderCalendar()
-
-      submitTaskBtn.addEventListener('click', addTask)
-      taskDescInput.addEventListener('keypress', e => {
-        if (e.key === 'Enter') addTask()
-      })
-
-      // Show/hide schedule button
-      showScheduleBtn.addEventListener('click', () => {
-        taskListSection.classList.toggle('hidden')
-        showScheduleBtn.textContent = taskListSection.classList.contains(
-          'hidden'
-        )
-          ? 'Show Schedule'
-          : 'Hide Schedule'
-      })
-
-      // Reset button - clear all tasks
-      resetBtn.addEventListener('click', () => {
-        if (confirm('Are you sure you want to clear all tasks?')) {
-          tasks = []
-          renderCalendar()
-        }
-      })
-
-      function addTask() {
-        const dayNumbers = dayNumbersInput.value.trim()
-        const description = taskDescInput.value.trim()
-
-        if (!dayNumbers || !description) {
-          alert('Please fill in both the day numbers and task description!')
-          return
-        }
-
-        // Validate day numbers
-        const validDays = dayNumbers
-          .split('')
-          .filter(d => '1234567'.includes(d))
-        if (validDays.length === 0) {
-          alert('Please enter valid day numbers (1-7)!')
-          return
-        }
-
-        // Remove duplicates and sort
-        const uniqueDays = [...new Set(validDays)].sort()
-
-        const task = {
-          days: uniqueDays,
-          description: description,
-          id: Date.now(),
-        }
-
-        tasks.push(task)
-        renderCalendar()
-
-        // Clear inputs
-        dayNumbersInput.value = ''
-        taskDescInput.value = ''
-        dayNumbersInput.focus()
-      }
-
-      function renderCalendar() {
-        // Create calendar structure with all 7 days
-        const calendarHTML = Object.keys(dayNames)
-          .map(dayNum => {
-            const dayTasks = tasks.filter(task => task.days.includes(dayNum))
-            const tasksHTML = dayTasks
-              .map(
-                task => `<div class="calendar-task">• ${task.description}</div>`
-              )
-              .join('')
-
-            return `
-            <div class="calendar-day">
-              <div class="calendar-day-header">
-                ${dayNames[dayNum]}:
-              </div>
-              <div class="calendar-day-content">
-                ${tasksHTML}
-              </div>
+        <section class="panel">
+          <h2>Version 2 Slideshow</h2>
+          <p class="tiny">
+            This one goes from best to worst. The student score controls the slide color:
+            100 is blue, 75 is cyan, 50 is white, 25 is red, and 0 is black.
+          </p>
+          <div id="slideshowEmpty" class="empty-state">
+            Add students with scores to start the slideshow.
+          </div>
+          <div id="slideshowWrap" class="slideshow" hidden>
+            <div id="slideCard" class="slide-card"></div>
+            <div class="slideshow-controls">
+              <button id="prevSlide" class="secondary">Previous</button>
+              <button id="nextSlide" class="secondary">Next</button>
+              <button id="toggleSlideshow" class="secondary">Play Slideshow</button>
             </div>
-          `
-          })
-          .join('')
+          </div>
+          <ul class="scale-list">
+            <li class="scale-item">
+              <div class="swatch" style="background: rgb(0, 128, 255);"></div>
+              <div><strong>100</strong> is totally blue.</div>
+              <code>rgb(0, 128, 255)</code>
+            </li>
+            <li class="scale-item">
+              <div class="swatch" style="background: rgb(0, 255, 255);"></div>
+              <div><strong>75</strong> is cyan.</div>
+              <code>rgb(0, 255, 255)</code>
+            </li>
+            <li class="scale-item">
+              <div class="swatch" style="background: rgb(255, 255, 255);"></div>
+              <div><strong>50</strong> is white.</div>
+              <code>rgb(255, 255, 255)</code>
+            </li>
+            <li class="scale-item">
+              <div class="swatch" style="background: rgb(255, 0, 0);"></div>
+              <div><strong>25</strong> is red.</div>
+              <code>rgb(255, 0, 0)</code>
+            </li>
+            <li class="scale-item">
+              <div class="swatch" style="background: rgb(0, 0, 0);"></div>
+              <div><strong>0</strong> is black, but the text still stays visible.</div>
+              <code>rgb(0, 0, 0)</code>
+            </li>
+          </ul>
+        </section>
 
-        calendarContainer.innerHTML = calendarHTML
-      }
+        <section class="panel">
+          <h2>Letter Meanings</h2>
+          <ul class="legend-list">
+            {
+              behaviorScale.map(([letter, meaning]) => (
+                <li>
+                  <strong>{letter}</strong> means {meaning}
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </div>
+    </main>
 
-      // Magic trick functionality
-      const magicNumberInput = document.getElementById('magic-number')
-      const calculateMagicBtn = document.getElementById('calculate-magic')
-      const magicResult = document.getElementById('magic-result')
+    <script define:vars={{ behaviorScale }}>
+      const nameInput = document.querySelector("#studentName");
+      const letterInput = document.querySelector("#studentLetter");
+      const scoreInput = document.querySelector("#studentScore");
+      const addStudentButton = document.querySelector("#addStudent");
+      const handOutButton = document.querySelector("#handOut");
+      const speakAllButton = document.querySelector("#speakAll");
+      const clearAllButton = document.querySelector("#clearAll");
+      const studentsWrap = document.querySelector("#studentsWrap");
+      const narrationList = document.querySelector("#narrationList");
+      const narrationEmpty = document.querySelector("#narrationEmpty");
+      const slideshowWrap = document.querySelector("#slideshowWrap");
+      const slideshowEmpty = document.querySelector("#slideshowEmpty");
+      const slideCard = document.querySelector("#slideCard");
+      const prevSlideButton = document.querySelector("#prevSlide");
+      const nextSlideButton = document.querySelector("#nextSlide");
+      const toggleSlideshowButton = document.querySelector("#toggleSlideshow");
 
-      calculateMagicBtn.addEventListener('click', calculateMagic)
-      magicNumberInput.addEventListener('keypress', e => {
-        if (e.key === 'Enter') calculateMagic()
-      })
+      const meaningMap = new Map(behaviorScale);
+      const savedClass = window.localStorage.getItem("girls2-class");
+      const students = [];
+      let currentAudio = null;
+      let slideshowIndex = 0;
+      let slideshowTimer = null;
 
-      function calculateMagic() {
-        const secretNumber = parseFloat(magicNumberInput.value)
-
-        if (isNaN(secretNumber)) {
-          alert('Please enter any number!')
-          return
+      const clampScore = (value) => {
+        const numeric = Number(value);
+        if (!Number.isFinite(numeric)) {
+          return 50;
         }
 
-        const result = 150 - secretNumber
+        return Math.max(0, Math.min(100, Math.round(numeric)));
+      };
 
-        // Hide the input (the magic trick!)
-        magicNumberInput.value = ''
+      const normalizeStudent = (student) => ({
+        name: String(student?.name ?? "").trim(),
+        letter: meaningMap.has(student?.letter) ? student.letter : "M",
+        score: clampScore(student?.score ?? 50),
+      });
 
-        // Show the result in big 100pt Helvetica
-        magicResult.textContent = result
-
-        // Optional: Add a magical animation
-        magicResult.style.animation = 'none'
-        setTimeout(() => {
-          magicResult.style.animation = 'fadeIn 0.5s ease-in'
-        }, 10)
+      if (savedClass) {
+        try {
+          const parsed = JSON.parse(savedClass);
+          for (const student of parsed) {
+            const normalized = normalizeStudent(student);
+            if (normalized.name) {
+              students.push(normalized);
+            }
+          }
+        } catch (error) {
+          console.error(error);
+        }
       }
+
+      const saveStudents = () => {
+        window.localStorage.setItem("girls2-class", JSON.stringify(students));
+      };
+
+      const sortedStudents = () =>
+        [...students].sort((left, right) => right.score - left.score || left.name.localeCompare(right.name));
+
+      const mixRgb = (from, to, ratio) => from.map((value, index) => {
+        return Math.round(value + (to[index] - value) * ratio);
+      });
+
+      const getScoreColor = (score) => {
+        const anchors = [
+          { score: 0, rgb: [0, 0, 0] },
+          { score: 25, rgb: [255, 0, 0] },
+          { score: 50, rgb: [255, 255, 255] },
+          { score: 75, rgb: [0, 255, 255] },
+          { score: 100, rgb: [0, 128, 255] },
+        ];
+
+        const safeScore = clampScore(score);
+
+        for (let index = 0; index < anchors.length - 1; index += 1) {
+          const start = anchors[index];
+          const end = anchors[index + 1];
+
+          if (safeScore >= start.score && safeScore <= end.score) {
+            const range = end.score - start.score || 1;
+            const ratio = (safeScore - start.score) / range;
+            const [red, green, blue] = mixRgb(start.rgb, end.rgb, ratio);
+            return { red, green, blue };
+          }
+        }
+
+        const [red, green, blue] = anchors[anchors.length - 1].rgb;
+        return { red, green, blue };
+      };
+
+      const getReadableTextColor = ({ red, green, blue }) => {
+        const brightness = (red * 299 + green * 587 + blue * 114) / 1000;
+        return brightness < 145 ? "#ffffff" : "#231815";
+      };
+
+      const makeOutcome = (student) => {
+        const meaning = meaningMap.get(student.letter) ?? "something mysterious happens.";
+        return `${student.letter} means ${meaning}`;
+      };
+
+      const makeNarration = (student) => {
+        return `The narrator says ${student.name} has student score ${student.score} and got ${student.letter}. ${makeOutcome(student)}`;
+      };
+
+      const speakTextFallback = (text) => {
+        if (!("speechSynthesis" in window)) {
+          return;
+        }
+
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.95;
+        utterance.pitch = 1.08;
+        window.speechSynthesis.speak(utterance);
+      };
+
+      const speakText = async (text) => {
+        try {
+          window.speechSynthesis?.cancel?.();
+
+          if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+          }
+
+          const response = await fetch("/api/polly/say", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              text,
+              voiceId: "Matthew",
+              engine: "neural",
+            }),
+          });
+
+          if (!response.ok || !response.body) {
+            throw new Error("Audio response failed.");
+          }
+
+          const reader = response.body.getReader();
+          const chunks = [];
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+              break;
+            }
+
+            chunks.push(value);
+          }
+
+          const audioBlob = new Blob(chunks, { type: "audio/mpeg" });
+          const audioUrl = URL.createObjectURL(audioBlob);
+
+          currentAudio = new Audio(audioUrl);
+          currentAudio.addEventListener("ended", () => {
+            URL.revokeObjectURL(audioUrl);
+            currentAudio = null;
+          }, { once: true });
+
+          await currentAudio.play();
+        } catch (error) {
+          console.error(error);
+          speakTextFallback(text);
+        }
+      };
+
+      const renderNarration = () => {
+        narrationList.innerHTML = "";
+
+        if (students.length === 0) {
+          narrationEmpty.hidden = false;
+          return;
+        }
+
+        narrationEmpty.hidden = true;
+
+        for (const student of students) {
+          const item = document.createElement("li");
+          item.textContent = makeNarration(student);
+          narrationList.appendChild(item);
+        }
+      };
+
+      const stopSlideshow = () => {
+        if (slideshowTimer) {
+          window.clearInterval(slideshowTimer);
+          slideshowTimer = null;
+        }
+
+        toggleSlideshowButton.textContent = "Play Slideshow";
+      };
+
+      const renderSlideshow = () => {
+        const rankedStudents = sortedStudents();
+
+        if (rankedStudents.length === 0) {
+          slideshowWrap.hidden = true;
+          slideshowEmpty.hidden = false;
+          stopSlideshow();
+          return;
+        }
+
+        slideshowWrap.hidden = false;
+        slideshowEmpty.hidden = true;
+
+        if (slideshowIndex >= rankedStudents.length) {
+          slideshowIndex = 0;
+        }
+
+        if (slideshowIndex < 0) {
+          slideshowIndex = rankedStudents.length - 1;
+        }
+
+        const student = rankedStudents[slideshowIndex];
+        const rank = slideshowIndex + 1;
+        const color = getScoreColor(student.score);
+        const textColor = getReadableTextColor(color);
+
+        slideCard.style.background = `rgb(${color.red}, ${color.green}, ${color.blue})`;
+        slideCard.style.color = textColor;
+        slideCard.innerHTML = `
+          <div class="slide-top">
+            <div class="slide-rank">Best to worst: ${rank} of ${rankedStudents.length}</div>
+            <div class="slide-score">Student score ${student.score}</div>
+          </div>
+          <div>
+            <h3>${student.name}</h3>
+            <div class="slide-number">${student.letter}</div>
+          </div>
+          <div class="slide-outcome">${makeOutcome(student)}</div>
+        `;
+      };
+
+      const renderStudents = () => {
+        studentsWrap.innerHTML = "";
+
+        if (students.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "empty-state";
+          empty.textContent = "No students added yet.";
+          studentsWrap.appendChild(empty);
+          renderNarration();
+          renderSlideshow();
+          return;
+        }
+
+        for (const student of students) {
+          const card = document.createElement("article");
+          card.className = "student-card";
+
+          const info = document.createElement("div");
+          info.innerHTML = `<strong>${student.name}</strong><div>${makeNarration(student)}</div>`;
+
+          const badge = document.createElement("div");
+          badge.className = "badge";
+          badge.textContent = student.letter;
+
+          const scoreBadge = document.createElement("div");
+          scoreBadge.className = "score-badge";
+          scoreBadge.textContent = student.score;
+
+          const scoreColor = getScoreColor(student.score);
+          scoreBadge.style.background = `rgb(${scoreColor.red}, ${scoreColor.green}, ${scoreColor.blue})`;
+          scoreBadge.style.color = getReadableTextColor(scoreColor);
+
+          const select = document.createElement("select");
+          for (const [letter] of behaviorScale) {
+            const option = document.createElement("option");
+            option.value = letter;
+            option.textContent = letter;
+            option.selected = letter === student.letter;
+            select.appendChild(option);
+          }
+
+          select.addEventListener("change", () => {
+            student.letter = select.value;
+            saveStudents();
+            renderStudents();
+          });
+
+          const scoreField = document.createElement("input");
+          scoreField.type = "number";
+          scoreField.min = "0";
+          scoreField.max = "100";
+          scoreField.value = String(student.score);
+          const syncStudentScore = () => {
+            student.score = clampScore(scoreField.value);
+            scoreField.value = String(student.score);
+            saveStudents();
+            renderStudents();
+          };
+          scoreField.addEventListener("input", syncStudentScore);
+          scoreField.addEventListener("change", syncStudentScore);
+
+          card.append(info, badge, scoreBadge, select, scoreField);
+          studentsWrap.appendChild(card);
+        }
+
+        renderNarration();
+        renderSlideshow();
+      };
+
+      const addStudent = () => {
+        const name = nameInput.value.trim();
+        if (!name) {
+          nameInput.focus();
+          return;
+        }
+
+        students.push({
+          name,
+          letter: letterInput.value,
+          score: clampScore(scoreInput.value),
+        });
+
+        nameInput.value = "";
+        letterInput.value = "M";
+        scoreInput.value = "50";
+        saveStudents();
+        renderStudents();
+        nameInput.focus();
+      };
+
+      addStudentButton.addEventListener("click", addStudent);
+
+      nameInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          addStudent();
+        }
+      });
+
+      handOutButton.addEventListener("click", async () => {
+        renderNarration();
+        if (students.length > 0) {
+          await speakText(students.map(makeNarration).join(" "));
+        }
+      });
+
+      speakAllButton.addEventListener("click", async () => {
+        if (students.length > 0) {
+          await speakText(students.map(makeNarration).join(" "));
+        }
+      });
+
+      prevSlideButton.addEventListener("click", () => {
+        slideshowIndex -= 1;
+        renderSlideshow();
+      });
+
+      nextSlideButton.addEventListener("click", () => {
+        slideshowIndex += 1;
+        renderSlideshow();
+      });
+
+      toggleSlideshowButton.addEventListener("click", () => {
+        if (slideshowTimer) {
+          stopSlideshow();
+          return;
+        }
+
+        toggleSlideshowButton.textContent = "Stop Slideshow";
+        slideshowTimer = window.setInterval(() => {
+          slideshowIndex += 1;
+          renderSlideshow();
+        }, 1800);
+      });
+
+      clearAllButton.addEventListener("click", () => {
+        students.splice(0, students.length);
+        saveStudents();
+        renderStudents();
+        stopSlideshow();
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+          currentAudio = null;
+        }
+        window.speechSynthesis?.cancel?.();
+      });
+
+      renderStudents();
     </script>
-
-    <style>
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: scale(0.8);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1);
-        }
-      }
-    </style>
   </body>
 </html>

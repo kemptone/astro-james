@@ -5,12 +5,14 @@ import Layout from '../layouts/Layout.astro'
 <Layout title="Circle Cross Game">
   <main class="choice-arcade">
     <section class="hero-card">
-      <p class="eyebrow">Two Versions</p>
+      <p class="eyebrow">Three Versions</p>
       <h1>Circle or Cross Out Game</h1>
       <p class="hero-copy">
         Version 1 lets you keep adding words, then tap each one after Submit to
-        reveal the opposite result. Version 2 turns your typed text into
-        backwards-alphabet letters, one second at a time.
+        reveal the result you picked. Version 2 turns your typed text into
+        backwards-alphabet letters, one second at a time. Version 3 walks
+        through all 33 Russian letters one at a time with Circle or Cross out
+        choices.
       </p>
 
       <div class="version-switch" role="tablist" aria-label="Game versions">
@@ -19,6 +21,9 @@ import Layout from '../layouts/Layout.astro'
         </button>
         <button type="button" class="version-pill" data-version="2" aria-selected="false">
           Version 2
+        </button>
+        <button type="button" class="version-pill" data-version="3" aria-selected="false">
+          Version 3
         </button>
       </div>
     </section>
@@ -30,7 +35,7 @@ import Layout from '../layouts/Layout.astro'
           <h2>Build your word list</h2>
           <p class="panel-note">
             Pick <strong>Circle</strong> or <strong>Cross out</strong> for each
-            text. The game reveals the opposite when you press the word later.
+            text. The game reveals that same choice when you press the word later.
           </p>
 
           <div id="v1-builder" class="stack">
@@ -76,11 +81,11 @@ import Layout from '../layouts/Layout.astro'
             <p class="panel-tag">Play</p>
             <h2>Tap each text</h2>
           </div>
-          <span class="count-badge inverse-badge">Opposite reveal mode</span>
+          <span class="count-badge inverse-badge">Reveal mode</span>
         </div>
         <p class="panel-note">
-          If you picked circle, this word gets crossed out. If you picked cross
-          out, this word gets circled.
+          If you picked circle, this word gets circled. If you picked cross
+          out, this word gets crossed out.
         </p>
         <div id="v1-play-board" class="play-board" aria-live="polite"></div>
       </article>
@@ -115,6 +120,75 @@ import Layout from '../layouts/Layout.astro'
         </article>
       </div>
     </section>
+
+    <section class="game-panel" data-panel="3">
+      <div class="panel-grid">
+        <article class="panel-card">
+          <p class="panel-tag">Russian Alphabet</p>
+          <h2>Set all 33 letters</h2>
+          <p class="panel-note">
+            This mode goes in order from Russian letter 1 to 33. The choices are
+            opposite here: if you pick <strong>Cross out</strong>, that letter is
+            treated like an actual circle letter later.
+          </p>
+
+          <div class="russian-step-shell">
+            <span id="v3-progress" class="count-badge">Letter 1 of 33</span>
+
+            <div class="russian-letter-stage" aria-live="polite">
+              <span id="v3-current-letter" class="russian-letter">А</span>
+              <span id="v3-current-number" class="russian-letter-number">Russian letter 1</span>
+            </div>
+          </div>
+
+          <label class="field">
+            <span>Option for this letter</span>
+            <select id="v3-choice">
+              <option value="circle">Circle</option>
+              <option value="cross">Cross out</option>
+            </select>
+          </label>
+
+          <p id="v3-status" class="panel-note">
+            Pick one option, then press Next to move to the next Russian letter.
+            Press any saved letter below to see the real circle or cross result.
+          </p>
+
+          <div class="button-row">
+            <button type="button" class="ghost-button" id="v3-prev">Previous</button>
+            <button type="button" class="primary-button" id="v3-next">Save and next</button>
+            <button type="button" class="ghost-button" id="v3-reset">Reset all 33</button>
+          </div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-header">
+            <div>
+              <p class="panel-tag">Collected</p>
+              <h2>Cross out picks</h2>
+            </div>
+            <span id="v3-count" class="count-badge">0 / 33 saved</span>
+          </div>
+          <p class="panel-note">
+            Because the options are opposite in this version, every letter saved
+            as <strong>Cross out</strong> becomes a real circle later. If the
+            real result is a cross, you lose the game.
+          </p>
+
+          <div class="output-shell russian-output-shell">
+            <p class="output-label">Press a saved letter below</p>
+            <div id="v3-result" class="collected-output" aria-live="polite">No letter pressed yet.</div>
+            <p id="v3-result-note" class="russian-result-note">
+              Safe letters are the ones you saved as <strong>Cross out</strong>.
+            </p>
+          </div>
+
+          <p id="v3-collected" class="russian-safe-list">Safe letters: None yet.</p>
+
+          <div id="v3-summary" class="saved-list russian-summary" aria-live="polite"></div>
+        </article>
+      </div>
+    </section>
   </main>
 
   <script is:inline>
@@ -137,15 +211,72 @@ import Layout from '../layouts/Layout.astro'
     const v2Start = document.querySelector('#v2-start');
     const v2Reset = document.querySelector('#v2-reset');
     const v2Output = document.querySelector('#v2-output');
+    const v3Progress = document.querySelector('#v3-progress');
+    const v3CurrentLetter = document.querySelector('#v3-current-letter');
+    const v3CurrentNumber = document.querySelector('#v3-current-number');
+    const v3Choice = document.querySelector('#v3-choice');
+    const v3Status = document.querySelector('#v3-status');
+    const v3Prev = document.querySelector('#v3-prev');
+    const v3Next = document.querySelector('#v3-next');
+    const v3Reset = document.querySelector('#v3-reset');
+    const v3Count = document.querySelector('#v3-count');
+    const v3Result = document.querySelector('#v3-result');
+    const v3ResultNote = document.querySelector('#v3-result-note');
+    const v3Collected = document.querySelector('#v3-collected');
+    const v3Summary = document.querySelector('#v3-summary');
 
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const reversedAlphabet = alphabet.split('').reverse().join('');
+    const russianAlphabet = [
+      'А',
+      'Б',
+      'В',
+      'Г',
+      'Д',
+      'Е',
+      'Ё',
+      'Ж',
+      'З',
+      'И',
+      'Й',
+      'К',
+      'Л',
+      'М',
+      'Н',
+      'О',
+      'П',
+      'Р',
+      'С',
+      'Т',
+      'У',
+      'Ф',
+      'Х',
+      'Ц',
+      'Ч',
+      'Ш',
+      'Щ',
+      'Ъ',
+      'Ы',
+      'Ь',
+      'Э',
+      'Ю',
+      'Я',
+    ];
     const v1Entries = [];
+    const v3Entries = russianAlphabet.map((letter, index) => ({
+      letter,
+      number: index + 1,
+      choice: null,
+    }));
     let v2Timers = [];
+    let v3CurrentIndex = 0;
+    let v3PressedIndex = null;
 
     const pluralize = (count, singular, plural) => `${count} ${count === 1 ? singular : plural}`;
-    const getOppositeResult = choice => (choice === 'circle' ? 'cross' : 'circle');
-
+    const formatChoice = choice =>
+      choice === 'circle' ? 'Circle' : choice === 'cross' ? 'Cross out' : 'Not set yet';
+    const getVersion3ActualResult = choice =>
+      choice === 'cross' ? 'circle' : choice === 'circle' ? 'cross' : null;
     const stopVersion2 = () => {
       v2Timers.forEach(timerId => window.clearTimeout(timerId));
       v2Timers = [];
@@ -164,6 +295,90 @@ import Layout from '../layouts/Layout.astro'
       });
 
       if (version !== '2') stopVersion2();
+    };
+
+    const saveVersion3Choice = () => {
+      v3Entries[v3CurrentIndex].choice = v3Choice.value;
+    };
+
+    const renderVersion3 = () => {
+      const currentEntry = v3Entries[v3CurrentIndex];
+      const savedCount = v3Entries.filter(entry => entry.choice).length;
+      const collectedLetters = v3Entries
+        .filter(entry => entry.choice === 'cross')
+        .map(entry => entry.letter);
+      const pressedEntry = v3PressedIndex === null ? null : v3Entries[v3PressedIndex];
+      const pressedResult = pressedEntry ? getVersion3ActualResult(pressedEntry.choice) : null;
+
+      v3Progress.textContent = `Letter ${currentEntry.number} of ${v3Entries.length}`;
+      v3CurrentLetter.textContent = currentEntry.letter;
+      v3CurrentNumber.textContent = `Russian letter ${currentEntry.number}`;
+      v3Choice.value = currentEntry.choice ?? 'circle';
+      v3Count.textContent = `${savedCount} / ${v3Entries.length} saved`;
+      v3Prev.disabled = v3CurrentIndex === 0;
+      v3Next.textContent =
+        v3CurrentIndex === v3Entries.length - 1 ? 'Save letter 33' : 'Save and next';
+
+      if (currentEntry.choice) {
+        v3Status.innerHTML = `Saved for <strong>${currentEntry.letter}</strong>: ${formatChoice(currentEntry.choice)}.`;
+      } else {
+        v3Status.textContent = 'Pick one option, then press Next to move to the next Russian letter.';
+      }
+
+      if (!pressedEntry) {
+        v3Result.textContent = 'No letter pressed yet.';
+        v3Result.dataset.tone = 'neutral';
+        v3ResultNote.innerHTML =
+          'Safe letters are the ones you saved as <strong>Cross out</strong>.';
+      } else if (!pressedEntry.choice) {
+        v3Result.textContent = `${pressedEntry.letter} is not set yet.`;
+        v3Result.dataset.tone = 'neutral';
+        v3ResultNote.textContent = 'Pick Circle or Cross out for this letter first.';
+      } else if (pressedResult === 'circle') {
+        v3Result.textContent = `${pressedEntry.letter} is really circled.`;
+        v3Result.dataset.tone = 'success';
+        v3ResultNote.textContent = 'This one is safe.';
+      } else {
+        v3Result.textContent = `${pressedEntry.letter} is really crossed out. You lose.`;
+        v3Result.dataset.tone = 'danger';
+        v3ResultNote.textContent = 'A real cross means the game is over.';
+      }
+
+      v3Collected.textContent = collectedLetters.length
+        ? `Safe letters: ${collectedLetters.join(' ')}`
+        : 'Safe letters: None yet.';
+      v3Summary.innerHTML = '';
+
+      v3Entries.forEach((entry, index) => {
+        const actualResult = getVersion3ActualResult(entry.choice);
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'saved-item summary-item';
+        item.classList.toggle('is-current', index === v3CurrentIndex);
+        item.classList.toggle('is-pressed', index === v3PressedIndex);
+        item.classList.toggle('is-real-circle', actualResult === 'circle');
+        item.classList.toggle('is-real-cross', actualResult === 'cross');
+        item.setAttribute(
+          'aria-label',
+          `${entry.letter}. ${entry.choice
+            ? `${formatChoice(entry.choice)}${entry.choice === 'cross' ? ', actually circled' : ', actually crossed out'}`
+            : 'Not set yet'}`
+        );
+
+        const title = document.createElement('strong');
+        title.className = 'summary-letter';
+        title.textContent = entry.letter;
+        item.appendChild(title);
+
+        item.addEventListener('click', () => {
+          saveVersion3Choice();
+          v3CurrentIndex = index;
+          v3PressedIndex = index;
+          renderVersion3();
+        });
+
+        v3Summary.appendChild(item);
+      });
     };
 
     const renderVersion1Count = () => {
@@ -234,7 +449,7 @@ import Layout from '../layouts/Layout.astro'
         hint.className = 'word-chip-hint';
 
         const applyState = () => {
-          const result = getOppositeResult(entry.choice);
+          const result = entry.choice;
           button.classList.toggle('is-revealed', entry.revealed);
           button.classList.toggle('is-circled', entry.revealed && result === 'circle');
           button.classList.toggle('is-crossed', entry.revealed && result === 'cross');
@@ -364,6 +579,43 @@ import Layout from '../layouts/Layout.astro'
       }
     };
 
+    const nextVersion3Letter = () => {
+      saveVersion3Choice();
+
+      if (v3CurrentIndex < v3Entries.length - 1) {
+        v3CurrentIndex += 1;
+        renderVersion3();
+        return;
+      }
+
+      renderVersion3();
+      v3Status.innerHTML =
+        'All 33 Russian letters are saved. Every <strong>Cross out</strong> pick above is one of the actual circled letters in this opposite-mode version.';
+    };
+
+    const previousVersion3Letter = () => {
+      saveVersion3Choice();
+
+      if (v3CurrentIndex === 0) {
+        renderVersion3();
+        return;
+      }
+
+      v3CurrentIndex -= 1;
+      renderVersion3();
+    };
+
+    const resetVersion3 = () => {
+      v3Entries.forEach(entry => {
+        entry.choice = null;
+      });
+      v3CurrentIndex = 0;
+      v3PressedIndex = null;
+      v3Choice.value = 'circle';
+      renderVersion3();
+      v3Status.textContent = 'All 33 Russian letters are cleared. Start again from letter 1.';
+    };
+
     versionButtons.forEach(button => {
       button.addEventListener('click', () => {
         setActiveVersion(button.dataset.version);
@@ -383,8 +635,12 @@ import Layout from '../layouts/Layout.astro'
 
     v2Start.addEventListener('click', startVersion2);
     v2Reset.addEventListener('click', resetVersion2);
+    v3Next.addEventListener('click', nextVersion3Letter);
+    v3Prev.addEventListener('click', previousVersion3Letter);
+    v3Reset.addEventListener('click', resetVersion3);
 
     renderVersion1List();
+    renderVersion3();
     setActiveVersion('1');
   </script>
 </Layout>
@@ -804,6 +1060,167 @@ import Layout from '../layouts/Layout.astro'
       opacity: 1;
       transform: scale(1) translateY(0);
     }
+  }
+
+  .russian-step-shell {
+    display: grid;
+    gap: 1rem;
+    margin: 1.15rem 0;
+  }
+
+  .russian-letter-stage {
+    display: grid;
+    justify-items: center;
+    gap: 0.45rem;
+    padding: 1.25rem 1rem;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.76);
+    border: 1px solid rgba(120, 77, 37, 0.12);
+  }
+
+  .russian-letter {
+    font-family: 'Fuzzy Bubbles', 'Trebuchet MS', sans-serif;
+    font-size: clamp(3.2rem, 10vw, 5.6rem);
+    line-height: 1;
+    color: #4a2312;
+  }
+
+  .russian-letter-number {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #8a5f3f;
+  }
+
+  .russian-output-shell {
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.86), transparent 34%),
+      linear-gradient(140deg, #20594e 0%, #35686f 100%);
+  }
+
+  .collected-output {
+    min-height: 3.5rem;
+    margin-top: 0.7rem;
+    color: #fff7e7;
+    font-family: 'Fuzzy Bubbles', 'Trebuchet MS', sans-serif;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    line-height: 1.55;
+    word-break: break-word;
+  }
+
+  .collected-output[data-tone='success'] {
+    color: #e1ffef;
+  }
+
+  .collected-output[data-tone='danger'] {
+    color: #ffe3df;
+  }
+
+  .russian-result-note,
+  .russian-safe-list {
+    margin: 0.7rem 0 0;
+    font-size: 0.98rem;
+    line-height: 1.5;
+  }
+
+  .russian-result-note {
+    color: rgba(255, 247, 231, 0.92);
+  }
+
+  .russian-safe-list {
+    color: #6d492f;
+    font-weight: 700;
+  }
+
+  .russian-summary {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.65rem;
+    min-height: 0;
+  }
+
+  :global(.summary-item) {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 3.2rem;
+    padding: 0.15rem;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  :global(.summary-letter) {
+    position: relative;
+    display: inline-block;
+    font-family: 'Fuzzy Bubbles', 'Trebuchet MS', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #5a2813;
+  }
+
+  :global(.summary-letter)::before,
+  :global(.summary-letter)::after {
+    content: '';
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  :global(.summary-item.is-real-circle .summary-letter)::after {
+    inset: -0.45rem -0.6rem;
+    opacity: 1;
+    border: 0.18rem solid #198f73;
+    border-radius: 999px;
+    transform: rotate(-6deg);
+  }
+
+  :global(.summary-item.is-real-circle .summary-letter) {
+    color: #166b56;
+  }
+
+  :global(.summary-item.is-real-cross .summary-letter)::before,
+  :global(.summary-item.is-real-cross .summary-letter)::after {
+    top: 52%;
+    left: -0.45rem;
+    width: calc(100% + 0.9rem);
+    height: 0.18rem;
+    opacity: 1;
+    border-radius: 999px;
+    background: #c63c2d;
+  }
+
+  :global(.summary-item.is-real-cross .summary-letter)::before {
+    transform: translateY(-50%) rotate(-18deg);
+  }
+
+  :global(.summary-item.is-real-cross .summary-letter)::after {
+    transform: translateY(-50%) rotate(18deg);
+  }
+
+  :global(.summary-item.is-real-cross .summary-letter) {
+    color: #8b2f26;
+  }
+
+  :global(.summary-item.is-current) {
+    transform: none;
+  }
+
+  :global(.summary-item.is-current .summary-letter) {
+    color: #198f73;
+  }
+
+  :global(.summary-item.is-pressed) {
+    transform: none;
+  }
+
+  :global(.summary-item.is-pressed .summary-letter) {
+    text-decoration: underline;
+    text-decoration-thickness: 0.16rem;
+    text-underline-offset: 0.22rem;
   }
 
   @media (max-width: 820px) {
