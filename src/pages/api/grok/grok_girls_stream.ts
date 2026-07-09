@@ -1,41 +1,23 @@
 import {buildStoryPreviewText} from '../../../core/girls/storyOptions'
+import {bestBehaviorLetter, normalizeBehaviorLetter} from '@/core/girls/behaviorLetters'
 
 const XAI_API_KEY = import.meta.env.XAI_API_KEY // 'grok key';
-
-const CUSTOM_OPTION_KEYS = [
-  'opening',
-  'noticeLead',
-  'notice',
-  'handling',
-  'sounded',
-  'teacher',
-  'classmates',
-  'ending',
-] as const
 
 function buildFallbackStory(body: Record<string, string>) {
   return buildStoryPreviewText({
     personName: body.person_name || body.girl || 'This person',
     choice: body.choice || body.bad_thing || 'made a choice at school',
-    styleScore: body.style_score,
-    behaviorScore: body.behavior_score || '1000',
+    behaviorScore: normalizeBehaviorLetter(
+      body.behavior_score || bestBehaviorLetter
+    ),
+    howGood: normalizeBehaviorLetter(
+      body.how_good || bestBehaviorLetter
+    ),
     whatHappened:
       body.what_happened ||
       body.got_caught ||
       'the teacher noticed right away',
-    opening: body.opening,
-    noticeLead: body.noticeLead,
-    notice: body.notice,
-    handling: body.handling,
-    sounded: body.sounded,
-    teacher: body.teacher,
-    classmates: body.classmates,
-    ending: body.ending,
   })
-}
-
-function hasCustomStoryOptions(body: Record<string, string>) {
-  return CUSTOM_OPTION_KEYS.some(key => key in body)
 }
 
 const fetchChatCompletionStream = async (body: any) => {
@@ -46,7 +28,7 @@ const fetchChatCompletionStream = async (body: any) => {
       {
         role: 'system',
         content:
-          'Based on a JSON prompt, build a school story. Use the following properties from the JSON to build the story. person_name = the person name, choice = what they chose to do and it can be good or bad, style_score = a behavior-number legend that runs from 0 to 100. In the middle band, 56 = Best, 55 = 10, 54 = 9, 53 = 8, 52 = 7, 51 = 6, 50 = neutral, 49 = 4, 48 = 3, 47 = 2, 46 = 1, 45 = 0, and 44 = Worst. Numbers above 56 are better than Best. Numbers below 44 are worse than Worst. There is no weak-but-good 5 slot anymore. behavior_score = what school behavior score they got on a 1 to 2052 scale where 1000 is the best score, what_happened = what happened next. If the JSON also includes opening, noticeLead, notice, handling, sounded, teacher, classmates, or ending, those are separate user-picked narrator options and they may be mixed on purpose, even if the story does not make sense. In that case, use those exact option phrases as written and do not try to fix their logic or make them match each other. Use exactly 6 sentences and follow this frame: 1. "{person_name} had Behavior Number Day at school and chose {choice} {opening}." 2. "{noticeLead} {what_happened}, and the moment felt {notice}." 3. "{person_name} {handling}, and the moment sounded {sounded}." 4. "The teacher said that choice caused {person_name} to have a school behavior score of {behavior_score}, and the teacher {teacher}." 5. "Other students could see that the moment was {classmates}." 6. "{person_name} ended the day understanding the moment went {ending}."',
+          'Based on a JSON prompt, build a short school story. Use only these properties from the JSON: person_name, choice, behavior_score, how_good, and what_happened. behavior_score is a behavior letter on this ladder, from best to worst: +A through +Z, then +a through +z, then A through Z, then a through z, then -a through -z, and finally -A through -Z. how_good uses the same ladder. +A is the best letter, Z is neutral, and -Z is the worst letter. Each letter changes the tone, and behavior_score and how_good are separate letters. Do not use lists. Do not repeat the same descriptive phrase twice in the story. Use exactly 6 sentences and follow this frame: 1. "{person_name} has behavior letter day at school and chose {choice} in a {how_good}-style way." 2. "{behavior_score} is ... {how_good} is ..." 3. "{person_name} ..." 4. "When {what_happened}, the teacher said that choice caused {person_name} to have a school behavior letter of {behavior_score}." 5. "Other students could see ..." 6. "{person_name} ended the day understanding the moment went ..., and the parents ..."',
       },
       {
         role: 'user',
@@ -110,17 +92,6 @@ export async function POST({request}: {request: Request}) {
   }
 
   try {
-    if (hasCustomStoryOptions(body)) {
-      return new Response(`data: ${JSON.stringify({
-        choices: [{delta: {content: buildFallbackStory(body)}}],
-      })}\n\ndata: [DONE]\n\n`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Transfer-Encoding': 'chunked',
-        },
-      })
-    }
-
     const stream = await fetchChatCompletionStream(body)
     if (!stream) {
       return new Response(`data: ${JSON.stringify({

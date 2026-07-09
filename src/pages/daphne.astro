@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro'
 
-const russianLetters = [
+const russianAlphabet = [
   'А',
   'Б',
   'В',
@@ -37,22 +37,99 @@ const russianLetters = [
   'Я',
 ]
 
+const russianByFrequency = [
+  'О',
+  'Е',
+  'А',
+  'И',
+  'Н',
+  'Т',
+  'С',
+  'Р',
+  'В',
+  'Л',
+  'К',
+  'М',
+  'Д',
+  'П',
+  'У',
+  'Я',
+  'Ы',
+  'Ь',
+  'Г',
+  'З',
+  'Б',
+  'Ч',
+  'Й',
+  'Х',
+  'Ж',
+  'Ш',
+  'Ю',
+  'Ц',
+  'Щ',
+  'Э',
+  'Ф',
+  'Ъ',
+  'Ё',
+]
+
 const splitIntoRows = <T,>(items: T[], size: number) =>
   Array.from({length: Math.ceil(items.length / size)}, (_, index) =>
     items.slice(index * size, index * size + size)
   )
 
-const letterRows = splitIntoRows(russianLetters, 10)
-const numberRows = splitIntoRows(
-  russianLetters.map((letter, index) => ({letter, number: index + 1})),
-  10
+const buildNumberRows = (letters: string[]) =>
+  splitIntoRows(
+    letters.map((letter, index) => ({letter, number: index + 1})),
+    10
+  )
+
+const encodeExample = (secret: string, letters: string[]) =>
+  Array.from(secret)
+    .map(letter => {
+      if (letter === '/') return '/'
+      return String(letters.indexOf(letter) + 1)
+    })
+    .join(' ')
+
+const exampleSecret = 'ПРИВЕТ/МИР'
+const defaultModeKey = 'alpha'
+const gameModes = {
+  alpha: {
+    buttonLabel: 'Alphabet order',
+    description: '1 is А and 33 is Я in this version.',
+    mapLabel: 'Alphabet Number Map',
+    mapNote: 'This version follows the normal Russian alphabet from start to finish.',
+    letters: russianAlphabet,
+  },
+  common: {
+    buttonLabel: 'Common to rare',
+    description: '1 is the most usual Russian letter and 33 is the least usual in this version.',
+    mapLabel: 'Common-to-Rare Number Map',
+    mapNote: 'This version ranks the letters from most usual to least usual.',
+    letters: russianByFrequency,
+  },
+}
+
+const modeConfigs = Object.fromEntries(
+  Object.entries(gameModes).map(([key, mode]) => [
+    key,
+    {
+      ...mode,
+      exampleCode: encodeExample(exampleSecret, mode.letters),
+      exampleWord: exampleSecret,
+    },
+  ])
 )
+
+const letterRows = splitIntoRows(russianAlphabet, 10)
+const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
 ---
 
 <Layout title="Daphne">
   <main class="daphne-page">
     <section class="hero">
-      <p class="eyebrow">Two Player</p>
+      <p class="eyebrow">Two Player • Two Versions</p>
       <h1>Russian Code Hangman</h1>
       <p class="lede">
         Player 1 writes the secret as <strong>numbers 1 to 33</strong> for the
@@ -60,14 +137,37 @@ const numberRows = splitIntoRows(
         numbers. Use <strong>/</strong> when you want a space between words.
       </p>
 
+      <div class="mode-toggle" role="tablist" aria-label="Russian code versions">
+        <button
+          type="button"
+          class="mode-pill is-active"
+          data-mode-button
+          data-mode="alpha"
+          aria-selected="true"
+        >
+          {gameModes.alpha.buttonLabel}
+        </button>
+        <button
+          type="button"
+          class="mode-pill"
+          data-mode-button
+          data-mode="common"
+          aria-selected="false"
+        >
+          {gameModes.common.buttonLabel}
+        </button>
+      </div>
+
+      <p id="mode-note" class="mode-note">{gameModes[defaultModeKey].description}</p>
+
       <div class="hero-notes">
         <div class="hero-chip">
           <strong>Example Code</strong>
-          <span>17 18 10 3 6 20 / 14 10 18</span>
+          <span id="example-code">{modeConfigs[defaultModeKey].exampleCode}</span>
         </div>
         <div class="hero-chip">
           <strong>Means</strong>
-          <span>ПРИВЕТ/МИР</span>
+          <span>{modeConfigs[defaultModeKey].exampleWord}</span>
         </div>
         <div class="hero-chip">
           <strong>Win</strong>
@@ -82,7 +182,9 @@ const numberRows = splitIntoRows(
           <p class="panel-kicker">Player 1</p>
           <h2>Make the code</h2>
         </div>
-        <p class="panel-note">Use numbers <strong>1 to 33</strong>. Use <strong>/</strong> for spaces.</p>
+        <p id="setup-note" class="panel-note">
+          Use numbers <strong>1 to 33</strong>. Use <strong>/</strong> for spaces.
+        </p>
       </div>
 
       <label class="field">
@@ -93,7 +195,7 @@ const numberRows = splitIntoRows(
           spellcheck="false"
           autocomplete="off"
           inputmode="numeric"
-          placeholder="For example: 17 18 10 3 6 20 / 14 10 18"
+          placeholder={`For example: ${modeConfigs[defaultModeKey].exampleCode}`}
         ></textarea>
       </label>
 
@@ -128,8 +230,9 @@ const numberRows = splitIntoRows(
       </div>
 
       <div class="map-wrap">
-        <p class="output-label">Russian Number Map</p>
-        <div class="rows-wrap">
+        <p id="map-label" class="output-label">{gameModes[defaultModeKey].mapLabel}</p>
+        <p id="map-note" class="map-note">{gameModes[defaultModeKey].mapNote}</p>
+        <div id="number-map" class="rows-wrap">
           {
             numberRows.map(row => (
               <div class="letter-row key-row">
@@ -204,11 +307,7 @@ const numberRows = splitIntoRows(
     </section>
   </main>
 
-  <script define:vars={{russianLetters}}>
-    const letterToNumber = new Map(
-      russianLetters.map((letter, index) => [letter, index + 1])
-    )
-
+  <script define:vars={{defaultModeKey, modeConfigs, russianAlphabet}}>
     const secretInput = document.querySelector('#secret-input')
     const startRoundButton = document.querySelector('#start-round')
     const newRoundButton = document.querySelector('#new-round')
@@ -218,13 +317,22 @@ const numberRows = splitIntoRows(
     const playFeedback = document.querySelector('#play-feedback')
     const starCount = document.querySelector('#star-count')
     const unlockBox = document.querySelector('#unlock-box')
+    const modeNote = document.querySelector('#mode-note')
+    const setupNote = document.querySelector('#setup-note')
+    const exampleCode = document.querySelector('#example-code')
+    const mapLabel = document.querySelector('#map-label')
+    const mapNote = document.querySelector('#map-note')
+    const numberMap = document.querySelector('#number-map')
+    const modeButtons = document.querySelectorAll('[data-mode-button]')
     const letterButtons = document.querySelectorAll('[data-letter-button]')
+    const russianLetterSet = new Set(russianAlphabet)
 
     const state = {
       secret: '',
       guessed: new Set(),
       active: false,
       stars: 0,
+      mode: defaultModeKey,
     }
 
     const setSetupFeedback = (message, tone = 'neutral') => {
@@ -239,11 +347,88 @@ const numberRows = splitIntoRows(
       playFeedback.dataset.tone = tone
     }
 
+    const getModeConfig = () => modeConfigs[state.mode]
+
+    const splitRows = (items, size) =>
+      Array.from({length: Math.ceil(items.length / size)}, (_, index) =>
+        items.slice(index * size, index * size + size)
+      )
+
+    const renderNumberMap = () => {
+      if (!numberMap) return
+
+      numberMap.innerHTML = ''
+
+      const rows = splitRows(
+        getModeConfig().letters.map((letter, index) => ({letter, number: index + 1})),
+        10
+      )
+
+      rows.forEach(row => {
+        const rowElement = document.createElement('div')
+        rowElement.className = 'letter-row key-row'
+
+        row.forEach(item => {
+          const card = document.createElement('div')
+          card.className = 'key-card'
+
+          const number = document.createElement('strong')
+          number.textContent = String(item.number)
+
+          const letter = document.createElement('span')
+          letter.textContent = item.letter
+
+          card.append(number, letter)
+          rowElement.appendChild(card)
+        })
+
+        numberMap.appendChild(rowElement)
+      })
+    }
+
+    const renderMode = () => {
+      const mode = getModeConfig()
+
+      modeButtons.forEach(button => {
+        const isActive = button.dataset.mode === state.mode
+        button.classList.toggle('is-active', isActive)
+        button.setAttribute('aria-selected', String(isActive))
+      })
+
+      if (modeNote) {
+        modeNote.textContent = mode.description
+      }
+
+      if (setupNote) {
+        setupNote.innerHTML =
+          `Use numbers <strong>1 to 33</strong>. Use <strong>/</strong> for spaces. ${mode.description}`
+      }
+
+      if (exampleCode) {
+        exampleCode.textContent = mode.exampleCode
+      }
+
+      if (secretInput) {
+        secretInput.placeholder = `For example: ${mode.exampleCode}`
+      }
+
+      if (mapLabel) {
+        mapLabel.textContent = mode.mapLabel
+      }
+
+      if (mapNote) {
+        mapNote.textContent = mode.mapNote
+      }
+
+      renderNumberMap()
+    }
+
     const parseSecretCode = rawValue => {
       const tokens = (rawValue.match(/\/|\d+/g) || [])
       const normalizedTokens = []
       const letters = []
       let invalidNumber = ''
+      const activeLetters = getModeConfig().letters
 
       tokens.forEach(token => {
         if (token === '/') {
@@ -256,7 +441,7 @@ const numberRows = splitIntoRows(
         }
 
         const numericValue = Number.parseInt(token, 10)
-        const letter = russianLetters[numericValue - 1]
+        const letter = activeLetters[numericValue - 1]
 
         if (!letter) {
           if (!invalidNumber) invalidNumber = token
@@ -280,7 +465,7 @@ const numberRows = splitIntoRows(
     }
 
     const getUniqueSecretLetters = () =>
-      new Set(Array.from(state.secret).filter(letter => letterToNumber.has(letter)))
+      new Set(Array.from(state.secret).filter(letter => russianLetterSet.has(letter)))
 
     const buildBlanks = () => {
       if (!state.secret) return 'Start a round to show the blanks.'
@@ -328,6 +513,21 @@ const numberRows = splitIntoRows(
       state.active = false
       updateLetterButtons()
       updateBlanks()
+    }
+
+    const setMode = mode => {
+      if (!modeConfigs[mode] || state.mode === mode) return
+
+      state.mode = mode
+      clearRound()
+
+      if (secretInput) {
+        secretInput.value = ''
+      }
+
+      renderMode()
+      setSetupFeedback('Version changed. Player 1 can write a new number code.', 'neutral')
+      setPlayFeedback('Start a round to let Player 2 begin guessing.', 'neutral')
     }
 
     const finishRoundIfSolved = () => {
@@ -407,6 +607,12 @@ const numberRows = splitIntoRows(
       }
     })
 
+    modeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        setMode(button.dataset.mode || defaultModeKey)
+      })
+    })
+
     letterButtons.forEach(button => {
       button.addEventListener('click', () => {
         if (!state.active) return
@@ -430,6 +636,7 @@ const numberRows = splitIntoRows(
       })
     })
 
+    renderMode()
     updateStars()
     updateLetterButtons()
     updateBlanks()
@@ -536,6 +743,48 @@ const numberRows = splitIntoRows(
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.8rem;
     margin-top: 1rem;
+  }
+
+  .mode-toggle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .mode-pill {
+    border: 0;
+    border-radius: 999px;
+    padding: 0.85rem 1.1rem;
+    font: inherit;
+    font-weight: 800;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: inset 0 0 0 2px rgba(28, 28, 27, 0.08);
+    cursor: pointer;
+    transition:
+      transform 120ms ease,
+      box-shadow 120ms ease,
+      background 120ms ease,
+      color 120ms ease;
+  }
+
+  .mode-pill.is-active {
+    color: white;
+    background: linear-gradient(135deg, var(--forest), #4c8a6e);
+    box-shadow: 0 14px 24px rgba(51, 95, 74, 0.24);
+  }
+
+  .mode-note,
+  .map-note {
+    margin-bottom: 0;
+    color: var(--ink-soft);
+    font-weight: 700;
+    line-height: 1.55;
+  }
+
+  .mode-note {
+    margin-top: 0.85rem;
   }
 
   .hero-chip,
@@ -653,6 +902,7 @@ const numberRows = splitIntoRows(
 
   .primary-button:hover,
   .secondary-button:hover,
+  .mode-pill:hover,
   .unlock-link:hover {
     transform: translateY(-1px);
   }
@@ -693,6 +943,10 @@ const numberRows = splitIntoRows(
 
   .map-wrap {
     margin-top: 1rem;
+  }
+
+  .map-note {
+    margin: 0 0 0.9rem;
   }
 
   .rows-wrap {

@@ -2,17 +2,16 @@
 import Layout from '../layouts/Layout.astro'
 ---
 
-<Layout title="x8 Seconds Game">
-  <main class="x8-page">
+<Layout title="Number Race | Shooting To the Moon">
+  <main class="race-page">
     <section class="hero">
-      <p class="eyebrow">Number Game</p>
-      <h1>Go one second at a time and multiply by 8.</h1>
+      <p class="eyebrow">Number Race</p>
+      <h1>Shooting To the Moon with powers and your own number.</h1>
       <p class="lede">
-        Start with a top number and think of it like a magic gradient from
-        <strong>0</strong> up to that number. Add seconds, then submit. Every
-        second takes the top number and turns it into <strong>x8</strong>. That
-        means <strong>0 - 100</strong> can become <strong>0 - 800</strong> after
-        <strong>1 second</strong>.
+        Pick <strong>2^n</strong>, <strong>5^n</strong>, or
+        <strong>8 × your number</strong>, then launch a race that lasts exactly
+        <strong>1 minute</strong>. Bigger finish lines fly faster because the
+        timer always stays locked to one minute.
       </p>
     </section>
 
@@ -21,117 +20,168 @@ import Layout from '../layouts/Layout.astro'
         <div class="panel-head">
           <div>
             <p class="eyebrow">Setup</p>
-            <h2>Pick the top number</h2>
+            <h2>Choose your moon shot</h2>
           </div>
-          <p class="panel-note">The number behaves like a stretched range from 0.</p>
+          <p class="panel-note">
+            One race. One minute. One lane moving all the way to the finish.
+          </p>
         </div>
 
-        <form id="x8-form" class="setup-form">
+        <form id="race-form" class="setup-form">
+          <section class="choice-card" aria-labelledby="base-title">
+            <div class="choice-copy">
+              <p class="eyebrow" id="base-title">Mode</p>
+              <h2>Pick your race type</h2>
+            </div>
+
+            <div class="base-grid" role="group" aria-labelledby="base-title">
+              <button type="button" class="base-button" data-mode="pow2" data-active="true">
+                2 to the power
+              </button>
+              <button type="button" class="base-button" data-mode="pow5" data-active="false">
+                5 to the power
+              </button>
+              <button type="button" class="base-button wide-button" data-mode="times8" data-active="false">
+                8 x your number
+              </button>
+            </div>
+          </section>
+
           <label class="field">
-            <span>Top number</span>
+            <span id="value-label">Exponent</span>
             <input
-              id="start-number"
-              name="startNumber"
+              id="value-input"
+              name="raceValue"
               type="number"
-              step="any"
-              inputmode="decimal"
-              value="100"
-              placeholder="100"
+              min="0"
+              step="1"
+              inputmode="numeric"
+              value="24"
+              placeholder="24"
             />
           </label>
 
-          <section class="seconds-box" aria-labelledby="seconds-title">
-            <div class="seconds-copy">
-              <p class="eyebrow" id="seconds-title">Seconds</p>
-              <h2 id="seconds-count">0 seconds</h2>
-              <p id="seconds-text" class="panel-note">
-                At 0 seconds, the number stays where it starts.
+          <section class="race-box" aria-labelledby="race-title">
+            <div class="race-copy">
+              <p class="eyebrow" id="race-title">Race Time</p>
+              <h2>1 minute</h2>
+              <p class="panel-note">
+                The timer never changes. Bigger finish lines simply make the
+                board move faster.
               </p>
             </div>
 
-            <div class="seconds-controls">
-              <button type="button" class="ghost-button" data-seconds-change="1">
-                Add 1 second
+            <div class="race-controls">
+              <button type="button" class="ghost-button" data-value-change="1" id="change-1">
+                +1 power
               </button>
-              <button type="button" class="ghost-button" id="reset-seconds">
-                Reset seconds
+              <button type="button" class="ghost-button" data-value-change="5" id="change-2">
+                +5 powers
+              </button>
+              <button type="button" class="ghost-button" data-value-change="10" id="change-3">
+                +10 powers
+              </button>
+              <button type="button" class="ghost-button" id="reset-value">
+                Reset to 24
               </button>
             </div>
           </section>
 
           <div class="preview-card">
-            <span class="preview-label">Magic Gradient Idea</span>
-            <strong id="preview-readout">0 - 100 now, 0 - 800 after 1 second</strong>
+            <span class="preview-label">Preview</span>
+            <strong id="preview-readout">2^24 = secret finish line</strong>
             <p id="preview-note" class="preview-note">
-              It is not a real gradient bar. The number itself is what stretches.
+              This race goes 1 by 1 for one minute, just extremely fast.
             </p>
           </div>
 
-          <button type="submit" class="submit-button">Submit</button>
+          <div class="form-actions">
+            <button type="submit" class="submit-button">Launch the race</button>
+            <button type="button" class="ghost-button stop-button" id="stop-race" hidden>
+              Stop race
+            </button>
+          </div>
         </form>
       </article>
 
       <article class="panel result-panel">
         <div class="panel-head">
           <div>
-            <p class="eyebrow">Below</p>
-            <h2>Numbers moving fast</h2>
+            <p class="eyebrow">Live Race</p>
+            <h2>One wide board, one timer</h2>
           </div>
-          <p class="panel-note">Submit starts the count instead of just printing the answer.</p>
+          <p class="panel-note">
+            The lane does not show the changing number. The timer is what gets
+            it to the finish.
+          </p>
         </div>
 
         <div id="empty-state" class="empty-state">
-          Add seconds, then press submit to make the numbers race.
+          Pick a base, choose an exponent, then press launch to start the
+          1-minute timer race.
         </div>
 
         <div id="result-shell" class="result-shell" hidden>
-          <div class="summary-grid">
-            <article class="summary-card">
-              <span class="summary-label">Start range</span>
-              <strong id="summary-start">0 - 100</strong>
-            </article>
+          <section class="track-card race-board">
+            <div class="board-top">
+              <article class="summary-card board-chip">
+                <span class="summary-label">Formula</span>
+                <strong id="summary-power">2^24</strong>
+              </article>
 
-            <article class="summary-card">
-              <span class="summary-label">Seconds</span>
-              <strong id="summary-seconds">0 seconds</strong>
-            </article>
+              <article class="summary-card board-chip">
+                <span class="summary-label">Finish line</span>
+                <strong id="summary-finish">Secret finish line</strong>
+              </article>
 
-            <article class="summary-card">
-              <span class="summary-label">Top range now</span>
-              <strong id="summary-top">0 - 100</strong>
-            </article>
-          </div>
-
-          <div class="live-grid">
-            <section class="track-card live-card up-card">
-              <div class="track-head">
-                <p class="eyebrow">Going Up</p>
-                <h3 id="live-step-label">Ready to count</h3>
-              </div>
-              <strong id="live-up-range" class="live-range">0 - 100</strong>
-              <div class="live-meter">
-                <span id="live-up-fill" class="live-fill up-fill"></span>
-              </div>
-            </section>
-
-            <section class="track-card live-card down-card">
-              <div class="track-head">
-                <p class="eyebrow">Going Down</p>
-                <h3 id="live-down-label">Ready to count</h3>
-              </div>
-              <strong id="live-down-range" class="live-range">0 - 100</strong>
-              <div class="live-meter">
-                <span id="live-down-fill" class="live-fill down-fill"></span>
-              </div>
-            </section>
-          </div>
-
-          <section class="track-card history-card">
-            <div class="track-head">
-              <p class="eyebrow">Reached Numbers</p>
-              <h3>It goes up to each one</h3>
+              <article class="summary-card board-chip">
+                <span class="summary-label">Moon Speed</span>
+                <strong id="summary-speed">279,621 per second</strong>
+              </article>
             </div>
-            <div id="step-log" class="step-log"></div>
+
+            <div class="track-head">
+              <p class="eyebrow">Single Wide Lane</p>
+              <h3 id="live-step-label">Waiting on launch</h3>
+            </div>
+
+            <div class="board-lane-shell">
+              <div class="board-lane">
+                <div class="track-labels">
+                  <span class="track-label">Start: 1</span>
+                  <span class="track-label" id="live-finish-note">Finish: secret</span>
+                </div>
+
+                <div class="lane-track">
+                  <div class="lane-stream" aria-hidden="true">
+                    <div id="lane-stream-track" class="lane-stream-track">
+                      <span>1</span>
+                      <span>2</span>
+                      <span>3</span>
+                      <span>4</span>
+                      <span>5</span>
+                      <span>6</span>
+                      <span>7</span>
+                      <span>8</span>
+                    </div>
+                  </div>
+                  <span id="live-progress-fill" class="lane-fill"></span>
+                  <span id="lane-runner" class="lane-runner" aria-hidden="true"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="board-bottom">
+              <div class="clock-box">
+                <span class="summary-label">Moon Clock</span>
+                <strong id="live-count-label" class="count-readout">1</strong>
+                <strong id="live-time-label" class="clock-readout">1:00 remaining</strong>
+              </div>
+
+              <p id="live-status-note" class="live-support">
+                The timer carries the race all the way to the finish.
+              </p>
+            </div>
           </section>
         </div>
       </article>
@@ -139,139 +189,287 @@ import Layout from '../layouts/Layout.astro'
   </main>
 
   <script is:inline>
-    const MULTIPLIER = 8
-    const DEFAULT_TOP_NUMBER = 100
-    const MIN_SECONDS = 0
-    const MAX_SECONDS = 24
-    const MIN_STEP_DURATION_MS = 45
-    const MAX_STEP_DURATION_MS = 110
-    const MAX_TOTAL_ANIMATION_MS = 560
+    const DEFAULT_MODE = 'pow2'
+    const DEFAULT_VALUE = 24
+    const DEFAULT_TIMES8_VALUE = 100
+    const MIN_RACE_VALUE = 0
+    const RACE_DURATION_MS = 60000
+    const SLOWDOWN_START_MS = 50000
+    const FINAL_CRAWL_START_MS = 59000
+    const BIGINT_PROGRESS_SCALE = 1000000n
+
+    const MODE_CONFIG = {
+      pow2: {
+        title: '2 to the power',
+        inputLabel: 'Exponent',
+        previewLabel: value => `2^${value}`,
+        summaryLabel: value => `2^${value}`,
+        finishValue: value => 2n ** BigInt(value),
+        resetValue: DEFAULT_VALUE,
+        changeLabels: ['+1 power', '+5 powers', '+10 powers'],
+        changeValues: [1, 5, 10],
+        resetLabel: `Reset to ${DEFAULT_VALUE}`,
+      },
+      pow5: {
+        title: '5 to the power',
+        inputLabel: 'Exponent',
+        previewLabel: value => `5^${value}`,
+        summaryLabel: value => `5^${value}`,
+        finishValue: value => 5n ** BigInt(value),
+        resetValue: DEFAULT_VALUE,
+        changeLabels: ['+1 power', '+5 powers', '+10 powers'],
+        changeValues: [1, 5, 10],
+        resetLabel: `Reset to ${DEFAULT_VALUE}`,
+      },
+      times8: {
+        title: '8 x your number',
+        inputLabel: 'Your number',
+        previewLabel: value => `8 x ${formatBigInt(BigInt(value))}`,
+        summaryLabel: value => `8 x ${formatBigInt(BigInt(value))}`,
+        finishValue: value => BigInt(value) * 8n,
+        resetValue: DEFAULT_TIMES8_VALUE,
+        changeLabels: ['+1 number', '+10 numbers', '+100 numbers'],
+        changeValues: [1, 10, 100],
+        resetLabel: `Reset to ${DEFAULT_TIMES8_VALUE}`,
+      },
+    }
 
     const state = {
-      seconds: 0,
+      mode: DEFAULT_MODE,
+      raceValue: DEFAULT_VALUE,
       animationToken: 0,
       frameId: 0,
     }
 
-    const form = document.querySelector('#x8-form')
-    const startNumberInput = document.querySelector('#start-number')
-    const secondsCount = document.querySelector('#seconds-count')
-    const secondsText = document.querySelector('#seconds-text')
+    const form = document.querySelector('#race-form')
+    const valueInput = document.querySelector('#value-input')
+    const valueLabel = document.querySelector('#value-label')
     const previewReadout = document.querySelector('#preview-readout')
     const previewNote = document.querySelector('#preview-note')
     const emptyState = document.querySelector('#empty-state')
     const resultShell = document.querySelector('#result-shell')
-    const summaryStart = document.querySelector('#summary-start')
-    const summarySeconds = document.querySelector('#summary-seconds')
-    const summaryTop = document.querySelector('#summary-top')
+    const summaryPower = document.querySelector('#summary-power')
+    const summaryFinish = document.querySelector('#summary-finish')
+    const summarySpeed = document.querySelector('#summary-speed')
     const liveStepLabel = document.querySelector('#live-step-label')
-    const liveDownLabel = document.querySelector('#live-down-label')
-    const liveUpRange = document.querySelector('#live-up-range')
-    const liveDownRange = document.querySelector('#live-down-range')
-    const liveUpFill = document.querySelector('#live-up-fill')
-    const liveDownFill = document.querySelector('#live-down-fill')
-    const stepLog = document.querySelector('#step-log')
-    const resetSecondsButton = document.querySelector('#reset-seconds')
+    const liveCountLabel = document.querySelector('#live-count-label')
+    const liveTimeLabel = document.querySelector('#live-time-label')
+    const liveFinishNote = document.querySelector('#live-finish-note')
+    const liveStatusNote = document.querySelector('#live-status-note')
+    const liveProgressFill = document.querySelector('#live-progress-fill')
+    const laneRunner = document.querySelector('#lane-runner')
+    const laneStreamTrack = document.querySelector('#lane-stream-track')
+    const resetValueButton = document.querySelector('#reset-value')
+    const change1Button = document.querySelector('#change-1')
+    const change2Button = document.querySelector('#change-2')
+    const change3Button = document.querySelector('#change-3')
+    const stopRaceButton = document.querySelector('#stop-race')
     const submitButton = document.querySelector('.submit-button')
-    const secondsButtons = Array.from(document.querySelectorAll('[data-seconds-change]'))
+    const modeButtons = Array.from(document.querySelectorAll('[data-mode]'))
+    const valueButtons = Array.from(
+      document.querySelectorAll('[data-value-change]'),
+    )
 
-    const formatter = new Intl.NumberFormat('en-US', {
-      maximumFractionDigits: 6,
-    })
+    function getCurrentModeConfig() {
+      return MODE_CONFIG[state.mode]
+    }
 
-    function getStartNumber() {
-      const rawText = startNumberInput.value.trim()
+    function clampRaceValue(value) {
+      return Math.max(MIN_RACE_VALUE, value)
+    }
+
+    function getRaceValue() {
+      const rawText = valueInput.value.trim()
 
       if (rawText === '') {
-        return DEFAULT_TOP_NUMBER
+        return getCurrentModeConfig().resetValue
       }
 
-      const rawValue = Number(rawText)
+      const parsed = Math.floor(Number(rawText))
 
-      if (Number.isFinite(rawValue)) {
-        return rawValue
+      if (!Number.isFinite(parsed)) {
+        return getCurrentModeConfig().resetValue
       }
 
-      return DEFAULT_TOP_NUMBER
+      return clampRaceValue(parsed)
     }
 
-    function normalizeStartNumberInput() {
-      if (startNumberInput.value.trim() === '') {
-        startNumberInput.value = String(DEFAULT_TOP_NUMBER)
-      }
+    function normalizeRaceValueInput() {
+      valueInput.value = String(getRaceValue())
     }
 
-    function formatValue(value) {
-      if (!Number.isFinite(value)) {
-        return 'Too big'
-      }
+    function formatBigInt(value) {
+      const text = value.toString()
 
-      const absolute = Math.abs(value)
-
-      if (absolute >= 1e12 || (absolute > 0 && absolute < 0.000001)) {
-        return value.toExponential(4)
-      }
-
-      return formatter.format(value)
+      return text.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     }
 
-    function describeSeconds(seconds) {
-      return seconds === 1 ? '1 second' : `${seconds} seconds`
+    function formatPower(base, exponent) {
+      return `${base}^${exponent}`
     }
 
-    function formatRange(topValue) {
-      return `0 - ${formatValue(topValue)}`
+    function getPowerValue(base, exponent) {
+      return BigInt(base) ** BigInt(exponent)
+    }
+
+    function divideAndRoundUp(value, divisor) {
+      const divisorBigInt = BigInt(divisor)
+
+      return (value + divisorBigInt - 1n) / divisorBigInt
+    }
+
+    function getSpeedLabel(finishValue) {
+      return `${formatBigInt(divideAndRoundUp(finishValue, 60))} per second`
+    }
+
+    function getDigitCount(value) {
+      return value.toString().length
+    }
+
+    function getTickerDurationMs(finishValue) {
+      const digits = getDigitCount(finishValue)
+
+      return Math.max(320, 1450 - (digits * 38))
+    }
+
+    function buildLaneStream(finishValue) {
+      const limit = Math.min(12, Math.max(8, getDigitCount(finishValue) + 2))
+      const values = []
+
+      for (let index = 1; index <= limit; index += 1) {
+        values.push(String(index))
+      }
+
+      return values.concat(values).map(value => `<span>${value}</span>`).join('')
+    }
+
+    function formatClock(milliseconds) {
+      const totalSeconds = Math.max(0, Math.ceil(milliseconds / 1000))
+      const minutes = Math.floor(totalSeconds / 60)
+      const seconds = totalSeconds % 60
+
+      return `${minutes}:${String(seconds).padStart(2, '0')}`
+    }
+
+    function updateModeButtons() {
+      modeButtons.forEach(button => {
+        const buttonMode = button.getAttribute('data-mode')
+        button.setAttribute(
+          'data-active',
+          buttonMode === state.mode ? 'true' : 'false',
+        )
+      })
+    }
+
+    function updateControlsForMode() {
+      const config = getCurrentModeConfig()
+
+      valueLabel.textContent = config.inputLabel
+      change1Button.textContent = config.changeLabels[0]
+      change2Button.textContent = config.changeLabels[1]
+      change3Button.textContent = config.changeLabels[2]
+      change1Button.setAttribute('data-value-change', String(config.changeValues[0]))
+      change2Button.setAttribute('data-value-change', String(config.changeValues[1]))
+      change3Button.setAttribute('data-value-change', String(config.changeValues[2]))
+      resetValueButton.textContent = config.resetLabel
+    }
+
+    function formatFormula(value) {
+      return getCurrentModeConfig().summaryLabel(value)
+    }
+
+    function getFinishValue(value) {
+      return getCurrentModeConfig().finishValue(value)
+    }
+
+    function buildGrowingNumberStream(finishValue) {
+      const steps = 10
+      const values = []
+
+      for (let index = 1; index <= steps; index += 1) {
+        const scaled = (finishValue * BigInt(index)) / BigInt(steps)
+        values.push(formatBigInt(scaled > 0n ? scaled : 1n))
+      }
+
+      return values.concat(values).map(value => `<span>${value}</span>`).join('')
+    }
+
+    function clampUnitInterval(value) {
+      return Math.max(0, Math.min(1, value))
+    }
+
+    function getEaseOutRatio(progress, power) {
+      const safeProgress = clampUnitInterval(progress)
+
+      return 1 - ((1 - safeProgress) ** power)
+    }
+
+    function interpolateBigInt(startValue, endValue, scaledRatio) {
+      const ratio = BigInt(Math.max(0, Math.min(Number(BIGINT_PROGRESS_SCALE), scaledRatio)))
+
+      return startValue + (((endValue - startValue) * ratio) / BIGINT_PROGRESS_SCALE)
+    }
+
+    function getScaledRatio(value) {
+      return Math.floor(clampUnitInterval(value) * Number(BIGINT_PROGRESS_SCALE))
+    }
+
+    function getCurrentCount(elapsed, finishValue) {
+      if (finishValue <= 1n) {
+        return 1n
+      }
+
+      const safeElapsed = Math.max(0, Math.min(RACE_DURATION_MS, elapsed))
+      const finalCrawlValue = finishValue - 1n
+      const slowdownTarget = interpolateBigInt(
+        1n,
+        finalCrawlValue,
+        getScaledRatio(0.97),
+      )
+
+      if (safeElapsed < SLOWDOWN_START_MS) {
+        return interpolateBigInt(
+          1n,
+          slowdownTarget,
+          getScaledRatio(getEaseOutRatio(safeElapsed / SLOWDOWN_START_MS, 4)),
+        )
+      }
+
+      if (safeElapsed < FINAL_CRAWL_START_MS) {
+        return interpolateBigInt(
+          slowdownTarget,
+          finalCrawlValue,
+          getScaledRatio(
+            getEaseOutRatio(
+              (safeElapsed - SLOWDOWN_START_MS) / (FINAL_CRAWL_START_MS - SLOWDOWN_START_MS),
+              2.8,
+            ),
+          ),
+        )
+      }
+
+      return finalCrawlValue
+    }
+
+    function getProgressPercent(currentCount, finishValue) {
+      if (finishValue <= 1n) {
+        return 100
+      }
+
+      return Number((currentCount * 10000n) / finishValue) / 100
     }
 
     function updatePreview() {
-      const start = getStartNumber()
-      const nextValue = start * MULTIPLIER
+      state.raceValue = getRaceValue()
+      const finishValue = getFinishValue(state.raceValue)
+      const formula = formatFormula(state.raceValue)
 
-      secondsCount.textContent = describeSeconds(state.seconds)
-      secondsText.textContent =
-        state.seconds === 0
-          ? 'At 0 seconds, the number stays where it starts.'
-          : state.seconds === 1
-            ? 'One jump means the top number becomes x8.'
-            : `${state.seconds} jumps keep multiplying the top number by 8.`
       previewReadout.textContent =
-        `${formatRange(start)} now, ${formatRange(nextValue)} after 1 second`
+        `${formula} = secret finish line`
       previewNote.textContent =
-        state.seconds === 0
-          ? 'It is like a gradient idea, but the number is what stretches.'
-          : `Press submit to watch it race through ${describeSeconds(state.seconds)}.`
-    }
-
-    function clampSeconds(value) {
-      return Math.max(MIN_SECONDS, Math.min(MAX_SECONDS, value))
-    }
-
-    function setSeconds(nextSeconds) {
-      state.seconds = clampSeconds(nextSeconds)
-      updatePreview()
-    }
-
-    function buildRows(start, seconds) {
-      const rows = []
-
-      for (let second = 0; second <= seconds; second += 1) {
-        rows.push({
-          second,
-          up: start * (MULTIPLIER ** second),
-          down: start / (MULTIPLIER ** second),
-        })
-      }
-
-      return rows
-    }
-
-    function getStepDuration(stepCount) {
-      const rawDuration = MAX_TOTAL_ANIMATION_MS / Math.max(1, stepCount)
-
-      return Math.max(
-        MIN_STEP_DURATION_MS,
-        Math.min(MAX_STEP_DURATION_MS, rawDuration),
-      )
+        finishValue <= 1n
+          ? 'This one starts and finishes at 1, so the timer is already done.'
+          : `This 1-minute race goes 1 by 1 toward a secret finish line at about ${getSpeedLabel(finishValue)}. It blasts early, slows after 50 seconds, and crawls in the final second.`
     }
 
     function stopAnimation() {
@@ -283,151 +481,152 @@ import Layout from '../layouts/Layout.astro'
       }
     }
 
-    function setLiveRanges(upValue, downValue, upPercent, downPercent) {
-      liveUpRange.textContent = formatRange(upValue)
-      liveDownRange.textContent = formatRange(downValue)
-      liveUpFill.style.width = `${Math.max(4, upPercent)}%`
-      liveDownFill.style.width = `${Math.max(4, downPercent)}%`
+    function setRunningState(isRunning) {
+      submitButton.disabled = isRunning
+      submitButton.textContent = isRunning ? 'Racing to the moon...' : 'Launch the race'
+      stopRaceButton.hidden = !isRunning
     }
 
-    function addStepLog(row, active = false) {
-      const item = document.createElement('article')
-      item.className = `step-item${active ? ' active' : ''}`
-      item.innerHTML = `
-        <span class="step-second">${row.second === 0 ? 'Start' : `Second ${row.second}`}</span>
-        <strong>${formatRange(row.up)}</strong>
-        <span class="step-note">down: ${formatRange(row.down)}</span>
-      `
-      stepLog.appendChild(item)
-
-      return item
+    function resetResults() {
+      stopAnimation()
+      emptyState.hidden = false
+      resultShell.hidden = true
+      liveProgressFill.style.width = '0%'
+      laneRunner.style.left = '0%'
+      laneStreamTrack.style.animationPlayState = 'paused'
+      liveCountLabel.textContent = '1'
+      liveTimeLabel.textContent = '1:00 remaining'
+      setRunningState(false)
     }
 
-    function animateValuePair(fromRow, toRow, maxUp, maxDown, duration, token) {
-      return new Promise(resolve => {
-        const startedAt = performance.now()
+    function updateLiveView(formula, elapsed, finishValue) {
+      const currentCount =
+        elapsed >= RACE_DURATION_MS
+          ? finishValue
+          : getCurrentCount(elapsed, finishValue)
+      const progressPercent = Math.max(
+        0,
+        Math.min(100, getProgressPercent(currentCount, finishValue)),
+      )
 
-        function tick(now) {
-          if (token !== state.animationToken) {
-            resolve()
-            return
-          }
+      liveStepLabel.textContent =
+        finishValue <= 1n
+          ? 'Start and finish are the same'
+          : `Counting 1 by 1 toward ${formula}`
+      liveFinishNote.textContent = 'Finish: secret'
+      liveStatusNote.textContent =
+        elapsed >= RACE_DURATION_MS
+          ? `Touchdown at the secret finish for ${formula}.`
+          : elapsed >= FINAL_CRAWL_START_MS
+            ? `Moon clock count: ${formatBigInt(currentCount)}. Final crawl now: about 1 number per second.`
+            : elapsed >= SLOWDOWN_START_MS
+              ? `Moon clock count: ${formatBigInt(currentCount)}. The race is slowing down for the last stretch.`
+              : `Moon clock count: ${formatBigInt(currentCount)}. The finish line stays secret.`
+      liveCountLabel.textContent = formatBigInt(currentCount)
+      liveTimeLabel.textContent =
+        elapsed >= RACE_DURATION_MS
+          ? 'Touchdown at the moon'
+          : `${formatClock(RACE_DURATION_MS - elapsed)} remaining`
 
-          const progress = Math.min(1, (now - startedAt) / duration)
-          const eased = progress
-          const currentUp = fromRow.up + ((toRow.up - fromRow.up) * eased)
-          const currentDown = fromRow.down + ((toRow.down - fromRow.down) * eased)
-          const upPercent = maxUp === 0 ? 100 : (Math.abs(currentUp) / maxUp) * 100
-          const downPercent = maxDown === 0 ? 100 : (Math.abs(currentDown) / maxDown) * 100
-
-          setLiveRanges(currentUp, currentDown, upPercent, downPercent)
-
-          if (progress >= 1) {
-            state.frameId = 0
-            resolve()
-            return
-          }
-
-          state.frameId = requestAnimationFrame(tick)
-        }
-
-        state.frameId = requestAnimationFrame(tick)
-      })
+      liveProgressFill.style.width = `${progressPercent}%`
+      laneRunner.style.left = `${progressPercent}%`
     }
 
-    async function startAnimation(start, seconds) {
+    function finishRace(formula, finishValue) {
+      updateLiveView(formula, RACE_DURATION_MS, finishValue)
+      setRunningState(false)
+      state.frameId = 0
+    }
+
+    function startRace(raceValue) {
       stopAnimation()
       const token = state.animationToken
-      const rows = buildRows(start, seconds)
-      const stepDuration = getStepDuration(rows.length - 1)
-      const maxUp = Math.max(...rows.map(row => Math.abs(row.up)), 1)
-      const maxDown = Math.max(...rows.map(row => Math.abs(row.down)), 1)
-      const firstUpPercent = maxUp === 0 ? 100 : (Math.abs(rows[0].up) / maxUp) * 100
-      const firstDownPercent = maxDown === 0 ? 100 : (Math.abs(rows[0].down) / maxDown) * 100
+      const finishValue = getFinishValue(raceValue)
+      const formula = formatFormula(raceValue)
+      const startedAt = performance.now()
+      const laneTickerDurationMs = getTickerDurationMs(finishValue)
 
-      summaryStart.textContent = formatRange(start)
-      summarySeconds.textContent = describeSeconds(seconds)
-      summaryTop.textContent = formatRange(rows[rows.length - 1].up)
+      summaryPower.textContent = formula
+      summaryFinish.textContent = 'Secret finish line'
+      summarySpeed.textContent = getSpeedLabel(finishValue)
 
       emptyState.hidden = true
       resultShell.hidden = false
-      stepLog.innerHTML = ''
-      submitButton.disabled = true
-      submitButton.textContent = 'Counting fast...'
+      laneStreamTrack.innerHTML = buildGrowingNumberStream(finishValue)
+      laneStreamTrack.style.setProperty('--ticker-duration', `${laneTickerDurationMs}ms`)
+      laneStreamTrack.style.animationPlayState = 'paused'
+      updateLiveView(formula, 0, finishValue)
+      setRunningState(true)
 
-      liveStepLabel.textContent = 'Start'
-      liveDownLabel.textContent = 'Start'
-      setLiveRanges(rows[0].up, rows[0].down, firstUpPercent, firstDownPercent)
-
-      let activeItem = addStepLog(rows[0], true)
-
-      if (rows.length === 1) {
-        liveStepLabel.textContent = 'Finished going up'
-        liveDownLabel.textContent = 'Finished going down'
-        submitButton.disabled = false
-        submitButton.textContent = 'Submit'
+      if (finishValue <= 1n) {
+        finishRace(formula, finishValue)
         return
       }
 
-      for (let index = 1; index < rows.length; index += 1) {
+      function tick(now) {
         if (token !== state.animationToken) {
           return
         }
 
-        const previousRow = rows[index - 1]
-        const currentRow = rows[index]
-        liveStepLabel.textContent = `Second ${currentRow.second} going up`
-        liveDownLabel.textContent = `Second ${currentRow.second} going down`
+        const elapsed = Math.min(RACE_DURATION_MS, now - startedAt)
+        updateLiveView(formula, elapsed, finishValue)
 
-        await animateValuePair(
-          previousRow,
-          currentRow,
-          maxUp,
-          maxDown,
-          stepDuration,
-          token,
-        )
-
-        if (token !== state.animationToken) {
+        if (elapsed >= RACE_DURATION_MS) {
+          finishRace(formula, finishValue)
           return
         }
 
-        activeItem.classList.remove('active')
-        activeItem = addStepLog(currentRow, true)
+        state.frameId = requestAnimationFrame(tick)
       }
 
-      liveStepLabel.textContent = 'Finished going up'
-      liveDownLabel.textContent = 'Finished going down'
-      submitButton.disabled = false
-      submitButton.textContent = 'Submit'
+      state.frameId = requestAnimationFrame(tick)
     }
 
-    secondsButtons.forEach(button => {
+    modeButtons.forEach(button => {
       button.addEventListener('click', () => {
-        const change = Number(button.getAttribute('data-seconds-change') || '0')
-        setSeconds(state.seconds + change)
+        state.mode = button.getAttribute('data-mode') || DEFAULT_MODE
+        valueInput.value = String(getCurrentModeConfig().resetValue)
+        updateModeButtons()
+        updateControlsForMode()
+        updatePreview()
       })
     })
 
-    resetSecondsButton.addEventListener('click', () => {
-      stopAnimation()
-      setSeconds(0)
-      emptyState.hidden = false
-      resultShell.hidden = true
-      submitButton.disabled = false
-      submitButton.textContent = 'Submit'
+    valueButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const change = Number(button.getAttribute('data-value-change') || '0')
+        valueInput.value = String(clampRaceValue(getRaceValue() + change))
+        updatePreview()
+      })
     })
 
-    startNumberInput.addEventListener('input', () => {
+    resetValueButton.addEventListener('click', () => {
+      valueInput.value = String(getCurrentModeConfig().resetValue)
+      updatePreview()
+    })
+
+    stopRaceButton.addEventListener('click', () => {
+      resetResults()
+    })
+
+    valueInput.addEventListener('input', () => {
+      updatePreview()
+    })
+
+    valueInput.addEventListener('blur', () => {
+      normalizeRaceValueInput()
       updatePreview()
     })
 
     form.addEventListener('submit', event => {
       event.preventDefault()
-      normalizeStartNumberInput()
-      startAnimation(getStartNumber(), state.seconds)
+      normalizeRaceValueInput()
+      updatePreview()
+      startRace(getRaceValue())
     })
 
+    updateModeButtons()
+    updateControlsForMode()
     updatePreview()
   </script>
 </Layout>
@@ -435,7 +634,6 @@ import Layout from '../layouts/Layout.astro'
 <style>
   :root {
     color-scheme: light;
-    --paper: #f6f1e7;
     --panel: rgba(255, 252, 246, 0.9);
     --ink: #191510;
     --muted: #6f6252;
@@ -443,8 +641,8 @@ import Layout from '../layouts/Layout.astro'
     --accent-deep: #0c4f43;
     --warm: #cf7b32;
     --line: rgba(25, 21, 16, 0.1);
-    --up: #1d8f63;
-    --down: #c95f45;
+    --progress: #1d8f63;
+    --progress-soft: #93dfc0;
   }
 
   * {
@@ -460,8 +658,8 @@ import Layout from '../layouts/Layout.astro'
     font-family: 'Avenir Next', 'Trebuchet MS', 'Segoe UI', sans-serif;
   }
 
-  .x8-page {
-    width: min(1120px, calc(100% - 2rem));
+  .race-page {
+    width: min(1960px, calc(100% - 1rem));
     margin: 0 auto;
     padding: 2rem 0 5rem;
   }
@@ -503,7 +701,7 @@ import Layout from '../layouts/Layout.astro'
   }
 
   .lede {
-    max-width: 52rem;
+    max-width: 58rem;
     margin-top: 0.95rem;
     font-size: 1.05rem;
     line-height: 1.6;
@@ -512,7 +710,7 @@ import Layout from '../layouts/Layout.astro'
 
   .game-grid {
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
     gap: 1rem;
     align-items: start;
   }
@@ -540,7 +738,8 @@ import Layout from '../layouts/Layout.astro'
   }
 
   .setup-form,
-  .seconds-box,
+  .choice-card,
+  .race-box,
   .track-card,
   .summary-card,
   .preview-card,
@@ -553,6 +752,65 @@ import Layout from '../layouts/Layout.astro'
   .setup-form {
     display: grid;
     gap: 1rem;
+  }
+
+  .choice-card,
+  .race-box {
+    padding: 1rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .choice-copy h2,
+  .race-copy h2 {
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    line-height: 1;
+  }
+
+  .base-grid,
+  .race-controls,
+  .form-actions {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .base-grid,
+  .form-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wide-button {
+    grid-column: 1 / -1;
+  }
+
+  .race-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .base-button,
+  .ghost-button,
+  .submit-button {
+    border: 0;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+      transform 0.18s ease,
+      background 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+
+  .base-button {
+    padding: 0.95rem 1rem;
+    background: rgba(18, 110, 92, 0.08);
+    color: var(--accent-deep);
+  }
+
+  .base-button[data-active='true'] {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--warm) 100%);
+    color: white;
+    box-shadow: 0 14px 28px rgba(18, 110, 92, 0.18);
   }
 
   .field {
@@ -583,45 +841,18 @@ import Layout from '../layouts/Layout.astro'
     box-shadow: 0 0 0 4px rgba(18, 110, 92, 0.12);
   }
 
-  .seconds-box {
-    padding: 1rem;
-    display: grid;
-    gap: 1rem;
-  }
-
-  .seconds-copy h2 {
-    font-size: clamp(1.9rem, 5vw, 3rem);
-    line-height: 1;
-  }
-
-  .seconds-controls {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-  }
-
-  .ghost-button,
-  .submit-button {
-    border: 0;
-    border-radius: 999px;
-    font: inherit;
-    font-weight: 800;
-    cursor: pointer;
-    transition:
-      transform 0.18s ease,
-      background 0.18s ease,
-      box-shadow 0.18s ease;
-  }
-
   .ghost-button {
     padding: 0.85rem 1rem;
     background: rgba(18, 110, 92, 0.1);
     color: var(--accent-deep);
   }
 
+  .base-button:hover,
+  .base-button:focus-visible,
   .ghost-button:hover,
-  .ghost-button:focus-visible {
-    background: rgba(18, 110, 92, 0.16);
+  .ghost-button:focus-visible,
+  .submit-button:hover,
+  .submit-button:focus-visible {
     transform: translateY(-1px);
   }
 
@@ -633,8 +864,7 @@ import Layout from '../layouts/Layout.astro'
 
   .preview-label,
   .summary-label,
-  .step-second,
-  .step-note {
+  .track-label {
     font-size: 0.84rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -645,6 +875,7 @@ import Layout from '../layouts/Layout.astro'
   .preview-card strong {
     font-size: 1.25rem;
     line-height: 1.2;
+    overflow-wrap: anywhere;
   }
 
   .preview-note {
@@ -659,16 +890,14 @@ import Layout from '../layouts/Layout.astro'
     box-shadow: 0 14px 28px rgba(18, 110, 92, 0.18);
   }
 
-  .submit-button:hover,
-  .submit-button:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 18px 34px rgba(18, 110, 92, 0.24);
-  }
-
   .submit-button:disabled {
     opacity: 0.8;
     cursor: wait;
     transform: none;
+  }
+
+  .stop-button {
+    align-self: stretch;
   }
 
   .empty-state {
@@ -679,21 +908,7 @@ import Layout from '../layouts/Layout.astro'
 
   .result-shell {
     display: grid;
-    gap: 1rem;
-  }
-
-  .summary-grid,
-  .live-grid {
-    display: grid;
-    gap: 1rem;
-  }
-
-  .summary-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .live-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow-x: auto;
   }
 
   .summary-card,
@@ -704,120 +919,201 @@ import Layout from '../layouts/Layout.astro'
   .summary-card strong {
     display: block;
     margin-top: 0.35rem;
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     line-height: 1.2;
+    overflow-wrap: anywhere;
   }
 
   .track-head {
-    margin-bottom: 0.9rem;
+    margin-bottom: 1rem;
   }
 
   .track-head h3 {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
   }
 
-  .live-card {
+  .race-board {
+    padding: 1.1rem;
+    overflow: hidden;
+    min-width: 1320px;
+  }
+
+  .board-top {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .board-chip {
+    min-height: 100%;
+  }
+
+  .board-lane-shell {
+    overflow-x: auto;
+    padding-bottom: 0.35rem;
+  }
+
+  .board-lane {
+    min-width: 1240px;
+  }
+
+  .track-labels {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .lane-track {
     position: relative;
+    height: 3.4rem;
+    border-radius: 999px;
+    background:
+      linear-gradient(90deg, rgba(147, 223, 192, 0.22) 0%, rgba(207, 123, 50, 0.14) 100%),
+      rgba(25, 21, 16, 0.06);
+    border: 1px solid rgba(18, 110, 92, 0.14);
     overflow: hidden;
   }
 
-  .live-card::before {
+  .lane-stream {
+    display: none;
+  }
+
+  .lane-stream::after {
     content: '';
     position: absolute;
     inset: 0;
-    opacity: 0.1;
-    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.45),
+      transparent 12%,
+      transparent 88%,
+      rgba(255, 255, 255, 0.45)
+    );
   }
 
-  .up-card::before {
-    background: linear-gradient(135deg, #7ed9b6, transparent 65%);
+  .lane-stream-track {
+    --ticker-duration: 1200ms;
+    position: absolute;
+    inset: 0 auto 0 0;
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    min-width: max-content;
+    padding: 0 1.6rem;
+    color: rgba(12, 79, 67, 0.48);
+    font-size: 1.15rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    animation: lane-stream-move var(--ticker-duration) linear infinite;
+    animation-play-state: paused;
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
   }
 
-  .down-card::before {
-    background: linear-gradient(135deg, #efbcaa, transparent 65%);
+  .lane-stream-track span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
   }
 
-  .live-range {
-    display: block;
-    font-size: clamp(2rem, 5vw, 3.25rem);
-    line-height: 1;
-    margin-bottom: 0.8rem;
-    position: relative;
-    z-index: 1;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .live-meter {
-    height: 0.9rem;
-    border-radius: 999px;
-    overflow: hidden;
-    background: rgba(25, 21, 16, 0.08);
-    position: relative;
-    z-index: 1;
-  }
-
-  .live-fill {
-    display: block;
-    height: 100%;
-    width: 4%;
-    border-radius: 999px;
+  .lane-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0%;
+    background: linear-gradient(90deg, var(--progress-soft) 0%, var(--progress) 100%);
+    opacity: 0.75;
     transition: width 80ms linear;
   }
 
-  .up-fill {
-    background: linear-gradient(90deg, #7ed9b6 0%, var(--up) 100%);
+  .lane-runner {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #fff4d5 0%, #ffd27d 35%, #cf7b32 100%);
+    box-shadow:
+      0 0 0 6px rgba(255, 255, 255, 0.68),
+      0 18px 28px rgba(76, 44, 14, 0.24);
+    transform: translate(-50%, -50%);
+    z-index: 2;
   }
 
-  .down-fill {
-    background: linear-gradient(90deg, #efbcaa 0%, var(--down) 100%);
-  }
-
-  .step-log {
+  .board-bottom {
     display: grid;
-    gap: 0.75rem;
+    grid-template-columns: minmax(860px, 1.8fr) minmax(260px, 0.7fr);
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1rem;
   }
 
-  .step-item {
-    border-radius: 18px;
-    border: 1px solid rgba(25, 21, 16, 0.08);
-    background: #fff;
-    padding: 0.9rem 1rem;
-    display: grid;
-    gap: 0.25rem;
-    animation: rise-in 240ms ease both;
+  .clock-box {
+    border-radius: 20px;
+    border: 1px solid rgba(18, 110, 92, 0.12);
+    background: rgba(255, 255, 255, 0.82);
+    padding: 1rem 1.15rem;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 
-  .step-item strong {
-    font-size: 1.2rem;
-    line-height: 1.1;
+  .count-readout {
+    display: block;
+    margin-top: 0.5rem;
+    max-width: 100%;
+    min-width: max-content;
+    font-size: clamp(2rem, 4vw, 4.25rem);
+    line-height: 0.95;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+    color: var(--accent-deep);
+    white-space: nowrap;
   }
 
-  .step-item.active {
-    border-color: rgba(18, 110, 92, 0.35);
-    box-shadow: 0 0 0 3px rgba(18, 110, 92, 0.12);
+  .clock-readout {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 1rem;
+    line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
   }
 
-  @keyframes rise-in {
+  .live-support {
+    color: #4f4337;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+
+  @keyframes lane-stream-move {
     from {
-      opacity: 0;
-      transform: translateY(10px);
+      transform: translateX(0);
     }
 
     to {
-      opacity: 1;
-      transform: translateY(0);
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (max-width: 980px) {
+    .game-grid {
+      grid-template-columns: 1fr;
     }
   }
 
   @media (max-width: 900px) {
-    .game-grid,
-    .live-grid,
-    .summary-grid,
-    .seconds-controls {
+    .panel-head,
+    .board-top,
+    .base-grid,
+    .race-controls,
+    .form-actions {
       grid-template-columns: 1fr;
+      display: grid;
     }
 
-    .panel-head {
+    .track-labels {
       display: grid;
     }
   }

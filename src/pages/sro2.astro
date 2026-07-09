@@ -1,18 +1,1360 @@
 ---
+import Empty from '../layouts/Empty.astro'
 import Menu3 from '@/components/menu.astro'
+import '../../pico.css'
+
+const scoreOptions = Array.from({length: 33}, (_, index) => 65 - index * 2)
+const behaviorScoreOptions = Array.from({length: 21}, (_, index) => 20 - index)
+
+const scoreBands = [
+  {
+    label: 'Better than Boodeboo',
+    note: '65 is the best, and 59 or higher is stronger than Boodeboo.',
+    numbers: [65, 63, 61, 59],
+  },
+  {
+    label: 'Good Numbers',
+    note: 'These are still high and happy scores.',
+    numbers: [57, 55, 53, 51, 49],
+  },
+  {
+    label: 'Neutral',
+    note: '47 is the middle landing.',
+    numbers: [47],
+  },
+  {
+    label: 'Not So Good',
+    note: 'These feel a little shaky.',
+    numbers: [45, 43, 41],
+  },
+  {
+    label: 'Bad',
+    note: 'Bad girls usually get 25.',
+    numbers: [39, 37, 35, 33, 31, 29, 27, 25],
+  },
+  {
+    label: 'Brutal',
+    note: 'These numbers land hard.',
+    numbers: [23, 21, 19, 17, 15, 13, 11],
+  },
+  {
+    label: 'Worst',
+    note: '9, 7, 5, and 3 are the worst numbers.',
+    numbers: [9, 7, 5, 3],
+  },
+  {
+    label: 'The Worst One',
+    note: '1 is the absolute worst.',
+    numbers: [1],
+  },
+]
+
+const behaviorBands = [
+  {
+    label: 'Best Behavior',
+    note: '20 is the best behavior score.',
+    numbers: [20],
+  },
+  {
+    label: 'Strong Behavior',
+    note: '19 down to 11 are still strong behavior scores.',
+    numbers: [19, 18, 17, 16, 15, 14, 13, 12, 11],
+  },
+  {
+    label: 'Neutral',
+    note: '10 is neutral.',
+    numbers: [10],
+  },
+  {
+    label: 'Slightly Weak',
+    note: '9 is slightly weak, but not a trouble moment.',
+    numbers: [9],
+  },
+  {
+    label: 'Trouble',
+    note: '8 down to 1 are trouble behavior scores, with 1 being the worst regular one.',
+    numbers: [8, 7, 6, 5, 4, 3, 2, 1],
+  },
+  {
+    label: 'Ultimate Dead Meat',
+    note: '0 is ultimate dead meat.',
+    numbers: [0],
+  },
+]
+
+const starterScenarios = [
+  {
+    behaviorScore: 19,
+    label: 'Good girl',
+    name: 'Lily',
+    type: 'good',
+    choice: 'helped her friend clean the room',
+    score: 59,
+  },
+  {
+    behaviorScore: 5,
+    label: 'Bad girl',
+    name: 'Riley',
+    type: 'bad',
+    choice: 'ignored the rules and made a mess',
+    score: 25,
+  },
+  {
+    behaviorScore: 2,
+    label: 'Brutal miss',
+    name: 'Ava',
+    type: 'good',
+    choice: 'tried to help but made the whole plan crash',
+    score: 11,
+  },
+]
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Music Sentence App</title>
-	</head>
-	<body>
-        <Menu3 />
-		<!-- <script type="module" src={musicAppScript}></script> -->
-		<script src="../core/sro2/MusicApp.js"></script>
-		<music-app></music-app>
-	</body>
-</html>
+<Empty title="SRO2 Girls">
+  <Menu3 />
+
+  <style>
+    :root {
+      --paper: #fff8ec;
+      --ink: #24171c;
+      --rose: #ff7ca2;
+      --rose-deep: #d9487c;
+      --gold: #ffd15d;
+      --mint: #b9f3d3;
+      --sky: #d7efff;
+      --line: rgba(36, 23, 28, 0.12);
+      --panel: rgba(255, 255, 255, 0.84);
+      --shadow: 0 24px 54px rgba(75, 33, 53, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: 'Trebuchet MS', 'Avenir Next', sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.94), transparent 34%),
+        linear-gradient(180deg, #ffcade 0%, #ffe7a3 55%, #d7f6ff 100%);
+    }
+
+    main {
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.4rem 0 3rem;
+    }
+
+    .hero,
+    .panel {
+      background: var(--panel);
+      border: 3px solid rgba(255, 255, 255, 0.72);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      max-width: 54rem;
+      margin: 0.95rem auto 0;
+      line-height: 1.55;
+      font-size: 1.05rem;
+    }
+
+    .hero-rules {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.7rem;
+      margin-top: 1.2rem;
+    }
+
+    .rule-pill {
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      border: 2px solid rgba(36, 23, 28, 0.08);
+      background: rgba(255, 255, 255, 0.82);
+      font-weight: 800;
+    }
+
+    .layout {
+      display: grid;
+      gap: 1.2rem;
+      margin-top: 1.2rem;
+    }
+
+    .panel {
+      padding: 1.35rem;
+    }
+
+    .controls-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    label {
+      display: grid;
+      gap: 0.45rem;
+      font-weight: 800;
+    }
+
+    input,
+    button {
+      font: inherit;
+    }
+
+    input[type='text'] {
+      width: 100%;
+      border: 2px solid var(--line);
+      border-radius: 18px;
+      padding: 0.85rem 0.95rem;
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .choice-switch,
+    .behavior-grid,
+    .starter-row,
+    .score-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 0.85rem 1.2rem;
+      font-weight: 900;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(180deg, var(--rose), var(--rose-deep));
+      transition:
+        transform 140ms ease,
+        box-shadow 140ms ease,
+        opacity 140ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(68, 25, 44, 0.18);
+    }
+
+    button.secondary {
+      background: white;
+      color: var(--ink);
+      border: 2px solid var(--line);
+    }
+
+    .choice-button[data-active='true'],
+    .behavior-chip[data-active='true'],
+    .score-chip[data-active='true'],
+    .starter-button[data-active='true'] {
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.9), 0 12px 26px rgba(68, 25, 44, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .choice-button[data-choice-type='good'] {
+      background: linear-gradient(180deg, #48c985, #15985d);
+    }
+
+    .choice-button[data-choice-type='bad'] {
+      background: linear-gradient(180deg, #ff8d6f, #e45544);
+    }
+
+    .helper {
+      margin-top: 1rem;
+      line-height: 1.5;
+    }
+
+    .result-head {
+      display: grid;
+      gap: 1.1rem;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+    }
+
+    .score-burst {
+      min-width: 8rem;
+      padding: 1rem 1.1rem;
+      text-align: center;
+      border-radius: 24px;
+      background: linear-gradient(180deg, var(--gold), #fff0b1);
+      border: 2px solid rgba(36, 23, 28, 0.08);
+    }
+
+    .score-burst span {
+      display: block;
+      font-size: 0.84rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .score-burst strong {
+      display: block;
+      font-size: clamp(2.6rem, 7vw, 4rem);
+      line-height: 1;
+      margin-top: 0.25rem;
+    }
+
+    .eyebrow {
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--rose-deep);
+      margin-bottom: 0.4rem;
+    }
+
+    .summary {
+      margin-top: 0.4rem;
+      line-height: 1.55;
+    }
+
+    .slider-wrap {
+      margin-top: 1rem;
+      padding: 1rem 1rem 0.7rem;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 2px solid rgba(36, 23, 28, 0.07);
+    }
+
+    input[type='range'] {
+      width: 100%;
+      accent-color: var(--rose-deep);
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.94rem;
+      font-weight: 800;
+      margin-top: 0.6rem;
+    }
+
+    .score-grid {
+      margin-top: 1rem;
+    }
+
+    .behavior-grid {
+      margin-top: 1rem;
+    }
+
+    .behavior-board {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 2px solid rgba(36, 23, 28, 0.08);
+    }
+
+    .behavior-head {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+    }
+
+    .score-chip {
+      min-width: 3.6rem;
+      justify-content: center;
+      background: linear-gradient(180deg, #2f2438, #161117);
+    }
+
+    .behavior-chip {
+      min-width: 3.25rem;
+      justify-content: center;
+      background: linear-gradient(180deg, #265d9b, #17355f);
+    }
+
+    .behavior-burst {
+      background: linear-gradient(180deg, #d7efff, #f4fbff);
+    }
+
+    .subheading {
+      margin-top: 1.1rem;
+    }
+
+    .behavior-slider {
+      direction: rtl;
+    }
+
+    .story-card {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+    }
+
+    .narrator-box,
+    .landing-box {
+      padding: 1.1rem;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 2px solid rgba(36, 23, 28, 0.07);
+    }
+
+    blockquote {
+      margin: 0.85rem 0 0;
+      padding: 1rem 1rem 1rem 1.1rem;
+      border-left: 5px solid var(--rose);
+      background: rgba(255, 255, 255, 0.78);
+      border-radius: 0 20px 20px 0;
+      line-height: 1.6;
+      font-size: 1.04rem;
+    }
+
+    .narrator-actions {
+      margin-top: 1rem;
+    }
+
+    .map-grid {
+      display: grid;
+      gap: 0.9rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-top: 1rem;
+    }
+
+    .band-card {
+      padding: 1rem;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 2px solid rgba(36, 23, 28, 0.07);
+    }
+
+    .band-card p {
+      margin-top: 0.35rem;
+      line-height: 1.45;
+    }
+
+    .band-numbers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.8rem;
+    }
+
+    .number-pill {
+      padding: 0.42rem 0.72rem;
+      border-radius: 999px;
+      background: white;
+      border: 2px solid rgba(36, 23, 28, 0.08);
+      font-weight: 900;
+    }
+
+    .footnote {
+      margin-top: 1rem;
+      line-height: 1.55;
+    }
+
+    .result-board[data-band='better'],
+    .band-card[data-band='better'] {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(223, 255, 233, 0.9));
+    }
+
+    .result-board[data-band='good'],
+    .band-card[data-band='good'] {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(231, 248, 255, 0.9));
+    }
+
+    .result-board[data-band='neutral'],
+    .band-card[data-band='neutral'] {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(247, 241, 211, 0.92));
+    }
+
+    .result-board[data-band='shaky'],
+    .band-card[data-band='shaky'] {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 236, 201, 0.92));
+    }
+
+    .result-board[data-band='bad'],
+    .band-card[data-band='bad'] {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 220, 210, 0.92));
+    }
+
+    .result-board[data-band='brutal'],
+    .band-card[data-band='brutal'] {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 198, 205, 0.94));
+    }
+
+    .result-board[data-band='worst'],
+    .band-card[data-band='worst'] {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(234, 186, 197, 0.96));
+    }
+
+    .result-board[data-band='bottom'],
+    .band-card[data-band='bottom'] {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(214, 155, 171, 0.96));
+    }
+
+    @media (max-width: 780px) {
+      main {
+        width: min(100%, calc(100% - 1rem));
+      }
+
+      .controls-grid,
+      .story-card,
+      .result-head {
+        grid-template-columns: 1fr;
+      }
+
+      .result-head {
+        justify-items: start;
+      }
+
+      .score-burst {
+        min-width: 0;
+      }
+    }
+  </style>
+
+  <main>
+    <section class="hero">
+      <h1>SRO2 Girls</h1>
+      <p class="subtitle">
+        Pick whether the move was a good choice or a bad choice, then land it on two scales at
+        once. The odd-number ladder from 65 down to 1 shows how the moment landed, and the
+        behavior score from 20 down to 0 shows how strong or weak the behavior was.
+      </p>
+      <div class="hero-rules">
+        <div class="rule-pill">65 is the best.</div>
+        <div class="rule-pill">47 is neutral.</div>
+        <div class="rule-pill">59+ is better than Boodeboo.</div>
+        <div class="rule-pill">Below 25 is worse than Boodeboo.</div>
+        <div class="rule-pill">20 is the best behavior score.</div>
+        <div class="rule-pill">10 is neutral behavior.</div>
+        <div class="rule-pill">0 is ultimate dead meat.</div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <section class="panel">
+        <h2>Build the moment</h2>
+        <div class="controls-grid" style="margin-top: 1rem;">
+          <label>
+            Girl name
+            <input id="girlName" type="text" value="Lily" />
+          </label>
+          <label>
+            What happened
+            <input id="choiceText" type="text" value="helped her friend clean the room" />
+          </label>
+        </div>
+
+        <div style="margin-top: 1rem;">
+          <h3>Choice type</h3>
+          <div class="choice-switch" style="margin-top: 0.75rem;">
+            <button class="choice-button" data-choice-type="good" data-active="true" type="button">
+              Good choice
+            </button>
+            <button class="choice-button" data-choice-type="bad" data-active="false" type="button">
+              Bad choice
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-top: 1rem;">
+          <h3>Quick starts</h3>
+          <div class="starter-row" style="margin-top: 0.75rem;">
+            {
+              starterScenarios.map((scenario, index) => (
+                <button
+                  class="starter-button secondary"
+                  data-starter-choice={scenario.choice}
+                  data-starter-behavior-score={scenario.behaviorScore}
+                  data-starter-index={index}
+                  data-starter-name={scenario.name}
+                  data-starter-score={scenario.score}
+                  data-starter-type={scenario.type}
+                  data-active={index === 0 ? 'true' : 'false'}
+                  onclick="window.applySro2Starter?.(this)"
+                  type="button"
+                >
+                  {scenario.label}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <p class="helper">
+          Good choice means the narrator starts happy that it happened. Bad choice makes the
+          narrator sound worried or upset. The 65 ladder shows the landing, and the 20-to-0
+          behavior score shows how strong, neutral, weak, or troubling the behavior felt.
+        </p>
+      </section>
+
+      <section class="panel result-board" id="resultBoard" data-band="better">
+        <div class="result-head">
+          <div class="score-burst">
+            <span>Score</span>
+            <strong id="scoreValue">59</strong>
+          </div>
+
+          <div>
+            <p class="eyebrow" id="bandLabel">Better than Boodeboo</p>
+            <h2 id="landingTitle">Good choice landed great</h2>
+            <p class="summary" id="landingSummary">
+              Lily made a good choice and it landed as a strong, happy result.
+            </p>
+          </div>
+
+          <button id="randomScore" type="button">Random score</button>
+        </div>
+
+        <div class="slider-wrap">
+          <input id="scoreSlider" type="range" min="1" max="65" step="2" value="59" />
+          <div class="slider-labels">
+            <span>65 best</span>
+            <span>47 neutral</span>
+            <span>1 worst</span>
+          </div>
+        </div>
+
+        <div class="score-grid" id="scoreGrid">
+          {
+            scoreOptions.map(score => (
+              <button
+                class="score-chip"
+                data-score={score}
+                data-active={score === 59 ? 'true' : 'false'}
+                type="button"
+              >
+                {score}
+              </button>
+            ))
+          }
+        </div>
+
+        <div class="behavior-board" id="behaviorBoard" data-band="good">
+          <div class="behavior-head">
+            <div class="score-burst behavior-burst">
+              <span>Behavior</span>
+              <strong id="behaviorValue">19</strong>
+            </div>
+
+            <div>
+              <p class="eyebrow" id="behaviorBandLabel">Strong behavior</p>
+              <p class="summary" id="behaviorSummary">
+                19 is a strong behavior score, so the behavior side stays steady.
+              </p>
+            </div>
+
+            <button class="secondary" id="randomBehavior" type="button">Random behavior</button>
+          </div>
+
+          <div class="slider-wrap">
+            <input
+              class="behavior-slider"
+              id="behaviorSlider"
+              type="range"
+              min="0"
+              max="20"
+              step="1"
+              value="18"
+            />
+            <div class="slider-labels">
+              <span>20 best</span>
+              <span>10 neutral</span>
+              <span>0 dead meat</span>
+            </div>
+          </div>
+
+          <div class="behavior-grid" id="behaviorGrid">
+            {
+              behaviorScoreOptions.map(score => (
+                <button
+                  class="behavior-chip"
+                  data-behavior-score={score}
+                  data-active={score === 19 ? 'true' : 'false'}
+                  onclick="window.applyBehaviorScore?.(this)"
+                  type="button"
+                >
+                  {score}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="panel story-card">
+        <div class="narrator-box">
+          <h2>Narrator</h2>
+          <p class="summary" id="narratorMood">
+            The narrator sounds happy because Lily made a good choice, the landing stayed high,
+            and the behavior score is still strong.
+          </p>
+          <blockquote id="narratorLine">
+            "Lily made a good choice when she helped her friend clean the room, and a 59 means it
+            landed bright and strong. Her behavior score is 19, so the behavior side stays
+            strong."
+          </blockquote>
+          <div class="narrator-actions">
+            <button class="secondary" id="speakNarration" type="button">Speak narration</button>
+          </div>
+        </div>
+
+        <div class="landing-box">
+          <h2>How this scale works</h2>
+          <p class="summary">
+            Good girls usually get 59. Bad girls usually get 25. If a good choice falls into low
+            numbers, it means the good choice landed bad. If a bad choice climbs into high numbers,
+            it means the bad choice landed surprisingly good.
+          </p>
+          <p class="footnote">
+            On the behavior side, 10 is neutral, 9 is slightly weak without being trouble, 1 is
+            the worst regular behavior score, and 0 is ultimate dead meat.
+          </p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Visible number map</h2>
+        <div class="map-grid">
+          {
+            scoreBands.map(band => {
+              let bandKey = 'good'
+
+              if (band.label === 'Better than Boodeboo') bandKey = 'better'
+              if (band.label === 'Good Numbers') bandKey = 'good'
+              if (band.label === 'Neutral') bandKey = 'neutral'
+              if (band.label === 'Not So Good') bandKey = 'shaky'
+              if (band.label === 'Bad') bandKey = 'bad'
+              if (band.label === 'Brutal') bandKey = 'brutal'
+              if (band.label === 'Worst') bandKey = 'worst'
+              if (band.label === 'The Worst One') bandKey = 'bottom'
+
+              return (
+                <article class="band-card" data-band={bandKey}>
+                  <h3>{band.label}</h3>
+                  <p>{band.note}</p>
+                  <div class="band-numbers">
+                    {band.numbers.map(number => <span class="number-pill">{number}</span>)}
+                  </div>
+                </article>
+              )
+            })
+          }
+        </div>
+
+        <h3 class="subheading">Behavior score map</h3>
+        <div class="map-grid">
+          {
+            behaviorBands.map(band => {
+              let bandKey = 'good'
+
+              if (band.label === 'Best Behavior') bandKey = 'better'
+              if (band.label === 'Strong Behavior') bandKey = 'good'
+              if (band.label === 'Neutral') bandKey = 'neutral'
+              if (band.label === 'Slightly Weak') bandKey = 'shaky'
+              if (band.label === 'Trouble') bandKey = 'bad'
+              if (band.label === 'Ultimate Dead Meat') bandKey = 'bottom'
+
+              return (
+                <article class="band-card" data-band={bandKey}>
+                  <h3>{band.label}</h3>
+                  <p>{band.note}</p>
+                  <div class="band-numbers">
+                    {band.numbers.map(number => <span class="number-pill">{number}</span>)}
+                  </div>
+                </article>
+              )
+            })
+          }
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script define:vars={{behaviorScoreOptions, scoreOptions, starterScenarios}}>
+    function stripOuterQuotes(text) {
+      return text.replace(/^"/, '').replace(/"$/, '')
+    }
+
+    const girlNameInput = document.querySelector('#girlName')
+    const behaviorBoard = document.querySelector('#behaviorBoard')
+    const behaviorBandLabel = document.querySelector('#behaviorBandLabel')
+    const behaviorSummary = document.querySelector('#behaviorSummary')
+    const behaviorSlider = document.querySelector('#behaviorSlider')
+    const behaviorValue = document.querySelector('#behaviorValue')
+    const choiceTextInput = document.querySelector('#choiceText')
+    const scoreValue = document.querySelector('#scoreValue')
+    const bandLabel = document.querySelector('#bandLabel')
+    const landingTitle = document.querySelector('#landingTitle')
+    const landingSummary = document.querySelector('#landingSummary')
+    const narratorMood = document.querySelector('#narratorMood')
+    const narratorLine = document.querySelector('#narratorLine')
+    const scoreSlider = document.querySelector('#scoreSlider')
+    const resultBoard = document.querySelector('#resultBoard')
+    const randomBehaviorButton = document.querySelector('#randomBehavior')
+    const randomScoreButton = document.querySelector('#randomScore')
+    const speakButton = document.querySelector('#speakNarration')
+    const behaviorButtons = Array.from(document.querySelectorAll('.behavior-chip'))
+    const choiceButtons = Array.from(document.querySelectorAll('.choice-button'))
+    const scoreButtons = Array.from(document.querySelectorAll('.score-chip'))
+    const starterButtons = Array.from(document.querySelectorAll('.starter-button'))
+
+    const state = {
+      behaviorScore: 19,
+      score: 59,
+      choiceType: 'good',
+    }
+
+    function normalizeBehaviorScore(value) {
+      const numeric = Number(value)
+      let score = Number.isFinite(numeric) ? numeric : 19
+
+      score = Math.max(0, Math.min(20, score))
+
+      return Math.round(score)
+    }
+
+    function normalizeScore(value) {
+      const numeric = Number(value)
+      let score = Number.isFinite(numeric) ? numeric : 59
+
+      score = Math.max(1, Math.min(65, score))
+
+      if (score % 2 === 0) {
+        score -= 1
+      }
+
+      if (score < 1) {
+        score = 1
+      }
+
+      return score
+    }
+
+    function getBehaviorBand(score) {
+      if (score === 20) {
+        return {
+          key: 'better',
+          label: 'Best behavior',
+          summary: '20 is the best behavior score.',
+        }
+      }
+
+      if (score >= 11) {
+        return {
+          key: 'good',
+          label: 'Strong behavior',
+          summary: `${score} is a strong behavior score.`,
+        }
+      }
+
+      if (score === 10) {
+        return {
+          key: 'neutral',
+          label: 'Behavior neutral',
+          summary: '10 is neutral behavior.',
+        }
+      }
+
+      if (score === 9) {
+        return {
+          key: 'shaky',
+          label: 'Slightly weak',
+          summary: '9 is slightly weak, but not a trouble moment.',
+        }
+      }
+
+      if (score >= 1) {
+        return {
+          key: 'bad',
+          label: 'Trouble behavior',
+          summary: `${score} is in the trouble range, and 1 is the worst regular behavior score.`,
+        }
+      }
+
+      return {
+        key: 'bottom',
+        label: 'Ultimate dead meat',
+        summary: '0 is ultimate dead meat.',
+      }
+    }
+
+    function getBand(score) {
+      if (score >= 59) {
+        return {
+          key: 'better',
+          label: 'Better than Boodeboo',
+          summary: 'This is high-number territory. The score is stronger than Boodeboo.',
+        }
+      }
+
+      if (score >= 49) {
+        return {
+          key: 'good',
+          label: 'Good numbers',
+          summary: 'Still strong, still positive, and clearly above neutral.',
+        }
+      }
+
+      if (score === 47) {
+        return {
+          key: 'neutral',
+          label: 'Neutral',
+          summary: 'This is the middle. It neither shines nor crashes.',
+        }
+      }
+
+      if (score >= 41) {
+        return {
+          key: 'shaky',
+          label: 'Not so good',
+          summary: 'The choice landed a little shaky and did not stay strong.',
+        }
+      }
+
+      if (score >= 25) {
+        return {
+          key: 'bad',
+          label: 'Bad',
+          summary: 'This is bad-number territory, and 25 is where bad girls usually land.',
+        }
+      }
+
+      if (score >= 11) {
+        return {
+          key: 'brutal',
+          label: 'Brutal',
+          summary: 'This landed hard and feels much worse than Boodeboo.',
+        }
+      }
+
+      if (score >= 3) {
+        return {
+          key: 'worst',
+          label: 'Worst',
+          summary: 'These are the worst-number drops on the board: 9, 7, 5, and 3.',
+        }
+      }
+
+      return {
+        key: 'bottom',
+        label: 'The worst one',
+        summary: 'A 1 is the absolute worst landing in the whole game.',
+      }
+    }
+
+    function buildBehaviorImpact(behaviorScore, name) {
+      const cleanName = name.trim() || 'This girl'
+      const behavior = getBehaviorBand(behaviorScore)
+
+      if (behaviorScore === 20) {
+        return {
+          ...behavior,
+          lineSentence: `${cleanName}'s behavior score is 20, so the behavior side is at its best.`,
+          moodSentence: 'The behavior score keeps the whole moment feeling as strong as possible.',
+          summarySentence: `${cleanName} also has a behavior score of 20, which is the best.`,
+        }
+      }
+
+      if (behaviorScore >= 11) {
+        return {
+          ...behavior,
+          lineSentence: `${cleanName}'s behavior score is ${behaviorScore}, so the behavior side stays strong.`,
+          moodSentence: 'The behavior score keeps the moment steady and strong.',
+          summarySentence: `${cleanName} also has a behavior score of ${behaviorScore}, which keeps the behavior side strong.`,
+        }
+      }
+
+      if (behaviorScore === 10) {
+        return {
+          ...behavior,
+          lineSentence: `${cleanName}'s behavior score is 10, so the behavior side is neutral.`,
+          moodSentence: 'The behavior score lands right in the middle.',
+          summarySentence: `${cleanName} also has a behavior score of 10, which is neutral.`,
+        }
+      }
+
+      if (behaviorScore === 9) {
+        return {
+          ...behavior,
+          lineSentence: `${cleanName}'s behavior score is 9, which is slightly weak but not a trouble moment.`,
+          moodSentence: 'The behavior score dips a little, but it is not in trouble yet.',
+          summarySentence: `${cleanName} also has a behavior score of 9, which is slightly weak but not a trouble moment.`,
+        }
+      }
+
+      if (behaviorScore >= 1) {
+        return {
+          ...behavior,
+          lineSentence: `${cleanName}'s behavior score is ${behaviorScore}, so the behavior side is in trouble.`,
+          moodSentence: 'The behavior score pulls the moment down into trouble.',
+          summarySentence: `${cleanName} also has a behavior score of ${behaviorScore}, which puts the behavior side in trouble.`,
+        }
+      }
+
+      return {
+        ...behavior,
+        lineSentence: `${cleanName}'s behavior score is 0, which means ultimate dead meat.`,
+        moodSentence: 'The behavior score makes the whole moment feel like ultimate dead meat.',
+        summarySentence: `${cleanName} also has a behavior score of 0, which means ultimate dead meat.`,
+      }
+    }
+
+    function buildOutcome(choiceType, score, name, choiceText) {
+      const band = getBand(score)
+      const cleanName = name.trim() || 'This girl'
+      const cleanChoice =
+        choiceText.trim() || (choiceType === 'good' ? 'made a kind choice' : 'made a rough choice')
+
+      if (choiceType === 'good') {
+        if (score >= 59) {
+          return {
+            ...band,
+            title: 'Good choice landed great',
+            summary: `${cleanName} made a good choice, and it landed bright, happy, and strong at ${score}.`,
+            mood: `The narrator sounds happy and proud because ${cleanName} made a good choice and the number stayed high.`,
+            line: `"${cleanName} made a good choice when she ${cleanChoice}, and a ${score} means it landed bright and strong."`,
+            pitch: 1.2,
+            rate: 1.02,
+          }
+        }
+
+        if (score >= 49) {
+          return {
+            ...band,
+            title: 'Good choice landed well',
+            summary: `${cleanName} still held onto a good number, so the choice feels solid and safe.`,
+            mood: `The narrator still sounds happy because the good choice stayed above neutral.`,
+            line: `"${cleanName} made a good choice when she ${cleanChoice}, and this ${score} still lands in a good place."`,
+            pitch: 1.14,
+            rate: 1,
+          }
+        }
+
+        if (score === 47) {
+          return {
+            ...band,
+            title: 'Good choice landed neutral',
+            summary: `${cleanName} meant well, but the score settled right in the middle.`,
+            mood: `The narrator starts warm, then levels out because the choice only landed neutral.`,
+            line: `"${cleanName} made a good choice when she ${cleanChoice}, but a 47 means it landed right in the middle."`,
+            pitch: 1.04,
+            rate: 0.97,
+          }
+        }
+
+        if (score >= 41) {
+          return {
+            ...band,
+            title: 'Good choice landed shaky',
+            summary: `${cleanName} made a good choice, but the number slipped into the not-so-good zone.`,
+            mood: `The narrator starts happy, then sounds unsure because the good choice did not stay strong.`,
+            line: `"${cleanName} tried to do the right thing when she ${cleanChoice}, but a ${score} means the good choice landed shaky."`,
+            pitch: 0.98,
+            rate: 0.95,
+          }
+        }
+
+        if (score >= 25) {
+          return {
+            ...band,
+            title: 'Good choice landed bad',
+            summary: `${cleanName} made a good choice, but the low number means the good choice landed bad.`,
+            mood: `The narrator starts happy that the choice happened, then sighs because the landing turned bad.`,
+            line: `"${cleanName} made a good choice when she ${cleanChoice}, but a ${score} means that good choice landed bad."`,
+            pitch: 0.92,
+            rate: 0.93,
+          }
+        }
+
+        if (score >= 11) {
+          return {
+            ...band,
+            title: 'Good choice landed brutal',
+            summary: `${cleanName} meant well, but the choice crashed into brutal numbers.`,
+            mood: `The narrator sounds crushed because the good choice went very wrong after it landed.`,
+            line: `"${cleanName} made a good choice when she ${cleanChoice}, but a ${score} sends it into brutal territory."`,
+            pitch: 0.85,
+            rate: 0.9,
+          }
+        }
+
+        if (score >= 3) {
+          return {
+            ...band,
+            title: 'Good choice landed worst',
+            summary: `${cleanName} made a good choice, but the result dropped into the worst numbers on the board.`,
+            mood: `The narrator sounds shocked because a good choice fell all the way into the worst zone.`,
+            line: `"${cleanName} made a good choice when she ${cleanChoice}, but a ${score} is one of the worst landings possible."`,
+            pitch: 0.78,
+            rate: 0.88,
+          }
+        }
+
+        return {
+          ...band,
+          title: 'Good choice hit the worst one',
+          summary: `${cleanName} made a good choice, but it dropped all the way to 1, the worst one.`,
+          mood: `The narrator sounds heartbroken because the good choice fell to the absolute lowest score.`,
+          line: `"${cleanName} made a good choice when she ${cleanChoice}, but a 1 is the worst one of all."`,
+          pitch: 0.72,
+          rate: 0.85,
+        }
+      }
+
+      if (score >= 59) {
+        return {
+          ...band,
+          title: 'Bad choice landed surprisingly good',
+          summary: `${cleanName} made a bad choice, but the huge score made it land much better than expected.`,
+          mood: `The narrator sounds stunned because a bad choice somehow rose into high-number territory.`,
+          line: `"${cleanName} made a bad choice when she ${cleanChoice}, but a ${score} means it landed surprisingly good."`,
+          pitch: 1.06,
+          rate: 1,
+        }
+      }
+
+      if (score >= 49) {
+        return {
+          ...band,
+          title: 'Bad choice landed lighter than expected',
+          summary: `${cleanName} made a bad choice, but the score stayed on the good side of the board.`,
+          mood: `The narrator sounds wary, but also surprised that the bad choice did not sink.`,
+          line: `"${cleanName} made a bad choice when she ${cleanChoice}, and somehow this ${score} keeps it lighter than expected."`,
+          pitch: 0.98,
+          rate: 0.98,
+        }
+      }
+
+      if (score === 47) {
+        return {
+          ...band,
+          title: 'Bad choice landed neutral',
+          summary: `${cleanName} made a bad choice, but the score stopped at the middle.`,
+          mood: `The narrator sounds uneasy because the bad choice did not turn great or terrible.`,
+          line: `"${cleanName} made a bad choice when she ${cleanChoice}, and a 47 leaves it right in the middle."`,
+          pitch: 0.93,
+          rate: 0.95,
+        }
+      }
+
+      if (score >= 41) {
+        return {
+          ...band,
+          title: 'Bad choice landed not so good',
+          summary: `${cleanName} made a bad choice, and the score slipped into the not-so-good range.`,
+          mood: `The narrator sounds worried because the bad choice is starting to fall apart.`,
+          line: `"${cleanName} made a bad choice when she ${cleanChoice}, and a ${score} means it landed not so good."`,
+          pitch: 0.9,
+          rate: 0.93,
+        }
+      }
+
+      if (score >= 25) {
+        return {
+          ...band,
+          title: 'Bad choice landed bad',
+          summary: `${cleanName} made a bad choice, and the board says it landed bad.`,
+          mood: `The narrator sounds unhappy because the bad choice landed where bad numbers live.`,
+          line: `"${cleanName} made a bad choice when she ${cleanChoice}, and a ${score} means it landed bad."`,
+          pitch: 0.84,
+          rate: 0.91,
+        }
+      }
+
+      if (score >= 11) {
+        return {
+          ...band,
+          title: 'Bad choice landed brutal',
+          summary: `${cleanName} made a bad choice, and the landing turned brutal.`,
+          mood: `The narrator sounds alarmed because the bad choice crashed into brutal numbers.`,
+          line: `"${cleanName} made a bad choice when she ${cleanChoice}, and a ${score} pushes it into brutal territory."`,
+          pitch: 0.78,
+          rate: 0.88,
+        }
+      }
+
+      if (score >= 3) {
+        return {
+          ...band,
+          title: 'Bad choice landed worst',
+          summary: `${cleanName} made a bad choice, and it dropped into the worst numbers on the board.`,
+          mood: `The narrator sounds harsh and upset because the bad choice fell into the worst zone.`,
+          line: `"${cleanName} made a bad choice when she ${cleanChoice}, and a ${score} is one of the worst scores possible."`,
+          pitch: 0.72,
+          rate: 0.85,
+        }
+      }
+
+      return {
+        ...band,
+        title: 'Bad choice hit the worst one',
+        summary: `${cleanName} made a bad choice, and it landed on 1, the worst one of all.`,
+        mood: `The narrator sounds severe because the bad choice reached the lowest score in the game.`,
+        line: `"${cleanName} made a bad choice when she ${cleanChoice}, and a 1 is the worst one of all."`,
+        pitch: 0.68,
+        rate: 0.82,
+      }
+    }
+
+    function syncBehaviorButtons() {
+      behaviorButtons.forEach(button => {
+        button.dataset.active =
+          Number(button.dataset.behaviorScore) === state.behaviorScore ? 'true' : 'false'
+      })
+    }
+
+    function syncChoiceButtons() {
+      choiceButtons.forEach(button => {
+        button.dataset.active = button.dataset.choiceType === state.choiceType ? 'true' : 'false'
+      })
+    }
+
+    function syncScoreButtons() {
+      scoreButtons.forEach(button => {
+        button.dataset.active = Number(button.dataset.score) === state.score ? 'true' : 'false'
+      })
+    }
+
+    function render() {
+      state.behaviorScore = normalizeBehaviorScore(state.behaviorScore)
+      state.score = normalizeScore(state.score)
+      behaviorSlider.value = String(state.behaviorScore)
+      behaviorValue.textContent = String(state.behaviorScore)
+      scoreSlider.value = String(state.score)
+      scoreValue.textContent = String(state.score)
+
+      const behaviorImpact = buildBehaviorImpact(state.behaviorScore, girlNameInput.value)
+      const outcome = buildOutcome(
+        state.choiceType,
+        state.score,
+        girlNameInput.value,
+        choiceTextInput.value
+      )
+
+      behaviorBandLabel.textContent = behaviorImpact.label
+      behaviorSummary.textContent = behaviorImpact.summary
+      bandLabel.textContent = outcome.label
+      landingTitle.textContent = outcome.title
+      landingSummary.textContent = `${outcome.summary} ${behaviorImpact.summarySentence}`
+      narratorMood.textContent = `${outcome.mood} ${behaviorImpact.moodSentence}`
+      narratorLine.textContent = `"${stripOuterQuotes(outcome.line)} ${behaviorImpact.lineSentence}"`
+      behaviorBoard.dataset.band = behaviorImpact.key
+      resultBoard.dataset.band = outcome.key
+
+      syncBehaviorButtons()
+      syncChoiceButtons()
+      syncScoreButtons()
+    }
+
+    window.applyBehaviorScore = button => {
+      if (!(button instanceof HTMLElement)) {
+        return
+      }
+
+      state.behaviorScore = normalizeBehaviorScore(button.dataset.behaviorScore)
+      render()
+    }
+
+    window.applySro2Starter = button => {
+      if (!(button instanceof HTMLElement)) {
+        return
+      }
+
+      girlNameInput.value = button.dataset.starterName || girlNameInput.value
+      choiceTextInput.value = button.dataset.starterChoice || choiceTextInput.value
+      state.behaviorScore = normalizeBehaviorScore(button.dataset.starterBehaviorScore)
+      state.choiceType = button.dataset.starterType === 'bad' ? 'bad' : 'good'
+      state.score = normalizeScore(button.dataset.starterScore)
+
+      starterButtons.forEach(otherButton => {
+        otherButton.dataset.active = otherButton === button ? 'true' : 'false'
+      })
+
+      render()
+    }
+
+    function speakNarration() {
+      const text = narratorLine.textContent || ''
+
+      if (!text || !('speechSynthesis' in window)) {
+        return
+      }
+
+      const outcome = buildOutcome(
+        state.choiceType,
+        state.score,
+        girlNameInput.value,
+        choiceTextInput.value
+      )
+
+      window.speechSynthesis.cancel()
+
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.pitch = outcome.pitch
+      utterance.rate = outcome.rate
+      utterance.volume = 1
+      window.speechSynthesis.speak(utterance)
+    }
+
+    behaviorButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        state.behaviorScore = Number(button.dataset.behaviorScore)
+        render()
+      })
+    })
+
+    choiceButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        state.choiceType = button.dataset.choiceType || 'good'
+        render()
+      })
+    })
+
+    scoreButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        state.score = Number(button.dataset.score)
+        render()
+      })
+    })
+
+    scoreSlider.addEventListener('input', () => {
+      state.score = normalizeScore(scoreSlider.value)
+      render()
+    })
+
+    behaviorSlider.addEventListener('input', () => {
+      state.behaviorScore = normalizeBehaviorScore(behaviorSlider.value)
+      render()
+    })
+
+    girlNameInput.addEventListener('input', render)
+    choiceTextInput.addEventListener('input', render)
+    randomBehaviorButton.addEventListener('click', () => {
+      const randomIndex = Math.floor(Math.random() * behaviorScoreOptions.length)
+      state.behaviorScore = behaviorScoreOptions[randomIndex]
+      render()
+    })
+    randomScoreButton.addEventListener('click', () => {
+      const randomIndex = Math.floor(Math.random() * scoreOptions.length)
+      state.score = scoreOptions[randomIndex]
+      render()
+    })
+    speakButton.addEventListener('click', speakNarration)
+
+    render()
+  </script>
+</Empty>

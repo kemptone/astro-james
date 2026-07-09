@@ -1,419 +1,2791 @@
 ---
 import Menu from '@/components/menu.astro'
 
-// sro24 - Movie game with timer
+// sro24 - Movie clip game
 ---
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SRO24 - Movie Game</title>
+    <title>SRO24 - Movie Clip Game</title>
   </head>
   <body>
     <Menu />
-    <div class="container">
-      <h1>this is sro24, the movie game with sro25</h1>
 
-      <div class="controls">
-        <div class="checkbox-container">
-          <input type="checkbox" id="gameCheckbox" checked disabled />
-          <label for="gameCheckbox">Game Active</label>
+    <main class="shell">
+      <section class="hero card">
+        <div class="hero-copy">
+          <p class="eyebrow">SRO24 movie game</p>
+          <h1>Press any minute, or make your own clip.</h1>
+          <p class="hero-text">
+            Version 1 makes one-minute slices. Version 2 lets you choose a start and end time.
+            If the end is earlier than the start, the clip goes in reverse. If both times match,
+            it makes a screenshot instead.
+          </p>
         </div>
 
-        <div class="timer-controls">
-          <div class="input-group">
-            <label for="startTime">Start (seconds):</label>
-            <input type="number" id="startTime" placeholder="3599" min="0" />
+        <div class="hero-side">
+          <div class="checkbox-pill">
+            <input type="checkbox" id="gameCheckbox" checked disabled />
+            <label for="gameCheckbox">Game active</label>
+          </div>
+          <div class="season-list">
+            <p><strong>Decorations</strong></p>
+            <p>Halloween: September 20 - November 2</p>
+            <p>Thanksgiving: November 3 - November 30</p>
+            <p>Christmas: December 1 - January 2</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <section class="card control-card">
+          <div class="section-heading">
+            <p class="eyebrow">Movie loader</p>
+            <h2>Search a movie preview, or load a whole movie source</h2>
+            <p class="section-copy">
+              Search for a real title like <strong>The Lion King</strong> or tap one from the
+              quick shelf. The page will load a legal movie preview automatically, with no file
+              picker needed. If you want clips from anywhere in the whole movie, load the built-in
+              full movie demo or your own full video source and the clip range can go all the way
+              to the real duration.
+            </p>
           </div>
 
-          <div class="input-group">
-            <label for="stopTime">Stop (seconds):</label>
-            <input type="number" id="stopTime" placeholder="3602" min="0" />
+          <div class="search-panel">
+            <div class="search-row">
+              <label class="search-label">
+                Search any movie
+                <input id="movieTitle" type="text" placeholder="The Lion King" maxlength="120" />
+              </label>
+              <button id="searchMovies" type="button">Search movies</button>
+            </div>
+
+            <div id="searchResultsStatus" class="soft-panel">
+              Search for a real movie title and click a result to load its preview.
+            </div>
+
+            <div id="searchResults" class="search-results" hidden></div>
           </div>
 
-          <button id="startBtn">Start Timer</button>
-          <button id="resetBtn">Reset</button>
-        </div>
+          <div class="whole-source-cta soft-panel">
+            <strong>Whole movie mode</strong>
+            <p>
+              Load a full movie URL or a movie file if you want clips from 0:00 up to the real
+              end of the movie, like 30 minutes or longer.
+            </p>
+            <div class="whole-source-cta-actions">
+              <button id="loadWholeMovieDemo" type="button">Load full movie demo</button>
+              <button id="focusWholeSource" class="ghost" type="button">Use whole movie source</button>
+            </div>
+            <p class="whole-source-demo-copy">
+              Built-in demo: <strong>Night of the Living Dead</strong> (1968), a full public-domain
+              movie that runs about 1:35:53 and creates 96 minute buttons automatically.
+            </p>
+          </div>
 
-        <div class="timer-display">
-          <div id="timer">0:00</div>
-        </div>
-      </div>
+          <div class="movie-shelf-wrap">
+            <div class="movie-shelf-heading">
+              <p class="eyebrow">Quick shelf</p>
+              <p class="section-copy">Tap one and it will search and load that movie automatically.</p>
+            </div>
+            <div id="movieShelf" class="movie-shelf"></div>
+          </div>
 
-      <div class="iframe-container">
-        <iframe src="/sro25" title="SRO25 Movie" allowfullscreen> </iframe>
-      </div>
+          <details id="sourceTools" class="source-tools" open>
+            <summary>Whole movie source tools</summary>
+            <p class="section-copy">
+              This is the full-length path. Once a whole movie source is loaded, minute buttons and
+              custom timing can use any time up to the movie's real end. Search results stay on
+              legal preview footage unless you load a full movie source here.
+            </p>
 
-      <div class="decorations-info">
-        <h3>Seasonal Decorations:</h3>
-        <ul>
-          <li>Halloween: September 20 - November 2</li>
-          <li>Thanksgiving: November 3 - November 30</li>
-          <li>Christmas: December 1 - January 2</li>
-        </ul>
-      </div>
-    </div>
+            <div class="custom-grid load-grid">
+              <label>
+                Full movie URL
+                <input
+                  id="movieUrl"
+                  type="text"
+                  placeholder="https://example.com/full-movie.mp4"
+                  inputmode="url"
+                />
+              </label>
+              <div class="fallback-actions">
+                <button id="loadMovieUrl" type="button">Load whole movie URL</button>
+              </div>
+            </div>
+
+            <div class="upload-row">
+              <label class="file-picker" for="movieFile">
+                <span>Choose whole movie file</span>
+                <input id="movieFile" type="file" accept="video/*" />
+              </label>
+              <button id="clearMovie" class="ghost" type="button">Clear movie</button>
+            </div>
+          </details>
+
+          <div class="stats-grid">
+            <article class="stat-box">
+              <span class="stat-label">Source mode</span>
+              <strong id="sourceModeValue">No source</strong>
+            </article>
+            <article class="stat-box">
+              <span class="stat-label">Movie</span>
+              <strong id="movieName">No movie yet</strong>
+            </article>
+            <article class="stat-box">
+              <span class="stat-label">Duration</span>
+              <strong id="movieDuration">0:00</strong>
+            </article>
+            <article class="stat-box">
+              <span class="stat-label">Minute clips</span>
+              <strong id="minuteCount">0</strong>
+            </article>
+            <article class="stat-box">
+              <span class="stat-label">Clip range</span>
+              <strong id="sourceRangeValue">0:00 to 0:00</strong>
+            </article>
+          </div>
+
+          <div class="player-frame">
+            <div id="sourceLoader" class="source-loader" hidden>
+              <div class="source-loader-art">
+                <img id="sourceLoaderPoster" alt="Loading movie poster" hidden />
+                <div id="sourceLoaderPosterFallback" class="source-loader-fallback">Movie</div>
+              </div>
+              <div class="loader-wheel"></div>
+              <p id="sourceLoaderText">Loading movie source...</p>
+            </div>
+            <div id="movieSourceCard" class="movie-source-card" hidden>
+              <div class="movie-source-art">
+                <img id="movieSourcePoster" alt="Movie source poster" hidden />
+                <div id="movieSourcePosterFallback" class="movie-source-fallback">Movie</div>
+              </div>
+              <div class="movie-source-copy">
+                <p class="movie-source-label">Movie source loaded</p>
+                <h3 id="movieSourceHeading">Movie title</h3>
+                <p id="movieSourceMeta">Ready for clip buttons and minute buttons.</p>
+                <div class="movie-source-spinner">
+                  <span class="mini-wheel"></span>
+                  <span>Source spinning and ready</span>
+                </div>
+              </div>
+            </div>
+            <video id="moviePreview" controls playsinline preload="metadata"></video>
+            <div id="playerEmpty" class="player-empty">
+              Search a movie and click it to watch a legal preview here. If you want whole-movie
+              clip exports all the way to the movie's real end, load the full movie demo or your
+              own full video source with the whole movie tools above.
+            </div>
+          </div>
+        </section>
+
+        <section class="card tool-card">
+          <div class="section-heading">
+            <p class="eyebrow">Version 1</p>
+            <h2>One-minute buttons</h2>
+            <p class="section-copy">
+              `1` goes from the beginning to 1 minute. `2` goes from 1 minute to 2 minutes. The
+              last button can be less than one minute when the movie ends early. Search results cut
+              one-minute preview clips. Your own full video source cuts one-minute movie clips.
+            </p>
+          </div>
+
+          <div id="minuteButtonsEmpty" class="soft-panel">
+            Load a movie first. Then every minute becomes a button you can press.
+          </div>
+          <div id="minuteButtons" class="minute-grid" hidden></div>
+        </section>
+
+        <section class="card tool-card">
+          <div class="section-heading">
+            <p class="eyebrow">Version 2</p>
+            <h2>Custom start and end</h2>
+            <p class="section-copy">
+              Use `M:SS` or `H:MM:SS`. If the end is past the start, it makes a normal clip. If the
+              end is earlier than the start, it makes a reverse clip. If both match, it makes a
+              screenshot for Photos. Search mode clips the loaded preview video. Whole-movie clips
+              require your own full video source.
+            </p>
+          </div>
+
+          <div class="custom-grid">
+            <label>
+              Start time
+              <input id="startTime" type="text" placeholder="59:32" inputmode="numeric" />
+            </label>
+            <label>
+              End time
+              <input id="endTime" type="text" placeholder="56:44" inputmode="numeric" />
+            </label>
+          </div>
+
+          <div class="button-row">
+            <button id="makeCustomClip" type="button">Make result</button>
+            <button id="fillWholeMovie" class="ghost" type="button">Whole loaded video</button>
+            <button id="jumpToStart" class="ghost" type="button">Jump video to start</button>
+          </div>
+
+          <div id="selectionSummary" class="soft-panel">
+            No movie loaded yet.
+          </div>
+        </section>
+
+        <section class="card output-card">
+          <div class="section-heading">
+            <p class="eyebrow">Result</p>
+            <h2>Clip or screenshot output</h2>
+          </div>
+
+          <div id="statusBanner" class="status-banner">Pick a movie to begin.</div>
+
+          <div class="result-stage">
+            <div id="resultEmpty" class="result-empty">
+              Your finished clip or screenshot will show up here.
+            </div>
+
+            <video id="resultVideo" controls playsinline hidden></video>
+            <img id="resultImage" alt="Movie screenshot result" hidden />
+          </div>
+
+          <div class="result-meta">
+            <strong id="resultTitle">Nothing exported yet</strong>
+            <p id="resultDetails">
+              Choose a minute button or enter custom times after loading a preview or your own
+              video source.
+            </p>
+          </div>
+
+          <div class="button-row">
+            <button id="saveResult" type="button" disabled>Save result</button>
+            <button id="shareResult" class="ghost" type="button" disabled>Share result</button>
+          </div>
+        </section>
+      </section>
+    </main>
 
     <script>
-      let timerInterval
-      let currentSeconds = 0
-      let startSeconds = 0
-      let stopSeconds = 0
-      let isCountingUp = true
-      let wakeLock = null
-
-      const timerDisplay = document.getElementById('timer')
+      const fileInput = document.getElementById('movieFile')
+      const movieTitleInput = document.getElementById('movieTitle')
+      const searchMoviesButton = document.getElementById('searchMovies')
+      const searchResultsStatus = document.getElementById('searchResultsStatus')
+      const searchResults = document.getElementById('searchResults')
+      const sourceTools = document.getElementById('sourceTools')
+      const loadWholeMovieDemoButton = document.getElementById('loadWholeMovieDemo')
+      const focusWholeSourceButton = document.getElementById('focusWholeSource')
+      const movieUrlInput = document.getElementById('movieUrl')
+      const loadMovieUrlButton = document.getElementById('loadMovieUrl')
+      const clearMovieButton = document.getElementById('clearMovie')
+      const movieShelf = document.getElementById('movieShelf')
+      const sourceLoader = document.getElementById('sourceLoader')
+      const sourceLoaderText = document.getElementById('sourceLoaderText')
+      const sourceLoaderPoster = document.getElementById('sourceLoaderPoster')
+      const sourceLoaderPosterFallback = document.getElementById('sourceLoaderPosterFallback')
+      const movieSourceCard = document.getElementById('movieSourceCard')
+      const movieSourcePoster = document.getElementById('movieSourcePoster')
+      const movieSourcePosterFallback = document.getElementById('movieSourcePosterFallback')
+      const movieSourceHeading = document.getElementById('movieSourceHeading')
+      const movieSourceMeta = document.getElementById('movieSourceMeta')
+      const moviePreview = document.getElementById('moviePreview')
+      const playerEmpty = document.getElementById('playerEmpty')
+      const sourceModeValue = document.getElementById('sourceModeValue')
+      const sourceRangeValue = document.getElementById('sourceRangeValue')
+      const movieName = document.getElementById('movieName')
+      const movieDuration = document.getElementById('movieDuration')
+      const minuteCount = document.getElementById('minuteCount')
+      const minuteButtons = document.getElementById('minuteButtons')
+      const minuteButtonsEmpty = document.getElementById('minuteButtonsEmpty')
       const startTimeInput = document.getElementById('startTime')
-      const stopTimeInput = document.getElementById('stopTime')
-      const startBtn = document.getElementById('startBtn')
-      const resetBtn = document.getElementById('resetBtn')
+      const endTimeInput = document.getElementById('endTime')
+      const makeCustomClipButton = document.getElementById('makeCustomClip')
+      const fillWholeMovieButton = document.getElementById('fillWholeMovie')
+      const jumpToStartButton = document.getElementById('jumpToStart')
+      const selectionSummary = document.getElementById('selectionSummary')
+      const statusBanner = document.getElementById('statusBanner')
+      const resultEmpty = document.getElementById('resultEmpty')
+      const resultVideo = document.getElementById('resultVideo')
+      const resultImage = document.getElementById('resultImage')
+      const resultTitle = document.getElementById('resultTitle')
+      const resultDetails = document.getElementById('resultDetails')
+      const saveResultButton = document.getElementById('saveResult')
+      const shareResultButton = document.getElementById('shareResult')
 
-      // Keep screen awake
-      async function requestWakeLock() {
-        try {
-          if ('wakeLock' in navigator) {
-            wakeLock = await navigator.wakeLock.request('screen')
-            wakeLock.addEventListener('release', () => {
-              console.log('Wake Lock released')
-            })
-          }
-        } catch (err) {
-          console.log('Wake Lock error:', err)
+      const moviePresets = [
+        { title: 'Home Alone', accent: 'accent-red', year: '1990', description: 'Kevin turns being left home alone into a full Christmas defense mission.' },
+        { title: 'The Lion King', accent: 'accent-gold', year: '1994', description: 'Simba grows up, faces his past, and returns to fight for Pride Rock.' },
+        { title: 'Toy Story', accent: 'accent-blue', year: '1995', description: 'Woody and Buzz crash into a toy-sized adventure and have to get back home.' },
+        { title: 'Spirited Away', accent: 'accent-sky', year: '2001', description: 'Chihiro enters a magical bathhouse world and works to save her parents.' },
+        { title: 'Frozen', accent: 'accent-ice', year: '2013', description: 'Anna chases Elsa across the snow to mend their bond and save Arendelle.' },
+        { title: 'Back to the Future', accent: 'accent-plum', year: '1985', description: 'Marty lands in 1955 and has to repair the timeline before he disappears.' },
+        { title: 'Harry Potter', accent: 'accent-sage', year: '2001', description: 'A young wizard starts Hogwarts and is pulled into a much darker mystery.' },
+        { title: 'The Wizard of Oz', accent: 'accent-emerald', year: '1939', description: 'Dorothy follows the yellow brick road toward home and the Emerald City.' },
+      ]
+
+      const wholeMovieDemo = {
+        title: 'Night of the Living Dead',
+        year: '1968',
+        runtimeLabel: '1:35:53',
+        minuteButtons: 96,
+        description: 'A full public-domain movie source built in for whole-movie clipping demos.',
+        url: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Night_of_the_Living_Dead_%281968%29.webm',
+      }
+
+      const state = {
+        selectedMovieTitle: 'Home Alone',
+        movieFile: null,
+        movieUrl: '',
+        duration: 0,
+        searching: false,
+        searchResults: [],
+        sourceKind: 'none',
+        watchMode: 'none',
+        sourceArtwork: '',
+        exportBlob: null,
+        exportUrl: '',
+        exportName: '',
+        exportKind: '',
+        exportType: '',
+        busy: false,
+      }
+
+      const mimeCandidates = [
+        'video/mp4',
+        'video/webm;codecs=vp9',
+        'video/webm;codecs=vp8',
+        'video/webm',
+      ]
+
+      function hasLoadedSource() {
+        return !!state.movieUrl
+      }
+
+      function isPreviewSource() {
+        return state.sourceKind === 'preview'
+      }
+
+      function hasUserVideoSource() {
+        return state.sourceKind === 'file' || state.sourceKind === 'direct-url'
+      }
+
+      function currentSourceKindLabel() {
+        return isPreviewSource() ? 'preview' : 'video'
+      }
+
+      function formatClipRangeText() {
+        if (!state.duration) {
+          return '0:00 to 0:00'
+        }
+
+        return `0:00 to ${formatClock(state.duration)}`
+      }
+
+      function openWholeMovieTools(shouldFocusUrl = false) {
+        if (sourceTools) {
+          sourceTools.open = true
+        }
+
+        if (shouldFocusUrl) {
+          movieUrlInput.focus()
+          movieUrlInput.select()
         }
       }
 
-      function releaseWakeLock() {
-        if (wakeLock !== null) {
-          wakeLock.release()
-          wakeLock = null
-        }
-      }
-
-      function formatTime(totalSeconds) {
-        const hours = Math.floor(totalSeconds / 3600)
-        const minutes = Math.floor((totalSeconds % 3600) / 60)
-        const seconds = totalSeconds % 60
-
-        // Show hours only when >= 3600 seconds
-        if (totalSeconds >= 3600) {
-          return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-        } else {
-          return `${minutes}:${seconds.toString().padStart(2, '0')}`
-        }
-      }
-
-      function updateDisplay() {
-        timerDisplay.textContent = formatTime(currentSeconds)
-      }
-
-      function startTimer() {
-        const startVal = parseInt(startTimeInput.value) || 0
-        const stopVal = parseInt(stopTimeInput.value) || 0
-
-        if (startVal === 0 && stopVal === 0) {
-          alert('Please enter start and stop times')
+      function updateSourceFacts() {
+        if (!hasLoadedSource()) {
+          sourceModeValue.textContent = 'No source'
+          sourceRangeValue.textContent = '0:00 to 0:00'
           return
         }
 
-        startSeconds = startVal
-        stopSeconds = stopVal
-        currentSeconds = startSeconds
-        isCountingUp = stopSeconds > startSeconds
+        sourceModeValue.textContent = isPreviewSource() ? 'Preview source' : 'Whole movie source'
+        sourceRangeValue.textContent = formatClipRangeText()
+      }
 
-        if (timerInterval) {
-          clearInterval(timerInterval)
+      function rangePastEndMessage(kind = 'collapse') {
+        const sourceLabel = currentSourceKindLabel()
+        const ending = formatClock(state.duration)
+
+        if (kind === 'start') {
+          return isPreviewSource()
+            ? `That start time is past the end of this ${sourceLabel}. It only runs to ${ending}. Pick earlier times or load your own full video source.`
+            : `That start time is past the end of this whole movie source. It only runs to ${ending}. Pick earlier times.`
         }
 
-        updateDisplay()
-        requestWakeLock()
+        return isPreviewSource()
+          ? `Those times fall past the end of this ${sourceLabel}. It only runs to ${ending}. Pick earlier times or load your own full video source.`
+          : `Those times fall past the end of this whole movie source. It only runs to ${ending}. Pick earlier times.`
+      }
 
-        timerInterval = setInterval(() => {
-          if (isCountingUp) {
-            currentSeconds++
-            if (currentSeconds >= stopSeconds) {
-              clearInterval(timerInterval)
-              timerDisplay.classList.add('complete')
-              releaseWakeLock()
-              startBtn.textContent = 'Start Timer'
-              startBtn.disabled = false
-              resetBtn.disabled = false
+      function updateActionButtonLabels() {
+        if (isPreviewSource()) {
+          makeCustomClipButton.textContent = 'Make preview result'
+          fillWholeMovieButton.textContent = 'Whole preview'
+          jumpToStartButton.textContent = 'Jump preview to start'
+          return
+        }
+
+        makeCustomClipButton.textContent = 'Make result'
+        fillWholeMovieButton.textContent = 'Whole loaded video'
+        jumpToStartButton.textContent = 'Jump video to start'
+      }
+
+      function getTimerValues() {
+        return {
+          startValue: parseTimeValue(startTimeInput.value),
+          endValue: parseTimeValue(endTimeInput.value),
+        }
+      }
+
+      function hasBothTimers() {
+        const { startValue, endValue } = getTimerValues()
+        return startValue !== null && endValue !== null
+      }
+
+      function updateCustomButtonsState() {
+        const ready = hasBothTimers()
+        makeCustomClipButton.disabled = state.busy || !ready
+        fillWholeMovieButton.disabled = state.busy || !ready
+        jumpToStartButton.disabled = state.busy || !ready
+      }
+
+      function setBusy(isBusy) {
+        state.busy = isBusy
+        searchMoviesButton.disabled = isBusy || state.searching
+        loadMovieUrlButton.disabled = isBusy || state.searching
+        loadWholeMovieDemoButton.disabled = isBusy || state.searching
+        clearMovieButton.disabled = isBusy || !hasLoadedSource()
+        saveResultButton.disabled = isBusy || !state.exportBlob
+        shareResultButton.disabled = isBusy || !state.exportBlob
+        updateCustomButtonsState()
+
+        const minuteActionButtons = minuteButtons.querySelectorAll('button')
+        minuteActionButtons.forEach(button => {
+          button.disabled = isBusy || !hasLoadedSource()
+        })
+
+        const searchActionButtons = searchResults.querySelectorAll('button')
+        searchActionButtons.forEach(button => {
+          button.disabled = button.dataset.intrinsicDisabled === 'true' ? true : isBusy || state.searching
+        })
+
+        const shelfButtons = movieShelf.querySelectorAll('button')
+        shelfButtons.forEach(button => {
+          button.disabled = isBusy || state.searching
+        })
+      }
+
+      function setStatus(message, tone = 'neutral') {
+        statusBanner.textContent = message
+        statusBanner.dataset.tone = tone
+      }
+
+      function setSearchStatus(message) {
+        searchResultsStatus.textContent = message
+      }
+
+      function setSearching(isSearching) {
+        state.searching = isSearching
+        searchMoviesButton.disabled = isSearching || state.busy
+        loadMovieUrlButton.disabled = isSearching || state.busy
+        loadWholeMovieDemoButton.disabled = isSearching || state.busy
+        const searchActionButtons = searchResults.querySelectorAll('button')
+        searchActionButtons.forEach(button => {
+          button.disabled = button.dataset.intrinsicDisabled === 'true' ? true : isSearching || state.busy
+        })
+        const shelfButtons = movieShelf.querySelectorAll('button')
+        shelfButtons.forEach(button => {
+          button.disabled = isSearching || state.busy
+        })
+      }
+
+      function currentMovieTitle() {
+        const typed = String(movieTitleInput.value || '').trim()
+        return typed || state.selectedMovieTitle || 'Movie'
+      }
+
+      function proxyMovieUrl(url) {
+        return `/api/movie-preview?url=${encodeURIComponent(url)}`
+      }
+
+      function estimatedMovieDuration(title) {
+        const text = String(title || '').toLowerCase()
+        if (text.includes('short')) return 1800
+        if (text.includes('fantasia') || text.includes('harry potter')) return 9000
+        if (text.includes('lion king') || text.includes('home alone')) return 6300
+        return 7200
+      }
+
+      function nextFrame() {
+        return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+      }
+
+      function setLoaderArtwork(movie) {
+        const artwork =
+          movie && Object.prototype.hasOwnProperty.call(movie, 'artwork')
+            ? movie.artwork || ''
+            : state.sourceArtwork || ''
+        if (artwork) {
+          sourceLoaderPoster.src = artwork
+          sourceLoaderPoster.hidden = false
+          sourceLoaderPosterFallback.hidden = true
+        } else {
+          sourceLoaderPoster.removeAttribute('src')
+          sourceLoaderPoster.hidden = true
+          sourceLoaderPosterFallback.hidden = false
+          sourceLoaderPosterFallback.textContent = movie?.title || currentMovieTitle()
+        }
+      }
+
+      function showSourceLoader(message, movie = null) {
+        sourceLoaderText.textContent = message
+        setLoaderArtwork(movie)
+        sourceLoader.hidden = false
+        movieSourceCard.hidden = true
+        moviePreview.hidden = true
+        playerEmpty.hidden = true
+      }
+
+      function hideSourceLoader() {
+        sourceLoader.hidden = true
+      }
+
+      function restorePlayerVisualState() {
+        hideSourceLoader()
+
+        if (hasLoadedSource()) {
+          movieSourceCard.hidden = true
+          moviePreview.hidden = false
+          playerEmpty.hidden = true
+          return
+        }
+
+        movieSourceCard.hidden = true
+        moviePreview.hidden = true
+        playerEmpty.hidden = false
+      }
+
+      function showCatalogSourceCard(movie) {
+        state.sourceArtwork = movie.artwork || ''
+        if (state.sourceArtwork) {
+          movieSourcePoster.src = state.sourceArtwork
+          movieSourcePoster.hidden = false
+          movieSourcePosterFallback.hidden = true
+        } else {
+          movieSourcePoster.removeAttribute('src')
+          movieSourcePoster.hidden = true
+          movieSourcePosterFallback.hidden = false
+          movieSourcePosterFallback.textContent = movie.title
+        }
+
+        movieSourceHeading.textContent = movie.title
+        movieSourceMeta.textContent = `Minute buttons are ready for about ${formatClock(state.duration)} of movie time.`
+        movieSourceCard.hidden = false
+        moviePreview.hidden = true
+        playerEmpty.hidden = true
+      }
+
+      function normalizeMovieResult(item) {
+        return {
+          id: String(item.pageid || item.title),
+          title: item.title || 'Movie',
+          year: item.year || '',
+          genre: item.category || 'Movie',
+          artwork: item.thumbnail || '',
+          previewUrl: item.previewUrl || '',
+          previewTitle: item.previewTitle || '',
+          exactPreviewMatch: Boolean(item.exactPreviewMatch),
+          trackViewUrl: item.pageUrl || '',
+          description: item.description || 'No description yet.',
+          durationSeconds: Number(item.durationSeconds) || 0,
+        }
+      }
+
+      function renderSearchResults() {
+        searchResults.innerHTML = ''
+
+        if (!state.searchResults.length) {
+          searchResults.hidden = true
+          return
+        }
+
+        searchResults.hidden = false
+
+        state.searchResults.forEach(movie => {
+          const card = document.createElement('article')
+          card.className = 'search-card'
+          const hasPreview = !!movie.previewUrl
+          const previewSourceNote =
+            hasPreview && movie.previewTitle && movie.previewTitle !== movie.title
+              ? `<p class="search-preview-note">Preview source: ${movie.previewTitle}</p>`
+              : ''
+          const previewButton = `<button type="button" data-action="preview" data-intrinsic-disabled="${hasPreview ? 'false' : 'true'}" ${hasPreview ? '' : 'disabled'}>${hasPreview ? 'Watch preview' : 'Preview unavailable'}</button>`
+          const appleLink = movie.trackViewUrl
+            ? `<a href="${movie.trackViewUrl}" target="_blank" rel="noreferrer">Open listing</a>`
+            : ''
+
+          card.innerHTML = `
+            <div class="search-poster-wrap">
+              ${movie.artwork ? `<img src="${movie.artwork}" alt="${movie.title} poster" class="search-poster" />` : `<div class="search-poster placeholder">No poster</div>`}
+            </div>
+            <div class="search-copy">
+              <div class="search-topline">
+                <strong>${movie.title}</strong>
+                <span>${movie.year || 'Year unknown'}</span>
+              </div>
+              <p class="search-genre">${movie.genre}${movie.durationSeconds ? ` • ${formatClock(movie.durationSeconds)}` : ''}</p>
+              ${previewSourceNote}
+              <p class="search-description">${movie.description}</p>
+              <div class="search-actions">
+                ${previewButton}
+                ${appleLink}
+              </div>
+            </div>
+          `
+
+          const previewLocator = card.querySelector('button[data-action="preview"]')
+          previewLocator?.addEventListener('click', () => {
+            if (movie.previewUrl) {
+              loadSearchMovie(movie)
             }
-          } else {
-            currentSeconds--
-            if (currentSeconds <= stopSeconds) {
-              clearInterval(timerInterval)
-              timerDisplay.classList.add('complete')
-              releaseWakeLock()
-              startBtn.textContent = 'Start Timer'
-              startBtn.disabled = false
-              resetBtn.disabled = false
+          })
+
+          searchResults.appendChild(card)
+        })
+      }
+
+      async function searchMovies(term = currentMovieTitle(), { autoLoadFirst = false } = {}) {
+        const query = String(term || '').trim()
+
+        if (!query) {
+          setSearchStatus('Type a movie title first.')
+          setStatus('Type a movie title first.', 'error')
+          return
+        }
+
+        setSearching(true)
+        if (autoLoadFirst) {
+          showSourceLoader(`Searching for ${query}...`, { title: query, artwork: '' })
+          setStatus(`Searching for ${query}...`, 'working')
+        }
+        setSearchStatus(`Searching real movies for ${query}...`)
+
+        try {
+          const response = await fetch(`/api/movie-search?term=${encodeURIComponent(query)}`)
+
+          if (!response.ok) {
+            throw new Error('Movie search failed.')
+          }
+
+          const payload = await response.json()
+          const results = Array.isArray(payload.results) ? payload.results.map(normalizeMovieResult) : []
+          const exact = []
+          const partial = []
+
+          results.forEach(movie => {
+            if (movie.title.toLowerCase() === query.toLowerCase()) {
+              exact.push(movie)
+            } else {
+              partial.push(movie)
+            }
+          })
+
+          state.searchResults = [...exact, ...partial]
+          renderSearchResults()
+
+          if (!state.searchResults.length) {
+            if (autoLoadFirst) {
+              restorePlayerVisualState()
+            }
+            setSearchStatus(`No movies showed up for ${query}. Try another title.`)
+            setStatus('No movie results yet. Try another title.', 'error')
+            return
+          }
+
+          setSearchStatus(
+            `Found ${state.searchResults.length} movie results for ${query}. Click one to load a legal preview.`
+          )
+          setStatus('Movie results are ready. Click one to load its preview.', 'success')
+
+          if (autoLoadFirst) {
+            const firstPlayableMovie = state.searchResults.find(movie => movie.previewUrl)
+            if (firstPlayableMovie) {
+              await loadSearchMovie(firstPlayableMovie)
+            } else {
+              restorePlayerVisualState()
+              setStatus('No real movie preview was available for that title. Try another result.', 'error')
             }
           }
-          updateDisplay()
-        }, 1000)
-
-        timerDisplay.classList.remove('complete')
-        startBtn.textContent = 'Running...'
-        startBtn.disabled = true
-        resetBtn.disabled = true
-      }
-
-      function resetTimer() {
-        if (timerInterval) {
-          clearInterval(timerInterval)
+        } catch (error) {
+          console.error(error)
+          state.searchResults = []
+          renderSearchResults()
+          if (autoLoadFirst) {
+            restorePlayerVisualState()
+          }
+          setSearchStatus('Movie search could not load right now.')
+          setStatus('Movie search could not load right now.', 'error')
+        } finally {
+          setSearching(false)
         }
-        releaseWakeLock()
-        currentSeconds = 0
-        updateDisplay()
-        timerDisplay.classList.remove('complete')
-        startBtn.textContent = 'Start Timer'
-        startBtn.disabled = false
-        resetBtn.disabled = false
       }
 
-      startBtn.addEventListener('click', startTimer)
-      resetBtn.addEventListener('click', resetTimer)
+      async function loadSearchMovie(movie) {
+        movieTitleInput.value = movie.title
+        state.selectedMovieTitle = movie.title
+        renderMovieShelf()
 
-      updateDisplay()
+        try {
+          if (!movie.previewUrl) {
+            throw new Error(`No real preview is available for ${movie.title} right now.`)
+          }
+
+          setBusy(true)
+          const previewSourceTitle = movie.previewTitle || movie.title
+          showSourceLoader(`Loading ${previewSourceTitle}...`, movie)
+          setStatus(`Loading a real preview for ${movie.title}...`, 'working')
+          await nextFrame()
+          await loadMovie({
+            url: proxyMovieUrl(movie.previewUrl),
+            label: movie.title,
+            keepLoader: true,
+            sourceKind: 'preview',
+          })
+          state.sourceArtwork = movie.artwork || ''
+          movieName.textContent =
+            movie.previewTitle && movie.previewTitle !== movie.title
+              ? `${movie.title} preview via ${movie.previewTitle}`
+              : `${movie.title} preview`
+          setStatus(
+            movie.previewTitle && movie.previewTitle !== movie.title
+              ? `${movie.title} preview loaded from ${movie.previewTitle}. Minute buttons and custom timing will clip that preview video.`
+              : `${movie.title} preview loaded. Minute buttons and custom timing will clip this preview video.`,
+            'success'
+          )
+        } catch (error) {
+          console.error(error)
+          hideSourceLoader()
+          movieSourceCard.hidden = true
+          playerEmpty.hidden = false
+          setStatus(
+            error instanceof Error
+              ? error.message
+              : `That movie preview could not load. Try another movie or use the backup tools.`,
+            'error'
+          )
+        } finally {
+          setBusy(false)
+        }
+      }
+
+      async function loadWholeMovieDemo() {
+        movieTitleInput.value = wholeMovieDemo.title
+        movieUrlInput.value = wholeMovieDemo.url
+        state.selectedMovieTitle = wholeMovieDemo.title
+        renderMovieShelf()
+        openWholeMovieTools()
+
+        try {
+          setBusy(true)
+          showSourceLoader(`Loading ${wholeMovieDemo.title} full movie demo...`, {
+            title: wholeMovieDemo.title,
+            artwork: '',
+          })
+          setStatus(`Loading a full movie demo for ${wholeMovieDemo.title}...`, 'working')
+          await nextFrame()
+          await loadMovie({
+            url: proxyMovieUrl(wholeMovieDemo.url),
+            label: wholeMovieDemo.title,
+            keepLoader: true,
+            sourceKind: 'direct-url',
+          })
+          const loadedRuntime = formatClock(state.duration)
+          movieName.textContent = `${wholeMovieDemo.title} whole movie demo`
+          setSearchStatus(
+            `Whole movie demo loaded. It runs ${loadedRuntime}, so the minute buttons cover the full movie instead of just preview footage.`
+          )
+          setStatus(
+            `${wholeMovieDemo.title} whole movie demo loaded. Minute buttons now cover the full ${loadedRuntime} runtime.`,
+            'success'
+          )
+        } catch (error) {
+          console.error(error)
+          teardownMovie()
+          setStatus('The whole movie demo could not be loaded right now.', 'error')
+        } finally {
+          setBusy(false)
+        }
+      }
+
+      function renderMovieShelf() {
+        movieShelf.innerHTML = ''
+
+        moviePresets.forEach((preset, index) => {
+          const button = document.createElement('button')
+          button.type = 'button'
+          button.className = `shelf-card ${preset.accent}`
+          button.dataset.selected = preset.title === state.selectedMovieTitle ? 'true' : 'false'
+          button.innerHTML =
+            `<span class="shelf-number">${String(index + 1).padStart(2, '0')}</span><strong>${preset.title}</strong><span class="shelf-year">${preset.year}</span><p>${preset.description}</p><em>Pick this movie</em>`
+
+          button.addEventListener('click', () => {
+            state.selectedMovieTitle = preset.title
+            movieTitleInput.value = preset.title
+            renderMovieShelf()
+            movieName.textContent = hasLoadedSource() ? currentMovieTitle() : `${preset.title} selected`
+            searchMovies(preset.title, { autoLoadFirst: true })
+          })
+
+          movieShelf.appendChild(button)
+        })
+      }
+
+      function formatClock(totalSeconds) {
+        const rounded = Math.max(0, Math.floor(totalSeconds))
+        const hours = Math.floor(rounded / 3600)
+        const minutes = Math.floor((rounded % 3600) / 60)
+        const seconds = rounded % 60
+
+        if (hours > 0) {
+          return `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+        }
+
+        return `${minutes}:${String(seconds).padStart(2, '0')}`
+      }
+
+      function formatSpan(start, end) {
+        return `${formatClock(start)} to ${formatClock(end)}`
+      }
+
+      function parseTimeValue(value) {
+        const text = String(value || '').trim()
+        if (!text) return null
+
+        if (/^\d+$/.test(text)) {
+          return Number(text)
+        }
+
+        const parts = text.split(':').map(part => part.trim())
+        if (parts.some(part => part === '' || !/^\d+$/.test(part))) {
+          return null
+        }
+
+        if (parts.length === 2) {
+          return Number(parts[0]) * 60 + Number(parts[1])
+        }
+
+        if (parts.length === 3) {
+          return Number(parts[0]) * 3600 + Number(parts[1]) * 60 + Number(parts[2])
+        }
+
+        return null
+      }
+
+      function clampToDuration(seconds) {
+        if (!Number.isFinite(seconds)) return 0
+        return Math.min(Math.max(seconds, 0), state.duration)
+      }
+
+      function pickMimeType() {
+        return mimeCandidates.find(type => MediaRecorder.isTypeSupported(type)) || 'video/webm'
+      }
+
+      function waitForEvent(target, eventName) {
+        return new Promise(resolve => {
+          target.addEventListener(eventName, resolve, { once: true })
+        })
+      }
+
+      function delay(ms) {
+        return new Promise(resolve => window.setTimeout(resolve, ms))
+      }
+
+      function waitForMetadata(video) {
+        if (video.readyState >= 1) {
+          return Promise.resolve()
+        }
+
+        return waitForEvent(video, 'loadedmetadata')
+      }
+
+      function updateSelectionSummary() {
+        const { startValue, endValue } = getTimerValues()
+
+        if (startValue === null || endValue === null) {
+          if (isPreviewSource()) {
+            selectionSummary.textContent =
+              'Set both timer boxes to enable the buttons below. This preview mode exports preview clips, and matching times make a screenshot.'
+            updateCustomButtonsState()
+            return
+          }
+
+          if (!hasLoadedSource()) {
+            selectionSummary.textContent = 'Set both timer boxes to enable the buttons below.'
+            updateCustomButtonsState()
+            return
+          }
+
+          selectionSummary.textContent = 'Enter a start and end time like 1:20 or 1:34:04.'
+          updateCustomButtonsState()
+          return
+        }
+
+        const start = clampToDuration(startValue)
+        const end = clampToDuration(endValue)
+
+        if (!hasLoadedSource()) {
+          if (startValue === endValue) {
+            selectionSummary.textContent =
+              `Both timers are set to ${formatClock(startValue)}. The buttons below are ready, and a loaded video source can turn that into a screenshot.`
+            updateCustomButtonsState()
+            return
+          }
+
+          const rawDirection = endValue > startValue ? 'forward' : 'reverse'
+          const rawSpan = Math.abs(endValue - startValue)
+          selectionSummary.textContent =
+            `Both timers are set from ${formatClock(startValue)} to ${formatClock(endValue)}. The buttons below are ready, and a loaded video source can turn that into a ${rawDirection} clip of ${formatClock(rawSpan)}.`
+          updateCustomButtonsState()
+          return
+        }
+
+        if (startValue > state.duration) {
+          selectionSummary.textContent = rangePastEndMessage('start')
+          updateCustomButtonsState()
+          return
+        }
+
+        if (startValue !== endValue && start === end) {
+          selectionSummary.textContent = rangePastEndMessage('collapse')
+          updateCustomButtonsState()
+          return
+        }
+
+        if (start === end) {
+          selectionSummary.textContent = isPreviewSource()
+            ? `Same start and end at ${formatClock(start)}. This will export a preview screenshot.`
+            : `Same start and end at ${formatClock(start)}. This will export a screenshot.`
+          updateCustomButtonsState()
+          return
+        }
+
+        const direction = end > start ? 'forward' : 'reverse'
+        const span = Math.abs(end - start)
+        const clippedAtEnd = endValue > state.duration && end > start
+        selectionSummary.textContent = isPreviewSource()
+          ? `This will export a ${direction} preview clip from ${formatSpan(start, end)}. Clip length: ${formatClock(span)}.${clippedAtEnd ? ` This preview ends at ${formatClock(end)}.` : ''} Search results only use preview footage, not the whole movie.`
+          : `This will export a ${direction} clip from ${formatSpan(start, end)}. Clip length: ${formatClock(span)}.${clippedAtEnd ? ` This movie ends at ${formatClock(end)}.` : ''} Whole movie mode can use any time in ${formatClipRangeText()}.`
+        updateCustomButtonsState()
+      }
+
+      function resetResult() {
+        if (state.exportUrl) {
+          URL.revokeObjectURL(state.exportUrl)
+        }
+
+        state.exportBlob = null
+        state.exportUrl = ''
+        state.exportName = ''
+        state.exportKind = ''
+        state.exportType = ''
+
+        resultVideo.pause()
+        resultVideo.removeAttribute('src')
+        resultVideo.load()
+        resultVideo.hidden = true
+        resultImage.removeAttribute('src')
+        resultImage.hidden = true
+        resultEmpty.hidden = false
+        resultTitle.textContent = 'Nothing exported yet'
+        resultDetails.textContent = 'Choose a minute button or enter custom times after loading a preview or your own video source.'
+        setBusy(false)
+      }
+
+      function teardownMovie() {
+        resetResult()
+
+        if (state.movieUrl.startsWith('blob:')) {
+          URL.revokeObjectURL(state.movieUrl)
+        }
+
+        state.movieFile = null
+        state.movieUrl = ''
+        state.duration = 0
+        state.sourceKind = 'none'
+        state.watchMode = 'none'
+
+        fileInput.value = ''
+        movieUrlInput.value = ''
+        state.sourceArtwork = ''
+        hideSourceLoader()
+        movieSourceCard.hidden = true
+        movieSourcePoster.removeAttribute('src')
+        movieSourcePoster.hidden = true
+        movieSourcePosterFallback.hidden = false
+        moviePreview.pause()
+        moviePreview.removeAttribute('src')
+        moviePreview.load()
+        moviePreview.hidden = true
+        playerEmpty.hidden = false
+        minuteButtons.innerHTML = ''
+        minuteButtons.hidden = true
+        minuteButtonsEmpty.hidden = false
+        movieName.textContent = `${currentMovieTitle()} selected`
+        movieDuration.textContent = '0:00'
+        minuteCount.textContent = '0'
+        updateSourceFacts()
+        startTimeInput.value = ''
+        endTimeInput.value = ''
+        updateActionButtonLabels()
+        updateSelectionSummary()
+        setStatus('Pick a movie to begin.', 'neutral')
+        setBusy(false)
+      }
+
+      function renderMinuteButtons() {
+        minuteButtons.innerHTML = ''
+
+        if (!state.duration) {
+          minuteButtons.hidden = true
+          minuteButtonsEmpty.hidden = false
+          minuteCount.textContent = '0'
+          return
+        }
+
+        const totalButtons = Math.ceil(state.duration / 60)
+        minuteCount.textContent = String(totalButtons)
+        minuteButtons.hidden = false
+        minuteButtonsEmpty.hidden = true
+
+        for (let index = 0; index < totalButtons; index += 1) {
+          const start = index * 60
+          const end = Math.min((index + 1) * 60, state.duration)
+          const clipLength = end - start
+          const button = document.createElement('button')
+          button.type = 'button'
+          button.className = 'minute-button'
+          button.innerHTML =
+            `<strong>${index + 1}</strong><span>${formatSpan(start, end)}</span><em>${formatClock(clipLength)}</em>`
+
+          button.addEventListener('click', () => {
+            startTimeInput.value = formatClock(start)
+            endTimeInput.value = formatClock(end)
+            updateSelectionSummary()
+            exportRange(start, end, `Minute ${index + 1}`)
+          })
+
+          minuteButtons.appendChild(button)
+        }
+
+        setBusy(state.busy)
+      }
+
+      async function loadMovie({
+        file = null,
+        url = '',
+        label = '',
+        keepLoader = false,
+        sourceKind = 'direct-url',
+      }) {
+        teardownMovie()
+
+        if (file) {
+          state.movieFile = file
+          state.movieUrl = URL.createObjectURL(file)
+          state.sourceKind = sourceKind
+        } else if (url) {
+          state.movieFile = null
+          state.movieUrl = url
+          state.sourceKind = sourceKind
+        } else {
+          throw new Error('No movie source was provided.')
+        }
+
+        state.watchMode = 'clip'
+        movieSourceCard.hidden = true
+        if (!keepLoader) {
+          hideSourceLoader()
+        }
+        moviePreview.src = state.movieUrl
+        moviePreview.crossOrigin = 'anonymous'
+        await waitForMetadata(moviePreview)
+
+        state.duration = Number.isFinite(moviePreview.duration) ? moviePreview.duration : 0
+        hideSourceLoader()
+        moviePreview.hidden = false
+        playerEmpty.hidden = true
+        movieName.textContent = isPreviewSource() ? `${currentMovieTitle()} preview` : currentMovieTitle()
+        movieDuration.textContent = formatClock(state.duration)
+        updateSourceFacts()
+        startTimeInput.value = '0:00'
+        endTimeInput.value = formatClock(state.duration)
+        updateActionButtonLabels()
+        renderMinuteButtons()
+        updateSelectionSummary()
+        setStatus(
+          isPreviewSource()
+            ? `${currentMovieTitle()} preview loaded. Choose a minute button or make a custom preview clip.`
+            : `${currentMovieTitle()} whole movie source loaded. You can clip anywhere from 0:00 to ${formatClock(state.duration)}.`,
+          'success'
+        )
+        setBusy(false)
+      }
+
+      async function withVideoFrame(atTime, callback) {
+        const helperVideo = document.createElement('video')
+        helperVideo.src = state.movieUrl
+        helperVideo.preload = 'auto'
+        helperVideo.crossOrigin = 'anonymous'
+        helperVideo.muted = true
+        helperVideo.playsInline = true
+
+        try {
+          await waitForMetadata(helperVideo)
+
+          const safeTime = Math.min(Math.max(atTime, 0), Math.max(helperVideo.duration - 0.02, 0))
+          helperVideo.currentTime = safeTime
+          await waitForEvent(helperVideo, 'seeked')
+
+          return await callback(helperVideo)
+        } finally {
+          helperVideo.pause()
+          helperVideo.removeAttribute('src')
+          helperVideo.load()
+        }
+      }
+
+      function buildCanvasForVideo(video) {
+        const maxWidth = 960
+        const width = video.videoWidth || 640
+        const height = video.videoHeight || 360
+        const ratio = width / height || 16 / 9
+        const canvas = document.createElement('canvas')
+
+        if (width > maxWidth) {
+          canvas.width = maxWidth
+          canvas.height = Math.round(maxWidth / ratio)
+        } else {
+          canvas.width = width
+          canvas.height = height
+        }
+
+        return canvas
+      }
+
+      async function createScreenshotBlob(atTime) {
+        return withVideoFrame(atTime, video => {
+          const canvas = buildCanvasForVideo(video)
+          const context = canvas.getContext('2d')
+
+          if (!context) {
+            throw new Error('Canvas is not available for screenshots.')
+          }
+
+          context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+          return new Promise((resolve, reject) => {
+            canvas.toBlob(blob => {
+              if (!blob) {
+                reject(new Error('Screenshot export failed.'))
+                return
+              }
+
+              resolve(blob)
+            }, 'image/png')
+          })
+        })
+      }
+
+      async function createForwardClipBlob(start, end) {
+        return withVideoFrame(start, async video => {
+          const canvas = buildCanvasForVideo(video)
+          const context = canvas.getContext('2d')
+
+          if (!context) {
+            throw new Error('Canvas is not available for clip export.')
+          }
+
+          const fps = 30
+          const mimeType = pickMimeType()
+          const stream = canvas.captureStream(fps)
+          const recorder = new MediaRecorder(
+            stream,
+            mimeType ? { mimeType, videoBitsPerSecond: 3_000_000 } : undefined,
+          )
+          const chunks = []
+          let finished = false
+
+          const stopRecorder = () => {
+            if (finished) return
+            finished = true
+            window.cancelAnimationFrame(animationFrame)
+            video.pause()
+            window.clearInterval(limitWatcher)
+            window.setTimeout(() => recorder.stop(), 120)
+          }
+
+          recorder.ondataavailable = event => {
+            if (event.data && event.data.size > 0) {
+              chunks.push(event.data)
+            }
+          }
+
+          const stopPromise = new Promise((resolve, reject) => {
+            recorder.onstop = () => resolve(new Blob(chunks, { type: recorder.mimeType || mimeType || 'video/webm' }))
+            recorder.onerror = () => reject(new Error('Movie clip recording failed.'))
+          })
+
+          context.drawImage(video, 0, 0, canvas.width, canvas.height)
+          recorder.start()
+
+          let animationFrame = 0
+          const draw = () => {
+            if (!finished) {
+              context.drawImage(video, 0, 0, canvas.width, canvas.height)
+              animationFrame = window.requestAnimationFrame(draw)
+            }
+          }
+
+          draw()
+          video.muted = true
+          await video.play()
+
+          const limitWatcher = window.setInterval(() => {
+            if (video.currentTime >= end || video.ended) {
+              stopRecorder()
+            }
+          }, 50)
+
+          const blob = await stopPromise
+          stream.getTracks().forEach(track => track.stop())
+          return blob
+        })
+      }
+
+      async function createReverseClipBlob(start, end) {
+        return withVideoFrame(start, async video => {
+          const canvas = buildCanvasForVideo(video)
+          const context = canvas.getContext('2d')
+
+          if (!context) {
+            throw new Error('Canvas is not available for reverse clip export.')
+          }
+
+          const fps = 12
+          const frameStep = 1 / fps
+          const mimeType = pickMimeType()
+          const stream = canvas.captureStream(fps)
+          const recorder = new MediaRecorder(
+            stream,
+            mimeType ? { mimeType, videoBitsPerSecond: 3_000_000 } : undefined,
+          )
+          const chunks = []
+
+          recorder.ondataavailable = event => {
+            if (event.data && event.data.size > 0) {
+              chunks.push(event.data)
+            }
+          }
+
+          const stopPromise = new Promise((resolve, reject) => {
+            recorder.onstop = () => resolve(new Blob(chunks, { type: recorder.mimeType || mimeType || 'video/webm' }))
+            recorder.onerror = () => reject(new Error('Reverse clip recording failed.'))
+          })
+
+          recorder.start()
+
+          for (let stamp = start; stamp >= end; stamp -= frameStep) {
+            const safeStamp = Math.max(end, Math.min(stamp, Math.max(video.duration - 0.02, 0)))
+            video.currentTime = safeStamp
+            await waitForEvent(video, 'seeked')
+            context.drawImage(video, 0, 0, canvas.width, canvas.height)
+            await delay(1000 / fps)
+          }
+
+          window.setTimeout(() => recorder.stop(), 120)
+          const blob = await stopPromise
+          stream.getTracks().forEach(track => track.stop())
+          return blob
+        })
+      }
+
+      function wrapCanvasText(context, text, maxWidth) {
+        const words = String(text || '').split(/\s+/).filter(Boolean)
+        const lines = []
+        let current = ''
+
+        words.forEach(word => {
+          const candidate = current ? `${current} ${word}` : word
+          if (context.measureText(candidate).width <= maxWidth || !current) {
+            current = candidate
+          } else {
+            lines.push(current)
+            current = word
+          }
+        })
+
+        if (current) {
+          lines.push(current)
+        }
+
+        return lines
+      }
+
+      function roundedRectPath(context, x, y, width, height, radius) {
+        context.beginPath()
+        context.moveTo(x + radius, y)
+        context.lineTo(x + width - radius, y)
+        context.quadraticCurveTo(x + width, y, x + width, y + radius)
+        context.lineTo(x + width, y + height - radius)
+        context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+        context.lineTo(x + radius, y + height)
+        context.quadraticCurveTo(x, y + height, x, y + height - radius)
+        context.lineTo(x, y + radius)
+        context.quadraticCurveTo(x, y, x + radius, y)
+        context.closePath()
+      }
+
+      async function loadCatalogArtwork() {
+        if (!state.sourceArtwork) return null
+
+        return new Promise(resolve => {
+          const image = new Image()
+          image.crossOrigin = 'anonymous'
+          image.onload = () => resolve(image)
+          image.onerror = () => resolve(null)
+          image.src = state.sourceArtwork
+        })
+      }
+
+      function drawCatalogFrame(context, { start, end, label, progress, artworkImage }) {
+        const direction = end === start ? 'Screenshot' : end > start ? 'Forward clip' : 'Reverse clip'
+        const span = Math.abs(end - start)
+        const currentStamp = start + (end - start) * progress
+        const width = 1280
+        const height = 720
+
+        const gradient = context.createLinearGradient(0, 0, width, height)
+        gradient.addColorStop(0, '#1d2026')
+        gradient.addColorStop(0.5, '#6f466f')
+        gradient.addColorStop(1, '#d85b73')
+        context.fillStyle = gradient
+        context.fillRect(0, 0, width, height)
+
+        context.fillStyle = 'rgba(255,255,255,0.12)'
+        for (let x = 24; x < width; x += 86) {
+          context.fillRect(x, 24, 48, 18)
+          context.fillRect(x, height - 42, 48, 18)
+        }
+
+        context.fillStyle = `rgba(255,255,255,${0.1 + progress * 0.06})`
+        context.beginPath()
+        context.arc(1060 - progress * 120, 140 + progress * 40, 120 + progress * 12, 0, Math.PI * 2)
+        context.fill()
+
+        context.fillStyle = '#fff7ef'
+        roundedRectPath(context, 110, 92, width - 220, height - 184, 34)
+        context.fill()
+
+        context.save()
+        roundedRectPath(context, 150, 150, 260, 376, 30)
+        context.clip()
+        if (artworkImage) {
+          context.drawImage(artworkImage, 150, 150, 260, 376)
+        } else {
+          const fallback = context.createLinearGradient(150, 150, 410, 526)
+          fallback.addColorStop(0, '#d85b73')
+          fallback.addColorStop(1, '#6c8ed9')
+          context.fillStyle = fallback
+          context.fillRect(150, 150, 260, 376)
+          context.fillStyle = 'rgba(255,255,255,0.94)'
+          context.font = '900 42px Trebuchet MS'
+          context.textAlign = 'center'
+          const titleLines = wrapCanvasText(context, currentMovieTitle(), 190).slice(0, 4)
+          titleLines.forEach((line, index) => {
+            context.fillText(line, 280, 260 + index * 52)
+          })
+          context.textAlign = 'left'
+        }
+        context.restore()
+
+        context.strokeStyle = '#d85b73'
+        context.lineWidth = 10
+        roundedRectPath(context, 150, 150, 260, 376, 30)
+        context.stroke()
+
+        context.fillStyle = '#1d2026'
+        context.font = '800 34px Trebuchet MS'
+        context.fillText('SRO24 smart movie source', 470, 176)
+
+        context.font = '900 68px Trebuchet MS'
+        const titleLines = wrapCanvasText(context, currentMovieTitle(), 580).slice(0, 2)
+        titleLines.forEach((line, index) => {
+          context.fillText(line, 470, 260 + index * 76)
+        })
+
+        context.font = '700 30px Trebuchet MS'
+        context.fillStyle = '#6f466f'
+        context.fillText(`${label} • ${direction}`, 470, titleLines.length > 1 ? 412 : 340)
+
+        context.fillStyle = '#1d2026'
+        context.font = '700 42px Trebuchet MS'
+        const rowTop = titleLines.length > 1 ? 486 : 414
+        context.fillText(`Start: ${formatClock(start)}`, 470, rowTop)
+        context.fillText(`End: ${formatClock(end)}`, 470, rowTop + 62)
+        context.fillText(`Length: ${formatClock(span)}`, 470, rowTop + 124)
+
+        context.font = '800 26px Trebuchet MS'
+        context.fillStyle = '#434758'
+        context.fillText(`Now previewing: ${formatClock(currentStamp)}`, 470, rowTop + 188)
+
+        const barX = 470
+        const barY = rowTop + 226
+        const barWidth = 560
+        const barHeight = 22
+
+        context.fillStyle = 'rgba(29,32,38,0.14)'
+        roundedRectPath(context, barX, barY, barWidth, barHeight, 11)
+        context.fill()
+
+        const fillWidth = Math.max(18, barWidth * progress)
+        const barGradient = context.createLinearGradient(barX, barY, barX + barWidth, barY)
+        barGradient.addColorStop(0, '#f0b44d')
+        barGradient.addColorStop(1, '#d85b73')
+        context.fillStyle = barGradient
+        roundedRectPath(context, barX, barY, fillWidth, barHeight, 11)
+        context.fill()
+
+        const handleX = barX + barWidth * progress
+        context.fillStyle = '#1d2026'
+        context.beginPath()
+        context.arc(handleX, barY + barHeight / 2, 16, 0, Math.PI * 2)
+        context.fill()
+        context.fillStyle = '#fff7ef'
+        context.beginPath()
+        context.arc(handleX, barY + barHeight / 2, 7, 0, Math.PI * 2)
+        context.fill()
+
+        context.font = '800 24px Trebuchet MS'
+        context.fillStyle = '#1d2026'
+        context.fillText(formatClock(start), barX, barY + 58)
+        context.textAlign = 'right'
+        context.fillText(formatClock(end), barX + barWidth, barY + 58)
+        context.textAlign = 'left'
+
+        context.fillStyle = '#6f466f'
+        context.font = '700 22px Trebuchet MS'
+        context.fillText(
+          direction === 'Reverse clip' ? 'Smart reverse rendering' : 'Smart clip rendering',
+          470,
+          barY + 108
+        )
+      }
+
+      async function createCatalogResultBlob(start, end, label) {
+        const canvas = document.createElement('canvas')
+        canvas.width = 1280
+        canvas.height = 720
+        const context = canvas.getContext('2d')
+
+        if (!context) {
+          throw new Error('Canvas is not available for movie cards.')
+        }
+
+        const artworkImage = await loadCatalogArtwork()
+        drawCatalogFrame(context, { start, end, label, progress: 1, artworkImage })
+
+        return new Promise((resolve, reject) => {
+          canvas.toBlob(blob => {
+            if (!blob) {
+              reject(new Error('Movie card export failed.'))
+              return
+            }
+
+            resolve(blob)
+          }, 'image/png')
+        })
+      }
+
+      async function createCatalogClipBlob(start, end, label) {
+        const canvas = document.createElement('canvas')
+        canvas.width = 1280
+        canvas.height = 720
+        const context = canvas.getContext('2d')
+
+        if (!context) {
+          throw new Error('Canvas is not available for movie clip cards.')
+        }
+
+        const fps = 12
+        const mimeType = pickMimeType()
+        const stream = canvas.captureStream(fps)
+        const recorder = new MediaRecorder(
+          stream,
+          mimeType ? { mimeType, videoBitsPerSecond: 2_500_000 } : undefined,
+        )
+        const chunks = []
+        const artworkImage = await loadCatalogArtwork()
+        const span = Math.abs(end - start)
+        const clipDurationMs = Math.min(5200, Math.max(2200, 1200 + span * 22))
+        const totalFrames = Math.max(24, Math.round((clipDurationMs / 1000) * fps))
+
+        recorder.ondataavailable = event => {
+          if (event.data && event.data.size > 0) {
+            chunks.push(event.data)
+          }
+        }
+
+        const stopPromise = new Promise((resolve, reject) => {
+          recorder.onstop = () => resolve(new Blob(chunks, { type: recorder.mimeType || mimeType || 'video/webm' }))
+          recorder.onerror = () => reject(new Error('Smart movie clip export failed.'))
+        })
+
+        recorder.start()
+
+        for (let frame = 0; frame < totalFrames; frame += 1) {
+          const progress = totalFrames === 1 ? 1 : frame / (totalFrames - 1)
+          drawCatalogFrame(context, { start, end, label, progress, artworkImage })
+          await delay(1000 / fps)
+        }
+
+        window.setTimeout(() => recorder.stop(), 160)
+        const blob = await stopPromise
+        stream.getTracks().forEach(track => track.stop())
+        return blob
+      }
+
+      function prepareResultDisplay({ title, details, previewKind = '', previewUrl = '' }) {
+        if (state.exportUrl) {
+          URL.revokeObjectURL(state.exportUrl)
+        }
+
+        state.exportBlob = null
+        state.exportUrl = ''
+        state.exportName = ''
+        state.exportKind = ''
+        state.exportType = ''
+
+        resultVideo.pause()
+        resultVideo.removeAttribute('src')
+        resultVideo.load()
+        resultVideo.hidden = true
+        resultImage.removeAttribute('src')
+        resultImage.hidden = true
+        resultEmpty.hidden = false
+
+        if (previewKind === 'image' && previewUrl) {
+          resultImage.src = previewUrl
+          resultImage.hidden = false
+          resultEmpty.hidden = true
+        }
+
+        resultTitle.textContent = title
+        resultDetails.textContent = details
+      }
+
+      function createCatalogPreviewUrl(start, end, label) {
+        const canvas = document.createElement('canvas')
+        canvas.width = 1280
+        canvas.height = 720
+        const context = canvas.getContext('2d')
+
+        if (!context) {
+          return ''
+        }
+
+        const progress = start === end ? 1 : end > start ? 0 : 1
+        drawCatalogFrame(context, { start, end, label, progress, artworkImage: null })
+        return canvas.toDataURL('image/png')
+      }
+
+      function setExportResult({ blob, kind, title, details, extension }) {
+        prepareResultDisplay({ title, details })
+
+        state.exportBlob = blob
+        state.exportKind = kind
+        state.exportType = blob.type
+        state.exportName = `${title.replace(/\s+/g, '-').toLowerCase()}.${extension}`
+        state.exportUrl = URL.createObjectURL(blob)
+
+        if (kind === 'image') {
+          resultImage.src = state.exportUrl
+          resultImage.hidden = false
+        } else {
+          resultVideo.src = state.exportUrl
+          resultVideo.hidden = false
+          resultVideo.currentTime = 0
+          resultVideo.play().catch(() => {
+            resultVideo.pause()
+            resultVideo.currentTime = 0
+          })
+        }
+
+        resultEmpty.hidden = true
+        resultTitle.textContent = title
+        resultDetails.textContent = details
+        autoDownloadResult()
+        setBusy(false)
+      }
+
+      function autoDownloadResult() {
+        if (!state.exportUrl || !state.exportName) return
+
+        const link = document.createElement('a')
+        link.href = state.exportUrl
+        link.download = state.exportName
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
+
+      async function exportRange(startInput, endInput, label = 'Custom result') {
+        if (state.busy) return
+
+        try {
+          if (!hasLoadedSource()) {
+            throw new Error('Load a preview or your own video source first.')
+          }
+
+          const start = clampToDuration(startInput)
+          const end = clampToDuration(endInput)
+          const previewPrefix = isPreviewSource() ? 'preview ' : ''
+          const screenshotTitle = `${currentMovieTitle()} ${label} ${previewPrefix}screenshot`
+          const clipTitle = `${currentMovieTitle()} ${label} ${previewPrefix}clip`
+          const reverseClipTitle = `${currentMovieTitle()} ${label} ${previewPrefix}reverse clip`
+
+          if (startInput > state.duration) {
+            if (isPreviewSource()) {
+              openWholeMovieTools(true)
+            }
+            throw new Error(rangePastEndMessage('start'))
+          }
+
+          if (startInput !== endInput && start === end) {
+            if (isPreviewSource()) {
+              openWholeMovieTools(true)
+            }
+            throw new Error(rangePastEndMessage('collapse'))
+          }
+
+          setBusy(true)
+
+          if (start === end) {
+            prepareResultDisplay({
+              title: screenshotTitle,
+              details: `${isPreviewSource() ? 'Preview s' : 'S'}creenshot at ${formatClock(start)}.`,
+            })
+            setStatus(
+              `Making ${isPreviewSource() ? 'preview ' : ''}screenshot at ${formatClock(start)}...`,
+              'working'
+            )
+            await nextFrame()
+            const screenshotBlob = await createScreenshotBlob(start)
+            setExportResult({
+              blob: screenshotBlob,
+              kind: 'image',
+              title: screenshotTitle,
+              details: `${isPreviewSource() ? 'Preview s' : 'S'}creenshot captured at ${formatClock(start)}.`,
+              extension: 'png',
+            })
+            setStatus(isPreviewSource() ? 'Preview screenshot downloaded.' : 'Screenshot downloaded.', 'success')
+            return
+          }
+
+          if (end > start) {
+            prepareResultDisplay({
+              title: clipTitle,
+              details: `Forward ${previewPrefix}clip from ${formatSpan(start, end)}.`,
+            })
+            setStatus(`Making ${previewPrefix}clip from ${formatSpan(start, end)}...`, 'working')
+            await nextFrame()
+            const clipBlob = await createForwardClipBlob(start, end)
+            setExportResult({
+              blob: clipBlob,
+              kind: 'video',
+              title: clipTitle,
+              details: `Forward ${previewPrefix}clip from ${formatSpan(start, end)}.`,
+              extension: clipBlob.type.includes('mp4') ? 'mp4' : 'webm',
+            })
+            setStatus(isPreviewSource() ? 'Preview clip downloaded.' : 'Forward clip downloaded.', 'success')
+            return
+          }
+
+          prepareResultDisplay({
+            title: reverseClipTitle,
+            details: `Reverse ${previewPrefix}clip from ${formatClock(start)} down to ${formatClock(end)}.`,
+          })
+          setStatus(`Making reverse ${previewPrefix}clip from ${formatSpan(start, end)}...`, 'working')
+          await nextFrame()
+          const reverseBlob = await createReverseClipBlob(start, end)
+          setExportResult({
+            blob: reverseBlob,
+            kind: 'video',
+            title: reverseClipTitle,
+            details: `Reverse ${previewPrefix}clip from ${formatClock(start)} down to ${formatClock(end)}.`,
+            extension: reverseBlob.type.includes('mp4') ? 'mp4' : 'webm',
+          })
+          setStatus(isPreviewSource() ? 'Reverse preview clip downloaded.' : 'Reverse clip downloaded.', 'success')
+        } catch (error) {
+          console.error(error)
+          setStatus(error instanceof Error ? error.message : 'Export failed.', 'error')
+          setBusy(false)
+        }
+      }
+
+      async function saveOrShareResult(mode) {
+        if (!state.exportBlob) return
+
+        const file = new File([state.exportBlob], state.exportName || 'sro24-export', {
+          type: state.exportType || state.exportBlob.type,
+        })
+
+        if (mode === 'share') {
+          try {
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                files: [file],
+                title: state.exportKind === 'image' ? 'SRO24 screenshot' : 'SRO24 clip',
+              })
+              setStatus('Shared. Use Save Image or Save Video in the share sheet if you want it in Photos.', 'success')
+              return
+            }
+          } catch (error) {
+            console.error(error)
+          }
+        } else {
+          try {
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                files: [file],
+                title: state.exportKind === 'image' ? 'SRO24 screenshot' : 'SRO24 clip',
+              })
+              setStatus('Share sheet opened. Choose Save Image or Save Video there.', 'success')
+              return
+            }
+          } catch (error) {
+            console.error(error)
+          }
+        }
+
+        autoDownloadResult()
+        setStatus(state.exportKind === 'image' ? 'Screenshot downloaded.' : 'Clip downloaded.', 'success')
+      }
+
+      fileInput.addEventListener('change', event => {
+        const [file] = event.target.files || []
+        if (file) {
+          if (!String(movieTitleInput.value || '').trim()) {
+            movieTitleInput.value = state.selectedMovieTitle
+          }
+
+          loadMovie({ file, sourceKind: 'file' }).catch(error => {
+            console.error(error)
+            teardownMovie()
+            setStatus('That movie could not be loaded.', 'error')
+          })
+        }
+      })
+
+      searchMoviesButton.addEventListener('click', () => {
+        searchMovies(movieTitleInput.value)
+      })
+
+      movieTitleInput.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+          event.preventDefault()
+          searchMovies(movieTitleInput.value)
+        }
+      })
+
+      loadMovieUrlButton.addEventListener('click', () => {
+        const typedUrl = String(movieUrlInput.value || '').trim()
+
+        if (!typedUrl) {
+          setStatus('Paste a direct video URL first.', 'error')
+          return
+        }
+
+        if (!/^https?:\/\//i.test(typedUrl)) {
+          setStatus('Use a full URL that starts with http:// or https://.', 'error')
+          return
+        }
+
+        if (!String(movieTitleInput.value || '').trim()) {
+          movieTitleInput.value = state.selectedMovieTitle
+        }
+
+        loadMovie({ url: typedUrl, label: currentMovieTitle(), sourceKind: 'direct-url' }).catch(error => {
+          console.error(error)
+          teardownMovie()
+          setStatus('That movie URL could not be loaded.', 'error')
+        })
+      })
+
+      clearMovieButton.addEventListener('click', () => {
+        teardownMovie()
+      })
+
+      loadWholeMovieDemoButton.addEventListener('click', () => {
+        loadWholeMovieDemo()
+      })
+
+      focusWholeSourceButton.addEventListener('click', () => {
+        openWholeMovieTools(true)
+        setStatus('Whole movie tools are ready. Load a full video URL or movie file to use the full runtime.', 'success')
+      })
+
+      makeCustomClipButton.addEventListener('click', () => {
+        const startValue = parseTimeValue(startTimeInput.value)
+        const endValue = parseTimeValue(endTimeInput.value)
+
+        if (startValue === null || endValue === null) {
+          setStatus('Enter valid times like 59:32 or 1:34:04.', 'error')
+          updateSelectionSummary()
+          return
+        }
+
+        if (!hasLoadedSource()) {
+          openWholeMovieTools(true)
+          setStatus('Load a movie preview or your own video source after setting both timers if you want to make a clip.', 'error')
+          updateSelectionSummary()
+          return
+        }
+
+        updateSelectionSummary()
+        exportRange(startValue, endValue)
+      })
+
+      fillWholeMovieButton.addEventListener('click', () => {
+        if (!hasLoadedSource()) {
+          openWholeMovieTools(true)
+          setStatus('Load a movie preview or your own video source first if you want full timing.', 'error')
+          return
+        }
+
+        startTimeInput.value = '0:00'
+        endTimeInput.value = formatClock(state.duration)
+        updateSelectionSummary()
+        setStatus(
+          isPreviewSource()
+            ? 'Whole preview timing is ready.'
+            : hasUserVideoSource()
+              ? `Whole movie timing is ready from 0:00 to ${formatClock(state.duration)}.`
+              : 'Whole timing is ready.',
+          'success'
+        )
+      })
+
+      jumpToStartButton.addEventListener('click', async () => {
+        const startValue = parseTimeValue(startTimeInput.value)
+        if (startValue === null) {
+          setStatus('Enter a valid start time first.', 'error')
+          return
+        }
+
+        if (!hasLoadedSource()) {
+          openWholeMovieTools(true)
+          setStatus('Load a movie preview or your own video source first if you want to jump to the start.', 'error')
+          return
+        }
+
+        moviePreview.currentTime = clampToDuration(startValue)
+        moviePreview.play().catch(() => {
+          moviePreview.pause()
+        })
+      })
+
+      startTimeInput.addEventListener('input', updateSelectionSummary)
+      endTimeInput.addEventListener('input', updateSelectionSummary)
+      movieTitleInput.addEventListener('input', () => {
+        const typed = String(movieTitleInput.value || '').trim()
+        if (typed) {
+          state.selectedMovieTitle = typed
+        }
+        renderMovieShelf()
+        if (!hasLoadedSource()) {
+          movieName.textContent = typed ? `${typed} selected` : 'No movie yet'
+        }
+      })
+      saveResultButton.addEventListener('click', () => saveOrShareResult('save'))
+      shareResultButton.addEventListener('click', () => saveOrShareResult('share'))
+
+      movieTitleInput.value = state.selectedMovieTitle
+      renderMovieShelf()
+      updateSourceFacts()
+      teardownMovie()
     </script>
 
     <style>
+      :root {
+        --bg: #f4efe4;
+        --ink: #1d2026;
+        --paper: rgba(255, 251, 244, 0.88);
+        --paper-strong: rgba(255, 255, 255, 0.95);
+        --line: rgba(29, 32, 38, 0.12);
+        --rose: #d85b73;
+        --plum: #6f466f;
+        --gold: #f0b44d;
+        --sage: #90b59f;
+        --sky: #6c8ed9;
+        --shadow: 0 28px 80px rgba(48, 35, 28, 0.16);
+      }
+
       * {
-        margin: 0;
-        padding: 0;
         box-sizing: border-box;
       }
 
       body {
-        font-family:
-          system-ui,
-          -apple-system,
-          sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: 0;
         min-height: 100vh;
-        padding: 20px;
+        color: var(--ink);
+        font-family: 'Trebuchet MS', 'Avenir Next', 'Segoe UI', sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(240, 180, 77, 0.28), transparent 28%),
+          radial-gradient(circle at top right, rgba(108, 142, 217, 0.18), transparent 25%),
+          linear-gradient(180deg, #fbf0d8 0%, #f3e8dd 44%, #e7dfd6 100%);
       }
 
-      .container {
-        max-width: 1200px;
+      .shell {
+        width: min(1240px, calc(100% - 2rem));
         margin: 0 auto;
-        background: white;
-        border-radius: 12px;
-        padding: 30px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        padding: 1.25rem 0 3rem;
       }
 
-      h1 {
-        color: #333;
-        text-align: center;
-        margin-bottom: 30px;
-        font-size: 2rem;
+      .card {
+        background: var(--paper);
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        border-radius: 30px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
       }
 
-      .controls {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        margin-bottom: 30px;
-      }
-
-      .checkbox-container {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 15px;
-        background: #f0f0f0;
-        border-radius: 8px;
-      }
-
-      .checkbox-container input[type='checkbox'] {
-        width: 20px;
-        height: 20px;
-        cursor: not-allowed;
-      }
-
-      .checkbox-container label {
-        font-weight: 600;
-        color: #555;
-      }
-
-      .timer-controls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        align-items: flex-end;
-      }
-
-      .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
-
-      .input-group label {
-        font-size: 0.9rem;
-        color: #666;
-        font-weight: 500;
-      }
-
-      .input-group input {
-        padding: 10px;
-        border: 2px solid #ddd;
-        border-radius: 6px;
-        font-size: 1rem;
-        width: 150px;
-        transition: border-color 0.3s;
-      }
-
-      .input-group input:focus {
-        outline: none;
-        border-color: #667eea;
-      }
-
-      button {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 6px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-
-      #startBtn {
-        background: #667eea;
-        color: white;
-      }
-
-      #startBtn:hover:not(:disabled) {
-        background: #5568d3;
-        transform: translateY(-2px);
-      }
-
-      #startBtn:disabled {
-        background: #999;
-        cursor: not-allowed;
-      }
-
-      #resetBtn {
-        background: #f44336;
-        color: white;
-      }
-
-      #resetBtn:hover:not(:disabled) {
-        background: #da190b;
-        transform: translateY(-2px);
-      }
-
-      #resetBtn:disabled {
-        background: #999;
-        cursor: not-allowed;
-      }
-
-      .timer-display {
-        text-align: center;
-        padding: 30px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 12px;
-      }
-
-      #timer {
-        font-size: 4rem;
-        font-weight: bold;
-        color: white;
-        font-family: 'Courier New', monospace;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-      }
-
-      #timer.complete {
-        animation: pulse 1s infinite;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.05);
-        }
-      }
-
-      .iframe-container {
-        margin: 30px 0;
-        border-radius: 12px;
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.8fr) minmax(280px, 0.9fr);
+        gap: 1.5rem;
+        padding: 2rem;
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      }
-
-      .iframe-container iframe {
-        width: 100%;
-        height: 600px;
-        border: none;
-      }
-
-      .decorations-info {
-        margin-top: 30px;
-        padding: 20px;
-        background: #f9f9f9;
-        border-radius: 8px;
-        border-left: 4px solid #667eea;
-      }
-
-      .decorations-info h3 {
-        color: #333;
-        margin-bottom: 15px;
-      }
-
-      .decorations-info ul {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .decorations-info li {
-        color: #555;
-        font-size: 0.95rem;
-        padding-left: 20px;
         position: relative;
       }
 
-      .decorations-info li::before {
-        content: '🎮';
+      .hero::after {
+        content: '';
         position: absolute;
-        left: 0;
+        inset: auto -4rem -5rem auto;
+        width: 18rem;
+        height: 18rem;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(216, 91, 115, 0.22), transparent 70%);
+        pointer-events: none;
       }
 
-      @media (max-width: 768px) {
-        .container {
-          padding: 20px;
+      .hero-copy {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .eyebrow {
+        margin: 0;
+        font-size: 0.88rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--plum);
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(2.4rem, 4vw, 4.5rem);
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+      }
+
+      h2 {
+        font-size: clamp(1.45rem, 2vw, 2rem);
+        line-height: 1.05;
+      }
+
+      .hero-text,
+      .section-copy {
+        line-height: 1.6;
+        color: rgba(29, 32, 38, 0.8);
+      }
+
+      .hero-side {
+        display: grid;
+        gap: 1rem;
+        align-content: start;
+      }
+
+      .checkbox-pill,
+      .season-list,
+      .soft-panel,
+      .stat-box,
+      .result-meta,
+      .status-banner,
+      .player-empty,
+      .result-empty {
+        background: var(--paper-strong);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+      }
+
+      .checkbox-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 1rem 1.1rem;
+        font-weight: 700;
+      }
+
+      .checkbox-pill input {
+        width: 20px;
+        height: 20px;
+      }
+
+      .season-list {
+        display: grid;
+        gap: 0.45rem;
+        padding: 1rem 1.1rem;
+        line-height: 1.45;
+      }
+
+      .workspace {
+        display: grid;
+        gap: 1.25rem;
+        margin-top: 1.25rem;
+      }
+
+      .control-card,
+      .tool-card,
+      .output-card {
+        padding: 1.4rem;
+      }
+
+      .section-heading {
+        display: grid;
+        gap: 0.45rem;
+        margin-bottom: 1rem;
+      }
+
+      .upload-row,
+      .button-row {
+        display: flex;
+        gap: 0.85rem;
+        flex-wrap: wrap;
+      }
+
+      .search-panel {
+        display: grid;
+        gap: 0.9rem;
+        margin-bottom: 1rem;
+      }
+
+      .whole-source-cta {
+        display: grid;
+        gap: 0.65rem;
+        margin-bottom: 1rem;
+        align-items: start;
+      }
+
+      .whole-source-cta-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .whole-source-cta strong {
+        font-size: 1.05rem;
+      }
+
+      .whole-source-cta p {
+        color: rgba(29, 32, 38, 0.78);
+        line-height: 1.55;
+      }
+
+      .whole-source-demo-copy strong {
+        color: rgba(20, 34, 68, 0.96);
+      }
+
+      .search-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.85rem;
+        align-items: end;
+      }
+
+      .search-label {
+        display: grid;
+        gap: 0.45rem;
+        font-weight: 700;
+      }
+
+      .search-results {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+      }
+
+      .search-card {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        gap: 0.9rem;
+        padding: 0.95rem;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid var(--line);
+      }
+
+      .search-poster-wrap {
+        display: flex;
+      }
+
+      .search-poster,
+      .search-poster.placeholder {
+        width: 112px;
+        height: 160px;
+        border-radius: 18px;
+        object-fit: cover;
+        background: linear-gradient(160deg, rgba(108, 142, 217, 0.16), rgba(111, 70, 111, 0.22));
+      }
+
+      .search-poster.placeholder {
+        display: grid;
+        place-items: center;
+        color: rgba(29, 32, 38, 0.6);
+        font-weight: 700;
+        text-align: center;
+        padding: 0.75rem;
+      }
+
+      .search-copy {
+        display: grid;
+        gap: 0.5rem;
+        align-content: start;
+      }
+
+      .search-topline {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.75rem;
+        align-items: start;
+      }
+
+      .search-topline strong {
+        font-size: 1.08rem;
+        line-height: 1.2;
+      }
+
+      .search-topline span,
+      .search-genre,
+      .search-preview-note {
+        color: rgba(29, 32, 38, 0.66);
+      }
+
+      .search-preview-note {
+        font-weight: 700;
+      }
+
+      .search-description {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        line-height: 1.45;
+        color: rgba(29, 32, 38, 0.8);
+      }
+
+      .search-actions {
+        display: flex;
+        gap: 0.7rem;
+        flex-wrap: wrap;
+        margin-top: 0.2rem;
+      }
+
+      .search-actions a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.8rem 1rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        text-decoration: none;
+        background: white;
+        font-weight: 700;
+      }
+
+      .movie-shelf-wrap {
+        margin-bottom: 1rem;
+      }
+
+      .movie-shelf-heading {
+        display: grid;
+        gap: 0.35rem;
+        margin-bottom: 0.85rem;
+      }
+
+      .movie-shelf {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 0.85rem;
+      }
+
+      .shelf-card {
+        display: grid;
+        gap: 0.45rem;
+        min-height: 188px;
+        text-align: left;
+        align-content: start;
+        padding: 0.9rem;
+        color: white;
+        background: linear-gradient(145deg, #1d2026, #434758);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+      }
+
+      .shelf-card[data-selected='true'] {
+        outline: 3px solid rgba(240, 180, 77, 0.75);
+        outline-offset: 2px;
+      }
+
+      .shelf-number {
+        display: block;
+        font-size: 0.82rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.8;
+      }
+
+      .shelf-card strong {
+        display: block;
+        font-size: 1.2rem;
+        line-height: 1.1;
+      }
+
+      .shelf-year {
+        display: block;
+        font-size: 0.86rem;
+        font-weight: 800;
+        opacity: 0.82;
+      }
+
+      .shelf-card p {
+        margin: 0;
+        font-size: 0.92rem;
+        line-height: 1.35;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .shelf-card em {
+        display: block;
+        font-style: normal;
+        margin-top: auto;
+        opacity: 0.78;
+      }
+
+      .accent-red {
+        background: linear-gradient(145deg, #8f2130, #d85b73);
+      }
+
+      .accent-gold {
+        background: linear-gradient(145deg, #866018, #f0b44d);
+      }
+
+      .accent-blue {
+        background: linear-gradient(145deg, #2851a4, #6c8ed9);
+      }
+
+      .accent-sky {
+        background: linear-gradient(145deg, #3e5f92, #7fa7d8);
+      }
+
+      .accent-ice {
+        background: linear-gradient(145deg, #4c79a7, #8bc8f3);
+      }
+
+      .accent-plum {
+        background: linear-gradient(145deg, #402954, #6f466f);
+      }
+
+      .accent-sage {
+        background: linear-gradient(145deg, #4f6957, #90b59f);
+      }
+
+      .accent-emerald {
+        background: linear-gradient(145deg, #1e6a52, #3db28a);
+      }
+
+      .file-picker {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 180px;
+        padding: 0.95rem 1.2rem;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--sky), var(--plum));
+        color: white;
+        cursor: pointer;
+        font-weight: 800;
+        overflow: hidden;
+      }
+
+      .file-picker input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        border-radius: 999px;
+        padding: 0.95rem 1.2rem;
+        font-weight: 800;
+        cursor: pointer;
+        color: white;
+        background: linear-gradient(135deg, var(--rose), var(--plum));
+        transition:
+          transform 140ms ease,
+          box-shadow 140ms ease,
+          opacity 140ms ease;
+      }
+
+      button:hover:not(:disabled),
+      .file-picker:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 28px rgba(87, 53, 87, 0.22);
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+        box-shadow: none;
+      }
+
+      button.ghost {
+        background: white;
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.9rem;
+        margin: 1rem 0;
+      }
+
+      .stat-box {
+        display: grid;
+        gap: 0.35rem;
+        padding: 1rem;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(29, 32, 38, 0.58);
+      }
+
+      .player-frame {
+        position: relative;
+        border-radius: 26px;
+        overflow: hidden;
+        background:
+          linear-gradient(135deg, rgba(111, 70, 111, 0.95), rgba(29, 32, 38, 0.95));
+        min-height: 340px;
+      }
+
+      .player-frame video,
+      .output-card video,
+      .output-card img {
+        display: block;
+        width: 100%;
+        border-radius: 22px;
+        background: #0b0d10;
+      }
+
+      .player-frame video {
+        min-height: 340px;
+        border: 0;
+      }
+
+      .source-loader,
+      .movie-source-card {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+      }
+
+      .source-loader {
+        gap: 0.85rem;
+        color: white;
+        text-align: center;
+        background: radial-gradient(circle at center, rgba(111, 70, 111, 0.78), rgba(11, 13, 16, 0.96));
+      }
+
+      .source-loader-art {
+        display: grid;
+        place-items: center;
+        animation: loader-bob 900ms ease-in-out infinite alternate;
+      }
+
+      .source-loader-art img,
+      .source-loader-fallback {
+        width: 170px;
+        height: 246px;
+        border-radius: 24px;
+        object-fit: cover;
+        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.36);
+        animation: poster-spin 1200ms linear infinite;
+      }
+
+      .source-loader-fallback {
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 1rem;
+        font-size: 2rem;
+        font-weight: 900;
+        background: linear-gradient(145deg, rgba(216, 91, 115, 0.95), rgba(108, 142, 217, 0.95));
+      }
+
+      .loader-wheel,
+      .mini-wheel {
+        display: inline-block;
+        border-radius: 50%;
+        border: 6px solid rgba(255, 255, 255, 0.18);
+        border-top-color: #f0b44d;
+        animation: spin-wheel 900ms linear infinite;
+      }
+
+      .loader-wheel {
+        width: 72px;
+        height: 72px;
+      }
+
+      .mini-wheel {
+        width: 18px;
+        height: 18px;
+        border-width: 3px;
+      }
+
+      .movie-source-card {
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 1.25rem;
+        align-items: center;
+        background:
+          linear-gradient(135deg, rgba(18, 20, 25, 0.95), rgba(89, 58, 95, 0.92));
+        color: white;
+      }
+
+      .movie-source-art {
+        display: flex;
+        justify-content: center;
+      }
+
+      .movie-source-art img,
+      .movie-source-fallback {
+        width: 220px;
+        height: 320px;
+        border-radius: 24px;
+        object-fit: cover;
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+      }
+
+      .movie-source-fallback {
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 1rem;
+        font-size: 2rem;
+        font-weight: 900;
+        background: linear-gradient(145deg, rgba(216, 91, 115, 0.9), rgba(108, 142, 217, 0.92));
+      }
+
+      .movie-source-copy {
+        display: grid;
+        gap: 0.8rem;
+        align-content: center;
+      }
+
+      .movie-source-label {
+        font-size: 0.92rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.72);
+      }
+
+      .movie-source-copy h3 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 3.6rem);
+        line-height: 0.95;
+      }
+
+      .movie-source-copy p {
+        color: rgba(255, 255, 255, 0.82);
+        line-height: 1.6;
+      }
+
+      .movie-source-spinner {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        width: fit-content;
+        padding: 0.8rem 1rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+      }
+
+      @keyframes spin-wheel {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes poster-spin {
+        from {
+          transform: rotateY(0deg) rotateZ(0deg) scale(0.96);
+        }
+        50% {
+          transform: rotateY(180deg) rotateZ(2deg) scale(1);
+        }
+        to {
+          transform: rotateY(360deg) rotateZ(0deg) scale(0.96);
+        }
+      }
+
+      @keyframes loader-bob {
+        from {
+          transform: translateY(-4px);
+        }
+        to {
+          transform: translateY(8px);
+        }
+      }
+
+      .player-empty,
+      .result-empty {
+        display: grid;
+        place-items: center;
+        min-height: 220px;
+        padding: 1.2rem;
+        text-align: center;
+        line-height: 1.6;
+      }
+
+      .result-stage {
+        position: relative;
+        min-height: 220px;
+      }
+
+      .soft-panel,
+      .result-meta,
+      .status-banner {
+        padding: 1rem 1.1rem;
+      }
+
+      .minute-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 0.85rem;
+      }
+
+      .minute-button {
+        display: grid;
+        gap: 0.35rem;
+        text-align: left;
+        min-height: 122px;
+        border-radius: 24px;
+        background:
+          linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(235, 223, 255, 0.96));
+        color: var(--ink);
+        border: 1px solid rgba(111, 70, 111, 0.12);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+      }
+
+      .minute-button strong {
+        font-size: 1.5rem;
+      }
+
+      .minute-button span,
+      .minute-button em {
+        font-style: normal;
+        color: rgba(29, 32, 38, 0.72);
+      }
+
+      .custom-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.9rem;
+        margin-bottom: 1rem;
+      }
+
+      .load-grid {
+        margin-bottom: 1rem;
+      }
+
+      .source-tools {
+        margin-bottom: 1rem;
+        padding: 0.9rem 1rem 1rem;
+        border-radius: 24px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.75);
+      }
+
+      .source-tools summary {
+        cursor: pointer;
+        font-weight: 800;
+        list-style: none;
+      }
+
+      .source-tools summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .source-tools[open] summary {
+        margin-bottom: 0.8rem;
+      }
+
+      .fallback-actions {
+        display: flex;
+        align-items: end;
+      }
+
+      label {
+        display: grid;
+        gap: 0.45rem;
+        font-weight: 700;
+      }
+
+      input[type='text'] {
+        width: 100%;
+        padding: 0.95rem 1rem;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.96);
+      }
+
+      .status-banner {
+        margin-bottom: 1rem;
+        font-weight: 700;
+      }
+
+      .status-banner[data-tone='success'] {
+        background: rgba(144, 181, 159, 0.22);
+        border-color: rgba(144, 181, 159, 0.5);
+      }
+
+      .status-banner[data-tone='error'] {
+        background: rgba(216, 91, 115, 0.18);
+        border-color: rgba(216, 91, 115, 0.38);
+      }
+
+      .status-banner[data-tone='working'] {
+        background: rgba(240, 180, 77, 0.22);
+        border-color: rgba(240, 180, 77, 0.46);
+      }
+
+      .result-meta {
+        display: grid;
+        gap: 0.35rem;
+        margin: 1rem 0;
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-grid,
+        .custom-grid,
+        .search-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .shell {
+          width: min(100%, calc(100% - 1rem));
+          padding-bottom: 2rem;
+        }
+
+        .hero,
+        .control-card,
+        .tool-card,
+        .output-card {
+          padding: 1.1rem;
         }
 
         h1 {
-          font-size: 1.5rem;
+          font-size: 2.2rem;
         }
 
-        #timer {
-          font-size: 2.5rem;
+        .player-frame,
+        .player-frame video {
+          min-height: 220px;
         }
 
-        .timer-controls {
+        .minute-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .search-card {
+          grid-template-columns: 96px minmax(0, 1fr);
+        }
+
+        .search-poster,
+        .search-poster.placeholder {
+          width: 96px;
+          height: 140px;
+        }
+
+        .movie-source-card {
+          grid-template-columns: 1fr;
+          justify-items: center;
+          text-align: center;
+        }
+
+        .movie-source-art img,
+        .movie-source-fallback {
+          width: 160px;
+          height: 232px;
+        }
+
+        .movie-source-spinner {
+          justify-self: center;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .minute-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .upload-row,
+        .button-row {
           flex-direction: column;
-          align-items: stretch;
         }
 
-        .input-group input {
+        button,
+        .file-picker {
           width: 100%;
-        }
-
-        button {
-          width: 100%;
-        }
-
-        .iframe-container iframe {
-          height: 400px;
         }
       }
     </style>

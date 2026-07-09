@@ -9,27 +9,17 @@ import ProtoForm from '@/components/ProtoForm/ProtoForm'
 import {
   behavior_choices,
   ways_to_get_caught,
-  best_behavior_score,
   randomFromArray,
 } from '@/data/bad_stuff'
-import {
-  buildStoryPreviewLines,
-  getDefaultStoryOptionScores,
-} from '@/core/girls/storyOptions'
+import {bestBehaviorLetter} from '@/core/girls/behaviorLetters'
+import {buildStoryPreviewLines} from '@/core/girls/storyOptions'
 
 type FormType = {
   person_name: string
   choice: string
   behavior_score: string
+  how_good: string
   what_happened: string
-  opening: string
-  noticeLead: string
-  notice: string
-  handling: string
-  sounded: string
-  teacher: string
-  classmates: string
-  ending: string
 }
 
 function getNamedField(
@@ -42,13 +32,12 @@ function getNamedField(
 }
 
 function outputRandomValue(name: string) {
-  const storyOptions = getDefaultStoryOptionScores()
   const newValues = {
     person_name: name,
-    behavior_score: best_behavior_score,
+    behavior_score: bestBehaviorLetter,
+    how_good: bestBehaviorLetter,
     choice: randomFromArray(behavior_choices),
     what_happened: randomFromArray(ways_to_get_caught),
-    ...storyOptions,
   }
   return newValues
 }
@@ -62,6 +51,9 @@ function updateStoryPreview(e_dialog: HTMLDialogElement) {
   ) as HTMLInputElement | null
   const e_behavior_score = e_dialog.querySelector(
     'input[name="behavior_score"]'
+  ) as HTMLInputElement | null
+  const e_how_good = e_dialog.querySelector(
+    'input[name="how_good"]'
   ) as HTMLInputElement | null
   const e_what_happened = e_dialog.querySelector(
     'input[name="what_happened"]'
@@ -78,15 +70,8 @@ function updateStoryPreview(e_dialog: HTMLDialogElement) {
     personName: e_person_name?.value,
     choice: e_choice?.value,
     behaviorScore: e_behavior_score?.value,
+    howGood: e_how_good?.value,
     whatHappened: e_what_happened?.value,
-    opening: getNamedField(e_dialog, 'opening')?.value,
-    noticeLead: getNamedField(e_dialog, 'noticeLead')?.value,
-    notice: getNamedField(e_dialog, 'notice')?.value,
-    handling: getNamedField(e_dialog, 'handling')?.value,
-    sounded: getNamedField(e_dialog, 'sounded')?.value,
-    teacher: getNamedField(e_dialog, 'teacher')?.value,
-    classmates: getNamedField(e_dialog, 'classmates')?.value,
-    ending: getNamedField(e_dialog, 'ending')?.value,
   })
 
   e_lines.forEach((line, index) => {

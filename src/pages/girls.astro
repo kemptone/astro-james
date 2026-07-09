@@ -8,37 +8,27 @@ import {girls_names} from '@/data/girls_names'
 import {
   behavior_choices,
   ways_to_get_caught,
-  behavior_score,
-  best_behavior_score,
-  max_behavior_score,
   randomFromArray,
 } from '@/data/bad_stuff'
 import {
-  buildStoryPreviewLines,
-  getDefaultStoryOptionScores,
-  storyOptionChoices,
-  storyOptionFieldOrder,
-} from '@/core/girls/storyOptions'
+  behaviorLetterCount,
+  behaviorLetterOptions,
+  bestBehaviorLetter,
+} from '@/core/girls/behaviorLetters'
+import {buildStoryPreviewLines} from '@/core/girls/storyOptions'
 import Menu3 from '@/components/menu.astro'
 import '../components/wc-texarea-sizer'
 
 const initialPersonName = randomFromArray(girls_names)
 const initialChoice = randomFromArray(behavior_choices)
 const initialWhatHappened = randomFromArray(ways_to_get_caught)
-const initialStoryOptions = getDefaultStoryOptionScores()
 const initialStoryPreviewLines = buildStoryPreviewLines({
   personName: initialPersonName,
   choice: initialChoice,
-  behaviorScore: best_behavior_score,
+  behaviorScore: bestBehaviorLetter,
+  howGood: bestBehaviorLetter,
   whatHappened: initialWhatHappened,
-  ...initialStoryOptions,
 })
-const storyOptionInputs = storyOptionFieldOrder.map(({key, label}) => ({
-  key,
-  label,
-  value: initialStoryOptions[key],
-  choices: storyOptionChoices[key],
-}))
 ---
 
 <Empty title="girls">
@@ -48,22 +38,20 @@ const storyOptionInputs = storyOptionFieldOrder.map(({key, label}) => ({
       <h1>Person names</h1>
     </header>
     <p>
-      Behavior Number Day uses {max_behavior_score} numbers. The longest
-      YouTube slideshow goes through each one, and {best_behavior_score} is the
-      best school behavior score.
+      Behavior Letter Day uses {behaviorLetterCount} letter scores for the
+      behavior letter and the how-good letter. <strong>{bestBehaviorLetter}</strong>
+      is the best one, <strong>Z</strong> is neutral, and <strong>-Z</strong>
+      is the worst one.
     </p>
     <p>
-      Story option legend uses a full <strong>0</strong> to
-      <strong>100</strong> range. <strong>56</strong> means Best,
-      <strong>55</strong> means 10, <strong>54</strong> means 9,
-      <strong>53</strong> means 8, <strong>52</strong> means 7,
-      <strong>51</strong> means 6, <strong>50</strong> is neutral,
-      <strong>45</strong> means 0, and <strong>44</strong> means Worst.
-      Numbers above <strong>56</strong> are better than Best, and numbers below
-      <strong>44</strong> are worse than Worst. Numbers <strong>20</strong> to
-      <strong>11</strong> change very, very fast. Numbers <strong>10</strong>
-      to <strong>0</strong> are the worst ten numbers ever, and they drop
-      extremely, extremely, extremely fast.
+      Each band changes the tone. <strong>+A</strong> through
+      <strong>+Z</strong> stays extremely strong, <strong>+a</strong> through
+      <strong>+z</strong> stays very great, <strong>A</strong> through
+      <strong>Z</strong> stays no-trouble, <strong>a</strong> through
+      <strong>z</strong> moves into trouble, <strong>-a</strong> through
+      <strong>-z</strong> moves into serious trouble, and
+      <strong>-A</strong> through <strong>-Z</strong> goes too far into
+      trouble.
     </p>
     <div id="filters" class="group">
       <input type="search" name="name_filter" placeholder="Filter names" />
@@ -107,18 +95,30 @@ const storyOptionInputs = storyOptionFieldOrder.map(({key, label}) => ({
 
           <div class="grid">
             <WCFloatingLabel addclear="1">
-              <label>behavior score</label>
+              <label>behavior letter</label>
               <input
                 list="behavior_scores"
                 name="behavior_score"
-                placeholder="Pick a school behavior score (1000 is best)"
-                value={best_behavior_score}
+                placeholder="Pick a school behavior letter (+A is best)"
+                value={bestBehaviorLetter}
               />
               <datalist id="behavior_scores">
-                {behavior_score.map(v => <option value={v} />)}
+                {behaviorLetterOptions.map(v => <option value={v} />)}
               </datalist>
             </WCFloatingLabel>
 
+            <WCFloatingLabel addclear="1">
+              <label>how good letter</label>
+              <input
+                list="behavior_scores"
+                name="how_good"
+                placeholder="Pick a how-good letter (+A is best)"
+                value={bestBehaviorLetter}
+              />
+            </WCFloatingLabel>
+          </div>
+
+          <div class="grid">
             <WCFloatingLabel addclear="1">
               <label>what happened next</label>
               <input
@@ -133,49 +133,10 @@ const storyOptionInputs = storyOptionFieldOrder.map(({key, label}) => ({
             </WCFloatingLabel>
           </div>
           <details open>
-            <summary>story options before generation</summary>
+            <summary>story preview</summary>
             <p class="story-options-note">
-              Each narrator part is its own option now, so you can mix good and
-              bad pieces even if the story does not make sense.
-            </p>
-            <p class="story-options-note">
-              <code>notice lead option</code> starts blank and uses
-              <code>Good</code> for <code>Everyone noticed because</code> or
-              <code>Bad</code> for
-              <code>The problem grew bigger because</code>. 
-              <code>handling option</code> starts blank and uses
-              <code>Good</code> for
-              <code>handled it in a no-trouble way</code> or
-              <code>Bad</code> for
-              <code>moved through a trouble moment</code>.
-            </p>
-            <p class="story-options-note">
-              Number guide: <code>56</code> = Best, <code>55</code> = 10,
-              <code>54</code> = 9, <code>53</code> = 8, <code>52</code> = 7,
-              <code>51</code> = 6, <code>50</code> = neutral, <code>49</code> = 4,
-              <code>48</code> = 3, <code>47</code> = 2, <code>46</code> = 1,
-              <code>45</code> = 0, and <code>44</code> = Worst. <code>57</code>
-              and up are better than Best. <code>43</code> and down are worse
-              than Worst. <code>20</code> to <code>11</code> change very, very
-              fast. <code>10</code> to <code>0</code> are the worst ten numbers
-              ever, and the drop goes extremely, extremely, extremely fast.
-            </p>
-            <div id="story_option_pieces" class="grid">
-              {storyOptionInputs.map(item => (
-                <WCFloatingLabel addclear="1">
-                  <label>{item.label}</label>
-                  <select name={item.key}>
-                    {item.choices.map(choice => (
-                      <option value={choice} selected={choice === item.value}>
-                        {choice}
-                      </option>
-                    ))}
-                  </select>
-                </WCFloatingLabel>
-              ))}
-            </div>
-            <p class="story-options-note">
-              Full preview using the mixed options:
+              The letter now controls the whole tone, so there are no extra
+              story option mixers here anymore.
             </p>
             <div id="story_options_preview">
               {initialStoryPreviewLines.map(line => (
