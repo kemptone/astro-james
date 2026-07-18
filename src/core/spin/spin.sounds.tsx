@@ -5,8 +5,8 @@ function SpinSounds(
   totalRotations: number,
   customAudio1?: string,
   customAudio2?: string,
-  defaultAudio1?: string = "/spin/main_206.wav",
-  defaultAudio2?: string = "/spin/swoop_206.wav",
+  defaultAudio1: string = "/spin/main_206.wav",
+  defaultAudio2: string = "/spin/swoop_206.wav",
 ) {
   const isCustomAudio = Boolean(customAudio1 || customAudio2);
 

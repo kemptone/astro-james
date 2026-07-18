@@ -50,7 +50,7 @@ a:hover {
 }
 
 /* button {
-    /* background-color: var(--color2); */
+    background-color: var(--color2);
     background-color: transparent;
     border: 2px solid var(--color3);
     user-select: none;
