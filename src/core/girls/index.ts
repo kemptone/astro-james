@@ -12,6 +12,7 @@ import {
   randomFromArray,
 } from '@/data/bad_stuff'
 import {bestBehaviorLetter} from '@/core/girls/behaviorLetters'
+import {extendedBehaviorNumberNeutral} from '@/core/girls/behaviorNumbers'
 import {buildStoryPreviewLines} from '@/core/girls/storyOptions'
 
 type FormType = {
@@ -35,7 +36,7 @@ function outputRandomValue(name: string) {
   const newValues = {
     person_name: name,
     behavior_score: bestBehaviorLetter,
-    how_good: bestBehaviorLetter,
+    how_good: String(extendedBehaviorNumberNeutral),
     choice: randomFromArray(behavior_choices),
     what_happened: randomFromArray(ways_to_get_caught),
   }

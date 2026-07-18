@@ -15,6 +15,7 @@ import {
   behaviorLetterOptions,
   bestBehaviorLetter,
 } from '@/core/girls/behaviorLetters'
+import {extendedBehaviorNumberNeutral} from '@/core/girls/behaviorNumbers'
 import {buildStoryPreviewLines} from '@/core/girls/storyOptions'
 import Menu3 from '@/components/menu.astro'
 import '../components/wc-texarea-sizer'
@@ -26,7 +27,7 @@ const initialStoryPreviewLines = buildStoryPreviewLines({
   personName: initialPersonName,
   choice: initialChoice,
   behaviorScore: bestBehaviorLetter,
-  howGood: bestBehaviorLetter,
+  howGood: String(extendedBehaviorNumberNeutral),
   whatHappened: initialWhatHappened,
 })
 ---
@@ -39,12 +40,17 @@ const initialStoryPreviewLines = buildStoryPreviewLines({
     </header>
     <p>
       Behavior Letter Day uses {behaviorLetterCount} letter scores for the
-      behavior letter and the how-good letter. <strong>{bestBehaviorLetter}</strong>
-      is the best one, <strong>Z</strong> is neutral, and <strong>-Z</strong>
-      is the worst one.
+      behavior score. <strong>{bestBehaviorLetter}</strong> is the best one,
+      <strong>Z</strong> is neutral, and <strong>-Z</strong> is the worst one.
     </p>
     <p>
-      Each band changes the tone. <strong>+A</strong> through
+      Extended Behavior Number Day now uses numbers from <strong>0</strong> to
+      <strong>500</strong> for the how-good side. <strong>0</strong> is the
+      best, <strong>100</strong> is plain and neutral, and
+      <strong>500</strong> is the worst.
+    </p>
+    <p>
+      The behavior letter still controls the behavior explanation. <strong>+A</strong> through
       <strong>+Z</strong> stays extremely strong, <strong>+a</strong> through
       <strong>+z</strong> stays very great, <strong>A</strong> through
       <strong>Z</strong> stays no-trouble, <strong>a</strong> through
@@ -52,6 +58,15 @@ const initialStoryPreviewLines = buildStoryPreviewLines({
       <strong>-z</strong> moves into serious trouble, and
       <strong>-A</strong> through <strong>-Z</strong> goes too far into
       trouble.
+    </p>
+    <p>
+      Number ranges: <strong>0-50 Good</strong>, <strong>51-100 Statisfactory</strong>,
+      <strong>101-200 Moderately Weak</strong>, <strong>201-300 very weak</strong>,
+      <strong>301-400 very bad</strong>, and <strong>401-500 Severely bad</strong>.
+    </p>
+    <p>
+      Each extended number is its own rank with no repeats, so every 1-step
+      change means a different tone.
     </p>
     <div id="filters" class="group">
       <input type="search" name="name_filter" placeholder="Filter names" />
@@ -108,12 +123,15 @@ const initialStoryPreviewLines = buildStoryPreviewLines({
             </WCFloatingLabel>
 
             <WCFloatingLabel addclear="1">
-              <label>how good letter</label>
+              <label>extended behavior number</label>
               <input
-                list="behavior_scores"
+                type="number"
+                min="0"
+                max="500"
+                step="1"
                 name="how_good"
-                placeholder="Pick a how-good letter (+A is best)"
-                value={bestBehaviorLetter}
+                placeholder="Pick a number from 0 to 500 (100 is neutral)"
+                value={String(extendedBehaviorNumberNeutral)}
               />
             </WCFloatingLabel>
           </div>
@@ -135,8 +153,8 @@ const initialStoryPreviewLines = buildStoryPreviewLines({
           <details open>
             <summary>story preview</summary>
             <p class="story-options-note">
-              The letter now controls the whole tone, so there are no extra
-              story option mixers here anymore.
+              The behavior letter explains the score, and the extended number
+              quietly controls the moment tone.
             </p>
             <div id="story_options_preview">
               {initialStoryPreviewLines.map(line => (

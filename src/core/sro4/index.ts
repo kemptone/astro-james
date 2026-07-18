@@ -1,9 +1,22 @@
+type FanKey = 'fan1' | 'fan2'
+
+type TimelineEntry = {
+  fan1: number
+  fan2: number
+}
+
 class Sro4FanController extends HTMLElement {
   private shadow: ShadowRoot
-  private fanSpeed: number = 0
-  private timeSeconds: number = 1
-  private bitbibbiesActive: boolean = false
-  private fanAnimation: Animation | null = null
+  private timeline: TimelineEntry[] = [
+    {fan1: 0, fan2: 0},
+    {fan1: 0, fan2: 0},
+  ]
+  private bitbibbiesActive = false
+  private isPlaying = false
+  private playbackStartMs = 0
+  private playbackTimeMs = 0
+  private rafId: number | null = null
+  private fanAngles = [0, 0]
 
   constructor() {
     super()
@@ -13,6 +26,11 @@ class Sro4FanController extends HTMLElement {
   connectedCallback() {
     this.render()
     this.attachEventListeners()
+    this.resetFans()
+  }
+
+  disconnectedCallback() {
+    this.cancelPlayback()
   }
 
   private render() {
@@ -20,42 +38,87 @@ class Sro4FanController extends HTMLElement {
       <style>
         :host {
           display: block;
-          padding: 2rem;
-          font-family: system-ui, sans-serif;
-          max-width: 800px;
-          margin: 0 auto;
-          background: rgb(0, 0, 0);
-          color: white;
           min-height: 100vh;
-        }
-        
-        .container {
-          background: rgba(255, 255, 255, 0.05);
           padding: 2rem;
-          border-radius: 15px;
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #f9fbff;
+          font-family: "Trebuchet MS", "Avenir Next", sans-serif;
+          background:
+            radial-gradient(circle at top, rgba(79, 172, 254, 0.18), transparent 36%),
+            radial-gradient(circle at bottom, rgba(0, 242, 254, 0.12), transparent 42%),
+            rgb(0, 0, 0);
         }
-        
+
+        .container {
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: 2rem;
+          border-radius: 24px;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.06);
+          box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+          backdrop-filter: blur(16px);
+        }
+
+        h1,
+        h2,
+        h3 {
+          margin: 0;
+        }
+
         h1 {
-          color: #fff;
           text-align: center;
-          margin-bottom: 2rem;
-          font-size: 2.5rem;
+          font-size: clamp(2.2rem, 4vw, 3.5rem);
+          letter-spacing: 0.04em;
+          margin-bottom: 1rem;
         }
-        
+
+        .intro {
+          max-width: 820px;
+          margin: 0 auto 1.5rem;
+          text-align: center;
+          line-height: 1.5;
+          color: rgba(255, 255, 255, 0.88);
+        }
+
+        .rule-strip {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 0.75rem;
+          margin: 1.5rem 0 2rem;
+        }
+
+        .rule-card,
+        .warning,
+        .panel,
+        .mina-section,
+        .sro-history {
+          border-radius: 18px;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .rule-card {
+          padding: 1rem;
+          text-align: center;
+        }
+
+        .rule-card strong {
+          display: block;
+          font-size: 1.25rem;
+          margin-bottom: 0.35rem;
+        }
+
         .warning {
-          background: ${this.bitbibbiesActive ? 'rgba(0, 255, 0, 0.1)' : 'rgba(255, 0, 0, 0.2)'};
-          padding: 1.5rem;
-          border-radius: 10px;
-          margin-bottom: 2rem;
-          border: 2px solid ${this.bitbibbiesActive ? '#00ff00' : '#ff0000'};
+          padding: 1.25rem 1.5rem;
+          margin-bottom: 1.5rem;
+          border-color: ${this.bitbibbiesActive ? 'rgba(90, 255, 157, 0.75)' : 'rgba(255, 109, 109, 0.7)'};
+          background: ${this.bitbibbiesActive ? 'rgba(25, 110, 56, 0.18)' : 'rgba(120, 19, 19, 0.22)'};
         }
-        
+
         .warning.glitchy {
-          animation: glitch 0.5s infinite;
+          animation: glitch 0.55s infinite;
         }
-        
+
         @keyframes glitch {
           0% { transform: translateX(0); }
           20% { transform: translateX(-2px); }
@@ -64,380 +127,658 @@ class Sro4FanController extends HTMLElement {
           80% { transform: translateX(1px); }
           100% { transform: translateX(0); }
         }
-        
+
+        .bitbibbies-section,
+        .button-row {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 0.75rem;
+        }
+
         .bitbibbies-section {
-          text-align: center;
           margin-bottom: 2rem;
         }
-        
-        .bitbibbies-btn {
-          background: rgb(0, 0, 255);
-          color: white;
-          border: none;
-          padding: 1rem 2rem;
-          font-size: 1.2rem;
-          border-radius: 10px;
-          cursor: pointer;
-          margin: 1rem 0;
-        }
-        
+
         .bitbibbies-status {
-          font-size: 1.1rem;
-          margin-top: 1rem;
+          flex-basis: 100%;
+          text-align: center;
+          color: rgba(255, 255, 255, 0.84);
         }
-        
-        .fan-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin: 3rem 0;
-          height: 300px;
+
+        .fans-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 1.25rem;
+          margin: 2rem 0;
         }
-        
+
+        .fan-card {
+          padding: 1.25rem;
+          text-align: center;
+          border-radius: 24px;
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          background:
+            radial-gradient(circle at center, rgba(255, 255, 255, 0.12), transparent 48%),
+            rgba(6, 12, 24, 0.82);
+        }
+
+        .fan-stage {
+          display: grid;
+          place-items: center;
+          min-height: 280px;
+        }
+
         .fan {
-          width: 200px;
-          height: 200px;
           position: relative;
-          border: 3px solid #666;
+          width: 220px;
+          height: 220px;
           border-radius: 50%;
-          background: radial-gradient(circle, #333, #111);
+          overflow: hidden;
+          border: 4px solid rgba(255, 255, 255, 0.22);
+          background:
+            radial-gradient(circle at center, rgba(210, 242, 255, 0.26), rgba(40, 75, 102, 0.28) 48%, rgba(2, 7, 14, 0.9) 78%);
+          box-shadow:
+            inset 0 0 40px rgba(255, 255, 255, 0.08),
+            0 20px 50px rgba(0, 0, 0, 0.38);
         }
-        
-        .fan-blades {
-          width: 100%;
-          height: 100%;
+
+        .fan-ring {
           position: absolute;
-          top: 0;
-          left: 0;
+          inset: 12px;
+          border-radius: 50%;
+          border: 2px solid rgba(255, 255, 255, 0.09);
         }
-        
+
+        .fan-blades {
+          position: absolute;
+          inset: 0;
+          will-change: transform;
+        }
+
         .blade {
           position: absolute;
-          width: 6px;
-          height: 80px;
-          background: linear-gradient(to bottom, #fff, #ccc);
           left: 50%;
-          top: 10%;
-          transform-origin: 50% 100%;
-          border-radius: 3px;
+          top: 16px;
+          width: 12px;
+          height: 92px;
+          transform-origin: 50% calc(100% - 8px);
+          margin-left: -6px;
+          border-radius: 999px 999px 12px 12px;
+          background: linear-gradient(180deg, #ffffff, #a7d8ff 65%, #66b0f4);
+          box-shadow: 0 0 14px rgba(167, 216, 255, 0.35);
         }
-        
-        .blade:nth-child(1) { transform: translateX(-50%) rotate(0deg); }
-        .blade:nth-child(2) { transform: translateX(-50%) rotate(72deg); }
-        .blade:nth-child(3) { transform: translateX(-50%) rotate(144deg); }
-        .blade:nth-child(4) { transform: translateX(-50%) rotate(216deg); }
-        .blade:nth-child(5) { transform: translateX(-50%) rotate(288deg); }
-        
+
         .fan-center {
           position: absolute;
-          width: 30px;
-          height: 30px;
-          background: #444;
-          border-radius: 50%;
-          top: 50%;
           left: 50%;
-          transform: translate(-50%, -50%);
+          top: 50%;
+          width: 42px;
+          height: 42px;
+          margin-left: -21px;
+          margin-top: -21px;
+          border-radius: 50%;
+          border: 3px solid rgba(255, 255, 255, 0.2);
+          background: radial-gradient(circle, #f9fdff, #5f7f99 58%, #18242f);
+          box-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
         }
-        
-        .controls {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-          align-items: center;
-        }
-        
-        .control-group {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 1rem;
-        }
-        
-        .speed-control {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-        
-        .speed-input {
-          width: 100px;
-          padding: 0.5rem;
-          font-size: 1.1rem;
-          border: 2px solid #666;
-          border-radius: 5px;
-          background: rgba(255, 255, 255, 0.1);
-          color: white;
-          text-align: center;
-        }
-        
-        .time-control {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-        
-        .time-display {
-          font-size: 2rem;
-          font-weight: bold;
-          color: #00ff00;
-          min-width: 100px;
-          text-align: center;
-        }
-        
-        .btn {
-          background: #3498db;
-          color: white;
-          border: none;
-          padding: 0.75rem 1.5rem;
+
+        .fan-readout {
+          margin-top: 0.75rem;
           font-size: 1rem;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: background 0.3s;
+          color: rgba(255, 255, 255, 0.88);
         }
-        
-        .btn:hover {
-          background: #2980b9;
-        }
-        
-        .speed-display {
-          font-size: 1.5rem;
-          margin: 1rem 0;
-        }
-        
-        .mina-section {
-          background: rgba(255, 255, 255, 0.1);
-          padding: 2rem;
-          border-radius: 10px;
-          margin-top: 2rem;
-        }
-        
-        .mina-chat {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-        }
-        
-        .mina-input {
-          padding: 0.8rem;
-          border: none;
-          border-radius: 5px;
-          background: rgba(255, 255, 255, 0.9);
-          font-size: 1rem;
-        }
-        
-        .mina-response {
-          background: rgba(0, 255, 0, 0.2);
-          padding: 1rem;
-          border-radius: 5px;
-          border-left: 4px solid #00ff00;
-        }
-        
-        .sro-history {
-          background: rgba(255, 255, 255, 0.05);
+
+        .panel {
           padding: 1.5rem;
-          border-radius: 10px;
-          margin-top: 2rem;
+          margin-bottom: 1.5rem;
         }
-        
+
+        .button-row {
+          margin-top: 1rem;
+        }
+
+        button {
+          border: none;
+          border-radius: 999px;
+          padding: 0.85rem 1.25rem;
+          font: inherit;
+          font-weight: 700;
+          color: #04131e;
+          cursor: pointer;
+          background: linear-gradient(135deg, #7ae2ff, #e3fff7);
+          box-shadow: 0 8px 22px rgba(122, 226, 255, 0.25);
+        }
+
+        button.secondary {
+          color: #f2f6ff;
+          background: rgba(255, 255, 255, 0.1);
+          box-shadow: none;
+        }
+
+        button:disabled {
+          opacity: 0.55;
+          cursor: not-allowed;
+        }
+
+        .timeline-table-wrap {
+          overflow-x: auto;
+          margin-top: 1rem;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          min-width: 520px;
+        }
+
+        th,
+        td {
+          padding: 0.85rem 0.75rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          text-align: center;
+        }
+
+        th {
+          font-size: 0.95rem;
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.72);
+        }
+
+        td:first-child,
+        th:first-child {
+          text-align: left;
+        }
+
+        .speed-input {
+          width: 92px;
+          padding: 0.6rem 0.65rem;
+          border-radius: 12px;
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          background: rgba(3, 12, 24, 0.75);
+          color: #f9fbff;
+          text-align: center;
+          font: inherit;
+        }
+
+        .status-board {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 0.75rem;
+          margin-top: 1rem;
+        }
+
+        .status-pill {
+          padding: 0.95rem 1rem;
+          border-radius: 14px;
+          background: rgba(255, 255, 255, 0.06);
+        }
+
+        .status-pill strong {
+          display: block;
+          font-size: 1.15rem;
+        }
+
+        .mina-section,
+        .sro-history {
+          padding: 1.5rem;
+          margin-top: 1.5rem;
+        }
+
+        .mina-chat {
+          display: grid;
+          gap: 0.75rem;
+          margin-top: 1rem;
+        }
+
+        .mina-input {
+          padding: 0.85rem 1rem;
+          border-radius: 14px;
+          border: none;
+          background: rgba(255, 255, 255, 0.92);
+          color: #07121c;
+          font: inherit;
+        }
+
+        .mina-response {
+          padding: 1rem;
+          border-radius: 14px;
+          border-left: 4px solid #7ae2ff;
+          background: rgba(122, 226, 255, 0.12);
+        }
+
+        .sro-history {
+          display: grid;
+          gap: 0.7rem;
+        }
+
         .sro-item {
-          margin-bottom: 0.8rem;
-          padding: 0.5rem;
+          padding: 0.85rem 1rem;
+          border-radius: 14px;
           background: rgba(255, 255, 255, 0.05);
-          border-radius: 5px;
+        }
+
+        @media (max-width: 720px) {
+          :host {
+            padding: 1rem;
+          }
+
+          .container {
+            padding: 1.25rem;
+          }
+
+          .fan {
+            width: 180px;
+            height: 180px;
+          }
+
+          .blade {
+            top: 14px;
+            height: 74px;
+          }
         }
       </style>
-      
+
       <div class="container">
-        <h1>🌪️ SRO4 - Fan Speed Controller 🌪️</h1>
-        
+        <h1>SRO4 - Two Fan Speed Animation</h1>
+        <p class="intro">
+          Watch your own fan animation with two fans. Sound is off this time, and the speed scale is
+          the important part: <strong>0</strong> means stopped, <strong>5</strong> means one full rotation
+          every 2 seconds, and <strong>10</strong> means one full rotation every second. There is no
+          maximum speed.
+        </p>
+
+        <div class="rule-strip">
+          <div class="rule-card">
+            <strong>2 Fans</strong>
+            Set Fan 1 and Fan 2 for every second.
+          </div>
+          <div class="rule-card">
+            <strong>No Maximum</strong>
+            10 is 1 rotation each second, but you can go higher.
+          </div>
+          <div class="rule-card">
+            <strong>5 Blades</strong>
+            Both fans have 5 blades, and only the blades spin.
+          </div>
+          <div class="rule-card">
+            <strong>Smooth Ramps</strong>
+            5 to 0 fades down across that second.
+          </div>
+        </div>
+
         <div class="warning ${this.bitbibbiesActive ? '' : 'glitchy'}">
-          <h3>⚠️ BitBibbies Status</h3>
-          <p>${this.bitbibbiesActive ? '✅ BitBibbies Active - Clean operation' : '❌ BitBibbies OFF - May contain bad words and glitches!'}</p>
-          <p>Without BitBibbies, this game doesn't work very well and may have glitches!</p>
+          <h3>BitBibbies Status</h3>
+          <p>${this.bitbibbiesActive ? 'BitBibbies active. Clean operation.' : 'BitBibbies off. This game may glitch a little.'}</p>
+          <p>Keeping BitBibbies on still makes the fan game smoother and clearer.</p>
         </div>
-        
+
         <div class="bitbibbies-section">
-          <button class="bitbibbies-btn" id="bitbibbies-btn">
-            ${this.bitbibbiesActive ? '✨ BitBibbies Active!' : 'Add BitBibbies'}
-          </button>
-          <div class="bitbibbies-status" id="bitbibbies-status">
-            ${this.bitbibbiesActive ? 'Games combined and enhanced!' : 'Click to activate BitBibbies'}
+          <button id="bitbibbies-btn">${this.bitbibbiesActive ? 'BitBibbies Active' : 'Add BitBibbies'}</button>
+          <div class="bitbibbies-status">
+            ${this.bitbibbiesActive ? 'Games combined and enhanced.' : 'Click to activate BitBibbies.'}
           </div>
         </div>
-        
-        <div class="fan-container">
-          <div class="fan" id="fan">
-            <div class="fan-blades" id="fan-blades">
-              <div class="blade"></div>
-              <div class="blade"></div>
-              <div class="blade"></div>
-              <div class="blade"></div>
-              <div class="blade"></div>
+
+        <div class="fans-grid">
+          ${this.getFanCardMarkup('fan-1', 'Fan 1')}
+          ${this.getFanCardMarkup('fan-2', 'Fan 2')}
+        </div>
+
+        <div class="panel">
+          <h2>Timeline Controls</h2>
+          <p>
+            Put in a speed for each second. Playback starts from the first row and moves forward,
+            blending one second into the next.
+          </p>
+
+          <div class="timeline-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Second</th>
+                  <th>Fan 1 Speed</th>
+                  <th>Fan 2 Speed</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${this.timeline
+                  .map(
+                    (entry, index) => `
+                      <tr>
+                        <td>${index + 1}</td>
+                        <td>
+                          <input
+                            class="speed-input"
+                            type="number"
+                            min="0"
+                            step="0.1"
+                            value="${entry.fan1}"
+                            data-index="${index}"
+                            data-fan="fan1"
+                          >
+                        </td>
+                        <td>
+                          <input
+                            class="speed-input"
+                            type="number"
+                            min="0"
+                            step="0.1"
+                            value="${entry.fan2}"
+                            data-index="${index}"
+                            data-fan="fan2"
+                          >
+                        </td>
+                      </tr>
+                    `,
+                  )
+                  .join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="button-row">
+            <button id="add-second-btn" class="secondary">Add Second</button>
+            <button id="remove-second-btn" class="secondary" ${this.timeline.length <= 1 ? 'disabled' : ''}>Remove Last Second</button>
+            <button id="play-btn">Play Animation</button>
+            <button id="stop-btn" class="secondary" ${this.isPlaying ? '' : 'disabled'}>Stop</button>
+            <button id="reset-btn" class="secondary">Reset Fans</button>
+          </div>
+
+          <div class="status-board">
+            <div class="status-pill">
+              <span>Playback Time</span>
+              <strong id="current-time">0.0s</strong>
             </div>
-            <div class="fan-center"></div>
+            <div class="status-pill">
+              <span>Fan 1 Right Now</span>
+              <strong id="fan1-speed-now">0</strong>
+            </div>
+            <div class="status-pill">
+              <span>Fan 2 Right Now</span>
+              <strong id="fan2-speed-now">0</strong>
+            </div>
+            <div class="status-pill">
+              <span>Run Length</span>
+              <strong>${this.timeline.length} second(s)</strong>
+            </div>
           </div>
         </div>
-        
-        <div class="controls">
-          <div class="control-group">
-            <h3>Fan Speed Control</h3>
-            <div class="speed-control">
-              <label>Speed (0-100):</label>
-              <input type="number" class="speed-input" id="speed-input" min="0" max="100" value="0">
-              <button class="btn" id="set-speed-btn">Set Speed</button>
-            </div>
-            <div class="speed-display">Current Speed: <span id="speed-value">0</span> rotations/second</div>
-          </div>
-          
-          <div class="control-group">
-            <h3>Time Control</h3>
-            <div class="time-control">
-              <button class="btn" id="add-seconds-btn">Add Seconds</button>
-              <div class="time-display" id="time-display">1s</div>
-              <button class="btn" id="reset-time-btn">Reset Time</button>
-            </div>
-            <p>At <span id="current-time">1</span> second(s), the fan runs at <span id="fan-speed-at-time">0</span> speed</p>
-          </div>
-        </div>
-        
+
         <div class="mina-section">
-          <h3>🤖 Talk to Mina - She Knows Everything!</h3>
-          <p><strong>Mina knows all apps, she knows everything. She is so clever!</strong></p>
+          <h3>Talk to Mina</h3>
+          <p><strong>Mina still knows everything.</strong> Ask about the fan game, the speed scale, or the SRO collection.</p>
           <div class="mina-chat">
             <input type="text" class="mina-input" id="mina-input" placeholder="Tell Mina anything...">
-            <button class="btn" id="ask-mina-btn">Ask Mina</button>
+            <button id="ask-mina-btn">Ask Mina</button>
             <div class="mina-response" id="mina-response" style="display: none;"></div>
           </div>
         </div>
-        
+
         <div class="sro-history">
-          <h3>📚 SRO Games History (From Mina's Knowledge)</h3>
-          <div class="sro-item"><strong>SRO:</strong> Type text and it comes out backwards (hello → olleh)</div>
-          <div class="sro-item"><strong>SRO2:</strong> Music game that turns into sentences</div>
-          <div class="sro-item"><strong>SRO3:</strong> Updated - shows tide highs and lows</div>
-          <div class="sro-item"><strong>SRO4:</strong> Fan controller (this game!) - was Fortnite tide controller</div>
-          <div class="sro-item"><strong>SRO5:</strong> Bank for money (updated from video generator)</div>
-          <div class="sro-item"><strong>SRO6:</strong> Toggle sprinklers</div>
-          <div class="sro-item"><strong>SRO7:</strong> Not in this app - for squares</div>
-          <div class="sro-item"><strong>SRO8:</strong> Put squares into code</div>
-          <div class="sro-item"><strong>SRO9:</strong> Time flipper</div>
-          <div class="sro-item"><strong>SRO10:</strong> ⚠️ DANGEROUS - Can teleport to dangerous places!</div>
+          <h3>SRO Games History</h3>
+          <div class="sro-item"><strong>SRO:</strong> Type text and it comes out backwards.</div>
+          <div class="sro-item"><strong>SRO2:</strong> Music game that turns into sentences.</div>
+          <div class="sro-item"><strong>SRO3:</strong> Updated to show tide highs and lows.</div>
+          <div class="sro-item"><strong>SRO4:</strong> Fan controller with two timed fan animations.</div>
+          <div class="sro-item"><strong>SRO5:</strong> Bank for money, updated from the video generator.</div>
+          <div class="sro-item"><strong>SRO6:</strong> Toggle sprinklers.</div>
+          <div class="sro-item"><strong>SRO7:</strong> Not in this app. It is for squares.</div>
+          <div class="sro-item"><strong>SRO8:</strong> Put squares into code.</div>
+          <div class="sro-item"><strong>SRO9:</strong> A time flipper.</div>
+          <div class="sro-item"><strong>SRO10:</strong> Dangerous. Best not to use it.</div>
         </div>
+      </div>
+    `
+  }
+
+  private getFanCardMarkup(id: string, label: string) {
+    const blades = Array.from({length: 5}, (_, index) => {
+      const rotation = index * 72
+
+      return `<div class="blade" style="transform: rotate(${rotation}deg);"></div>`
+    }).join('')
+
+    return `
+      <div class="fan-card">
+        <h2>${label}</h2>
+        <div class="fan-stage">
+          <div class="fan">
+            <div class="fan-ring"></div>
+            <div class="fan-blades" id="${id}">${blades}</div>
+            <div class="fan-center"></div>
+          </div>
+        </div>
+        <div class="fan-readout" id="${id}-readout">Starting speed: 0</div>
       </div>
     `
   }
 
   private attachEventListeners() {
     const bitbibbiesBtn = this.shadow.querySelector('#bitbibbies-btn')
-    const setSpeedBtn = this.shadow.querySelector('#set-speed-btn')
-    const addSecondsBtn = this.shadow.querySelector('#add-seconds-btn')
-    const resetTimeBtn = this.shadow.querySelector('#reset-time-btn')
+    const addSecondBtn = this.shadow.querySelector('#add-second-btn')
+    const removeSecondBtn = this.shadow.querySelector('#remove-second-btn')
+    const playBtn = this.shadow.querySelector('#play-btn')
+    const stopBtn = this.shadow.querySelector('#stop-btn')
+    const resetBtn = this.shadow.querySelector('#reset-btn')
     const askMinaBtn = this.shadow.querySelector('#ask-mina-btn')
-    const speedInput = this.shadow.querySelector(
-      '#speed-input',
-    ) as HTMLInputElement
-    const minaInput = this.shadow.querySelector(
-      '#mina-input',
-    ) as HTMLInputElement
+    const minaInput = this.shadow.querySelector('#mina-input') as HTMLInputElement
+    const speedInputs = this.shadow.querySelectorAll('.speed-input')
 
     bitbibbiesBtn?.addEventListener('click', () => this.toggleBitbibbies())
-    setSpeedBtn?.addEventListener('click', () => this.setFanSpeed())
-    addSecondsBtn?.addEventListener('click', () => this.addSeconds())
-    resetTimeBtn?.addEventListener('click', () => this.resetTime())
+    addSecondBtn?.addEventListener('click', () => this.addSecond())
+    removeSecondBtn?.addEventListener('click', () => this.removeSecond())
+    playBtn?.addEventListener('click', () => this.startPlayback())
+    stopBtn?.addEventListener('click', () => this.stopPlayback())
+    resetBtn?.addEventListener('click', () => this.resetFans())
     askMinaBtn?.addEventListener('click', () => this.askMina())
-
-    speedInput?.addEventListener('keypress', e => {
-      if (e.key === 'Enter') this.setFanSpeed()
-    })
 
     minaInput?.addEventListener('keypress', e => {
       if (e.key === 'Enter') this.askMina()
     })
+
+    speedInputs.forEach(input => {
+      input.addEventListener('input', event => this.updateTimelineSpeed(event))
+    })
   }
 
   private toggleBitbibbies() {
+    const wasPlaying = this.isPlaying
+    if (wasPlaying) this.stopPlayback()
     this.bitbibbiesActive = !this.bitbibbiesActive
     this.render()
     this.attachEventListeners()
+    this.resetFans()
   }
 
-  private setFanSpeed() {
-    const speedInput = this.shadow.querySelector(
-      '#speed-input',
-    ) as HTMLInputElement
-    const newSpeed = Math.max(
-      0,
-      Math.min(100, parseFloat(speedInput.value) || 0),
+  private addSecond() {
+    const lastEntry = this.timeline[this.timeline.length - 1] || {fan1: 0, fan2: 0}
+    this.timeline.push({...lastEntry})
+    this.refreshUiAfterTimelineShapeChange()
+  }
+
+  private removeSecond() {
+    if (this.timeline.length <= 1) return
+    this.timeline.pop()
+    this.refreshUiAfterTimelineShapeChange()
+  }
+
+  private refreshUiAfterTimelineShapeChange() {
+    if (this.isPlaying) this.stopPlayback()
+    this.render()
+    this.attachEventListeners()
+    this.resetFans()
+  }
+
+  private updateTimelineSpeed(event: Event) {
+    const input = event.currentTarget as HTMLInputElement
+    const index = Number(input.dataset.index)
+    const fan = input.dataset.fan as FanKey
+
+    if (!Number.isInteger(index) || !fan || !this.timeline[index]) return
+
+    const value = this.clampSpeed(input.value)
+    this.timeline[index][fan] = value
+    input.value = String(value)
+
+    if (!this.isPlaying) this.updateReadout(0, this.getSpeedsAtTime(0))
+  }
+
+  private clampSpeed(rawValue: string | number) {
+    const numericValue =
+      typeof rawValue === 'number' ? rawValue : parseFloat(rawValue || '0')
+
+    if (!Number.isFinite(numericValue)) return 0
+
+    return Math.max(0, Number(numericValue.toFixed(1)))
+  }
+
+  private startPlayback() {
+    if (this.isPlaying) return
+
+    this.isPlaying = true
+    this.playbackStartMs = performance.now()
+    this.playbackTimeMs = 0
+    this.fanAngles = [0, 0]
+    this.updatePlaybackButtons()
+    this.rafId = requestAnimationFrame(timestamp => this.stepPlayback(timestamp))
+  }
+
+  private stepPlayback(timestamp: number) {
+    if (!this.isPlaying) return
+
+    const totalDurationMs = this.timeline.length * 1000
+    const nextPlaybackTimeMs = Math.min(
+      timestamp - this.playbackStartMs,
+      totalDurationMs,
     )
-    this.fanSpeed = newSpeed
+    const deltaMs = Math.max(0, nextPlaybackTimeMs - this.playbackTimeMs)
+    this.playbackTimeMs = nextPlaybackTimeMs
 
-    this.updateSpeedDisplay()
-    this.animateFan()
-  }
+    const speeds = this.getSpeedsAtTime(this.playbackTimeMs)
+    this.advanceFans(deltaMs, speeds)
+    this.updateReadout(this.playbackTimeMs, speeds)
 
-  private updateSpeedDisplay() {
-    const speedValue = this.shadow.querySelector('#speed-value')
-    const fanSpeedAtTime = this.shadow.querySelector('#fan-speed-at-time')
-
-    if (speedValue) speedValue.textContent = this.fanSpeed.toString()
-    if (fanSpeedAtTime) fanSpeedAtTime.textContent = this.fanSpeed.toString()
-  }
-
-  private animateFan() {
-    const fanBlades = this.shadow.querySelector('#fan-blades') as HTMLElement
-
-    if (this.fanAnimation) {
-      this.fanAnimation.cancel()
-    }
-
-    if (this.fanSpeed === 0) {
-      fanBlades.style.animation = 'none'
+    if (this.playbackTimeMs >= totalDurationMs) {
+      this.finishPlayback()
       return
     }
 
-    const duration =
-      this.fanSpeed >= 100 ? 50 : Math.max(100, 2000 / this.fanSpeed)
-    console.log({duration, fanSpeed: this.fanSpeed})
-    fanBlades.style.animation = `spin ${duration}ms linear infinite`
+    this.rafId = requestAnimationFrame(nextTimestamp =>
+      this.stepPlayback(nextTimestamp),
+    )
+  }
 
-    if (!this.shadow.querySelector('#fan-keyframes')) {
-      const style = document.createElement('style')
-      style.id = 'fan-keyframes'
-      style.textContent = `
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `
-      this.shadow.appendChild(style)
+  private advanceFans(deltaMs: number, speeds: TimelineEntry) {
+    const deltaSeconds = deltaMs / 1000
+    const speedsPerFan = [speeds.fan1, speeds.fan2]
+
+    speedsPerFan.forEach((speedLevel, fanIndex) => {
+      const rotationsPerSecond = speedLevel / 10
+      this.fanAngles[fanIndex] += rotationsPerSecond * 360 * deltaSeconds
+    })
+
+    this.applyFanTransforms()
+  }
+
+  private applyFanTransforms() {
+    const fan1 = this.shadow.querySelector('#fan-1') as HTMLElement | null
+    const fan2 = this.shadow.querySelector('#fan-2') as HTMLElement | null
+
+    if (fan1) fan1.style.transform = `rotate(${this.fanAngles[0]}deg)`
+    if (fan2) fan2.style.transform = `rotate(${this.fanAngles[1]}deg)`
+  }
+
+  private getSpeedsAtTime(timeMs: number): TimelineEntry {
+    if (this.timeline.length === 0) {
+      return {fan1: 0, fan2: 0}
+    }
+
+    const secondsElapsed = Math.max(0, timeMs / 1000)
+    const currentIndex = Math.floor(secondsElapsed)
+    const safeCurrentIndex = Math.min(currentIndex, this.timeline.length - 1)
+    const current = this.timeline[safeCurrentIndex]
+
+    if (safeCurrentIndex >= this.timeline.length - 1) {
+      return {...current}
+    }
+
+    const next = this.timeline[safeCurrentIndex + 1]
+    const progress = secondsElapsed - safeCurrentIndex
+
+    return {
+      fan1: this.interpolate(current.fan1, next.fan1, progress),
+      fan2: this.interpolate(current.fan2, next.fan2, progress),
     }
   }
 
-  private addSeconds() {
-    this.timeSeconds++
-    this.updateTimeDisplay()
+  private interpolate(start: number, end: number, progress: number) {
+    const nextValue = start + (end - start) * progress
+    return Number(nextValue.toFixed(2))
   }
 
-  private resetTime() {
-    this.timeSeconds = 1
-    this.updateTimeDisplay()
+  private finishPlayback() {
+    this.cancelPlayback()
+    this.isPlaying = false
+    this.updatePlaybackButtons()
   }
 
-  private updateTimeDisplay() {
-    const timeDisplay = this.shadow.querySelector('#time-display')
+  private stopPlayback() {
+    this.cancelPlayback()
+    this.isPlaying = false
+    this.resetFans()
+    this.updatePlaybackButtons()
+  }
+
+  private resetFans() {
+    this.playbackTimeMs = 0
+    this.fanAngles = [0, 0]
+    this.applyFanTransforms()
+    this.updateReadout(0, this.getSpeedsAtTime(0))
+    this.updatePlaybackButtons()
+  }
+
+  private cancelPlayback() {
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId)
+      this.rafId = null
+    }
+  }
+
+  private updatePlaybackButtons() {
+    const playBtn = this.shadow.querySelector('#play-btn') as HTMLButtonElement | null
+    const stopBtn = this.shadow.querySelector('#stop-btn') as HTMLButtonElement | null
+
+    if (playBtn) playBtn.disabled = this.isPlaying
+    if (stopBtn) stopBtn.disabled = !this.isPlaying
+  }
+
+  private updateReadout(timeMs: number, speeds: TimelineEntry) {
     const currentTime = this.shadow.querySelector('#current-time')
+    const fan1SpeedNow = this.shadow.querySelector('#fan1-speed-now')
+    const fan2SpeedNow = this.shadow.querySelector('#fan2-speed-now')
+    const fan1Readout = this.shadow.querySelector('#fan-1-readout')
+    const fan2Readout = this.shadow.querySelector('#fan-2-readout')
 
-    if (timeDisplay) timeDisplay.textContent = `${this.timeSeconds}s`
-    if (currentTime) currentTime.textContent = this.timeSeconds.toString()
+    if (currentTime) currentTime.textContent = `${(timeMs / 1000).toFixed(1)}s`
+    if (fan1SpeedNow) fan1SpeedNow.textContent = this.formatSpeed(speeds.fan1)
+    if (fan2SpeedNow) fan2SpeedNow.textContent = this.formatSpeed(speeds.fan2)
+    if (fan1Readout) {
+      fan1Readout.textContent = `Current speed: ${this.formatSpeed(speeds.fan1)}`
+    }
+    if (fan2Readout) {
+      fan2Readout.textContent = `Current speed: ${this.formatSpeed(speeds.fan2)}`
+    }
+  }
+
+  private formatSpeed(speed: number) {
+    return Number(speed.toFixed(2)).toString()
   }
 
   private askMina() {
-    const minaInput = this.shadow.querySelector(
-      '#mina-input',
-    ) as HTMLInputElement
-    const minaResponse = this.shadow.querySelector(
-      '#mina-response',
-    ) as HTMLElement
+    const minaInput = this.shadow.querySelector('#mina-input') as HTMLInputElement
+    const minaResponse = this.shadow.querySelector('#mina-response') as HTMLElement
     const question = minaInput.value.trim()
 
     if (!question) return
@@ -452,26 +793,26 @@ class Sro4FanController extends HTMLElement {
     const lowerQ = question.toLowerCase()
 
     if (lowerQ.includes('sro')) {
-      return "I know all the SRO games! SRO4 is a fan controller that can spin at speeds 0-100. At 100 speed, it spins so fast you can't see the blades - just a circle! Each SRO game teaches different skills."
+      return 'I know the SRO games. SRO4 is the two-fan controller now, and each second can have its own speed for both fans.'
     }
 
     if (lowerQ.includes('fan') || lowerQ.includes('speed')) {
-      return 'The fan speed works like this: 0 means no rotation, 100 means maximum speed where blades become invisible! You can add seconds to control timing. Remember to keep BitBibbies on for clean operation!'
+      return 'The fan speed has no maximum now. Zero means stopped, 5 means one rotation every 2 seconds, and 10 means one rotation every second. Both fans have 5 blades, and only the blades spin.'
     }
 
     if (lowerQ.includes('bitbibbies')) {
-      return 'BitBibbies are essential! They combine games and make them more sensitive to code. Without them, you get glitches and bad words. Always keep BitBibbies active for the best experience!'
+      return 'BitBibbies still help this game stay cleaner and smoother. Turning them on is the best way to play.'
     }
 
     if (lowerQ.includes('dangerous') || lowerQ.includes('sro10')) {
-      return "⚠️ SRO10 is very dangerous! It can teleport you to dangerous places. I don't recommend using it. Stick with safer SRO games like this fan controller!"
+      return 'SRO10 is still the dangerous one. This fan game is much safer and easier to watch.'
     }
 
     if (lowerQ.includes('app') || lowerQ.includes('know')) {
-      return "I know everything! All apps, all games, all code. I'm so clever and I can help you with any question about the SRO collection or anything else you want to know!"
+      return "I know all the apps and I'm still here to help. Try asking about two fans, timeline speeds, or the smooth speed changes."
     }
 
-    return `You asked about "${question}". I know everything and I'm here to help! The fan controller is fun - try different speeds and remember to use BitBibbies. What else would you like to know?`
+    return `You asked about "${question}". The fan game has two fans now, so you can animate both one second at a time.`
   }
 }
 

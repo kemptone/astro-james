@@ -1,9 +1,13 @@
 import {
   bestBehaviorLetter,
   getBehaviorLetterStoryTone,
-  getHowGoodStoryTone,
   normalizeBehaviorLetter,
 } from '@/core/girls/behaviorLetters'
+import {
+  extendedBehaviorNumberNeutral,
+  getExtendedBehaviorNumberTone,
+  normalizeExtendedBehaviorNumber,
+} from '@/core/girls/behaviorNumbers'
 
 type StoryPreviewValues = {
   personName?: string
@@ -19,21 +23,21 @@ export function buildStoryPreviewLines(values: StoryPreviewValues) {
   const behaviorLetter = normalizeBehaviorLetter(
     values.behaviorScore || bestBehaviorLetter
   )
-  const howGoodLetter = normalizeBehaviorLetter(
-    values.howGood || bestBehaviorLetter
+  const howGoodNumber = normalizeExtendedBehaviorNumber(
+    values.howGood || String(extendedBehaviorNumberNeutral)
   )
   const whatHappened =
     values.whatHappened || 'the teacher noticed right away'
   const behaviorTone = getBehaviorLetterStoryTone(behaviorLetter)
-  const howGoodTone = getHowGoodStoryTone(howGoodLetter)
+  const howGoodTone = getExtendedBehaviorNumberTone(howGoodNumber)
 
   return [
-    `${personName} has behavior letter day at school and chose ${choice} ${howGoodTone.sentenceOne}.`,
-    `${behaviorLetter} is ${behaviorTone.sentenceTwo}. ${howGoodLetter} is ${howGoodTone.sentenceTwo}.`,
-    `${personName} ${behaviorTone.sentenceThree}.`,
+    `${personName} has extended behavior number day at school and chose ${choice} ${howGoodTone.sentenceOne}.`,
+    `${behaviorLetter} is ${behaviorTone.sentenceTwo}.`,
+    `${personName} ${behaviorTone.sentenceThree} ${howGoodTone.sentenceThree}.`,
     `When ${whatHappened}, the teacher said that choice caused ${personName} to have a school behavior letter of ${behaviorLetter}.`,
-    `Other students could see the moment felt ${behaviorTone.sentenceFive}.`,
-    `${personName} ended the day understanding the moment went ${howGoodTone.sentenceSix}, and the parents ${behaviorTone.parents}.`,
+    `Other students could see the moment felt ${howGoodTone.sentenceFive}.`,
+    `The parents ${behaviorTone.parents} about the behavior score of ${behaviorLetter}.`,
   ]
 }
 
