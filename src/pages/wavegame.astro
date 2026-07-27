@@ -1,0 +1,822 @@
+---
+import Menu from '@/components/menu.astro'
+
+const title = 'Blue Wave Game'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Draw a board of blue waves from comma-separated tide numbers."
+    />
+    <title>{title}</title>
+  </head>
+  <body>
+    <Menu />
+
+    <main>
+      <header class="hero">
+        <p class="eyebrow">0 is full · 100 is empty</p>
+        <h1>Blue Wave Game</h1>
+        <p class="intro">
+          Make a comma sentence of tide numbers. Small numbers make high waves,
+          and big numbers make low waves.
+        </p>
+      </header>
+
+      <section class="maker" aria-labelledby="maker-title">
+        <div class="instructions">
+          <div>
+            <p class="step">Step 1</p>
+            <h2 id="maker-title">Write your wave points</h2>
+          </div>
+          <div class="scale-key" aria-label="Wave number key">
+            <span><b>0</b> top stroke</span>
+            <span><b>1</b> top inside</span>
+            <span><b>100</b> bottom</span>
+          </div>
+        </div>
+
+        <label for="waveInput">Comma sentence</label>
+        <textarea
+          id="waveInput"
+          rows="3"
+          spellcheck="false"
+          inputmode="decimal"
+          aria-describedby="inputHelp inputMessage"
+        >8, 18, 6, 24, 10, 30, 12, 20, 4, 16, 9, 26</textarea>
+        <div class="under-input">
+          <p id="inputHelp">Use numbers from 0 to 100, separated by commas.</p>
+          <p id="pointCount" aria-live="polite">12 points ready</p>
+        </div>
+        <p id="inputMessage" class="message" aria-live="assertive"></p>
+
+        <div class="actions">
+          <button id="makeButton" type="button">Show the whole wave board</button>
+          <button id="highButton" class="secondary" type="button">Make high waves</button>
+          <button id="clearButton" class="plain" type="button">Clear</button>
+        </div>
+      </section>
+
+      <section id="boardSection" class="board-section" aria-labelledby="board-title">
+        <div class="board-heading">
+          <div>
+            <p class="step">Step 2</p>
+            <h2 id="board-title">Your whole wave board</h2>
+          </div>
+          <div class="reading" id="pointReading" aria-live="polite">
+            Select a point to read it
+          </div>
+        </div>
+
+        <div class="chart-shell">
+          <div class="axis-title" aria-hidden="true">FULLNESS</div>
+          <div class="chart-scroller" id="chartScroller">
+            <svg
+              id="waveChart"
+              role="img"
+              aria-labelledby="chartTitle chartDescription"
+              preserveAspectRatio="none"
+            >
+              <title id="chartTitle">Blue wave board</title>
+              <desc id="chartDescription">
+                A blue wave made from the comma-separated numbers. Zero is at
+                the top and one hundred is at the bottom.
+              </desc>
+              <g id="measureLines"></g>
+              <path id="waveArea" class="wave-area"></path>
+              <path id="waveLine" class="wave-line"></path>
+              <g id="wavePoints"></g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="board-legend">
+          <span><i class="top-dot"></i> Higher wave = smaller input</span>
+          <span><i class="bottom-dot"></i> Lower wave = larger input</span>
+          <span id="boardSummary">12 blue points</span>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const SVG_NS = 'http://www.w3.org/2000/svg'
+      const chartHeight = 560
+      const chartPadding = {top: 24, right: 32, bottom: 44, left: 72}
+
+      const input = document.getElementById('waveInput') as HTMLTextAreaElement
+      const makeButton = document.getElementById('makeButton') as HTMLButtonElement
+      const highButton = document.getElementById('highButton') as HTMLButtonElement
+      const clearButton = document.getElementById('clearButton') as HTMLButtonElement
+      const boardSection = document.getElementById('boardSection') as HTMLElement
+      const chartScroller = document.getElementById('chartScroller') as HTMLElement
+      const chart = document.getElementById('waveChart') as SVGSVGElement
+      const measureLines = document.getElementById('measureLines') as SVGGElement
+      const waveArea = document.getElementById('waveArea') as SVGPathElement
+      const waveLine = document.getElementById('waveLine') as SVGPathElement
+      const wavePoints = document.getElementById('wavePoints') as SVGGElement
+      const inputMessage = document.getElementById('inputMessage') as HTMLElement
+      const pointCount = document.getElementById('pointCount') as HTMLElement
+      const pointReading = document.getElementById('pointReading') as HTMLElement
+      const boardSummary = document.getElementById('boardSummary') as HTMLElement
+
+      type ParsedWaves = {values: number[]; error: string}
+
+      function parseWaves(raw: string): ParsedWaves {
+        const pieces = raw
+          .split(',')
+          .map(piece => piece.trim())
+          .filter(Boolean)
+
+        if (!pieces.length) {
+          return {values: [], error: 'Write at least two numbers to make a wave.'}
+        }
+
+        const invalid = pieces.find(piece => !Number.isFinite(Number(piece)))
+        if (invalid !== undefined) {
+          return {values: [], error: `“${invalid}” is not a number. Use commas between every point.`}
+        }
+
+        const values = pieces.map(Number)
+        const outside = values.find(value => value < 0 || value > 100)
+        if (outside !== undefined) {
+          return {values: [], error: `${outside} is outside the board. Use a number from 0 to 100.`}
+        }
+
+        if (values.length < 2) {
+          return {values: [], error: 'Add one more number so the points can make a wave.'}
+        }
+
+        return {values, error: ''}
+      }
+
+      function updateReadyCount() {
+        const parsed = parseWaves(input.value)
+        const count = input.value
+          .split(',')
+          .map(piece => piece.trim())
+          .filter(Boolean).length
+        pointCount.textContent = `${count} ${count === 1 ? 'point' : 'points'} ready`
+        input.setAttribute('aria-invalid', parsed.error && count > 0 ? 'true' : 'false')
+      }
+
+      function createSvgElement<K extends keyof SVGElementTagNameMap>(
+        name: K,
+        attributes: Record<string, string | number> = {},
+      ): SVGElementTagNameMap[K] {
+        const element = document.createElementNS(SVG_NS, name)
+        Object.entries(attributes).forEach(([key, value]) =>
+          element.setAttribute(key, String(value)),
+        )
+        return element
+      }
+
+      function smoothPath(points: Array<{x: number; y: number}>): string {
+        if (points.length === 2) {
+          return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`
+        }
+
+        let path = `M ${points[0].x} ${points[0].y}`
+        for (let index = 0; index < points.length - 1; index += 1) {
+          const previous = points[index - 1] || points[index]
+          const current = points[index]
+          const next = points[index + 1]
+          const afterNext = points[index + 2] || next
+          const firstControlX = current.x + (next.x - previous.x) / 6
+          const firstControlY = current.y + (next.y - previous.y) / 6
+          const secondControlX = next.x - (afterNext.x - current.x) / 6
+          const secondControlY = next.y - (afterNext.y - current.y) / 6
+          path += ` C ${firstControlX} ${firstControlY}, ${secondControlX} ${secondControlY}, ${next.x} ${next.y}`
+        }
+        return path
+      }
+
+      function drawBoard(values: number[]) {
+        const chartWidth = Math.max(760, chartScroller.clientWidth, values.length * 52 + 104)
+        const plotWidth = chartWidth - chartPadding.left - chartPadding.right
+        const plotHeight = chartHeight - chartPadding.top - chartPadding.bottom
+        const bottom = chartPadding.top + plotHeight
+
+        chart.setAttribute('viewBox', `0 0 ${chartWidth} ${chartHeight}`)
+        chart.style.width = `${chartWidth}px`
+        chart.style.height = `${chartHeight}px`
+        chartScroller.scrollLeft = 0
+        measureLines.replaceChildren()
+        wavePoints.replaceChildren()
+
+        for (let emptiness = 0; emptiness <= 100; emptiness += 10) {
+          const y = chartPadding.top + (emptiness / 100) * plotHeight
+          const fullness = 100 - emptiness
+          const line = createSvgElement('line', {
+            x1: chartPadding.left,
+            y1: y,
+            x2: chartWidth - chartPadding.right,
+            y2: y,
+            class: emptiness === 0 || emptiness === 100 ? 'edge-line' : 'measure-line',
+          })
+          measureLines.append(line)
+
+          if (emptiness > 0 && emptiness < 100) {
+            const label = createSvgElement('text', {
+              x: chartPadding.left - 18,
+              y: y + 5,
+              class: 'measure-label',
+              'text-anchor': 'end',
+            })
+            label.textContent = String(fullness)
+            measureLines.append(label)
+          }
+        }
+
+        const topLabel = createSvgElement('text', {
+          x: chartPadding.left - 18,
+          y: chartPadding.top + 5,
+          class: 'edge-label',
+          'text-anchor': 'end',
+        })
+        topLabel.textContent = 'FULL'
+        measureLines.append(topLabel)
+
+        const bottomLabel = createSvgElement('text', {
+          x: chartPadding.left - 18,
+          y: bottom + 5,
+          class: 'edge-label',
+          'text-anchor': 'end',
+        })
+        bottomLabel.textContent = 'EMPTY'
+        measureLines.append(bottomLabel)
+
+        const points = values.map((value, index) => ({
+          x:
+            values.length === 1
+              ? chartPadding.left + plotWidth / 2
+              : chartPadding.left + (index / (values.length - 1)) * plotWidth,
+          y: chartPadding.top + (value / 100) * plotHeight,
+        }))
+        const linePath = smoothPath(points)
+        const areaPath = `${linePath} L ${points.at(-1)?.x} ${bottom} L ${points[0].x} ${bottom} Z`
+        waveLine.setAttribute('d', linePath)
+        waveArea.setAttribute('d', areaPath)
+
+        points.forEach((point, index) => {
+          const value = values[index]
+          const fullness = 100 - value
+          const group = createSvgElement('g', {
+            class: 'wave-point',
+            role: 'button',
+            tabindex: '0',
+            'aria-label': `Point ${index + 1}: input ${value}, fullness ${fullness}`,
+          })
+          const dot = createSvgElement('circle', {cx: point.x, cy: point.y, r: 7})
+          const hitArea = createSvgElement('circle', {
+            cx: point.x,
+            cy: point.y,
+            r: 18,
+            class: 'point-hit-area',
+          })
+          const indexLabel = createSvgElement('text', {
+            x: point.x,
+            y: bottom + 27,
+            class: 'point-index',
+            'text-anchor': 'middle',
+          })
+          indexLabel.textContent = String(index + 1)
+          group.append(hitArea, dot, indexLabel)
+
+          const readPoint = () => {
+            wavePoints.querySelectorAll('.is-selected').forEach(selected =>
+              selected.classList.remove('is-selected'),
+            )
+            group.classList.add('is-selected')
+            pointReading.textContent = `Point ${index + 1}: input ${value} · ${fullness}% full`
+          }
+          group.addEventListener('click', readPoint)
+          group.addEventListener('focus', readPoint)
+          group.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              readPoint()
+            }
+          })
+          wavePoints.append(group)
+        })
+
+        boardSummary.textContent = `${values.length} blue ${values.length === 1 ? 'point' : 'points'}`
+        pointReading.textContent = 'Select a point to read it'
+        boardSection.classList.add('is-visible')
+        requestAnimationFrame(() => boardSection.scrollIntoView({behavior: 'smooth', block: 'start'}))
+      }
+
+      function submitWaves() {
+        const parsed = parseWaves(input.value)
+        inputMessage.textContent = parsed.error
+        input.setAttribute('aria-invalid', parsed.error ? 'true' : 'false')
+        if (parsed.error) {
+          input.focus()
+          return
+        }
+        drawBoard(parsed.values)
+      }
+
+      function makeHighWaves() {
+        const values = Array.from({length: 14}, (_, index) => {
+          const crest = index % 2 === 0
+          return crest ? Math.floor(Math.random() * 11) : 12 + Math.floor(Math.random() * 23)
+        })
+        input.value = values.join(', ')
+        inputMessage.textContent = ''
+        updateReadyCount()
+        drawBoard(values)
+      }
+
+      input.addEventListener('input', () => {
+        inputMessage.textContent = ''
+        updateReadyCount()
+      })
+      input.addEventListener('keydown', event => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') submitWaves()
+      })
+      makeButton.addEventListener('click', submitWaves)
+      highButton.addEventListener('click', makeHighWaves)
+      clearButton.addEventListener('click', () => {
+        input.value = ''
+        inputMessage.textContent = ''
+        boardSection.classList.remove('is-visible')
+        updateReadyCount()
+        input.focus()
+      })
+      window.addEventListener('resize', () => {
+        if (!boardSection.classList.contains('is-visible')) return
+        const parsed = parseWaves(input.value)
+        if (!parsed.error) drawBoard(parsed.values)
+      })
+
+      updateReadyCount()
+    </script>
+
+    <style>
+      :global(*) {
+        box-sizing: border-box;
+      }
+
+      :global(html) {
+        scroll-behavior: smooth;
+      }
+
+      :global(body) {
+        min-height: 100vh;
+        margin: 0;
+        color: #080821;
+        background:
+          radial-gradient(circle at 12% 8%, rgba(0, 0, 255, 0.12), transparent 28rem),
+          linear-gradient(180deg, #ffffff 0%, #f4f4ff 100%);
+        font-family:
+          Inter, ui-rounded, "SF Pro Rounded", system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      main {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 72px 0 100px;
+      }
+
+      .hero {
+        max-width: 780px;
+        margin-bottom: 36px;
+      }
+
+      .eyebrow,
+      .step {
+        margin: 0 0 8px;
+        color: #0000c7;
+        font-size: 0.78rem;
+        font-weight: 850;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 14px;
+        font-size: clamp(3rem, 8vw, 6.6rem);
+        line-height: 0.9;
+        letter-spacing: -0.07em;
+      }
+
+      h1::after {
+        display: inline-block;
+        width: 0.22em;
+        height: 0.22em;
+        margin-left: 0.11em;
+        border-radius: 50%;
+        background: #0000ff;
+        content: '';
+        vertical-align: 0.08em;
+      }
+
+      h2 {
+        margin-bottom: 0;
+        font-size: clamp(1.45rem, 3vw, 2.15rem);
+        letter-spacing: -0.035em;
+      }
+
+      .intro {
+        max-width: 640px;
+        margin-bottom: 0;
+        color: #3f3f5f;
+        font-size: clamp(1.03rem, 2vw, 1.25rem);
+        line-height: 1.6;
+      }
+
+      .maker,
+      .board-section {
+        border: 1px solid #c9c9f4;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: 0 24px 70px rgba(0, 0, 80, 0.1);
+      }
+
+      .maker {
+        padding: clamp(22px, 4vw, 42px);
+      }
+
+      .instructions,
+      .board-heading,
+      .under-input,
+      .board-legend {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .instructions {
+        align-items: end;
+        margin-bottom: 28px;
+      }
+
+      .scale-key {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .scale-key span {
+        padding: 7px 11px;
+        border: 1px solid #d7d7ee;
+        border-radius: 999px;
+        color: #4a4a67;
+        background: #fafaff;
+        font-size: 0.84rem;
+      }
+
+      .scale-key b {
+        color: #0000d4;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 9px;
+        font-size: 0.92rem;
+        font-weight: 800;
+      }
+
+      textarea {
+        display: block;
+        width: 100%;
+        resize: vertical;
+        border: 2px solid #a7a7df;
+        border-radius: 16px;
+        outline: none;
+        background: #ffffff;
+        padding: 17px 18px;
+        color: #080821;
+        font: 700 clamp(1.05rem, 2vw, 1.3rem)/1.5 ui-monospace, "SFMono-Regular", Consolas,
+          monospace;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+      }
+
+      textarea:focus {
+        border-color: #0000ff;
+        box-shadow: 0 0 0 5px rgba(0, 0, 255, 0.1);
+      }
+
+      textarea[aria-invalid='true'] {
+        border-color: #000088;
+        box-shadow: 0 0 0 5px rgba(0, 0, 255, 0.08);
+      }
+
+      .under-input {
+        margin-top: 9px;
+        color: #62627a;
+        font-size: 0.84rem;
+      }
+
+      .under-input p,
+      .message {
+        margin-bottom: 0;
+      }
+
+      #pointCount {
+        flex: none;
+        color: #0000b5;
+        font-weight: 800;
+      }
+
+      .message {
+        min-height: 1.5em;
+        margin-top: 8px;
+        color: #000077;
+        font-weight: 750;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      button {
+        min-height: 49px;
+        border: 2px solid #0000ff;
+        border-radius: 999px;
+        background: #0000ff;
+        padding: 0 21px;
+        color: white;
+        font: inherit;
+        font-weight: 850;
+        cursor: pointer;
+        transition: transform 140ms ease, box-shadow 140ms ease;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 9px 22px rgba(0, 0, 255, 0.2);
+      }
+
+      button:focus-visible {
+        outline: 3px solid #000088;
+        outline-offset: 3px;
+      }
+
+      button.secondary {
+        color: #0000dd;
+        background: white;
+      }
+
+      button.plain {
+        border-color: transparent;
+        color: #46465f;
+        background: transparent;
+      }
+
+      .board-section {
+        display: none;
+        margin-top: 28px;
+        padding: clamp(18px, 3vw, 32px);
+        scroll-margin-top: 22px;
+      }
+
+      .board-section.is-visible {
+        display: block;
+        animation: board-in 480ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+
+      .board-heading {
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .reading {
+        max-width: 360px;
+        border: 1px solid #cfcff1;
+        border-radius: 13px;
+        background: #f7f7ff;
+        padding: 11px 14px;
+        color: #0000a7;
+        font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-align: right;
+      }
+
+      .chart-shell {
+        position: relative;
+        overflow: hidden;
+        border: 2px solid #080821;
+        border-radius: 19px;
+        background: #ffffff;
+      }
+
+      .axis-title {
+        position: absolute;
+        z-index: 2;
+        top: 50%;
+        left: 8px;
+        color: #0000a8;
+        font-size: 0.66rem;
+        font-weight: 900;
+        letter-spacing: 0.11em;
+        pointer-events: none;
+        transform: rotate(-90deg) translateX(-50%);
+        transform-origin: left top;
+      }
+
+      .chart-scroller {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-inline: contain;
+      }
+
+      #waveChart {
+        display: block;
+        min-width: 100%;
+        height: 560px;
+      }
+
+      :global(.measure-line) {
+        stroke: #dadaef;
+        stroke-width: 1;
+        stroke-dasharray: 8 9;
+        vector-effect: non-scaling-stroke;
+      }
+
+      :global(.edge-line) {
+        stroke: #080821;
+        stroke-width: 2;
+        vector-effect: non-scaling-stroke;
+      }
+
+      :global(.measure-label),
+      :global(.edge-label),
+      :global(.point-index) {
+        fill: #51516a;
+        font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+        font-size: 13px;
+        font-weight: 750;
+      }
+
+      :global(.edge-label) {
+        fill: #0000a5;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+      }
+
+      :global(.point-index) {
+        fill: #6b6b82;
+        font-size: 11px;
+      }
+
+      :global(.wave-area) {
+        fill: #0000ff;
+        fill-opacity: 0.13;
+        pointer-events: none;
+      }
+
+      :global(.wave-line) {
+        fill: none;
+        stroke: #0000ff;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 5;
+        vector-effect: non-scaling-stroke;
+        pointer-events: none;
+        animation: draw-wave 1.1s ease both;
+      }
+
+      :global(.wave-point circle:not(.point-hit-area)) {
+        fill: #0000ff;
+        stroke: #ffffff;
+        stroke-width: 4;
+        vector-effect: non-scaling-stroke;
+        transition: r 140ms ease, fill 140ms ease;
+      }
+
+      :global(.point-hit-area) {
+        fill: transparent;
+        cursor: pointer;
+      }
+
+      :global(.wave-point:hover circle:not(.point-hit-area)),
+      :global(.wave-point:focus circle:not(.point-hit-area)),
+      :global(.wave-point.is-selected circle:not(.point-hit-area)) {
+        r: 11;
+        fill: #0000a8;
+      }
+
+      :global(.wave-point:focus) {
+        outline: none;
+      }
+
+      .board-legend {
+        flex-wrap: wrap;
+        margin-top: 15px;
+        color: #55556c;
+        font-size: 0.82rem;
+      }
+
+      .board-legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .board-legend i {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #0000ff;
+      }
+
+      .bottom-dot {
+        opacity: 0.35;
+      }
+
+      #boardSummary {
+        margin-left: auto;
+        color: #0000b0;
+        font-weight: 850;
+      }
+
+      @keyframes board-in {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+      }
+
+      @keyframes draw-wave {
+        from {
+          opacity: 0;
+          stroke-dasharray: 1 14;
+        }
+      }
+
+      @media (max-width: 700px) {
+        main {
+          width: min(100% - 20px, 1180px);
+          padding-top: 54px;
+        }
+
+        .instructions,
+        .board-heading {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .scale-key {
+          justify-content: flex-start;
+        }
+
+        .reading {
+          max-width: none;
+          text-align: left;
+        }
+
+        .under-input {
+          gap: 8px;
+        }
+
+        #waveChart {
+          height: 500px;
+        }
+
+        .board-legend {
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        #boardSummary {
+          margin-left: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        :global(html) {
+          scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </body>
+</html>

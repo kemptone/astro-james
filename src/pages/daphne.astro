@@ -73,6 +73,8 @@ const russianByFrequency = [
   'Ё',
 ]
 
+const russianBackwards = [...russianAlphabet].reverse()
+
 const splitIntoRows = <T,>(items: T[], size: number) =>
   Array.from({length: Math.ceil(items.length / size)}, (_, index) =>
     items.slice(index * size, index * size + size)
@@ -92,6 +94,14 @@ const encodeExample = (secret: string, letters: string[]) =>
     })
     .join(' ')
 
+const encodeBackwardsExample = (secret: string) =>
+  Array.from(secret)
+    .map(letter => {
+      if (letter === '/') return '/'
+      return russianAlphabet[russianBackwards.indexOf(letter)] ?? letter
+    })
+    .join(' ')
+
 const exampleSecret = 'ПРИВЕТ/МИР'
 const defaultModeKey = 'alpha'
 const gameModes = {
@@ -100,6 +110,14 @@ const gameModes = {
     description: '1 is А and 33 is Я in this version.',
     mapLabel: 'Alphabet Number Map',
     mapNote: 'This version follows the normal Russian alphabet from start to finish.',
+    inputKind: 'numbers',
+    inputLabel: 'Secret number code',
+    inputMode: 'numeric',
+    setupInstruction:
+      'Use numbers <strong>1 to 33</strong>. Use <strong>/</strong> for spaces.',
+    mapColumns: 10,
+    guessColumns: 10,
+    leadingShortRows: false,
     letters: russianAlphabet,
   },
   common: {
@@ -107,7 +125,31 @@ const gameModes = {
     description: '1 is the most usual Russian letter and 33 is the least usual in this version.',
     mapLabel: 'Common-to-Rare Number Map',
     mapNote: 'This version ranks the letters from most usual to least usual.',
+    inputKind: 'numbers',
+    inputLabel: 'Secret number code',
+    inputMode: 'numeric',
+    setupInstruction:
+      'Use numbers <strong>1 to 33</strong>. Use <strong>/</strong> for spaces.',
+    mapColumns: 10,
+    guessColumns: 10,
+    leadingShortRows: false,
     letters: russianByFrequency,
+  },
+  backwards: {
+    buttonLabel: 'Backwards letters',
+    description: 'Use Russian letters as the code. А becomes Я, Б becomes Ю, and the order keeps going backwards.',
+    mapLabel: 'Backwards Russian Letter Map',
+    mapNote:
+      'This version uses letters, not numbers. Tap a Russian code letter to make its backwards match.',
+    inputKind: 'letters',
+    inputLabel: 'Secret Russian letter code',
+    inputMode: 'text',
+    setupInstruction:
+      'Use Russian letters for the code. Use <strong>/</strong> for spaces.',
+    mapColumns: 10,
+    guessColumns: 10,
+    leadingShortRows: true,
+    letters: russianBackwards,
   },
 }
 
@@ -116,25 +158,27 @@ const modeConfigs = Object.fromEntries(
     key,
     {
       ...mode,
-      exampleCode: encodeExample(exampleSecret, mode.letters),
+      exampleCode:
+        mode.inputKind === 'letters'
+          ? encodeBackwardsExample(exampleSecret)
+          : encodeExample(exampleSecret, mode.letters),
       exampleWord: exampleSecret,
     },
   ])
 )
 
-const letterRows = splitIntoRows(russianAlphabet, 10)
 const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
 ---
 
 <Layout title="Daphne">
   <main class="daphne-page">
     <section class="hero">
-      <p class="eyebrow">Two Player • Two Versions</p>
+      <p class="eyebrow">Two Player • Three Versions</p>
       <h1>Russian Code Hangman</h1>
       <p class="lede">
-        Player 1 writes the secret as <strong>numbers 1 to 33</strong> for the
-        <strong>33-letter Russian alphabet</strong>. Keep spaces between the
-        numbers. Use <strong>/</strong> when you want a space between words.
+        Player 1 writes the secret as a hidden code for the
+        <strong>33-letter Russian alphabet</strong>. Versions 1 and 2 use
+        numbers. Version 3 uses backwards Russian letters instead.
       </p>
 
       <div class="mode-toggle" role="tablist" aria-label="Russian code versions">
@@ -155,6 +199,15 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
           aria-selected="false"
         >
           {gameModes.common.buttonLabel}
+        </button>
+        <button
+          type="button"
+          class="mode-pill"
+          data-mode-button
+          data-mode="backwards"
+          aria-selected="false"
+        >
+          {gameModes.backwards.buttonLabel}
         </button>
       </div>
 
@@ -188,7 +241,7 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
       </div>
 
       <label class="field">
-        <span>Secret number code</span>
+        <span id="secret-input-label">Secret number code</span>
         <textarea
           id="secret-input"
           rows="4"
@@ -198,6 +251,8 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
           placeholder={`For example: ${modeConfigs[defaultModeKey].exampleCode}`}
         ></textarea>
       </label>
+
+      <div id="secret-letter-pad" class="setup-letter-pad rows-wrap" hidden></div>
 
       <div class="button-row">
         <button id="start-round" type="button" class="primary-button">
@@ -217,9 +272,11 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
       <div class="panel-head">
         <div>
           <p class="panel-kicker">Crack The Code</p>
-          <h2>Blanks and number map</h2>
+          <h2 id="code-panel-title">Blanks and number map</h2>
         </div>
-        <p class="panel-note">The slash makes a word space. The secret number code stays hidden.</p>
+        <p id="code-panel-note" class="panel-note">
+          The slash makes a word space. The secret number code stays hidden.
+        </p>
       </div>
 
       <div class="code-box">
@@ -279,27 +336,7 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
         <a class="unlock-link" href="/talkers2">Go to Talkers Two</a>
       </div>
 
-      <div class="rows-wrap" aria-label="Russian letters to guess">
-        {
-          letterRows.map(row => (
-            <div class="letter-row">
-              {
-                row.map(letter => (
-                  <button
-                    type="button"
-                    class="letter-button"
-                    data-letter-button
-                    data-letter={letter}
-                    disabled
-                  >
-                    {letter}
-                  </button>
-                ))
-              }
-            </div>
-          ))
-        }
-      </div>
+      <div id="letter-board" class="rows-wrap" aria-label="Russian letters to guess"></div>
 
       <p id="play-feedback" class="feedback" aria-live="polite">
         Start a round to let Player 2 begin guessing.
@@ -309,10 +346,14 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
 
   <script define:vars={{defaultModeKey, modeConfigs, russianAlphabet}}>
     const secretInput = document.querySelector('#secret-input')
+    const secretInputLabel = document.querySelector('#secret-input-label')
+    const secretLetterPad = document.querySelector('#secret-letter-pad')
     const startRoundButton = document.querySelector('#start-round')
     const newRoundButton = document.querySelector('#new-round')
     const setupFeedback = document.querySelector('#setup-feedback')
     const codePanel = document.querySelector('.code-panel')
+    const codePanelTitle = document.querySelector('#code-panel-title')
+    const codePanelNote = document.querySelector('#code-panel-note')
     const blankOutput = document.querySelector('#blank-output')
     const playFeedback = document.querySelector('#play-feedback')
     const starCount = document.querySelector('#star-count')
@@ -323,8 +364,8 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
     const mapLabel = document.querySelector('#map-label')
     const mapNote = document.querySelector('#map-note')
     const numberMap = document.querySelector('#number-map')
+    const letterBoard = document.querySelector('#letter-board')
     const modeButtons = document.querySelectorAll('[data-mode-button]')
-    const letterButtons = document.querySelectorAll('[data-letter-button]')
     const russianLetterSet = new Set(russianAlphabet)
 
     const state = {
@@ -354,31 +395,166 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
         items.slice(index * size, index * size + size)
       )
 
+    const splitLeadingShortRows = (items, size) => {
+      const remainder = items.length % size
+
+      if (!remainder) return splitRows(items, size)
+
+      return [
+        items.slice(0, remainder),
+        ...splitRows(items.slice(remainder), size),
+      ]
+    }
+
+    const getModeRows = (items, columns, leadingShortRows = getModeConfig().leadingShortRows) => {
+      return leadingShortRows
+        ? splitLeadingShortRows(items, columns)
+        : splitRows(items, columns)
+    }
+
+    const getLetterButtons = () =>
+      document.querySelectorAll('[data-letter-button]')
+
+    const appendSecretToken = token => {
+      if (!secretInput) return
+
+      const current = secretInput.value.trim()
+      secretInput.value = current ? `${current} ${token}` : token
+      secretInput.focus()
+    }
+
+    const removeLastSecretToken = () => {
+      if (!secretInput) return
+
+      const tokens = secretInput.value.trim().split(/\s+/).filter(Boolean)
+      tokens.pop()
+      secretInput.value = tokens.join(' ')
+      secretInput.focus()
+    }
+
+    const handleLetterGuess = letter => {
+      if (!state.active || !letter || state.guessed.has(letter)) return
+
+      state.guessed.add(letter)
+      const isCorrect = state.secret.includes(letter)
+
+      updateLetterButtons()
+      updateBlanks()
+
+      if (isCorrect) {
+        if (finishRoundIfSolved()) return
+        setPlayFeedback(`${letter} is in the secret. Keep circling the right letters.`, 'success')
+        return
+      }
+
+      setPlayFeedback(`${letter} is not in the secret.`, 'danger')
+    }
+
+    const renderLetterBoard = () => {
+      if (!letterBoard) return
+
+      const mode = getModeConfig()
+      letterBoard.innerHTML = ''
+
+      getModeRows(russianAlphabet, mode.guessColumns, false).forEach(row => {
+        const rowElement = document.createElement('div')
+        rowElement.className = 'letter-row'
+        rowElement.style.setProperty('--row-columns', String(mode.guessColumns))
+
+        row.forEach(letter => {
+          const button = document.createElement('button')
+          button.type = 'button'
+          button.className = 'letter-button'
+          button.dataset.letterButton = ''
+          button.dataset.letter = letter
+          button.disabled = true
+          button.textContent = letter
+          button.addEventListener('click', () => handleLetterGuess(letter))
+          rowElement.appendChild(button)
+        })
+
+        letterBoard.appendChild(rowElement)
+      })
+
+      updateLetterButtons()
+    }
+
+    const renderSecretLetterPad = () => {
+      if (!secretLetterPad) return
+
+      const mode = getModeConfig()
+      const usesLetters = mode.inputKind === 'letters'
+      secretLetterPad.hidden = !usesLetters
+      secretLetterPad.innerHTML = ''
+
+      if (!usesLetters) return
+
+      getModeRows(russianAlphabet, mode.mapColumns).forEach(row => {
+        const rowElement = document.createElement('div')
+        rowElement.className = 'letter-row'
+        rowElement.style.setProperty('--row-columns', String(mode.mapColumns))
+
+        row.forEach(letter => {
+          const button = document.createElement('button')
+          button.type = 'button'
+          button.className = 'letter-button code-letter-button'
+          button.textContent = letter
+          button.addEventListener('click', () => appendSecretToken(letter))
+          rowElement.appendChild(button)
+        })
+
+        secretLetterPad.appendChild(rowElement)
+      })
+
+      const controls = document.createElement('div')
+      controls.className = 'button-row setup-letter-controls'
+
+      const slashButton = document.createElement('button')
+      slashButton.type = 'button'
+      slashButton.className = 'secondary-button compact-button'
+      slashButton.textContent = '/ space'
+      slashButton.addEventListener('click', () => appendSecretToken('/'))
+
+      const deleteButton = document.createElement('button')
+      deleteButton.type = 'button'
+      deleteButton.className = 'secondary-button compact-button'
+      deleteButton.textContent = 'Backspace'
+      deleteButton.addEventListener('click', removeLastSecretToken)
+
+      controls.append(slashButton, deleteButton)
+      secretLetterPad.appendChild(controls)
+    }
+
     const renderNumberMap = () => {
       if (!numberMap) return
 
       numberMap.innerHTML = ''
+      const mode = getModeConfig()
 
-      const rows = splitRows(
-        getModeConfig().letters.map((letter, index) => ({letter, number: index + 1})),
-        10
+      const rows = getModeRows(
+        mode.letters.map((letter, index) => ({
+          letter,
+          marker: mode.inputKind === 'letters' ? russianAlphabet[index] : String(index + 1),
+        })),
+        mode.mapColumns
       )
 
       rows.forEach(row => {
         const rowElement = document.createElement('div')
         rowElement.className = 'letter-row key-row'
+        rowElement.style.setProperty('--row-columns', String(mode.mapColumns))
 
         row.forEach(item => {
           const card = document.createElement('div')
           card.className = 'key-card'
 
-          const number = document.createElement('strong')
-          number.textContent = String(item.number)
+          const marker = document.createElement('strong')
+          marker.textContent = item.marker
 
           const letter = document.createElement('span')
           letter.textContent = item.letter
 
-          card.append(number, letter)
+          card.append(marker, letter)
           rowElement.appendChild(card)
         })
 
@@ -400,16 +576,32 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
       }
 
       if (setupNote) {
-        setupNote.innerHTML =
-          `Use numbers <strong>1 to 33</strong>. Use <strong>/</strong> for spaces. ${mode.description}`
+        setupNote.innerHTML = `${mode.setupInstruction} ${mode.description}`
       }
 
       if (exampleCode) {
         exampleCode.textContent = mode.exampleCode
       }
 
+      if (secretInputLabel) {
+        secretInputLabel.textContent = mode.inputLabel
+      }
+
       if (secretInput) {
         secretInput.placeholder = `For example: ${mode.exampleCode}`
+        secretInput.inputMode = mode.inputMode
+      }
+
+      if (codePanelTitle) {
+        codePanelTitle.textContent =
+          mode.inputKind === 'letters' ? 'Blanks and letter map' : 'Blanks and number map'
+      }
+
+      if (codePanelNote) {
+        codePanelNote.textContent =
+          mode.inputKind === 'letters'
+            ? 'The slash makes a word space. The secret letter code stays hidden.'
+            : 'The slash makes a word space. The secret number code stays hidden.'
       }
 
       if (mapLabel) {
@@ -421,14 +613,16 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
       }
 
       renderNumberMap()
+      renderSecretLetterPad()
+      renderLetterBoard()
     }
 
-    const parseSecretCode = rawValue => {
+    const parseNumberCode = rawValue => {
       const tokens = (rawValue.match(/\/|\d+/g) || [])
       const normalizedTokens = []
       const letters = []
-      let invalidNumber = ''
       const activeLetters = getModeConfig().letters
+      let invalidToken = ''
 
       tokens.forEach(token => {
         if (token === '/') {
@@ -444,7 +638,7 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
         const letter = activeLetters[numericValue - 1]
 
         if (!letter) {
-          if (!invalidNumber) invalidNumber = token
+          if (!invalidToken) invalidToken = token
           return
         }
 
@@ -458,11 +652,57 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
       }
 
       return {
-        invalidNumber,
+        invalidToken,
         code: normalizedTokens.join(' '),
         secret: letters.join(''),
       }
     }
+
+    const parseLetterCode = rawValue => {
+      const normalizedTokens = []
+      const letters = []
+      const activeLetters = getModeConfig().letters
+      let invalidToken = ''
+
+      Array.from(rawValue.toUpperCase()).forEach(character => {
+        if (/\s/.test(character)) return
+
+        if (character === '/') {
+          if (!normalizedTokens.length || normalizedTokens[normalizedTokens.length - 1] === '/')
+            return
+
+          normalizedTokens.push('/')
+          letters.push('/')
+          return
+        }
+
+        const letterIndex = russianAlphabet.indexOf(character)
+
+        if (letterIndex === -1) {
+          if (!invalidToken) invalidToken = character
+          return
+        }
+
+        normalizedTokens.push(character)
+        letters.push(activeLetters[letterIndex])
+      })
+
+      while (normalizedTokens[normalizedTokens.length - 1] === '/') {
+        normalizedTokens.pop()
+        letters.pop()
+      }
+
+      return {
+        invalidToken,
+        code: normalizedTokens.join(' '),
+        secret: letters.join(''),
+      }
+    }
+
+    const parseSecretCode = rawValue =>
+      getModeConfig().inputKind === 'letters'
+        ? parseLetterCode(rawValue)
+        : parseNumberCode(rawValue)
 
     const getUniqueSecretLetters = () =>
       new Set(Array.from(state.secret).filter(letter => russianLetterSet.has(letter)))
@@ -489,7 +729,7 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
     }
 
     const updateLetterButtons = () => {
-      letterButtons.forEach(button => {
+      getLetterButtons().forEach(button => {
         const element = button
         const letter = element.dataset.letter || ''
         const guessed = state.guessed.has(letter)
@@ -526,7 +766,7 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
       }
 
       renderMode()
-      setSetupFeedback('Version changed. Player 1 can write a new number code.', 'neutral')
+      setSetupFeedback('Version changed. Player 1 can write a new code.', 'neutral')
       setPlayFeedback('Start a round to let Player 2 begin guessing.', 'neutral')
     }
 
@@ -564,7 +804,9 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
 
       if (!cleaned) {
         setSetupFeedback(
-          'Write a real number code first. Use numbers 1 to 33. Use / if you want a space between words.',
+          getModeConfig().inputKind === 'letters'
+            ? 'Write a real Russian letter code first. Use / if you want a space between words.'
+            : 'Write a real number code first. Use numbers 1 to 33. Use / if you want a space between words.',
           'warning'
         )
         setPlayFeedback('Player 2 cannot start until Player 1 makes a code.', 'warning')
@@ -572,8 +814,13 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
         return
       }
 
-      if (parsed.invalidNumber) {
-        setSetupFeedback(`The number ${parsed.invalidNumber} does not work. Use only 1 to 33.`, 'warning')
+      if (parsed.invalidToken) {
+        setSetupFeedback(
+          getModeConfig().inputKind === 'letters'
+            ? `${parsed.invalidToken} does not work here. Use Russian letters or /.`
+            : `The number ${parsed.invalidToken} does not work. Use only 1 to 33.`,
+          'warning'
+        )
         setPlayFeedback('Player 2 cannot start until Player 1 makes a code.', 'warning')
         secretInput.focus()
         return
@@ -610,29 +857,6 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
     modeButtons.forEach(button => {
       button.addEventListener('click', () => {
         setMode(button.dataset.mode || defaultModeKey)
-      })
-    })
-
-    letterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        if (!state.active) return
-
-        const letter = button.dataset.letter || ''
-        if (!letter || state.guessed.has(letter)) return
-
-        state.guessed.add(letter)
-        const isCorrect = state.secret.includes(letter)
-
-        updateLetterButtons()
-        updateBlanks()
-
-        if (isCorrect) {
-          if (finishRoundIfSolved()) return
-          setPlayFeedback(`${letter} is in the secret. Keep circling the right letters.`, 'success')
-          return
-        }
-
-        setPlayFeedback(`${letter} is not in the secret.`, 'danger')
       })
     })
 
@@ -862,6 +1086,19 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
     box-shadow: 0 0 0 4px rgba(186, 122, 20, 0.18);
   }
 
+  .setup-letter-pad {
+    margin-top: 0.85rem;
+  }
+
+  .setup-letter-controls {
+    margin-top: 0.3rem;
+  }
+
+  .compact-button {
+    min-height: 2.8rem;
+    padding: 0.65rem 0.9rem;
+  }
+
   .button-row {
     display: flex;
     flex-wrap: wrap;
@@ -956,7 +1193,7 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
 
   .letter-row {
     display: grid;
-    grid-template-columns: repeat(10, minmax(0, 1fr));
+    grid-template-columns: repeat(var(--row-columns, 10), minmax(0, 1fr));
     gap: 0.65rem;
   }
 
@@ -1028,6 +1265,11 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
 
   .letter-button:disabled {
     cursor: default;
+  }
+
+  .code-letter-button:hover {
+    border-color: rgba(51, 95, 74, 0.32);
+    background: rgba(232, 247, 238, 0.88);
   }
 
   .letter-button.is-correct {
@@ -1110,7 +1352,7 @@ const numberRows = buildNumberRows(gameModes[defaultModeKey].letters)
     }
 
     .letter-row {
-      min-width: 42rem;
+      min-width: calc(var(--row-columns, 10) * 4.2rem);
     }
   }
 </style>
