@@ -1,6 +1,20 @@
 const subscriptionKey = import.meta.env.AZURE_SPEECH_KEY // 'YourSubscriptionKey';
 const serviceRegion = import.meta.env.AZURE_SPEECH_REGION // 'YourServiceRegion';
 
+function escapeXml(value: unknown) {
+  return String(value ?? '').replace(
+    /[<>&'"]/g,
+    character =>
+      ({
+        '<': '&lt;',
+        '>': '&gt;',
+        '&': '&amp;',
+        "'": '&apos;',
+        '"': '&quot;',
+      })[character] || character
+  )
+}
+
 async function synthesizeSpeech(requestBody: any) {
   const {
     ShortName,
@@ -13,24 +27,19 @@ async function synthesizeSpeech(requestBody: any) {
     voice,
   } = requestBody
 
-  console.log({
-    ShortName,
-    text,
-  })
-
-  const inner = `${text || text_hidden}`
+  const inner = escapeXml(text || text_hidden)
   const wrapped =
     express_as || engine
-      ? `<mstts:express-as style='${
+      ? `<mstts:express-as style='${escapeXml(
           express_as || engine
-        }'>${inner}</mstts:express-as>`
+        )}'>${inner}</mstts:express-as>`
       : inner
 
   const ssmlContent = `
 <speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='http://www.w3.org/2001/mstts' xml:lang='en-US'>
-  <voice xml:lang='${Locale}' xml:gender='${Gender}' name='${
-    ShortName || voice
-  }'>
+  <voice xml:lang='${escapeXml(Locale)}' xml:gender='${escapeXml(
+    Gender
+  )}' name='${escapeXml(ShortName || voice)}'>
   ${wrapped}
   </voice>
 </speak>
@@ -77,8 +86,8 @@ export async function POST({
     const output = await synthesizeSpeech(requestBody)
     return new Response(output, {
       headers: {
-        'Content-Type': 'audio/mpeg',
-        'Content-Disposition': 'inline; filename="output.mp3"',
+        'Content-Type': 'audio/wav',
+        'Content-Disposition': 'inline; filename="output.wav"',
       },
     })
   } catch (error) {

@@ -11,6 +11,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "build:sites:star": "astro build && node scripts/prepare-star-sites.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "test:ms": "node microsoft.js"
