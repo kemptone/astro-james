@@ -1,5 +1,8 @@
-const STEFFAN_VOICE = 'en-US-SteffanNeural'
+const STEPHEN_VOICE_ID = 'Stephen'
+const STEPHEN_ENGINE = 'neural'
+const DEFAULT_AWS_REGION = 'us-west-2'
 const MAX_NARRATION_LENGTH = 600
+const textEncoder = new TextEncoder()
 
 function jsonResponse(body, status) {
   return new Response(JSON.stringify(body), {
@@ -8,39 +11,115 @@ function jsonResponse(body, status) {
   })
 }
 
-function escapeXml(value) {
-  return String(value).replace(
-    /[<>&'"]/g,
-    character =>
-      ({
-        '<': '&lt;',
-        '>': '&gt;',
-        '&': '&amp;',
-        "'": '&apos;',
-        '"': '&quot;',
-      })[character]
+function toBytes(value) {
+  return typeof value === 'string' ? textEncoder.encode(value) : value
+}
+
+function toHex(bytes) {
+  return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('')
+}
+
+async function sha256(value) {
+  const digest = await crypto.subtle.digest('SHA-256', toBytes(value))
+  return new Uint8Array(digest)
+}
+
+async function hmac(key, value) {
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    toBytes(key),
+    {name: 'HMAC', hash: 'SHA-256'},
+    false,
+    ['sign']
   )
+  const signature = await crypto.subtle.sign(
+    'HMAC',
+    cryptoKey,
+    toBytes(value)
+  )
+  return new Uint8Array(signature)
+}
+
+function awsTimestamp(date) {
+  return date.toISOString().replace(/[:-]|\.\d{3}/g, '')
+}
+
+async function createAwsAuthorization({
+  accessKeyId,
+  body,
+  region,
+  secretAccessKey,
+  sessionToken,
+}) {
+  const service = 'polly'
+  const host = `polly.${region}.amazonaws.com`
+  const amzDate = awsTimestamp(new Date())
+  const dateStamp = amzDate.slice(0, 8)
+  const canonicalHeaderEntries = [
+    ['content-type', 'application/json'],
+    ['host', host],
+    ['x-amz-date', amzDate],
+  ]
+
+  if (sessionToken) {
+    canonicalHeaderEntries.push(['x-amz-security-token', sessionToken])
+  }
+
+  const canonicalHeaders =
+    canonicalHeaderEntries
+      .map(([name, value]) => `${name}:${String(value).trim()}`)
+      .join('\n') + '\n'
+  const signedHeaders = canonicalHeaderEntries
+    .map(([name]) => name)
+    .join(';')
+  const payloadHash = toHex(await sha256(body))
+  const canonicalRequest = [
+    'POST',
+    '/v1/speech',
+    '',
+    canonicalHeaders,
+    signedHeaders,
+    payloadHash,
+  ].join('\n')
+  const credentialScope = `${dateStamp}/${region}/${service}/aws4_request`
+  const stringToSign = [
+    'AWS4-HMAC-SHA256',
+    amzDate,
+    credentialScope,
+    toHex(await sha256(canonicalRequest)),
+  ].join('\n')
+  const dateKey = await hmac(`AWS4${secretAccessKey}`, dateStamp)
+  const regionKey = await hmac(dateKey, region)
+  const serviceKey = await hmac(regionKey, service)
+  const signingKey = await hmac(serviceKey, 'aws4_request')
+  const signature = toHex(await hmac(signingKey, stringToSign))
+
+  return {
+    authorization: `AWS4-HMAC-SHA256 Credential=${accessKeyId}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`,
+    amzDate,
+    host,
+  }
 }
 
 async function narrate(request, env) {
-  if (!env.AZURE_SPEECH_KEY || !env.AZURE_SPEECH_REGION) {
+  if (!env.AWS_ACCESS_KEY_ID || !env.AWS_SECRET_ACCESS_KEY) {
     return jsonResponse({error: 'Narration service is unavailable.'}, 503)
   }
 
-  if (!/^[a-z0-9-]+$/i.test(env.AZURE_SPEECH_REGION)) {
+  const region = env.AWS_REGION || DEFAULT_AWS_REGION
+  if (!/^[a-z0-9-]+$/i.test(region)) {
     return jsonResponse({error: 'Narration service is misconfigured.'}, 500)
   }
 
-  let body
+  let requestBody
 
   try {
-    body = await request.json()
+    requestBody = await request.json()
   } catch {
     return jsonResponse({error: 'Invalid JSON.'}, 400)
   }
 
-  const text = String(body.text ?? body.text_hidden ?? '').trim()
-
+  const text = String(requestBody.text ?? requestBody.text_hidden ?? '').trim()
   if (!text || text.length > MAX_NARRATION_LENGTH) {
     return jsonResponse(
       {error: `Narration must be 1–${MAX_NARRATION_LENGTH} characters.`},
@@ -48,19 +127,35 @@ async function narrate(request, env) {
     )
   }
 
-  const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US"><voice xml:lang="en-US" xml:gender="Male" name="${STEFFAN_VOICE}">${escapeXml(text)}</voice></speak>`
-  const speechResponse = await fetch(
-    `https://${env.AZURE_SPEECH_REGION}.tts.speech.microsoft.com/cognitiveservices/v1`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/ssml+xml',
-        'Ocp-Apim-Subscription-Key': env.AZURE_SPEECH_KEY,
-        'X-Microsoft-OutputFormat': 'riff-24khz-16bit-mono-pcm',
-      },
-      body: ssml,
-    }
-  )
+  const body = JSON.stringify({
+    Engine: STEPHEN_ENGINE,
+    OutputFormat: 'mp3',
+    Text: text,
+    TextType: 'text',
+    VoiceId: STEPHEN_VOICE_ID,
+  })
+  const signed = await createAwsAuthorization({
+    accessKeyId: env.AWS_ACCESS_KEY_ID,
+    body,
+    region,
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+    sessionToken: env.AWS_SESSION_TOKEN,
+  })
+  const headers = {
+    Authorization: signed.authorization,
+    'Content-Type': 'application/json',
+    'X-Amz-Date': signed.amzDate,
+  }
+
+  if (env.AWS_SESSION_TOKEN) {
+    headers['X-Amz-Security-Token'] = env.AWS_SESSION_TOKEN
+  }
+
+  const speechResponse = await fetch(`https://${signed.host}/v1/speech`, {
+    method: 'POST',
+    headers,
+    body,
+  })
 
   if (!speechResponse.ok || !speechResponse.body) {
     return jsonResponse({error: 'Failed to synthesize narration.'}, 502)
@@ -69,8 +164,8 @@ async function narrate(request, env) {
   return new Response(speechResponse.body, {
     headers: {
       'Cache-Control': 'no-store',
-      'Content-Disposition': 'inline; filename="steffan.wav"',
-      'Content-Type': 'audio/wav',
+      'Content-Disposition': 'inline; filename="stephen.mp3"',
+      'Content-Type': 'audio/mpeg',
     },
   })
 }
@@ -89,10 +184,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url)
 
-    if (
-      request.method === 'POST' &&
-      url.pathname === '/api/polly/say_m'
-    ) {
+    if (request.method === 'POST' && url.pathname === '/api/polly/say') {
       return narrate(request, env)
     }
 

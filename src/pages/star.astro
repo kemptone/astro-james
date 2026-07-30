@@ -148,9 +148,6 @@ const moments = narrationPrompts.map((placeholder, index) => {
 
       <div class="narration-stage">
         <p id="moment-readout" class="moment-readout">Textarea 10 · no stars checked</p>
-        <blockquote id="current-narration">
-          Preparing Stephan for the first narration…
-        </blockquote>
         <p id="play-status" class="play-status" aria-live="polite">
           The story will begin with an empty sky.
         </p>
@@ -169,7 +166,8 @@ const moments = narrationPrompts.map((placeholder, index) => {
 </Layout>
 
 <script define:vars={{starTotal: STAR_TOTAL}}>
-  const STEFFAN_SHORT_NAME = 'en-US-SteffanNeural'
+  const STEPHEN_VOICE_ID = 'Stephen'
+  const STEPHEN_ENGINE = 'neural'
 
   const setupPhase = document.querySelector('#setup-phase')
   const playPhase = document.querySelector('#play-phase')
@@ -180,7 +178,6 @@ const moments = narrationPrompts.map((placeholder, index) => {
   const playStars = document.querySelector('#play-stars')
   const playStarElements = Array.from(document.querySelectorAll('.play-star'))
   const momentReadout = document.querySelector('#moment-readout')
-  const currentNarration = document.querySelector('#current-narration')
   const playStatus = document.querySelector('#play-status')
   const narratorAudio = document.querySelector('#narrator-audio')
   const narrationFields = Array.from(
@@ -244,14 +241,13 @@ const moments = narrationPrompts.map((placeholder, index) => {
     if (existingRequest) return existingRequest
 
     const request = (async () => {
-      const response = await fetch('/api/polly/say_m', {
+      const response = await fetch('/api/polly/say', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
           text,
-          ShortName: STEFFAN_SHORT_NAME,
-          Gender: 'Male',
-          Locale: 'en-US',
+          voiceId: STEPHEN_VOICE_ID,
+          engine: STEPHEN_ENGINE,
         }),
       })
 
@@ -333,9 +329,6 @@ const moments = narrationPrompts.map((placeholder, index) => {
 
         if (momentReadout) {
           momentReadout.textContent = `Textarea ${moment} · ${describeStars(checkedStars)}`
-        }
-        if (currentNarration) {
-          currentNarration.textContent = narrations[moment]
         }
         if (playStatus) {
           playStatus.textContent =
@@ -810,17 +803,6 @@ const moments = narrationPrompts.map((placeholder, index) => {
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-  }
-
-  blockquote {
-    margin: 0;
-    border: 0;
-    padding: 0;
-    color: #fff;
-    font-size: clamp(1.4rem, 4vw, 2.6rem);
-    font-weight: 750;
-    letter-spacing: -0.035em;
-    line-height: 1.2;
   }
 
   .play-status {

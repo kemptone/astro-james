@@ -1,0 +1,844 @@
+---
+import Menu from '@/components/menu.astro'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta
+      name="description"
+      content="Set and explore air quality for named places across an interactive world map."
+    />
+    <title>Worldwide Air Quality Map</title>
+  </head>
+  <body>
+    <main
+      id="airmap-shell"
+      class="airmap-shell"
+      aria-label="Worldwide named-place air quality game"
+    >
+      <div id="airmap-map" class="airmap-map" aria-label="Interactive world map"></div>
+      <button id="airmap-edit" class="airmap-edit-button" type="button" hidden>
+        Edit AQI
+      </button>
+
+      <aside
+        id="airmap-controls"
+        class="control-panel"
+        aria-label="Named-place air quality controls"
+      >
+        <header class="panel-heading">
+          <div>
+            <p class="eyebrow">Creative sandbox</p>
+            <h1>Air Quality Map</h1>
+          </div>
+          <span class="baseline-pill">7,342 places start at 50</span>
+        </header>
+
+        <form id="airmap-place-search" class="place-search" role="search">
+          <label for="airmap-place-input">Find any named place on Earth</label>
+          <div class="search-row">
+            <input
+              id="airmap-place-input"
+              type="search"
+              placeholder="City, town, park, mountain…"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button id="airmap-search-button" type="submit">Find</button>
+          </div>
+          <div
+            id="airmap-search-results"
+            class="search-results"
+            aria-live="polite"
+          ></div>
+        </form>
+
+        <section class="selected-card" aria-live="polite">
+          <div
+            id="airmap-selected-swatch"
+            class="selected-swatch"
+            aria-hidden="true"
+          ></div>
+          <div class="selected-copy">
+            <span id="airmap-selected-name">Choose any named place</span>
+            <strong><span id="airmap-selected-value">50</span> AQI</strong>
+            <small id="airmap-selected-category">Good</small>
+          </div>
+        </section>
+        <div class="measurement-actions">
+          <button id="airmap-save-location" class="set-location-button" type="button" disabled>
+            Select a named place first
+          </button>
+          <button id="airmap-remove-location" class="remove-location-button" type="button" disabled>
+            Remove reading
+          </button>
+        </div>
+
+        <section class="reading-controls" aria-labelledby="reading-heading">
+          <div class="section-heading">
+            <h2 id="reading-heading">Place AQI</h2>
+            <span id="airmap-value-category" class="category-label">Moderate</span>
+          </div>
+
+          <div class="value-stepper">
+            <button id="airmap-decrease" type="button" aria-label="Decrease AQI by 10">
+              −10
+            </button>
+            <label>
+              <span class="sr-only">Air quality value from 0 to 500</span>
+              <input
+                id="airmap-aqi-input"
+                type="number"
+                inputmode="numeric"
+                min="0"
+                max="500"
+                step="1"
+                value="100"
+              />
+              <span>AQI</span>
+            </label>
+            <button id="airmap-increase" type="button" aria-label="Increase AQI by 10">
+              +10
+            </button>
+          </div>
+
+          <div class="influence-row">
+            <span>Influence area</span>
+            <div class="influence-options" role="group" aria-label="Place influence area">
+              <button type="button" data-influence="small">Small</button>
+              <button type="button" data-influence="medium" class="active">Medium</button>
+              <button type="button" data-influence="large">Large</button>
+            </div>
+          </div>
+
+          <label class="connect-toggle" for="airmap-connect">
+            <span>
+              <strong>Connect</strong>
+              <small>Join this area to the closest saved place</small>
+            </span>
+            <input id="airmap-connect" type="checkbox" role="switch" />
+            <span class="switch-track" aria-hidden="true"></span>
+          </label>
+        </section>
+
+        <section class="action-grid" aria-label="Map and edit actions">
+          <button id="airmap-undo" type="button" disabled>Undo</button>
+          <button id="airmap-redo" type="button" disabled>Redo</button>
+          <button id="airmap-reset" class="danger-button" type="button">Reset</button>
+          <button id="airmap-zoom-out" type="button" aria-label="Zoom out">−</button>
+          <button id="airmap-world" type="button">World</button>
+          <button id="airmap-zoom-in" type="button" aria-label="Zoom in">+</button>
+        </section>
+
+        <section class="legend-section" aria-label="US AQI color legend">
+          <div class="legend-title">
+            <span>AQI (US)</span>
+            <span>0–500</span>
+          </div>
+          <div class="legend-gradient" aria-hidden="true"></div>
+          <div class="legend-labels">
+            <span>Good</span>
+            <span>Moderate</span>
+            <span>Unhealthy</span>
+            <span>Hazardous</span>
+          </div>
+        </section>
+
+        <p id="airmap-status" class="status-message" role="status">
+          Search for any name or tap near a map label, then submit its air quality.
+        </p>
+      </aside>
+
+      <div class="map-credit">Land geometry: Natural Earth</div>
+    </main>
+
+    <Menu />
+    <script src="../core/airmap/index.ts"></script>
+  </body>
+</html>
+
+<style>
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  :global(html),
+  :global(body) {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: #dce7ec;
+    color: #15231f;
+    font-family:
+      Inter, ui-rounded, "SF Pro Rounded", "Segoe UI", system-ui, sans-serif;
+  }
+
+  :global(button),
+  :global(input) {
+    font: inherit;
+  }
+
+  :global(button:focus-visible),
+  :global(input:focus-visible) {
+    outline: 3px solid #166a53;
+    outline-offset: 2px;
+  }
+
+  .airmap-shell,
+  .airmap-map {
+    position: fixed;
+    inset: 0;
+  }
+
+  .airmap-shell {
+    isolation: isolate;
+  }
+
+  .airmap-map {
+    z-index: 0;
+    background:
+      radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.82), transparent 65%),
+      #dbe7ee;
+  }
+
+  .control-panel {
+    position: fixed;
+    z-index: 700;
+    top: max(16px, env(safe-area-inset-top));
+    left: max(16px, env(safe-area-inset-left));
+    width: min(340px, calc(100vw - 108px));
+    max-height: calc(100svh - 32px);
+    overflow: auto;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.82);
+    border-radius: 24px;
+    background: rgba(250, 252, 250, 0.9);
+    box-shadow:
+      0 18px 60px rgba(18, 44, 35, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  }
+
+  .airmap-edit-button {
+    position: fixed;
+    z-index: 700;
+    top: max(16px, env(safe-area-inset-top));
+    left: max(16px, env(safe-area-inset-left));
+    min-height: 44px;
+    padding: 0 17px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 999px;
+    color: #173c31;
+    background: rgba(250, 252, 250, 0.88);
+    box-shadow: 0 10px 30px rgba(18, 44, 35, 0.2);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    cursor: pointer;
+    font-weight: 850;
+  }
+
+  .airmap-edit-button:hover {
+    background: white;
+  }
+
+  .airmap-shell.is-presenting .control-panel {
+    display: none;
+  }
+
+  .panel-heading {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .eyebrow {
+    margin: 0 0 3px;
+    color: #37705f;
+    font-size: 0.71rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    color: #163c31;
+    font-size: clamp(1.45rem, 3vw, 1.8rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+  }
+
+  .baseline-pill {
+    flex: 0 0 auto;
+    padding: 6px 9px;
+    border-radius: 999px;
+    background: #d9f7e4;
+    color: #17643f;
+    font-size: 0.68rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .influence-options button,
+  .action-grid button,
+  .value-stepper button {
+    border: 0;
+    color: #2a463d;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 750;
+  }
+
+  .selected-card {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid #d8e3de;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.72);
+  }
+
+  .place-search {
+    margin-top: 12px;
+  }
+
+  .place-search > label {
+    display: block;
+    margin-bottom: 5px;
+    color: #49655b;
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+
+  .search-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px;
+  }
+
+  .search-row input {
+    min-width: 0;
+    height: 42px;
+    padding: 0 11px;
+    border: 1px solid #c8d8d2;
+    border-radius: 11px;
+    color: #173c31;
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  .search-row button,
+  .set-location-button,
+  .remove-location-button {
+    border: 0;
+    border-radius: 11px;
+    cursor: pointer;
+    font-weight: 800;
+  }
+
+  .set-location-button {
+    color: white;
+    background: #195d49;
+  }
+
+  .remove-location-button {
+    color: #873a38;
+    background: #f5e9e7;
+  }
+
+  .search-row button {
+    min-width: 58px;
+    padding: 0 12px;
+  }
+
+  .search-row button:disabled,
+  .set-location-button:disabled,
+  .remove-location-button:disabled {
+    opacity: 0.48;
+    cursor: not-allowed;
+  }
+
+  .search-results:not(:empty) {
+    display: grid;
+    gap: 4px;
+    max-height: 160px;
+    margin-top: 6px;
+    overflow: auto;
+  }
+
+  .search-results :global(button) {
+    width: 100%;
+    padding: 8px 9px;
+    border: 1px solid #d6e2dd;
+    border-radius: 9px;
+    color: #29483e;
+    background: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: left;
+  }
+
+  .search-results :global(button:hover) {
+    background: #eaf5f0;
+  }
+
+  .measurement-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 7px;
+    min-height: 39px;
+    margin-top: 7px;
+  }
+
+  .set-location-button,
+  .remove-location-button {
+    padding: 7px 12px;
+    font-size: 0.76rem;
+  }
+
+  .set-location-button {
+    min-width: 0;
+  }
+
+  .selected-swatch {
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    border: 4px solid white;
+    border-radius: 50%;
+    background: #00e400;
+    box-shadow: 0 2px 12px rgba(22, 59, 47, 0.2);
+  }
+
+  .selected-copy {
+    display: grid;
+    min-width: 0;
+  }
+
+  .selected-copy > span {
+    overflow: hidden;
+    color: #5a6c66;
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .selected-copy strong {
+    color: #173c31;
+    font-size: 1.28rem;
+    line-height: 1.1;
+  }
+
+  .selected-copy small {
+    color: #587068;
+    font-weight: 700;
+  }
+
+  .reading-controls {
+    margin-top: 14px;
+  }
+
+  .section-heading,
+  .influence-row,
+  .legend-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .category-label {
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #fff8b0;
+    color: #5d5412;
+    font-size: 0.68rem;
+    font-weight: 800;
+  }
+
+  .value-stepper {
+    display: grid;
+    grid-template-columns: 62px 1fr 62px;
+    gap: 7px;
+    margin-top: 8px;
+  }
+
+  .value-stepper button,
+  .action-grid button {
+    min-height: 42px;
+    border: 1px solid #cfddd7;
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.86);
+  }
+
+  .value-stepper button:hover,
+  .action-grid button:hover,
+  .influence-options button:hover {
+    background: #eef6f2;
+  }
+
+  .value-stepper label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #bdd0c8;
+    border-radius: 11px;
+    background: white;
+  }
+
+  .value-stepper input {
+    width: 76px;
+    border: 0;
+    outline: 0;
+    color: #163c31;
+    background: transparent;
+    font-size: 1.2rem;
+    font-weight: 850;
+    text-align: right;
+  }
+
+  .value-stepper label span:last-child {
+    margin-left: 4px;
+    color: #6d7d77;
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+
+  .influence-row {
+    margin-top: 10px;
+    color: #667770;
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  .influence-options {
+    display: flex;
+    gap: 4px;
+  }
+
+  .influence-options button {
+    padding: 7px 9px;
+    border-radius: 9px;
+    font-size: 0.69rem;
+  }
+
+  .influence-options button.active {
+    color: #165540;
+    background: #d9eee6;
+  }
+
+  .connect-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 48px;
+    margin-top: 10px;
+    padding: 8px 10px;
+    border: 1px solid #d2dfda;
+    border-radius: 12px;
+    color: #244a3e;
+    background: rgba(255, 255, 255, 0.72);
+    cursor: pointer;
+  }
+
+  .connect-toggle > span:first-child {
+    display: grid;
+  }
+
+  .connect-toggle strong {
+    font-size: 0.76rem;
+  }
+
+  .connect-toggle small {
+    color: #6a7b75;
+    font-size: 0.62rem;
+    font-weight: 650;
+  }
+
+  .connect-toggle input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .switch-track {
+    position: relative;
+    flex: 0 0 auto;
+    width: 42px;
+    height: 24px;
+    border-radius: 999px;
+    background: #becbc6;
+    transition:
+      background 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .switch-track::after {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 5px rgba(18, 44, 35, 0.25);
+    content: "";
+    transition: transform 180ms ease;
+  }
+
+  .connect-toggle input:checked + .switch-track {
+    background: #195d49;
+  }
+
+  .connect-toggle input:checked + .switch-track::after {
+    transform: translateX(18px);
+  }
+
+  .connect-toggle input:focus-visible + .switch-track {
+    box-shadow: 0 0 0 3px #166a53;
+  }
+
+  .action-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .action-grid button {
+    min-height: 38px;
+    font-size: 0.75rem;
+  }
+
+  .action-grid button:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+  }
+
+  .action-grid .danger-button {
+    color: #9a312f;
+  }
+
+  .legend-section {
+    margin-top: 14px;
+  }
+
+  .legend-title {
+    color: #566a62;
+    font-size: 0.69rem;
+    font-weight: 850;
+  }
+
+  .legend-gradient {
+    height: 11px;
+    margin-top: 5px;
+    border: 1px solid rgba(30, 50, 43, 0.12);
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      #00e400 0%,
+      #00e400 10%,
+      #ffff00 20%,
+      #ff7e00 30%,
+      #ff0000 40%,
+      #8f3f97 50%,
+      #7e0023 70%,
+      #7e0023 100%
+    );
+  }
+
+  .legend-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3px;
+    color: #74827d;
+    font-size: 0.55rem;
+    font-weight: 700;
+  }
+
+  .status-message {
+    margin: 12px 0 0;
+    padding-top: 10px;
+    border-top: 1px solid #dfe8e4;
+    color: #5f716a;
+    font-size: 0.69rem;
+    line-height: 1.35;
+  }
+
+  .map-credit {
+    position: fixed;
+    z-index: 500;
+    right: 8px;
+    bottom: 22px;
+    padding: 2px 5px;
+    border-radius: 4px;
+    color: #52615c;
+    background: rgba(255, 255, 255, 0.74);
+    font-size: 9px;
+    pointer-events: none;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  :global(.leaflet-container) {
+    font-family: inherit;
+  }
+
+  :global(.leaflet-zoom-animated) {
+    transition-duration: 700ms !important;
+    transition-timing-function: cubic-bezier(0.22, 0.72, 0.2, 1) !important;
+  }
+
+  :global(.leaflet-control-attribution) {
+    margin-bottom: env(safe-area-inset-bottom) !important;
+    color: #53645e;
+    background: rgba(255, 255, 255, 0.76) !important;
+    backdrop-filter: blur(8px);
+  }
+
+  @media (max-width: 720px) {
+    .control-panel {
+      top: auto;
+      right: max(8px, env(safe-area-inset-right));
+      bottom: max(8px, env(safe-area-inset-bottom));
+      left: max(8px, env(safe-area-inset-left));
+      width: auto;
+      max-height: min(58svh, 490px);
+      padding: 13px;
+      overflow: auto;
+      border-radius: 20px;
+    }
+
+    .panel-heading {
+      padding-right: 54px;
+    }
+
+    .eyebrow,
+    .baseline-pill,
+    .legend-labels,
+    .status-message {
+      display: none;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+    }
+
+    .selected-card {
+      position: static;
+      margin-top: 8px;
+      padding: 7px 9px;
+      background: rgba(252, 254, 253, 0.92);
+    }
+
+    .selected-swatch {
+      width: 34px;
+      height: 34px;
+    }
+
+    .selected-copy strong {
+      font-size: 1.1rem;
+    }
+
+    .place-search {
+      margin-top: 8px;
+    }
+
+    .place-search > label {
+      display: none;
+    }
+
+    .search-row input,
+    .search-row button {
+      height: 38px;
+    }
+
+    .search-results:not(:empty) {
+      max-height: 112px;
+    }
+
+    .reading-controls {
+      margin-top: 10px;
+    }
+
+    .legend-section {
+      display: none;
+    }
+
+    .map-credit {
+      bottom: calc(min(58svh, 490px) + 29px);
+    }
+
+    .airmap-shell.is-presenting .map-credit {
+      bottom: 22px;
+    }
+
+    :global(.leaflet-bottom.leaflet-right) {
+      bottom: calc(min(58svh, 490px) + 8px);
+    }
+
+    .airmap-shell.is-presenting :global(.leaflet-bottom.leaflet-right) {
+      bottom: 0;
+    }
+
+    :global(.leaflet-control-attribution) {
+      display: block;
+      max-width: 260px;
+      font-size: 8px;
+      line-height: 1.15;
+    }
+  }
+
+  @media (max-height: 620px) and (max-width: 720px) {
+    .control-panel {
+      max-height: 52svh;
+    }
+
+    .legend-section {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(*) {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+
+    :global(.leaflet-zoom-animated) {
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
