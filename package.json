@@ -14,6 +14,8 @@
     "build:sites:star": "astro build && node scripts/prepare-star-sites.mjs",
     "preview": "astro preview",
     "astro": "astro",
+    "test:wordle": "node --test src/core/wordle/game.test.ts",
+    "wordle:words": "node scripts/generate-wordle-words.mjs",
     "test:ms": "node microsoft.js"
   },
   "dependencies": {

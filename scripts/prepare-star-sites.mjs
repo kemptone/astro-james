@@ -13,6 +13,7 @@ const stagedClientDirectory = path.join(stagedDirectory, 'client')
 
 await rm(stagedDirectory, {recursive: true, force: true})
 await mkdir(path.join(stagedClientDirectory, 'star'), {recursive: true})
+await mkdir(path.join(stagedClientDirectory, 'wordle'), {recursive: true})
 await mkdir(path.join(stagedDirectory, 'server'), {recursive: true})
 
 await cp(
@@ -24,6 +25,10 @@ await cp(
   path.join(stagedClientDirectory, 'index.html')
 )
 await cp(
+  path.join(clientDirectory, 'wordle', 'index.html'),
+  path.join(stagedClientDirectory, 'wordle', 'index.html')
+)
+await cp(
   path.join(clientDirectory, '_astro'),
   path.join(stagedClientDirectory, '_astro'),
   {recursive: true}
@@ -33,6 +38,7 @@ for (const filename of [
   'externalEval.js',
   'favicon.svg',
   'manifest.json',
+  'wordle-og.png',
 ]) {
   await cp(
     path.join(clientDirectory, filename),
@@ -52,7 +58,7 @@ await cp(
 
 await writeFile(
   path.join(stagedDirectory, 'BUILD.txt'),
-  'Astro James Star Narrator — Cloudflare Workers-compatible Sites build\n'
+  'Astro James Star Narrator and Wordle — Cloudflare Workers-compatible Sites build\n'
 )
 
 await rm(distDirectory, {recursive: true, force: true})

@@ -9,6 +9,7 @@ interface MenuLink {
 }
 
 const menuLinks: MenuLink[] = [
+  {href: '/wordle', label: 'Wordle', code: ''},
   {href: '/colorfader', label: 'Color Fader', code: ''},
   {href: '/code/camila-too', label: 'Camila', code: ''},
   {href: '/code/Jory', label: 'Jory', code: ''},
@@ -286,14 +287,14 @@ const menuLinks: MenuLink[] = [
   .hamburger-line {
     width: 100%;
     height: 6px;
-    background-color: #333;
+    background-color: var(--menu-icon-color, #333);
     border-radius: 2px;
     transition: all 0.3s ease;
     transform-origin: center;
   }
 
   .hamburger-btn:hover .hamburger-line {
-    background-color: #555;
+    background-color: var(--menu-icon-hover, #555);
   }
 
   /* Menu overlay */

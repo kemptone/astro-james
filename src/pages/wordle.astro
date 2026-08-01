@@ -1,0 +1,250 @@
+---
+import Layout from '../layouts/Layout.astro'
+import '../core/wordle/wordle.css'
+
+const boardTiles = Array.from({length: 30}, (_, index) => index)
+const keyboardRows = [
+  ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+  ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+  ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACKSPACE'],
+]
+---
+
+<Layout
+  title="Wordle · Astro James"
+  description="Play the Astro James daily five-letter word puzzle or start an unlimited practice game."
+  socialImage="/wordle-og.png"
+>
+  <main class="wordle-page" id="wordle-app">
+    <header class="wordle-header">
+      <div class="header-actions" aria-label="Game information and settings">
+        <button class="icon-button" type="button" data-open-dialog="help-dialog" aria-label="How to play">
+          <span aria-hidden="true">?</span>
+        </button>
+        <button class="icon-button stats-icon" type="button" data-open-dialog="stats-dialog" aria-label="Statistics">
+          <span aria-hidden="true">▥</span>
+        </button>
+        <button class="icon-button" type="button" data-open-dialog="settings-dialog" aria-label="Settings">
+          <span aria-hidden="true">⚙</span>
+        </button>
+      </div>
+
+      <div class="wordle-title-wrap">
+        <p class="wordle-kicker">Astro James</p>
+        <h1>WORDLE</h1>
+      </div>
+    </header>
+
+    <section class="mode-bar" aria-label="Choose a game mode">
+      <div class="mode-switch" role="tablist" aria-label="Wordle modes">
+        <button
+          id="daily-mode"
+          type="button"
+          role="tab"
+          class="mode-button is-active"
+          aria-selected="true"
+          data-mode="daily">Daily</button
+        >
+        <button
+          id="practice-mode"
+          type="button"
+          role="tab"
+          class="mode-button"
+          aria-selected="false"
+          data-mode="practice">Practice</button
+        >
+      </div>
+      <button id="new-practice" class="new-practice-button" type="button" hidden>
+        New practice
+      </button>
+    </section>
+
+    <section class="game-copy" aria-live="polite">
+      <p id="mode-label">Daily puzzle</p>
+      <p id="hard-mode-label" class="hard-mode-label" hidden>Hard mode</p>
+    </section>
+
+    <section class="board-wrap" aria-label="Wordle game board">
+      <div class="wordle-board" id="wordle-board" role="grid" aria-rowcount="6" aria-colcount="5">
+        {
+          boardTiles.map(index => (
+            <div
+              class="wordle-tile"
+              data-tile-index={index}
+              role="gridcell"
+              aria-label={`Row ${Math.floor(index / 5) + 1}, column ${(index % 5) + 1}, empty`}
+            >
+              <span aria-hidden="true"></span>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="keyboard" id="wordle-keyboard" aria-label="On-screen keyboard">
+      {
+        keyboardRows.map(row => (
+          <div class="keyboard-row">
+            {row.map(key => (
+              <button
+                type="button"
+                class:list={['key-button', {'key-button-wide': key.length > 1}]}
+                data-key={key}
+                aria-label={key === 'BACKSPACE' ? 'Backspace' : key === 'ENTER' ? 'Enter guess' : `Letter ${key}`}
+              >
+                {key === 'BACKSPACE' ? <span aria-hidden="true">⌫</span> : key}
+              </button>
+            ))}
+          </div>
+        ))
+      }
+    </section>
+
+    <p class="wordle-footnote">A fresh independent word every day, plus unlimited practice.</p>
+
+    <div id="wordle-toast" class="wordle-toast" role="status" aria-live="assertive" aria-atomic="true"></div>
+  </main>
+
+  <dialog id="help-dialog" class="wordle-dialog help-dialog" aria-labelledby="help-title">
+    <div class="dialog-heading">
+      <div>
+        <p class="dialog-kicker">Quick guide</p>
+        <h2 id="help-title">How to play</h2>
+      </div>
+      <button class="dialog-close" type="button" data-close-dialog aria-label="Close how to play">×</button>
+    </div>
+    <p>Guess the five-letter word in six tries. Each guess must be a valid word.</p>
+    <div class="help-example" aria-label="Examples of tile clues">
+      <div class="example-row">
+        <span class="example-tile correct">W</span>
+        <span class="example-word"><strong>W</strong> is in the word and in the correct spot.</span>
+      </div>
+      <div class="example-row">
+        <span class="example-tile present">I</span>
+        <span class="example-word"><strong>I</strong> is in the word but in a different spot.</span>
+      </div>
+      <div class="example-row">
+        <span class="example-tile absent">U</span>
+        <span class="example-word"><strong>U</strong> is not in the word.</span>
+      </div>
+    </div>
+    <hr />
+    <p>
+      <strong>Daily</strong> gives everyone on this device’s local date the same puzzle.
+      <strong>Practice</strong> lets you keep playing without changing your daily streak.
+    </p>
+  </dialog>
+
+  <dialog id="stats-dialog" class="wordle-dialog stats-dialog" aria-labelledby="stats-title">
+    <div class="dialog-heading">
+      <div>
+        <p class="dialog-kicker">Daily results</p>
+        <h2 id="stats-title">Statistics</h2>
+      </div>
+      <button class="dialog-close" type="button" data-close-dialog aria-label="Close statistics">×</button>
+    </div>
+
+    <div class="stats-grid" aria-label="Daily game statistics">
+      <div><strong id="stat-played">0</strong><span>Played</span></div>
+      <div><strong id="stat-win">0</strong><span>Win %</span></div>
+      <div><strong id="stat-current">0</strong><span>Current streak</span></div>
+      <div><strong id="stat-max">0</strong><span>Max streak</span></div>
+    </div>
+
+    <h3>Guess distribution</h3>
+    <div id="guess-distribution" class="guess-distribution">
+      {
+        Array.from({length: 6}, (_, index) => (
+          <div class="distribution-row">
+            <span>{index + 1}</span>
+            <div class="distribution-track">
+              <span class="distribution-bar" data-distribution-index={index}>0</span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div id="result-summary" class="result-summary" hidden>
+      <p id="result-message"></p>
+      <div class="result-actions">
+        <div id="countdown-wrap" class="countdown-wrap">
+          <span>Next daily word</span>
+          <strong id="daily-countdown">00:00:00</strong>
+        </div>
+        <button id="share-result" class="primary-action" type="button">Share result</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="settings-dialog" class="wordle-dialog settings-dialog" aria-labelledby="settings-title">
+    <div class="dialog-heading">
+      <div>
+        <p class="dialog-kicker">Make it yours</p>
+        <h2 id="settings-title">Settings</h2>
+      </div>
+      <button class="dialog-close" type="button" data-close-dialog aria-label="Close settings">×</button>
+    </div>
+
+    <label class="setting-row" for="hard-mode-setting">
+      <span>
+        <strong>Hard mode</strong>
+        <small>All revealed hints must be used.</small>
+      </span>
+      <input id="hard-mode-setting" type="checkbox" role="switch" />
+    </label>
+    <p id="hard-mode-note" class="setting-note" hidden>
+      Hard mode cannot change after the first guess in this game.
+    </p>
+
+    <label class="setting-row" for="theme-setting">
+      <span>
+        <strong>Appearance</strong>
+        <small>Follow your device or choose a theme.</small>
+      </span>
+      <select id="theme-setting">
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </label>
+
+    <label class="setting-row" for="contrast-setting">
+      <span>
+        <strong>Colorblind colors</strong>
+        <small>Use orange and blue clue tiles.</small>
+      </span>
+      <input id="contrast-setting" type="checkbox" role="switch" />
+    </label>
+  </dialog>
+
+  <dialog id="reset-practice-dialog" class="wordle-dialog confirm-dialog" aria-labelledby="reset-practice-title">
+    <div class="dialog-heading">
+      <div>
+        <p class="dialog-kicker">Start over?</p>
+        <h2 id="reset-practice-title">Leave this practice game</h2>
+      </div>
+      <button class="dialog-close" type="button" data-close-dialog aria-label="Cancel new practice">×</button>
+    </div>
+    <p>Your guesses in this practice game will be cleared.</p>
+    <div class="dialog-actions">
+      <button type="button" class="secondary-action" data-close-dialog>Keep playing</button>
+      <button id="confirm-new-practice" type="button" class="primary-action">Start new game</button>
+    </div>
+  </dialog>
+
+  <dialog id="share-fallback-dialog" class="wordle-dialog share-dialog" aria-labelledby="share-fallback-title">
+    <div class="dialog-heading">
+      <div>
+        <p class="dialog-kicker">Your result</p>
+        <h2 id="share-fallback-title">Copy and share</h2>
+      </div>
+      <button class="dialog-close" type="button" data-close-dialog aria-label="Close share result">×</button>
+    </div>
+    <label for="share-fallback-text">Result text</label>
+    <textarea id="share-fallback-text" readonly rows="9"></textarea>
+    <button id="copy-fallback-result" class="primary-action" type="button">Copy result</button>
+  </dialog>
+
+  <script src="../core/wordle/index.ts"></script>
+</Layout>
