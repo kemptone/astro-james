@@ -1,0 +1,1227 @@
+---
+import Layout from '../layouts/Layout.astro'
+import {
+  DEFAULT_PRIMARY_NAMES,
+  DEFAULT_SECONDARY_NAMES,
+} from '../core/kidthing/data'
+
+const listSections = [
+  {
+    key: 'primary',
+    code: 'P',
+    title: 'Primary list',
+    description: 'These become the P-number buttons on the main Kid Thing screen.',
+    names: DEFAULT_PRIMARY_NAMES,
+  },
+  {
+    key: 'secondary',
+    code: 'S',
+    title: 'Secondary list',
+    description: 'These become the S-number buttons inside the secondary list.',
+    names: DEFAULT_SECONDARY_NAMES,
+  },
+]
+---
+
+<Layout title="Settings">
+  <main class="settings-page">
+    <header class="settings-hero">
+      <div>
+        <p class="eyebrow">Boodeboo control room</p>
+        <h1>Settings</h1>
+        <p class="hero-copy">
+          Change both Kid Thing lists, then rate every game from zero to ten.
+          Submit once to save everything and go play Kid Thing.
+        </p>
+      </div>
+      <a class="back-link" href="/kidthing">Go to Kid Thing <span>→</span></a>
+    </header>
+
+    <form id="settings-form">
+      <section class="settings-section" aria-labelledby="lists-heading">
+        <div class="section-heading">
+          <div>
+            <p class="step-number">01</p>
+            <h2 id="lists-heading">Kid Thing lists</h2>
+          </div>
+          <p>
+            Every row has a permanent number. Move a name and its number changes
+            to match the game.
+          </p>
+        </div>
+
+        <div class="list-grid">
+          {
+            listSections.map(section => (
+              <article
+                class="list-editor"
+                data-list-editor={section.key}
+                data-list-code={section.code}
+              >
+                <header>
+                  <div>
+                    <span class={`list-code list-code-${section.code.toLowerCase()}`}>
+                      {section.code}
+                    </span>
+                    <div>
+                      <h3>{section.title}</h3>
+                      <p>{section.description}</p>
+                    </div>
+                  </div>
+                  <strong class="list-count" data-list-count>
+                    {section.names.length} names
+                  </strong>
+                </header>
+
+                <div class="editor-rows" data-editor-rows>
+                  {
+                    section.names.map((name, index) => (
+                      <div class="name-row" data-name-row>
+                        <span class="row-number" data-row-number>
+                          {section.code}{index + 1}
+                        </span>
+                        <label>
+                          <span class="sr-only">
+                            {section.title} name {index + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={name}
+                            maxlength="80"
+                            data-name-input
+                            required
+                          />
+                        </label>
+                        <div class="row-actions">
+                          <button
+                            type="button"
+                            data-row-action="up"
+                            aria-label={`Move ${name} up`}
+                            title="Move up"
+                          >
+                            ↑
+                          </button>
+                          <button
+                            type="button"
+                            data-row-action="down"
+                            aria-label={`Move ${name} down`}
+                            title="Move down"
+                          >
+                            ↓
+                          </button>
+                          <button
+                            type="button"
+                            class="remove-row"
+                            data-row-action="remove"
+                            aria-label={`Remove ${name}`}
+                            title="Remove"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </div>
+
+                <button type="button" class="add-row" data-add-row>
+                  <span>+</span> Add another name
+                </button>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="settings-section ratings-section" aria-labelledby="ratings-heading">
+        <div class="section-heading">
+          <div>
+            <p class="step-number">02</p>
+            <h2 id="ratings-heading">Rate every game</h2>
+          </div>
+          <p>
+            Ten is the best, one is the worst, five is neutral, and zero is
+            reserved for a total disaster.
+          </p>
+        </div>
+
+        <div class="rating-scale" aria-label="Rating scale">
+          <div class="scale-point scale-worst">
+            <strong>0</strong>
+            <span>CODEX, YOUR MAKING IS HORRIBLE!!!</span>
+          </div>
+          <div class="scale-line" aria-hidden="true">
+            <span></span>
+          </div>
+          <div class="scale-point scale-neutral">
+            <strong>5</strong>
+            <span>Neutral</span>
+          </div>
+          <div class="scale-line scale-line-good" aria-hidden="true">
+            <span></span>
+          </div>
+          <div class="scale-point scale-best">
+            <strong>10</strong>
+            <span>WOW, THIS IS EXACTLY WHAT I IMAGINED.</span>
+          </div>
+        </div>
+
+        <div class="ratings-toolbar">
+          <label>
+            <span class="sr-only">Find a game to rate</span>
+            <input
+              id="game-filter"
+              type="search"
+              placeholder="Find a game…"
+              autocomplete="off"
+            />
+          </label>
+          <p id="rating-progress">Loading the games…</p>
+        </div>
+
+        <div class="rating-grid" id="rating-grid" aria-live="polite">
+          <p class="loading-games">Getting every game from the Boodeboo menu…</p>
+        </div>
+      </section>
+
+      <p class="save-error" id="save-error" role="alert" hidden></p>
+
+      <div class="submit-dock">
+        <div>
+          <strong>Ready to play?</strong>
+          <span>Both lists and every rating will be saved on this device.</span>
+        </div>
+        <button type="submit">
+          Save settings &amp; go to Kid Thing <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    import {
+      getKidThingLists,
+      saveKidThingLists,
+      type KidThingLists,
+    } from '../core/kidthing/data'
+
+    const GAME_RATINGS_STORAGE_KEY = 'BOODEBOO_GAME_RATINGS_V1'
+
+    type RatingMap = Record<string, number>
+    type ListKey = keyof KidThingLists
+    type GameLink = {
+      href: string
+      label: string
+    }
+
+    const settingsForm =
+      document.querySelector<HTMLFormElement>('#settings-form')
+    const ratingGrid = document.querySelector<HTMLElement>('#rating-grid')
+    const gameFilter =
+      document.querySelector<HTMLInputElement>('#game-filter')
+    const ratingProgress =
+      document.querySelector<HTMLElement>('#rating-progress')
+    const saveError = document.querySelector<HTMLElement>('#save-error')
+    const ratingCards: HTMLElement[] = []
+
+    const ratingDescriptions: Record<number, string> = {
+      0: 'CODEX, YOUR MAKING IS HORRIBLE!!!',
+      1: 'The worst',
+      2: 'Very bad',
+      3: 'Not good',
+      4: 'Almost neutral',
+      5: 'Neutral',
+      6: 'Pretty good',
+      7: 'Good',
+      8: 'Great',
+      9: 'Amazing',
+      10: 'WOW, THIS IS EXACTLY WHAT I IMAGINED.',
+    }
+
+    const loadRatings = (): RatingMap => {
+      try {
+        const raw = window.localStorage.getItem(GAME_RATINGS_STORAGE_KEY)
+        const parsed = raw ? JSON.parse(raw) : {}
+
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+          return {}
+        }
+
+        return Object.fromEntries(
+          Object.entries(parsed)
+            .filter(([, value]) => Number.isInteger(value))
+            .map(([href, value]) => [
+              href,
+              Math.min(10, Math.max(0, Number(value))),
+            ]),
+        )
+      } catch {
+        return {}
+      }
+    }
+
+    const ratings = loadRatings()
+
+    const makeActionButton = (
+      action: 'up' | 'down' | 'remove',
+      symbol: string,
+      label: string,
+    ) => {
+      const button = document.createElement('button')
+      button.type = 'button'
+      button.dataset.rowAction = action
+      button.textContent = symbol
+      button.title = label
+      button.setAttribute('aria-label', label)
+      if (action === 'remove') button.className = 'remove-row'
+      return button
+    }
+
+    const makeNameRow = (value: string) => {
+      const row = document.createElement('div')
+      row.className = 'name-row'
+      row.dataset.nameRow = ''
+
+      const number = document.createElement('span')
+      number.className = 'row-number'
+      number.dataset.rowNumber = ''
+
+      const label = document.createElement('label')
+      const hiddenLabel = document.createElement('span')
+      hiddenLabel.className = 'sr-only'
+      hiddenLabel.textContent = 'List name'
+
+      const input = document.createElement('input')
+      input.type = 'text'
+      input.maxLength = 80
+      input.required = true
+      input.value = value
+      input.dataset.nameInput = ''
+
+      label.append(hiddenLabel, input)
+
+      const actions = document.createElement('div')
+      actions.className = 'row-actions'
+      actions.append(
+        makeActionButton('up', '↑', 'Move up'),
+        makeActionButton('down', '↓', 'Move down'),
+        makeActionButton('remove', '×', 'Remove name'),
+      )
+
+      row.append(number, label, actions)
+      return row
+    }
+
+    const renumberEditor = (editor: HTMLElement) => {
+      const code = editor.dataset.listCode || ''
+      const rows = [
+        ...editor.querySelectorAll<HTMLElement>('[data-name-row]'),
+      ]
+      const count = editor.querySelector<HTMLElement>('[data-list-count]')
+
+      rows.forEach((row, index) => {
+        const number = row.querySelector<HTMLElement>('[data-row-number]')
+        const input = row.querySelector<HTMLInputElement>('[data-name-input]')
+        const nextNumber = `${code}${index + 1}`
+
+        if (number) number.textContent = nextNumber
+        if (input) input.setAttribute('aria-label', `${nextNumber} name`)
+      })
+
+      if (count) {
+        count.textContent = `${rows.length} ${rows.length === 1 ? 'name' : 'names'}`
+      }
+    }
+
+    const renderEditor = (key: ListKey, names: string[]) => {
+      const editor = document.querySelector<HTMLElement>(
+        `[data-list-editor="${key}"]`,
+      )
+      const rows = editor?.querySelector<HTMLElement>('[data-editor-rows]')
+      if (!editor || !rows) return
+
+      rows.replaceChildren(...names.map(makeNameRow))
+      renumberEditor(editor)
+    }
+
+    const savedLists = getKidThingLists()
+    renderEditor('primary', savedLists.primary)
+    renderEditor('secondary', savedLists.secondary)
+
+    document.querySelectorAll<HTMLElement>('[data-list-editor]').forEach(editor => {
+      editor.addEventListener('click', event => {
+        const target = event.target as HTMLElement
+        const addButton = target.closest<HTMLButtonElement>('[data-add-row]')
+
+        if (addButton) {
+          const rows = editor.querySelector<HTMLElement>('[data-editor-rows]')
+          const row = makeNameRow('')
+          rows?.append(row)
+          renumberEditor(editor)
+          row.querySelector<HTMLInputElement>('input')?.focus()
+          return
+        }
+
+        const actionButton =
+          target.closest<HTMLButtonElement>('[data-row-action]')
+        const row = actionButton?.closest<HTMLElement>('[data-name-row]')
+        if (!actionButton || !row) return
+
+        const action = actionButton.dataset.rowAction
+
+        if (action === 'up' && row.previousElementSibling) {
+          row.parentElement?.insertBefore(row, row.previousElementSibling)
+        }
+
+        if (action === 'down' && row.nextElementSibling) {
+          row.parentElement?.insertBefore(row.nextElementSibling, row)
+        }
+
+        if (action === 'remove') {
+          const rowCount = editor.querySelectorAll('[data-name-row]').length
+          if (rowCount > 1) row.remove()
+        }
+
+        renumberEditor(editor)
+      })
+    })
+
+    const gameLinks = (): GameLink[] => {
+      const seen = new Set<string>()
+
+      return [
+        ...document.querySelectorAll<HTMLAnchorElement>('a.menu-link'),
+      ].flatMap(link => {
+        const href = link.getAttribute('href') || ''
+        const label = link.textContent?.trim() || href
+
+        if (!href || href === '/settings' || seen.has(href)) return []
+        seen.add(href)
+        return [{href, label}]
+      })
+    }
+
+    const updateRatingProgress = () => {
+      const ratedCount = Object.values(ratings).filter(
+        rating => Number.isInteger(rating),
+      ).length
+      const total = ratingCards.length
+
+      if (ratingProgress) {
+        ratingProgress.textContent = `${ratedCount} of ${total} games rated`
+      }
+    }
+
+    const setRating = (
+      card: HTMLElement,
+      game: GameLink,
+      rating: number,
+    ) => {
+      ratings[game.href] = rating
+      card.dataset.rating = String(rating)
+
+      card.querySelectorAll<HTMLButtonElement>('[data-rating]').forEach(button => {
+        const buttonRating = Number(button.dataset.rating)
+        const selected =
+          buttonRating === 0 ? rating === 0 : buttonRating <= rating
+
+        button.classList.toggle('is-selected', selected)
+        button.setAttribute(
+          'aria-pressed',
+          buttonRating === rating ? 'true' : 'false',
+        )
+      })
+
+      const score = card.querySelector<HTMLElement>('[data-rating-score]')
+      const description = card.querySelector<HTMLElement>(
+        '[data-rating-description]',
+      )
+      if (score) score.textContent = `${rating}/10`
+      if (description) {
+        description.textContent = ratingDescriptions[rating]
+      }
+
+      updateRatingProgress()
+    }
+
+    const makeRatingCard = (game: GameLink, index: number) => {
+      const card = document.createElement('article')
+      card.className = 'rating-card'
+      card.dataset.ratingCard = ''
+      card.dataset.searchText = `${game.label} ${game.href}`.toLowerCase()
+
+      const heading = document.createElement('header')
+      const number = document.createElement('span')
+      number.className = 'game-number'
+      number.textContent = String(index + 1).padStart(2, '0')
+
+      const titleWrap = document.createElement('div')
+      const title = document.createElement('h3')
+      title.textContent = game.label
+      const path = document.createElement('span')
+      path.className = 'game-path'
+      path.textContent = game.href
+      titleWrap.append(title, path)
+      heading.append(number, titleWrap)
+
+      const controls = document.createElement('div')
+      controls.className = 'star-controls'
+      controls.setAttribute('role', 'group')
+      controls.setAttribute('aria-label', `Rate ${game.label}`)
+
+      const zeroButton = document.createElement('button')
+      zeroButton.type = 'button'
+      zeroButton.className = 'zero-rating'
+      zeroButton.dataset.rating = '0'
+      zeroButton.textContent = '0'
+      zeroButton.setAttribute('aria-label', `Rate ${game.label} zero out of ten`)
+      zeroButton.addEventListener('click', () => setRating(card, game, 0))
+      controls.append(zeroButton)
+
+      const stars = document.createElement('div')
+      stars.className = 'stars'
+
+      for (let rating = 1; rating <= 10; rating += 1) {
+        const star = document.createElement('button')
+        star.type = 'button'
+        star.className = 'rating-star'
+        star.dataset.rating = String(rating)
+        star.textContent = '★'
+        star.setAttribute(
+          'aria-label',
+          `Rate ${game.label} ${rating} out of ten`,
+        )
+        star.addEventListener('click', () => setRating(card, game, rating))
+        stars.append(star)
+      }
+
+      controls.append(stars)
+
+      const result = document.createElement('div')
+      result.className = 'rating-result'
+      const score = document.createElement('strong')
+      score.dataset.ratingScore = ''
+      const description = document.createElement('span')
+      description.dataset.ratingDescription = ''
+      result.append(score, description)
+
+      card.append(heading, controls, result)
+      const initialRating = Number.isInteger(ratings[game.href])
+        ? ratings[game.href]
+        : 5
+      setRating(card, game, initialRating)
+      return card
+    }
+
+    const games = gameLinks()
+    ratingCards.push(...games.map(makeRatingCard))
+    ratingGrid?.replaceChildren(...ratingCards)
+    updateRatingProgress()
+
+    gameFilter?.addEventListener('input', () => {
+      const query = gameFilter.value.trim().toLowerCase()
+
+      ratingCards.forEach(card => {
+        card.hidden = !String(card.dataset.searchText).includes(query)
+      })
+    })
+
+    const collectList = (key: ListKey) => {
+      const editor = document.querySelector<HTMLElement>(
+        `[data-list-editor="${key}"]`,
+      )
+
+      return [
+        ...(editor?.querySelectorAll<HTMLInputElement>('[data-name-input]') ||
+          []),
+      ]
+        .map(input => input.value.trim())
+        .filter(Boolean)
+    }
+
+    settingsForm?.addEventListener('submit', event => {
+      event.preventDefault()
+      const primary = collectList('primary')
+      const secondary = collectList('secondary')
+
+      if (!primary.length || !secondary.length) {
+        if (saveError) {
+          saveError.textContent =
+            'Both Kid Thing lists need at least one name before saving.'
+          saveError.hidden = false
+        }
+        return
+      }
+
+      saveKidThingLists({primary, secondary})
+      window.localStorage.setItem(
+        GAME_RATINGS_STORAGE_KEY,
+        JSON.stringify(ratings),
+      )
+      window.location.href = '/kidthing'
+    })
+  </script>
+</Layout>
+
+<style is:global>
+  :root {
+    --settings-ink: #20201d;
+    --settings-paper: #f6f3ea;
+    --settings-card: #fffdf7;
+    --settings-muted: #77756d;
+    --settings-line: rgba(44, 43, 37, 0.15);
+    --settings-yellow: #f4c95d;
+    --settings-orange: #ec7659;
+    --settings-mint: #97c9a5;
+    --settings-blue: #6798c0;
+  }
+
+  html {
+    background: var(--settings-paper);
+  }
+
+  body {
+    margin: 0;
+    color: var(--settings-ink);
+    background:
+      radial-gradient(circle at 5% 2%, rgba(244, 201, 93, 0.25), transparent 22rem),
+      radial-gradient(circle at 95% 15%, rgba(103, 152, 192, 0.16), transparent 28rem),
+      var(--settings-paper);
+    font-family:
+      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  .settings-page {
+    width: min(1180px, calc(100% - 36px));
+    margin: 0 auto;
+    padding: 74px 0 120px;
+  }
+
+  .settings-hero {
+    display: flex;
+    min-height: 330px;
+    padding: clamp(30px, 7vw, 76px);
+    align-items: end;
+    justify-content: space-between;
+    gap: 42px;
+    overflow: hidden;
+    border-radius: 34px;
+    color: #f9f6ee;
+    background:
+      radial-gradient(circle at 82% 10%, rgba(244, 201, 93, 0.85), transparent 13rem),
+      linear-gradient(135deg, #22231f, #34342e);
+    box-shadow: 0 28px 70px rgba(55, 48, 34, 0.15);
+    box-sizing: border-box;
+  }
+
+  .eyebrow {
+    margin: 0 0 14px;
+    color: var(--settings-yellow);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+  }
+
+  .settings-hero h1 {
+    margin: 0;
+    font-size: clamp(4rem, 11vw, 8.6rem);
+    letter-spacing: -0.085em;
+    line-height: 0.8;
+  }
+
+  .hero-copy {
+    max-width: 660px;
+    margin: 30px 0 0;
+    color: #c9c8c0;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    line-height: 1.65;
+  }
+
+  .back-link {
+    display: flex;
+    flex: 0 0 auto;
+    min-width: 180px;
+    min-height: 54px;
+    padding: 0 18px 0 22px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    border-radius: 999px;
+    color: var(--settings-ink);
+    background: var(--settings-yellow);
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .back-link span {
+    font-size: 1.35rem;
+  }
+
+  .settings-section {
+    padding: 88px 0 12px;
+  }
+
+  .section-heading {
+    display: grid;
+    grid-template-columns: 1fr minmax(260px, 480px);
+    gap: 40px;
+    align-items: end;
+    margin-bottom: 32px;
+    padding: 0 8px;
+  }
+
+  .step-number {
+    margin: 0 0 8px;
+    color: var(--settings-orange);
+    font-size: 0.74rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+  }
+
+  .section-heading h2 {
+    margin: 0;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: -0.065em;
+    line-height: 0.95;
+  }
+
+  .section-heading > p {
+    margin: 0;
+    color: var(--settings-muted);
+    line-height: 1.65;
+  }
+
+  .list-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .list-editor {
+    overflow: hidden;
+    border: 1px solid var(--settings-line);
+    border-radius: 26px;
+    background: var(--settings-card);
+    box-shadow: 0 18px 55px rgba(63, 53, 38, 0.08);
+  }
+
+  .list-editor > header {
+    display: flex;
+    padding: 25px;
+    align-items: start;
+    justify-content: space-between;
+    gap: 18px;
+    border-bottom: 1px solid var(--settings-line);
+  }
+
+  .list-editor > header > div {
+    display: flex;
+    gap: 14px;
+  }
+
+  .list-code {
+    display: grid;
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border-radius: 13px;
+    background: var(--settings-yellow);
+    font-weight: 950;
+  }
+
+  .list-code-s {
+    background: #a7d8df;
+  }
+
+  .list-editor h3 {
+    margin: 0 0 4px;
+    font-size: 1.2rem;
+  }
+
+  .list-editor header p {
+    max-width: 310px;
+    margin: 0;
+    color: var(--settings-muted);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .list-count {
+    flex: 0 0 auto;
+    color: var(--settings-muted);
+    font-size: 0.72rem;
+  }
+
+  .editor-rows {
+    display: grid;
+    max-height: 660px;
+    padding: 10px;
+    gap: 6px;
+    overflow: auto;
+  }
+
+  .name-row {
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    padding: 7px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+  }
+
+  .name-row:focus-within {
+    border-color: rgba(103, 152, 192, 0.38);
+    background: rgba(103, 152, 192, 0.06);
+  }
+
+  .row-number {
+    color: var(--settings-orange);
+    font-size: 0.76rem;
+    font-weight: 950;
+    text-align: center;
+  }
+
+  .name-row label {
+    margin: 0;
+  }
+
+  .name-row input {
+    width: 100%;
+    height: 44px;
+    margin: 0;
+    padding: 0 12px;
+    border: 1px solid var(--settings-line);
+    border-radius: 11px;
+    outline: 0;
+    background: white;
+    box-sizing: border-box;
+  }
+
+  .name-row input:focus {
+    border-color: var(--settings-blue);
+    box-shadow: 0 0 0 3px rgba(103, 152, 192, 0.14);
+  }
+
+  .row-actions {
+    display: flex;
+    gap: 3px;
+  }
+
+  .row-actions button {
+    display: grid;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    place-items: center;
+    border: 0;
+    border-radius: 8px;
+    color: var(--settings-muted);
+    background: #eeece5;
+    cursor: pointer;
+  }
+
+  .row-actions button:hover {
+    color: var(--settings-ink);
+    background: var(--settings-yellow);
+  }
+
+  .row-actions .remove-row:hover {
+    color: white;
+    background: var(--settings-orange);
+  }
+
+  .add-row {
+    width: calc(100% - 20px);
+    min-height: 48px;
+    margin: 0 10px 10px;
+    border: 1px dashed rgba(44, 43, 37, 0.25);
+    border-radius: 13px;
+    color: var(--settings-ink);
+    background: transparent;
+    font-weight: 850;
+    cursor: pointer;
+  }
+
+  .add-row span {
+    margin-right: 6px;
+    color: var(--settings-orange);
+    font-size: 1.2rem;
+  }
+
+  .add-row:hover {
+    border-color: var(--settings-blue);
+    background: rgba(103, 152, 192, 0.08);
+  }
+
+  .rating-scale {
+    display: grid;
+    grid-template-columns: minmax(170px, 1fr) minmax(40px, 0.4fr) minmax(110px, 0.6fr) minmax(40px, 0.4fr) minmax(170px, 1fr);
+    gap: 14px;
+    align-items: center;
+    padding: 22px;
+    border: 1px solid var(--settings-line);
+    border-radius: 22px;
+    background: var(--settings-card);
+  }
+
+  .scale-point {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 10px;
+    align-items: center;
+    color: var(--settings-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+
+  .scale-point strong {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border-radius: 50%;
+    color: white;
+    background: var(--settings-orange);
+    font-size: 1rem;
+  }
+
+  .scale-neutral strong {
+    color: var(--settings-ink);
+    background: var(--settings-yellow);
+  }
+
+  .scale-best strong {
+    background: #4f9b66;
+  }
+
+  .scale-line {
+    height: 4px;
+    background: linear-gradient(90deg, var(--settings-orange), var(--settings-yellow));
+  }
+
+  .scale-line-good {
+    background: linear-gradient(90deg, var(--settings-yellow), #4f9b66);
+  }
+
+  .ratings-toolbar {
+    display: flex;
+    margin: 22px 0 14px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  .ratings-toolbar label {
+    width: min(420px, 100%);
+    margin: 0;
+  }
+
+  .ratings-toolbar input {
+    width: 100%;
+    height: 52px;
+    margin: 0;
+    padding: 0 18px;
+    border: 1px solid var(--settings-line);
+    border-radius: 999px;
+    outline: none;
+    background: var(--settings-card);
+    box-sizing: border-box;
+  }
+
+  .ratings-toolbar input:focus {
+    border-color: var(--settings-blue);
+    box-shadow: 0 0 0 3px rgba(103, 152, 192, 0.14);
+  }
+
+  .ratings-toolbar p {
+    margin: 0;
+    color: var(--settings-muted);
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .rating-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .rating-card {
+    display: grid;
+    min-width: 0;
+    padding: 19px;
+    gap: 17px;
+    border: 1px solid var(--settings-line);
+    border-radius: 20px;
+    background: var(--settings-card);
+  }
+
+  .rating-card[hidden] {
+    display: none;
+  }
+
+  .rating-card > header {
+    display: flex;
+    min-width: 0;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .game-number {
+    color: #aaa79d;
+    font-size: 0.7rem;
+    font-weight: 900;
+  }
+
+  .rating-card h3 {
+    margin: 0;
+    overflow: hidden;
+    font-size: 1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .game-path {
+    display: block;
+    margin-top: 2px;
+    color: var(--settings-muted);
+    font-size: 0.66rem;
+  }
+
+  .star-controls {
+    display: flex;
+    min-width: 0;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .stars {
+    display: flex;
+    min-width: 0;
+    gap: 1px;
+  }
+
+  .rating-star,
+  .zero-rating {
+    display: grid;
+    width: 27px;
+    height: 32px;
+    padding: 0;
+    place-items: center;
+    border: 0;
+    border-radius: 7px;
+    color: #d8d4c8;
+    background: transparent;
+    font-size: 1.05rem;
+    cursor: pointer;
+  }
+
+  .rating-star:hover,
+  .rating-star.is-selected {
+    color: #e6ae20;
+    text-shadow: 0 0 12px rgba(244, 201, 93, 0.65);
+  }
+
+  .zero-rating {
+    flex: 0 0 auto;
+    border: 1px solid var(--settings-line);
+    color: var(--settings-muted);
+    font-size: 0.7rem;
+    font-weight: 900;
+  }
+
+  .zero-rating.is-selected {
+    border-color: var(--settings-orange);
+    color: white;
+    background: var(--settings-orange);
+  }
+
+  .rating-star:focus-visible,
+  .zero-rating:focus-visible,
+  .row-actions button:focus-visible,
+  .add-row:focus-visible,
+  .submit-dock button:focus-visible,
+  .back-link:focus-visible {
+    outline: 3px solid var(--settings-blue);
+    outline-offset: 2px;
+  }
+
+  .rating-result {
+    display: flex;
+    min-height: 28px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    color: var(--settings-muted);
+    font-size: 0.7rem;
+  }
+
+  .rating-result strong {
+    flex: 0 0 auto;
+    color: var(--settings-ink);
+    font-size: 0.86rem;
+  }
+
+  .rating-result span {
+    overflow: hidden;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .loading-games {
+    color: var(--settings-muted);
+  }
+
+  .save-error {
+    margin: 22px 0 0;
+    color: #b74331;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .submit-dock {
+    position: sticky;
+    z-index: 5;
+    bottom: 18px;
+    display: flex;
+    margin-top: 30px;
+    padding: 16px 18px 16px 22px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 22px;
+    color: white;
+    background: rgba(31, 32, 28, 0.94);
+    box-shadow: 0 20px 55px rgba(41, 36, 27, 0.24);
+    backdrop-filter: blur(18px);
+  }
+
+  .submit-dock > div {
+    display: grid;
+    gap: 3px;
+  }
+
+  .submit-dock span {
+    color: #bdbdb5;
+    font-size: 0.76rem;
+  }
+
+  .submit-dock button {
+    min-height: 54px;
+    padding: 0 23px;
+    border: 0;
+    border-radius: 999px;
+    color: var(--settings-ink);
+    background: var(--settings-yellow);
+    font-weight: 950;
+    cursor: pointer;
+  }
+
+  .submit-dock button span {
+    margin-left: 12px;
+    color: inherit;
+    font-size: 1.1rem;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 900px) {
+    .settings-hero {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    .list-grid,
+    .rating-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .rating-scale {
+      grid-template-columns: 1fr;
+    }
+
+    .scale-line {
+      width: 4px;
+      height: 28px;
+      margin-left: 19px;
+      background: linear-gradient(var(--settings-orange), var(--settings-yellow));
+    }
+
+    .scale-line-good {
+      background: linear-gradient(var(--settings-yellow), #4f9b66);
+    }
+  }
+
+  @media (max-width: 620px) {
+    .settings-page {
+      width: min(100% - 20px, 1180px);
+      padding-top: 68px;
+    }
+
+    .settings-hero {
+      min-height: 0;
+      border-radius: 25px;
+    }
+
+    .back-link {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .settings-section {
+      padding-top: 66px;
+    }
+
+    .section-heading {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .name-row {
+      grid-template-columns: 42px minmax(0, 1fr);
+    }
+
+    .row-actions {
+      grid-column: 2;
+      justify-content: end;
+    }
+
+    .ratings-toolbar,
+    .submit-dock {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .rating-card {
+      padding: 15px;
+    }
+
+    .rating-star {
+      width: min(8vw, 29px);
+    }
+
+    .submit-dock button {
+      width: 100%;
+    }
+  }
+</style>

@@ -100,6 +100,10 @@ export const memes2 = [
         "audio": "/media/sounds/snore-mimimimimimi.mp3"
     },
     {
+        "name": "English or Spanish Song",
+        "audio": "/media/sounds/english-or-spanish-song.mp3"
+    },
+    {
         "name": "Wow Anime meme",
         "audio": "/media/sounds/anime-wow-sound-effect-mp3cut.mp3"
     },
@@ -940,6 +944,10 @@ export const memes2 = [
         "audio": "/media/sounds/clown-horn-sound-effect_1.mp3"
     },
     {
+        "name": "BIG D RANDY",
+        "audio": "/media/sounds/big-d-randy_VnopRXZ.mp3"
+    },
+    {
         "name": "Что? Почему я чë рный?!!!!",
         "audio": "/media/sounds/chto-pochemu-ia-che-rnyi.mp3"
     },
@@ -1004,6 +1012,10 @@ export const memes2 = [
         "audio": "/media/sounds/enderpel.mp3"
     },
     {
+        "name": "English or spanish ?",
+        "audio": "/media/sounds/english-or-spanish_YRFEwaM.mp3"
+    },
+    {
         "name": "bomboclat",
         "audio": "/media/sounds/bomboclat.mp3"
     },
@@ -1027,10 +1039,10 @@ export const memes2 = [
         "name": "El Primo Sound Effect",
         "audio": "/media/sounds/elprimosoundeffectmp3.mp3"
     },
-    // {
-    //     "name": "JonTron - What? WTF",
-    //     "audio": "/media/sounds/jontron-what_K9mOgXd.mp3"
-    // },
+    {
+        "name": "JonTron - What? WTF",
+        "audio": "/media/sounds/jontron-what_K9mOgXd.mp3"
+    },
     {
         "name": "My Name Is Jeff",
         "audio": "/media/sounds/ringtone_20.mp3"
@@ -1487,10 +1499,10 @@ export const memes2 = [
         "name": "иван курапов пранк",
         "audio": "/media/sounds/ivan-kurapov-prank.mp3"
     },
-    // {
-    //     "name": "Oh Hell No (Vine)",
-    //     "audio": "/media/sounds/oh-hell-no-sound-effect-free-download.mp3"
-    // },
+    {
+        "name": "Oh Hell No (Vine)",
+        "audio": "/media/sounds/oh-hell-no-sound-effect-free-download.mp3"
+    },
     {
         "name": "me chama de lord",
         "audio": "/media/sounds/me-chama-de-lord.mp3"
@@ -1611,10 +1623,10 @@ export const memes2 = [
         "name": "MIAUUUUUUUU",
         "audio": "/media/sounds/miauuuuuuuu.mp3"
     },
-    // {
-    //     "name": "AW HELL NAH MAN",
-    //     "audio": "/media/sounds/aw-hell-nah-man.mp3"
-    // },
+    {
+        "name": "AW HELL NAH MAN",
+        "audio": "/media/sounds/aw-hell-nah-man.mp3"
+    },
     {
         "name": "Baba Booey",
         "audio": "/media/sounds/bababooey-sound-effect.mp3"
@@ -2120,6 +2132,10 @@ export const memes2 = [
         "audio": "/media/sounds/para-tira.mp3"
     },
     {
+        "name": "im a lion pizza chicken",
+        "audio": "/media/sounds/im-a-lion-pizza-chicken.mp3"
+    },
+    {
         "name": "Astaghfirullah kamu ini berdosa banget",
         "audio": "/media/sounds/astaghfirullah-kamu-ini-berdosa-banget.mp3"
     },
@@ -2503,10 +2519,10 @@ export const memes2 = [
         "name": "Juego",
         "audio": "/media/sounds/juego-audiotrimmer.mp3"
     },
-    // {
-    //     "name": "Yes yes no no",
-    //     "audio": "/media/sounds/ksi-yes-yes-yes-yes-no-no-no-no.mp3"
-    // },
+    {
+        "name": "Yes yes no no",
+        "audio": "/media/sounds/ksi-yes-yes-yes-yes-no-no-no-no.mp3"
+    },
     {
         "name": "Among us imposter",
         "audio": "/media/sounds/you-are-impostor-sound.mp3"
@@ -2663,10 +2679,10 @@ export const memes2 = [
         "name": "screaming emoji meme",
         "audio": "/media/sounds/screaming-emoji-meme.mp3"
     },
-    // {
-    //     "name": "Who invited this kid?",
-    //     "audio": "/media/sounds/video0-1-online-audio-converter_2i1mcmV.mp3"
-    // },
+    {
+        "name": "Who invited this kid?",
+        "audio": "/media/sounds/video0-1-online-audio-converter_2i1mcmV.mp3"
+    },
     {
         "name": "Cave Ambience 2",
         "audio": "/media/sounds/cave21.mp3"
@@ -2719,10 +2735,10 @@ export const memes2 = [
         "name": "welll well well well",
         "audio": "/media/sounds/welll-well-well-well.mp3"
     },
-    // {
-    //     "name": "KNOCK KNOCK MF ITS UNITED STATES OF AMERICA",
-    //     "audio": "/media/sounds/knock-knock-mf-its-united-states-of-america.mp3"
-    // },
+    {
+        "name": "KNOCK KNOCK MF ITS UNITED STATES OF AMERICA",
+        "audio": "/media/sounds/knock-knock-mf-its-united-states-of-america.mp3"
+    },
     {
         "name": "kyu nahi ho rahi padhai",
         "audio": "/media/sounds/kyu-nahi-ho-rahi-padhai.mp3"
@@ -2827,10 +2843,10 @@ export const memes2 = [
         "name": "Double chunk chocolate cookie",
         "audio": "/media/sounds/double-chunk-chocolate-cookie.mp3"
     },
-    // {
-    //     "name": "Gotcha Bit** by Dave Chapelle",
-    //     "audio": "/media/sounds/gotcha-bit-by-dave-chapelle.mp3"
-    // },
+    {
+        "name": "Gotcha Bit** by Dave Chapelle",
+        "audio": "/media/sounds/gotcha-bit-by-dave-chapelle.mp3"
+    },
     {
         "name": "Пасхалко 1488 джокер",
         "audio": "/media/sounds/paskhalko-1488-dzhoker.mp3"
@@ -2959,10 +2975,6 @@ export const memes2 = [
         "name": "จ๊ะเอ๋ตัวเอง",
         "audio": "/media/sounds/m_fixed_bBp6dW2.mp3"
     },
-    // {
-    //     "name": "Who invited this kid?",
-    //     "audio": "/media/sounds/video0-1-online-audio-converter_2i1mcmV.mp3"
-    // },
     {
         "name": "лягушка",
         "audio": "/media/sounds/m_fixed_V6KM8Vr.mp3"
@@ -3168,6 +3180,10 @@ export const memes2 = [
         "audio": "/media/sounds/aa-aaa-aaaa.mp3"
     },
     {
+        "name": "why you bully me",
+        "audio": "/media/sounds/why-you-bully-me-every-line.mp3"
+    },
+    {
         "name": "тап тап тап по хомяку",
         "audio": "/media/sounds/tap-tap-tap-po-khomiaku.mp3"
     },
@@ -3183,10 +3199,6 @@ export const memes2 = [
         "name": "Oh ta grand mere",
         "audio": "/media/sounds/oh-ta-grand-mere.mp3"
     },
-    // {
-    //     "name": "Gotcha Bit** by Dave Chapelle",
-    //     "audio": "/media/sounds/gotcha-bit-by-dave-chapelle.mp3"
-    // },
     {
         "name": "Ryan gosling burp",
         "audio": "/media/sounds/ryan-gosling-burp.mp3"
@@ -4039,10 +4051,10 @@ export const memes2 = [
         "name": "Cartoon bonk",
         "audio": "/media/sounds/cartoon-bonk.mp3"
     },
-    // {
-    //     "name": "loud shitpost fart",
-    //     "audio": "/media/sounds/loud-shitpost-fart.mp3"
-    // },
+    {
+        "name": "loud shitpost fart",
+        "audio": "/media/sounds/loud-shitpost-fart.mp3"
+    },
     {
         "name": "Angry Birds Bass Boosted",
         "audio": "/media/sounds/angry-birds-theme-song-audiotrimmer-1.mp3"

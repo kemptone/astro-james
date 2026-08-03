@@ -2,6 +2,8 @@ import {memes2} from '../../data/meme/memes2'
 import {reactions} from '../../data/meme/reactions'
 import {music} from '@/data/meme/music'
 import {pranks} from '@/data/meme/pranks'
+import {sound_effects} from '@/data/meme/sound_fx'
+import {getBadWordRanks} from '@/data/meme/bad-word-ranking'
 import type {MemeType} from '@/components/wc-meme-item'
 
 function clean(str: string) {
@@ -19,11 +21,15 @@ export async function GET() {
 
   const ret: MemeType[] = []
 
-  ;[...reactions, ...memes2, ...music, ...pranks]
-    .map(item => ({
-      name: clean(item.name),
-      audio: 'https://www.myinstants.com' + clean(item.audio),
-    }))
+  ;[...reactions, ...memes2, ...music, ...pranks, ...sound_effects]
+    .map(item => {
+      const name = clean(item.name)
+      return {
+        name,
+        audio: 'https://www.myinstants.com' + clean(item.audio),
+        badWordRanks: getBadWordRanks(name),
+      }
+    })
     .forEach(item => {
       if (map[item.audio]) return
       map[item.audio] = true

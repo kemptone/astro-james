@@ -1,0 +1,1441 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="The Best Timer Game Ever Made">
+  <main class="timer-game">
+    <section class="game-shell" aria-labelledby="page-title">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> Time-bending playground</p>
+          <h1 id="page-title">The best timer<br />game ever made.</h1>
+          <p class="intro">
+            Pick a time rule. Freeze one perfect moment, or animate a whole
+            time jump in full screen.
+          </p>
+        </div>
+
+        <div class="hero-orbit" aria-hidden="true">
+          <div class="orbit orbit-one"></div>
+          <div class="orbit orbit-two"></div>
+          <div class="orbit-core">
+            <span>×4</span>
+            <small>TIME</small>
+          </div>
+        </div>
+      </header>
+
+      <form id="timer-form">
+        <fieldset class="mode-picker">
+          <legend>1. Choose your version</legend>
+          <div class="mode-grid">
+            <label class="mode-card">
+              <input type="radio" name="mode" value="ten-minus" checked />
+              <span class="mode-number">V.01</span>
+              <span class="mode-icon minus-icon" aria-hidden="true">10−</span>
+              <strong>Ten Minus</strong>
+              <small>10 hours minus your time</small>
+              <span class="example">8:00:00 <b>→</b> 2:00:00</span>
+            </label>
+
+            <label class="mode-card">
+              <input type="radio" name="mode" value="four-times" />
+              <span class="mode-number">V.02</span>
+              <span class="mode-icon times-icon" aria-hidden="true">×4</span>
+              <strong>Four Times</strong>
+              <small>Your time multiplied by four</small>
+              <span class="example">1:00:00 <b>→</b> 4:00:00</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="play-picker">
+          <legend>2. Choose how it plays</legend>
+          <div class="segmented-control">
+            <label>
+              <input type="radio" name="play-style" value="frozen" checked />
+              <span>
+                <b>Frozen</b>
+                One transformed time
+              </span>
+            </label>
+            <label>
+              <input type="radio" name="play-style" value="animated" />
+              <span>
+                <b>Animated</b>
+                Travel from one time to another
+              </span>
+            </label>
+          </div>
+        </fieldset>
+
+        <section class="time-workbench" aria-labelledby="time-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">3. Set the clock</p>
+              <h2 id="time-heading">Build your time jump</h2>
+            </div>
+            <button type="button" class="swap-button" id="swap-times" hidden>
+              Swap times <span aria-hidden="true">⇄</span>
+            </button>
+          </div>
+
+          <div class="time-row">
+            <div class="time-entry">
+              <span class="time-label" id="start-label">Your time</span>
+              <div class="clock-inputs" role="group" aria-labelledby="start-label">
+                <label>
+                  <span>Hours</span>
+                  <input
+                    id="start-hours"
+                    type="number"
+                    min="0"
+                    max="10"
+                    value="8"
+                    inputmode="numeric"
+                    aria-label="Start hours"
+                  />
+                </label>
+                <i>:</i>
+                <label>
+                  <span>Minutes</span>
+                  <input
+                    id="start-minutes"
+                    type="number"
+                    min="0"
+                    max="59"
+                    value="0"
+                    inputmode="numeric"
+                    aria-label="Start minutes"
+                  />
+                </label>
+                <i>:</i>
+                <label>
+                  <span>Seconds</span>
+                  <input
+                    id="start-seconds"
+                    type="number"
+                    min="0"
+                    max="59"
+                    value="0"
+                    inputmode="numeric"
+                    aria-label="Start seconds"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <span class="time-arrow" aria-hidden="true">→</span>
+
+            <div class="time-result">
+              <span class="time-label">Becomes</span>
+              <output id="start-result">02:00:00</output>
+              <small id="formula-note">10:00:00 − 08:00:00</small>
+            </div>
+          </div>
+
+          <div class="time-row end-time-row" id="end-time-row" hidden>
+            <div class="time-entry">
+              <span class="time-label" id="end-label">Travel to</span>
+              <div class="clock-inputs" role="group" aria-labelledby="end-label">
+                <label>
+                  <span>Hours</span>
+                  <input
+                    id="end-hours"
+                    type="number"
+                    min="0"
+                    max="10"
+                    value="7"
+                    inputmode="numeric"
+                    aria-label="End hours"
+                  />
+                </label>
+                <i>:</i>
+                <label>
+                  <span>Minutes</span>
+                  <input
+                    id="end-minutes"
+                    type="number"
+                    min="0"
+                    max="59"
+                    value="59"
+                    inputmode="numeric"
+                    aria-label="End minutes"
+                  />
+                </label>
+                <i>:</i>
+                <label>
+                  <span>Seconds</span>
+                  <input
+                    id="end-seconds"
+                    type="number"
+                    min="0"
+                    max="59"
+                    value="0"
+                    inputmode="numeric"
+                    aria-label="End seconds"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <span class="time-arrow" aria-hidden="true">→</span>
+
+            <div class="time-result">
+              <span class="time-label">Becomes</span>
+              <output id="end-result">02:01:00</output>
+              <small id="end-formula-note">10:00:00 − 07:59:00</small>
+            </div>
+          </div>
+
+          <div class="run-summary" id="run-summary" hidden>
+            <span class="summary-dot"></span>
+            <p>
+              The full-screen clock will run from
+              <strong id="summary-start">02:00:00</strong> to
+              <strong id="summary-end">02:01:00</strong> in
+              <strong id="summary-duration">1 minute</strong>.
+            </p>
+          </div>
+        </section>
+
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+
+        <button class="launch-button" type="submit">
+          <span id="launch-label">Freeze this time</span>
+          <span class="launch-icon" aria-hidden="true">↗</span>
+        </button>
+      </form>
+    </section>
+
+    <section class="stage" id="stage" hidden aria-label="Full-screen timer">
+      <div class="stage-glow" aria-hidden="true"></div>
+      <div class="stage-topline">
+        <span id="stage-mode">TEN MINUS</span>
+        <span class="live-label" id="live-label">FROZEN</span>
+      </div>
+
+      <div class="stage-clock-wrap">
+        <p id="stage-caption">8 hours becomes</p>
+        <output id="stage-clock" role="timer" aria-live="off">02:00:00</output>
+        <div class="progress-track" id="progress-track" hidden>
+          <span id="progress-bar"></span>
+        </div>
+      </div>
+
+      <div class="stage-controls">
+        <button type="button" id="pause-timer" hidden>Pause</button>
+        <button type="button" id="close-stage">Change the time</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const TEN_HOURS = 10 * 60 * 60
+
+    type TimerMode = 'ten-minus' | 'four-times'
+    type PlayStyle = 'frozen' | 'animated'
+    type TimePart = 'hours' | 'minutes' | 'seconds'
+    type TimeGroupName = 'start' | 'end'
+    type TimerAnimation = {
+      mode: TimerMode
+      start: number
+      end: number
+      durationMs: number
+    }
+
+    const form = document.querySelector<HTMLFormElement>('#timer-form')
+    const stage = document.querySelector<HTMLElement>('#stage')
+    const startResult =
+      document.querySelector<HTMLOutputElement>('#start-result')
+    const endResult = document.querySelector<HTMLOutputElement>('#end-result')
+    const formulaNote = document.querySelector<HTMLElement>('#formula-note')
+    const endFormulaNote =
+      document.querySelector<HTMLElement>('#end-formula-note')
+    const endTimeRow = document.querySelector<HTMLElement>('#end-time-row')
+    const runSummary = document.querySelector<HTMLElement>('#run-summary')
+    const swapButton =
+      document.querySelector<HTMLButtonElement>('#swap-times')
+    const launchLabel = document.querySelector<HTMLElement>('#launch-label')
+    const formError = document.querySelector<HTMLElement>('#form-error')
+    const stageClock = document.querySelector<HTMLOutputElement>('#stage-clock')
+    const stageMode = document.querySelector<HTMLElement>('#stage-mode')
+    const stageCaption = document.querySelector<HTMLElement>('#stage-caption')
+    const liveLabel = document.querySelector<HTMLElement>('#live-label')
+    const progressTrack =
+      document.querySelector<HTMLElement>('#progress-track')
+    const progressBar = document.querySelector<HTMLElement>('#progress-bar')
+    const pauseButton =
+      document.querySelector<HTMLButtonElement>('#pause-timer')
+    const closeStageButton =
+      document.querySelector<HTMLButtonElement>('#close-stage')
+    const summaryStart = document.querySelector<HTMLElement>('#summary-start')
+    const summaryEnd = document.querySelector<HTMLElement>('#summary-end')
+    const summaryDuration =
+      document.querySelector<HTMLElement>('#summary-duration')
+    const allTimeInputs = [
+      ...document.querySelectorAll<HTMLInputElement>('.clock-inputs input'),
+    ]
+    const hourInputs = [
+      document.querySelector<HTMLInputElement>('#start-hours'),
+      document.querySelector<HTMLInputElement>('#end-hours'),
+    ]
+
+    const timeGroups = {
+      start: {
+        hours: document.querySelector<HTMLInputElement>('#start-hours'),
+        minutes: document.querySelector<HTMLInputElement>('#start-minutes'),
+        seconds: document.querySelector<HTMLInputElement>('#start-seconds'),
+      },
+      end: {
+        hours: document.querySelector<HTMLInputElement>('#end-hours'),
+        minutes: document.querySelector<HTMLInputElement>('#end-minutes'),
+        seconds: document.querySelector<HTMLInputElement>('#end-seconds'),
+      },
+    }
+
+    let frameId = 0
+    let animationStart = 0
+    let pausedAt = 0
+    let pausedDuration = 0
+    let isPaused = false
+    let activeAnimation: TimerAnimation | null = null
+
+    const selectedValue = (name: string) =>
+      document.querySelector<HTMLInputElement>(
+        `input[name="${name}"]:checked`,
+      )?.value
+
+    const selectedMode = () => selectedValue('mode') as TimerMode
+    const selectedPlayStyle = () =>
+      selectedValue('play-style') as PlayStyle
+
+    const pad = (value: number) =>
+      String(Math.floor(Math.abs(value))).padStart(2, '0')
+
+    function formatTime(totalSeconds: number) {
+      const safeSeconds = Math.max(0, Math.round(totalSeconds))
+      const hours = Math.floor(safeSeconds / 3600)
+      const minutes = Math.floor((safeSeconds % 3600) / 60)
+      const seconds = safeSeconds % 60
+      return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+    }
+
+    function formatDuration(totalSeconds: number) {
+      if (totalSeconds < 1) {
+        return `${Math.max(totalSeconds, 0).toFixed(2)} seconds`
+      }
+
+      const rounded = Math.round(totalSeconds * 100) / 100
+      if (rounded === 60) return '1 minute'
+      if (rounded > 60 && rounded % 60 === 0) {
+        return `${rounded / 60} minutes`
+      }
+      if (rounded === 1) return '1 second'
+      return `${rounded} seconds`
+    }
+
+    function readTime(group: TimeGroupName) {
+      const inputs = timeGroups[group]
+      const hours = Number(inputs.hours?.value)
+      const minutes = Number(inputs.minutes?.value)
+      const seconds = Number(inputs.seconds?.value)
+
+      if (
+        !Number.isFinite(hours) ||
+        !Number.isFinite(minutes) ||
+        !Number.isFinite(seconds) ||
+        hours < 0 ||
+        minutes < 0 ||
+        minutes > 59 ||
+        seconds < 0 ||
+        seconds > 59
+      ) {
+        return null
+      }
+
+      return hours * 3600 + minutes * 60 + seconds
+    }
+
+    function transformTime(seconds: number, mode: TimerMode) {
+      return mode === 'ten-minus' ? TEN_HOURS - seconds : seconds * 4
+    }
+
+    function formulaFor(seconds: number, mode: TimerMode) {
+      if (mode === 'ten-minus') {
+        return `10:00:00 − ${formatTime(seconds)}`
+      }
+      return `${formatTime(seconds)} × 4`
+    }
+
+    function setDefaultsForMode(mode: TimerMode) {
+      const start = timeGroups.start
+      const end = timeGroups.end
+
+      if (mode === 'ten-minus') {
+        start.hours.value = '8'
+        start.minutes.value = '0'
+        start.seconds.value = '0'
+        end.hours.value = '7'
+        end.minutes.value = '59'
+        end.seconds.value = '0'
+      } else {
+        start.hours.value = '1'
+        start.minutes.value = '0'
+        start.seconds.value = '0'
+        end.hours.value = '1'
+        end.minutes.value = '1'
+        end.seconds.value = '0'
+      }
+    }
+
+    function updateInterface() {
+      const mode = selectedMode()
+      const playStyle = selectedPlayStyle()
+      const isAnimated = playStyle === 'animated'
+      const start = readTime('start')
+      const end = readTime('end')
+
+      endTimeRow.hidden = !isAnimated
+      runSummary.hidden = !isAnimated
+      swapButton.hidden = !isAnimated
+      launchLabel.textContent = isAnimated
+        ? 'Start the time jump'
+        : 'Freeze this time'
+
+      hourInputs.forEach(input => {
+        input.max = mode === 'ten-minus' ? '10' : '99'
+      })
+
+      if (start === null || (mode === 'ten-minus' && start > TEN_HOURS)) {
+        startResult.textContent = '--:--:--'
+        formulaNote.textContent =
+          mode === 'ten-minus'
+            ? 'Choose a time from 00:00:00 to 10:00:00'
+            : 'Enter a valid time'
+      } else {
+        startResult.textContent = formatTime(transformTime(start, mode))
+        formulaNote.textContent = formulaFor(start, mode)
+      }
+
+      if (end === null || (mode === 'ten-minus' && end > TEN_HOURS)) {
+        endResult.textContent = '--:--:--'
+        endFormulaNote.textContent =
+          mode === 'ten-minus'
+            ? 'Choose a time from 00:00:00 to 10:00:00'
+            : 'Enter a valid time'
+      } else {
+        endResult.textContent = formatTime(transformTime(end, mode))
+        endFormulaNote.textContent = formulaFor(end, mode)
+      }
+
+      if (isAnimated && start !== null && end !== null) {
+        const realDuration = Math.abs(end - start) / (mode === 'four-times' ? 4 : 1)
+        summaryStart.textContent =
+          mode === 'ten-minus' && start > TEN_HOURS
+            ? '--:--:--'
+            : formatTime(transformTime(start, mode))
+        summaryEnd.textContent =
+          mode === 'ten-minus' && end > TEN_HOURS
+            ? '--:--:--'
+            : formatTime(transformTime(end, mode))
+        summaryDuration.textContent = formatDuration(realDuration)
+      }
+
+      formError.hidden = true
+    }
+
+    function validateTimes() {
+      const mode = selectedMode()
+      const playStyle = selectedPlayStyle()
+      const start = readTime('start')
+      const end = readTime('end')
+
+      if (start === null || (playStyle === 'animated' && end === null)) {
+        return 'Please enter valid hours, minutes, and seconds.'
+      }
+
+      if (
+        mode === 'ten-minus' &&
+        (start > TEN_HOURS || (playStyle === 'animated' && end > TEN_HOURS))
+      ) {
+        return 'Ten Minus accepts times from 00:00:00 through 10:00:00.'
+      }
+
+      if (playStyle === 'animated' && start === end) {
+        return 'Choose two different times for an animated jump.'
+      }
+
+      return ''
+    }
+
+    function describeInput(seconds: number) {
+      if (seconds === 0) return 'zero seconds'
+      if (seconds % 3600 === 0) {
+        const hours = seconds / 3600
+        return `${hours} ${hours === 1 ? 'hour' : 'hours'}`
+      }
+      return formatTime(seconds)
+    }
+
+    async function showStage() {
+      const mode = selectedMode()
+      const playStyle = selectedPlayStyle()
+      const start = readTime('start')
+      const end = readTime('end')
+      const transformedStart = transformTime(start, mode)
+
+      stage.hidden = false
+      document.body.classList.add('timer-stage-open')
+      stageMode.textContent = mode === 'ten-minus' ? 'TEN MINUS' : 'FOUR TIMES'
+      liveLabel.textContent = playStyle === 'animated' ? 'LIVE' : 'FROZEN'
+      stageCaption.textContent =
+        mode === 'ten-minus'
+          ? `${describeInput(start)} becomes`
+          : `${describeInput(start)}, multiplied by four`
+      stageClock.textContent = formatTime(transformedStart)
+      progressTrack.hidden = playStyle !== 'animated'
+      pauseButton.hidden = playStyle !== 'animated'
+      pauseButton.textContent = 'Pause'
+      progressBar.style.width = '0%'
+
+      try {
+        if (!document.fullscreenElement && stage.requestFullscreen) {
+          await stage.requestFullscreen()
+        }
+      } catch {
+        // The fixed stage still provides the intended full-screen experience.
+      }
+
+      if (playStyle === 'animated') {
+        const speed = mode === 'four-times' ? 4 : 1
+        activeAnimation = {
+          mode,
+          start,
+          end,
+          durationMs: (Math.abs(end - start) / speed) * 1000,
+        }
+        animationStart = performance.now()
+        pausedDuration = 0
+        isPaused = false
+        frameId = requestAnimationFrame(tick)
+      }
+    }
+
+    function tick(now: number) {
+      if (!activeAnimation || isPaused) return
+
+      const elapsed = now - animationStart - pausedDuration
+      const duration = Math.max(activeAnimation.durationMs, 1)
+      const progress = Math.min(elapsed / duration, 1)
+      const currentInput =
+        activeAnimation.start +
+        (activeAnimation.end - activeAnimation.start) * progress
+      const currentOutput = transformTime(currentInput, activeAnimation.mode)
+
+      stageClock.textContent = formatTime(currentOutput)
+      progressBar.style.width = `${progress * 100}%`
+
+      if (progress < 1) {
+        frameId = requestAnimationFrame(tick)
+      } else {
+        liveLabel.textContent = 'COMPLETE'
+        pauseButton.hidden = true
+        activeAnimation = null
+      }
+    }
+
+    async function closeStage() {
+      cancelAnimationFrame(frameId)
+      activeAnimation = null
+      isPaused = false
+      stage.hidden = true
+      document.body.classList.remove('timer-stage-open')
+
+      if (document.fullscreenElement) {
+        try {
+          await document.exitFullscreen()
+        } catch {
+          // Closing the in-page stage is enough if the browser refuses.
+        }
+      }
+    }
+
+    form?.addEventListener('submit', event => {
+      event.preventDefault()
+      const error = validateTimes()
+
+      if (error) {
+        formError.textContent = error
+        formError.hidden = false
+        return
+      }
+
+      showStage()
+    })
+
+    document.querySelectorAll('input[name="mode"]').forEach(input => {
+      input.addEventListener('change', () => {
+        setDefaultsForMode(selectedMode())
+        updateInterface()
+      })
+    })
+
+    document.querySelectorAll('input[name="play-style"]').forEach(input => {
+      input.addEventListener('change', updateInterface)
+    })
+
+    allTimeInputs.forEach(input => {
+      input.addEventListener('input', updateInterface)
+      input.addEventListener('blur', () => {
+        const min = Number(input.min)
+        const max = Number(input.max)
+        const value = Number(input.value)
+        if (Number.isFinite(value)) {
+          input.value = String(Math.min(Math.max(Math.floor(value), min), max))
+        }
+        updateInterface()
+      })
+    })
+
+    swapButton?.addEventListener('click', () => {
+      ;(['hours', 'minutes', 'seconds'] as TimePart[]).forEach(part => {
+        const oldStart = timeGroups.start[part].value
+        timeGroups.start[part].value = timeGroups.end[part].value
+        timeGroups.end[part].value = oldStart
+      })
+      updateInterface()
+    })
+
+    pauseButton?.addEventListener('click', () => {
+      if (!activeAnimation) return
+
+      if (isPaused) {
+        pausedDuration += performance.now() - pausedAt
+        isPaused = false
+        pauseButton.textContent = 'Pause'
+        liveLabel.textContent = 'LIVE'
+        frameId = requestAnimationFrame(tick)
+      } else {
+        isPaused = true
+        pausedAt = performance.now()
+        pauseButton.textContent = 'Resume'
+        liveLabel.textContent = 'PAUSED'
+        cancelAnimationFrame(frameId)
+      }
+    })
+
+    closeStageButton?.addEventListener('click', closeStage)
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && !stage.hidden) {
+        closeStage()
+      }
+    })
+
+    updateInterface()
+  </script>
+</Layout>
+
+<style is:global>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700;800&display=swap');
+
+  :root {
+    --ink: #f7f3e8;
+    --muted: #aaa89f;
+    --panel: #171816;
+    --panel-soft: #20211e;
+    --line: rgba(255, 255, 255, 0.13);
+    --acid: #d8ff4f;
+    --orange: #ff6b35;
+    --dark: #0c0d0b;
+  }
+
+  html {
+    background: var(--dark);
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background:
+      radial-gradient(circle at 12% 10%, rgba(216, 255, 79, 0.07), transparent 24rem),
+      radial-gradient(circle at 90% 35%, rgba(255, 107, 53, 0.08), transparent 26rem),
+      var(--dark);
+    color: var(--ink);
+    font-family: 'Manrope', sans-serif;
+  }
+
+  body.timer-stage-open {
+    overflow: hidden;
+  }
+
+  body.timer-stage-open .hamburger-nav {
+    display: none;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  button,
+  label {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .timer-game {
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+    box-sizing: border-box;
+  }
+
+  .game-shell {
+    width: min(1080px, 100%);
+    margin: 0 auto;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 56px;
+    align-items: center;
+    min-height: 430px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 16px;
+    color: var(--acid);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--acid);
+    box-shadow: 0 0 15px rgba(216, 255, 79, 0.75);
+  }
+
+  .hero h1 {
+    max-width: 760px;
+    margin: 0;
+    font-size: clamp(3.3rem, 8.3vw, 7rem);
+    font-weight: 800;
+    letter-spacing: -0.075em;
+    line-height: 0.87;
+  }
+
+  .intro {
+    max-width: 590px;
+    margin: 28px 0 0;
+    color: var(--muted);
+    font-size: clamp(1rem, 2vw, 1.22rem);
+    line-height: 1.6;
+  }
+
+  .hero-orbit {
+    position: relative;
+    display: grid;
+    width: 300px;
+    aspect-ratio: 1;
+    place-items: center;
+  }
+
+  .orbit {
+    position: absolute;
+    inset: 12%;
+    border: 1px solid rgba(216, 255, 79, 0.32);
+    border-radius: 50%;
+  }
+
+  .orbit::after {
+    position: absolute;
+    top: 50%;
+    left: -5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--acid);
+    box-shadow: 0 0 18px var(--acid);
+    content: '';
+  }
+
+  .orbit-one {
+    animation: orbit 13s linear infinite;
+  }
+
+  .orbit-two {
+    inset: 1%;
+    border-color: rgba(255, 107, 53, 0.28);
+    animation: orbit 19s linear infinite reverse;
+  }
+
+  .orbit-two::after {
+    top: 18%;
+    right: 18px;
+    left: auto;
+    background: var(--orange);
+    box-shadow: 0 0 18px var(--orange);
+  }
+
+  .orbit-core {
+    display: grid;
+    width: 138px;
+    aspect-ratio: 1;
+    place-content: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: rgba(20, 21, 18, 0.88);
+    box-shadow:
+      0 0 70px rgba(216, 255, 79, 0.09),
+      inset 0 0 40px rgba(216, 255, 79, 0.03);
+    text-align: center;
+  }
+
+  .orbit-core span {
+    color: var(--acid);
+    font-family: 'DM Mono', monospace;
+    font-size: 2.8rem;
+    line-height: 1;
+  }
+
+  .orbit-core small {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.28em;
+  }
+
+  fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  legend {
+    width: 100%;
+    margin-bottom: 22px;
+    color: var(--muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .mode-picker {
+    padding: 72px 0 28px;
+  }
+
+  .mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .mode-card {
+    position: relative;
+    display: grid;
+    min-height: 260px;
+    padding: 26px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: var(--panel);
+    cursor: pointer;
+    transition:
+      border-color 180ms ease,
+      transform 180ms ease,
+      background 180ms ease;
+    box-sizing: border-box;
+  }
+
+  .mode-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .mode-card:has(input:checked) {
+    border-color: var(--acid);
+    background:
+      linear-gradient(135deg, rgba(216, 255, 79, 0.1), transparent 50%),
+      var(--panel);
+    box-shadow: inset 0 0 0 1px var(--acid);
+  }
+
+  .mode-card input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .mode-card:has(input:focus-visible) {
+    outline: 3px solid white;
+    outline-offset: 4px;
+  }
+
+  .mode-number {
+    align-self: start;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+  }
+
+  .mode-icon {
+    position: absolute;
+    top: 22px;
+    right: 26px;
+    color: var(--acid);
+    font-family: 'DM Mono', monospace;
+    font-size: 2.4rem;
+    font-weight: 500;
+  }
+
+  .times-icon {
+    color: var(--orange);
+  }
+
+  .mode-card strong {
+    align-self: end;
+    margin-top: 70px;
+    font-size: clamp(1.45rem, 3vw, 2rem);
+  }
+
+  .mode-card small {
+    margin-top: 5px;
+    color: var(--muted);
+  }
+
+  .mode-card .example {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(0.85rem, 2vw, 1rem);
+  }
+
+  .mode-card .example b {
+    color: var(--acid);
+  }
+
+  .play-picker {
+    padding: 42px 0;
+  }
+
+  .segmented-control {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: min(620px, 100%);
+    padding: 5px;
+    border: 1px solid var(--line);
+    border-radius: 17px;
+    background: var(--panel);
+  }
+
+  .segmented-control label {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .segmented-control input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .segmented-control span {
+    display: grid;
+    min-height: 62px;
+    padding: 10px 18px;
+    place-content: center;
+    border-radius: 12px;
+    color: var(--muted);
+    font-size: 0.73rem;
+    text-align: center;
+  }
+
+  .segmented-control b {
+    color: inherit;
+    font-size: 0.94rem;
+  }
+
+  .segmented-control input:checked + span {
+    background: var(--acid);
+    color: #11130d;
+  }
+
+  .segmented-control input:focus-visible + span {
+    outline: 2px solid white;
+    outline-offset: 3px;
+  }
+
+  .time-workbench {
+    padding: clamp(24px, 5vw, 52px);
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.025), transparent),
+      var(--panel);
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .section-heading .eyebrow {
+    margin-bottom: 8px;
+  }
+
+  .section-heading h2 {
+    margin: 0;
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    letter-spacing: -0.04em;
+  }
+
+  .swap-button {
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .swap-button:hover {
+    border-color: var(--acid);
+  }
+
+  .time-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(220px, 0.72fr);
+    gap: clamp(18px, 4vw, 42px);
+    align-items: center;
+    padding: 28px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .time-row[hidden] {
+    display: none;
+  }
+
+  .time-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--muted);
+    font-size: 0.71rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .clock-inputs {
+    display: flex;
+    align-items: end;
+    gap: 7px;
+  }
+
+  .clock-inputs label {
+    display: grid;
+    gap: 6px;
+  }
+
+  .clock-inputs label span {
+    color: #777a72;
+    font-size: 0.59rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .clock-inputs input {
+    width: clamp(64px, 10vw, 92px);
+    height: 70px;
+    padding: 0 8px;
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    outline: none;
+    background: #0f100e;
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(1.35rem, 3.2vw, 2rem);
+    text-align: center;
+    box-sizing: border-box;
+    appearance: textfield;
+  }
+
+  .clock-inputs input::-webkit-inner-spin-button {
+    appearance: none;
+  }
+
+  .clock-inputs input:focus {
+    border-color: var(--acid);
+    box-shadow: 0 0 0 3px rgba(216, 255, 79, 0.12);
+  }
+
+  .clock-inputs i {
+    align-self: end;
+    padding-bottom: 18px;
+    color: #686a63;
+    font-family: 'DM Mono', monospace;
+    font-size: 1.7rem;
+    font-style: normal;
+  }
+
+  .time-arrow {
+    color: var(--acid);
+    font-size: 1.8rem;
+  }
+
+  .time-result output {
+    display: block;
+    color: var(--acid);
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(1.7rem, 4vw, 2.8rem);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  .time-result small {
+    display: block;
+    min-height: 1.2em;
+    margin-top: 9px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+  }
+
+  .run-summary {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    padding: 18px 20px;
+    border: 1px solid rgba(216, 255, 79, 0.2);
+    border-radius: 15px;
+    background: rgba(216, 255, 79, 0.06);
+  }
+
+  .run-summary[hidden] {
+    display: none;
+  }
+
+  .run-summary p {
+    margin: 0;
+    color: #c7c8c1;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .run-summary strong {
+    color: var(--acid);
+  }
+
+  .summary-dot {
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--acid);
+    box-shadow: 0 0 13px var(--acid);
+  }
+
+  .form-error {
+    margin: 18px 0 0;
+    color: #ff9570;
+    text-align: center;
+  }
+
+  .launch-button {
+    display: flex;
+    width: min(520px, 100%);
+    min-height: 76px;
+    margin: 30px auto 0;
+    padding: 14px 18px 14px 28px;
+    align-items: center;
+    justify-content: space-between;
+    border: 0;
+    border-radius: 999px;
+    background: var(--acid);
+    color: #10120c;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 16px 55px rgba(216, 255, 79, 0.14);
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .launch-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 65px rgba(216, 255, 79, 0.24);
+  }
+
+  .launch-button:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 5px;
+  }
+
+  .launch-icon {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    border-radius: 50%;
+    background: #11130d;
+    color: var(--acid);
+    font-size: 1.35rem;
+  }
+
+  .stage {
+    position: fixed;
+    z-index: 10000;
+    inset: 0;
+    display: grid;
+    padding: clamp(24px, 4vw, 58px);
+    overflow: hidden;
+    grid-template-rows: auto 1fr auto;
+    background:
+      radial-gradient(circle at center, rgba(216, 255, 79, 0.1), transparent 35%),
+      #090a08;
+    color: var(--ink);
+    box-sizing: border-box;
+  }
+
+  .stage[hidden] {
+    display: none;
+  }
+
+  .stage-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(74vw, 900px);
+    aspect-ratio: 1;
+    border: 1px solid rgba(216, 255, 79, 0.12);
+    border-radius: 50%;
+    box-shadow:
+      0 0 120px rgba(216, 255, 79, 0.06),
+      inset 0 0 120px rgba(216, 255, 79, 0.04);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .stage-topline {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.19em;
+  }
+
+  .live-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--acid);
+  }
+
+  .live-label::before {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 11px currentColor;
+    content: '';
+  }
+
+  .stage-clock-wrap {
+    z-index: 1;
+    display: grid;
+    width: 100%;
+    align-self: center;
+    justify-self: center;
+    justify-items: center;
+  }
+
+  .stage-clock-wrap p {
+    margin: 0 0 18px;
+    color: var(--muted);
+    font-size: clamp(0.8rem, 1.6vw, 1.05rem);
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+  }
+
+  .stage-clock-wrap output {
+    color: var(--acid);
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(3.4rem, 15vw, 13rem);
+    font-weight: 500;
+    letter-spacing: -0.08em;
+    line-height: 0.95;
+    text-shadow: 0 0 55px rgba(216, 255, 79, 0.16);
+    white-space: nowrap;
+  }
+
+  .progress-track {
+    width: min(720px, 75vw);
+    height: 3px;
+    margin-top: clamp(30px, 6vh, 64px);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .progress-track[hidden] {
+    display: none;
+  }
+
+  .progress-track span {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: var(--acid);
+    box-shadow: 0 0 14px var(--acid);
+  }
+
+  .stage-controls {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .stage-controls button {
+    min-width: 160px;
+    padding: 13px 20px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(20, 21, 18, 0.85);
+    color: var(--ink);
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+  }
+
+  .stage-controls button:hover,
+  .stage-controls button:focus-visible {
+    border-color: var(--acid);
+  }
+
+  @keyframes orbit {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (max-width: 780px) {
+    .timer-game {
+      padding: 28px 16px 64px;
+    }
+
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      padding: 72px 0 54px;
+    }
+
+    .hero-orbit {
+      display: none;
+    }
+
+    .mode-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .mode-card {
+      min-height: 220px;
+    }
+
+    .time-row {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .time-arrow {
+      transform: rotate(90deg);
+    }
+
+    .clock-inputs {
+      justify-content: space-between;
+    }
+
+    .clock-inputs input {
+      width: min(23vw, 92px);
+    }
+
+    .stage-clock-wrap output {
+      font-size: clamp(3.2rem, 16vw, 7rem);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 {
+      font-size: clamp(3.1rem, 17vw, 5rem);
+    }
+
+    .segmented-control {
+      grid-template-columns: 1fr;
+    }
+
+    .time-workbench {
+      padding: 22px 16px;
+      border-radius: 20px;
+    }
+
+    .section-heading {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    .clock-inputs {
+      gap: 4px;
+    }
+
+    .clock-inputs i {
+      padding-bottom: 17px;
+    }
+
+    .stage {
+      padding: 24px 16px;
+    }
+
+    .stage-controls {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .stage-controls button {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>

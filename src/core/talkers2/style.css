@@ -290,6 +290,30 @@ dialog wc-meme-board > fieldset {
   box-shadow: none !important;
 }
 
+.sound-ranking-help {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 1rem 0.8rem;
+}
+
+.sound-ranking-help p,
+.sound-ranking-help output,
+.bad-word-ranks {
+  margin: 0;
+}
+
+.sound-ranking-help p {
+  max-width: 48rem;
+  font-size: 0.9rem;
+}
+
+.sound-ranking-help output {
+  flex: 0 0 auto;
+  font-weight: 600;
+}
+
 dialog wc-meme-board > .list {
   flex: 1 1 auto;
   overflow-y: auto;
@@ -302,12 +326,41 @@ dialog wc-meme-board wc-meme-item {
 dialog wc-meme-board wc-meme-item h5 {
   font-size: 16px;
 }
+
+dialog wc-meme-board wc-meme-item .bad-word-ranks {
+  min-height: 2.4em;
+  font-size: 0.78rem;
+  line-height: 1.2;
+}
+
+dialog wc-meme-board wc-meme-item .has-ranks {
+  color: #b42318;
+}
+
+dialog wc-meme-board wc-meme-item .no-ranks {
+  color: #59636e;
+}
+
+@media only screen and (prefers-color-scheme: dark) {
+  dialog wc-meme-board wc-meme-item .has-ranks {
+    color: #ffb4a9;
+  }
+
+  dialog wc-meme-board wc-meme-item .no-ranks {
+    color: #bdc5ce;
+  }
+}
 dialog wc-meme-board wc-meme-item button {
   font-size: 16px !important;
   padding: 0.6rem !important;
 }
 
 @media (max-width: 500px) {
+  .sound-ranking-help {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .talker.preview .face {
     display: none;
   }

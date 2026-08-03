@@ -1,85 +1,264 @@
 :root {
-  --buttton-width:5em;
+  --kid-ink: #251e1a;
+  --kid-paper: #fffaf2;
+  --kid-muted: #796d65;
+  --kid-line: rgba(69, 48, 35, 0.16);
+  --kid-coral: #f06e4f;
+  --kid-yellow: #ffd35c;
+  --kid-blue: #78c6d0;
 }
 
 body {
-  padding: 0;
+  min-height: 100vh;
   margin: 0;
-  height: 100vh;
-  background-color: rgba(174, 144, 123, 0.484);
-  background-image:url(/noise-texture-100x100-b.png);
+  background:
+    linear-gradient(rgba(255, 250, 242, 0.9), rgba(255, 250, 242, 0.9)),
+    url('/noise-texture-100x100-b.png');
+  color: var(--kid-ink);
 }
 
 main.colorthing {
-  padding-top: 80px;
-  max-width: 890px;
-  width: 100%;
+  width: min(940px, calc(100% - 32px));
   margin: 0 auto;
+  padding: 80px 0 72px;
+}
+
+.kid-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 24px;
+  padding: clamp(24px, 5vw, 48px);
+  border: 1px solid var(--kid-line);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 90% 15%, rgba(255, 211, 92, 0.55), transparent 13rem),
+    var(--kid-paper);
+  box-shadow: 0 20px 60px rgba(89, 60, 40, 0.1);
+}
+
+.kid-header h1,
+.dialog-heading h2 {
+  margin: 0;
+  color: var(--kid-ink);
+  font-size: clamp(2.2rem, 7vw, 4.8rem);
+  letter-spacing: -0.065em;
+  line-height: 0.95;
+}
+
+.kid-header p:not(.kid-eyebrow) {
+  max-width: 540px;
+  margin: 16px 0 0;
+  color: var(--kid-muted);
+}
+
+.kid-eyebrow {
+  margin: 0 0 10px;
+  color: #b94b35;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.kid-settings-link {
+  flex: 0 0 auto;
+  padding: 12px 20px;
+  border: 1px solid var(--kid-ink);
+  border-radius: 999px;
+  color: var(--kid-paper);
+  background: var(--kid-ink);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.kid-settings-link:hover {
+  color: var(--kid-ink);
+  background: var(--kid-yellow);
 }
 
 main.colorthing .readout {
-  min-height: 200px;
   display: flex;
+  min-height: 150px;
+  margin-bottom: 20px;
+  padding: 22px;
+  align-content: flex-start;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 20px;
+  gap: 10px;
+  border: 1px dashed rgba(69, 48, 35, 0.25);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.46);
+  box-sizing: border-box;
 }
 
 main.colorthing .inner-readout {
-  display: block;
+  display: flex;
+  padding: 16px 0;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-main.colorthing .inner-readout .chosen {
-  display: inline-block;
-  padding: 10px;
+main.colorthing .chosen {
+  display: inline-flex;
+  min-height: 48px;
+  padding: 8px 14px 8px 8px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--kid-line);
+  border-radius: 14px;
+  color: var(--kid-ink);
+  background: var(--kid-paper);
+  font-size: 1rem;
+  box-sizing: border-box;
 }
 
-main.colorthing .readout .chosen {
-  width: 140px; 
-  /* height:100px; */
+main.colorthing .chosen b {
+  display: grid;
+  min-width: 42px;
+  height: 34px;
+  padding: 0 7px;
+  place-items: center;
+  border-radius: 9px;
+  color: var(--kid-ink);
+  background: var(--kid-yellow);
+  font-size: 0.8rem;
+}
+
+.empty-readout {
+  align-self: center;
+  margin: auto;
+  color: var(--kid-muted);
+}
+
+.list-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+  color: var(--kid-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.list-label strong {
+  color: var(--kid-ink);
 }
 
 main.colorthing .colors {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
+  gap: 9px;
+  padding: 16px 0;
+}
+
+dialog main.colorthing {
+  width: min(860px, calc(100% - 20px));
+  padding: 28px 0;
 }
 
 dialog main.colorthing .colors {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
   gap: 8px;
-  padding: 20px;
-  /* justify-content: space-around; */
+  padding: 18px 0;
 }
 
 main.colorthing .colors button {
-  padding: 13px 0;
+  display: flex;
+  min-width: 0;
+  min-height: 66px;
+  padding: 10px;
+  align-items: baseline;
+  justify-content: center;
+  gap: 3px;
+  border: 1px solid var(--kid-line);
+  border-radius: 17px;
+  color: var(--kid-ink);
+  background: var(--kid-paper);
+  box-shadow: 0 5px 0 rgba(69, 48, 35, 0.14);
+  font-size: 1.25rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
 }
 
-main.colorthing .readout .chosen,
-main.colorthing .colors button {
-  width: 100px;
-  font-size: 2rem;
+main.colorthing .colors button small {
+  color: var(--kid-coral);
+  font-size: 0.66rem;
+  font-weight: 900;
 }
 
-main.colorthing .readout .chosen {
-  width: 200px;
-  font-size: 2rem;
+main.colorthing .colors button:hover {
+  transform: translateY(-2px);
+  background: #fff1c6;
+  box-shadow: 0 7px 0 rgba(69, 48, 35, 0.12);
 }
 
-@media (max-width:480px) {
+main.colorthing .colors button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(69, 48, 35, 0.14);
+}
+
+main.colorthing .colors button:focus-visible,
+.kid-settings-link:focus-visible {
+  outline: 3px solid var(--kid-blue);
+  outline-offset: 3px;
+}
+
+.dialog-heading {
+  padding: 0 4px 18px;
+}
+
+.dialog-heading h2 {
+  font-size: clamp(2rem, 5vw, 3.6rem);
+}
+
+@media (max-width: 600px) {
+  main.colorthing {
+    width: min(100% - 20px, 940px);
+    padding-top: 70px;
+  }
+
+  .kid-header {
+    align-items: start;
+    flex-direction: column;
+    border-radius: 22px;
+  }
+
+  .kid-settings-link {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  main.colorthing .readout {
+    min-height: 120px;
+    padding: 12px;
+  }
+
+  main.colorthing .chosen {
+    max-width: 100%;
+  }
+
+  main.colorthing .colors,
+  dialog main.colorthing .colors {
+    grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
+  }
 
   main.colorthing .colors button {
-    width: 60px;
-    height: 60px;
+    min-height: 58px;
+    border-radius: 14px;
     font-size: 1rem;
   }
+}
 
-  main.colorthing .readout .chosen {
-    width: 60px; 
-    height:60px;
+@media (prefers-reduced-motion: reduce) {
+  main.colorthing .colors button {
+    transition: none;
   }
-
 }

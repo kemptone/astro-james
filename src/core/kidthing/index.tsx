@@ -1,52 +1,20 @@
-import {useEffect, useState} from 'preact/hooks'
+import {useState} from 'preact/hooks'
 import Dialog from '../../components/Dialog'
+import {getKidThingLists} from './data'
 import './style.css'
 
-const Primary =
-  'Abby  Adaliz  Aiden  Angelo  Anthony  Bailey  Benny  Briana  Chase  Cierra  Cruz  Gustavo  Hudson  Iker  James  Leilani  Lindsey  Merryck  Michael  Sophia C  Sofia V  Kenia  Melanie  Mrs. Kobylka'.split(
-    '  '
-  )
-
-const Secondary =
-  'Beau, Gianna, Makenzie, Blake, Merlin, Santa Claus, Tooth Fairy, Audry, Braxton, Adley, Crista, Jake, Makayla, Atticus, Presly P, Alexis, Sophie, Mikey, Davey Jack, Hazel, Oliver, Lucas, Presly, Jackson, Aubrey, Elliot, Dumpy, Kevin, Glinda, Dorothy, Scarecrow, Tin Man, lion, Auntie M, Wizard of Oz, Nixon, Easter Bunny, Dave, Ava, Atreyu, Moonchild, Bastian, Emerson, Ellie, Danial, Carmen, Zander, Lita, Linnie, Jill, Carol Anne, Claire Crosby, Darla, Jennifer, Sarjenka, Tina Youthers, Mykel-Michelle, Clara, Wrockley, Kufty, Mormage, Parad'.split(
-    ', '
-  )
-
-// const Primary = [
-//   "FF0000", // red
-//   "FF7F00", // yellow
-//   "FFFF00", // orange
-//   "00FF00", // green
-//   "0000FF",
-//   "6A0DAD",
-//   "FFFFFF",
-//   "808080",
-//   "000000",
-//   "88540B",
-//   "FFC0CB",
-// ];
-
-// console.log({ Primary, Secondary });
-
-// console.log(
-//   Primary.join(" is here..."),
-// );
-
-console.log(
-  [...Primary, ...Secondary].join(' is here.\n')
-  // Secondary.join(" is here... "),
-)
-
-console.log(
-  [...Primary, ...Secondary].join(' is absent.\n')
-  // Secondary.join(" is here... "),
-)
+type ChosenName = {
+  group: 'P' | 'S'
+  name: string
+  number: number
+}
 
 export default () => {
-  const [chosenNames, setChosenNames] = useState([])
+  const [lists] = useState(getKidThingLists)
+  const [chosenNames, setChosenNames] = useState<ChosenName[]>([])
   const [showingMissing, setShowingMissing] = useState(false)
-
-  // console.log({ chosenNames });
+  const Primary = lists.primary
+  const Secondary = lists.secondary
 
   return (
     <Dialog>
@@ -54,26 +22,63 @@ export default () => {
         <Dialog>
           {D => (
             <main class="colorthing">
+              <header class="kid-header">
+                <div>
+                  <p class="kid-eyebrow">Number picker</p>
+                  <h1>Kid Thing</h1>
+                  <p>
+                    Primary choices use <strong>P</strong>. Secondary choices
+                    use <strong>S</strong>.
+                  </p>
+                </div>
+                <a class="kid-settings-link" href="/settings">
+                  Settings
+                </a>
+              </header>
+
               <section class="readout">
-                {chosenNames.map((name, index) => (
-                  // <span class="chosen" key={index} children={{ name }} />
-                  <span class="chosen" children={name} />
-                ))}
+                {chosenNames.length ? (
+                  chosenNames.map((choice, index) => (
+                    <span class="chosen" key={`${choice.group}-${choice.number}-${index}`}>
+                      <b>
+                        {choice.group}
+                        {choice.number}
+                      </b>
+                      {choice.name}
+                    </span>
+                  ))
+                ) : (
+                  <p class="empty-readout">Press a numbered button to begin.</p>
+                )}
               </section>
+
+              <div class="list-label">
+                <strong>Primary list</strong>
+                <span>P1–P{Primary.length}</span>
+              </div>
+
               <section class="colors">
                 {Primary.map((item, index) => (
                   <button
-                    children={index + 1}
                     key={item + index}
-                    onClick={e => {
-                      setChosenNames([...chosenNames, item])
+                    aria-label={`Primary ${index + 1}: ${item}`}
+                    title={item}
+                    onClick={() => {
+                      setChosenNames([
+                        ...chosenNames,
+                        {group: 'P', name: item, number: index + 1},
+                      ])
                     }}
-                  />
+                  >
+                    <small>P</small>
+                    {index + 1}
+                  </button>
                 ))}
 
                 <button
-                  children="⟵"
-                  onClick={e => {
+                  aria-label="Remove the last choice"
+                  title="Remove the last choice"
+                  onClick={() => {
                     setChosenNames(
                       [...chosenNames].slice(0, chosenNames.length - 1)
                     )
@@ -81,61 +86,103 @@ export default () => {
                 />
 
                 <button
-                  children="⏲"
-                  onClick={e => {
+                  aria-label="Show unused primary names"
+                  title="Show unused primary names"
+                  onClick={() => {
                     D2.openDialog()
                   }}
-                />
+                >
+                  ⏲
+                </button>
 
                 <button
-                  children="🌗"
-                  onClick={e => {
+                  aria-label="Open the secondary list"
+                  title="Open the secondary list"
+                  onClick={() => {
                     D.openDialog()
                   }}
-                />
+                >
+                  S
+                </button>
 
                 <button
-                  children="♺"
-                  onClick={e => {
+                  aria-label="Clear every choice"
+                  title="Clear every choice"
+                  onClick={() => {
                     setChosenNames([])
                   }}
-                />
+                >
+                  ♺
+                </button>
               </section>
+
               <D2.Dialog ref={D2.ref}>
                 <main className="colorthing">
+                  <div className="dialog-heading">
+                    <p className="kid-eyebrow">Primary list</p>
+                    <h2>Still available</h2>
+                  </div>
                   <div className="readout">
                     {Primary.filter(
-                      name => chosenNames.join('::').indexOf(name) === -1
-                    ).map(name => (
-                      <span className="chosen">{name}</span>
-                    ))}
+                      name =>
+                        !chosenNames.some(
+                          choice => choice.group === 'P' && choice.name === name
+                        )
+                    ).map(name => {
+                      const number = Primary.indexOf(name) + 1
+                      return (
+                        <span className="chosen" key={`missing-${name}-${number}`}>
+                          <b>P{number}</b>
+                          {name}
+                        </span>
+                      )
+                    })}
                   </div>
                 </main>
               </D2.Dialog>
 
               <D.Dialog ref={D.ref}>
                 <main className="colorthing">
+                  <div className="dialog-heading">
+                    <p className="kid-eyebrow">Secondary list</p>
+                    <h2>S1–S{Secondary.length}</h2>
+                  </div>
                   <section className="inner-readout">
                     {showingMissing
-                      ? chosenNames.map((name, index) => (
-                          // <span class="chosen" key={index} children={{ name }} />
-                          <span class="chosen" children={name} />
+                      ? chosenNames.map((choice, index) => (
+                          <span class="chosen" key={`dialog-${choice.group}-${choice.number}-${index}`}>
+                            <b>
+                              {choice.group}
+                              {choice.number}
+                            </b>
+                            {choice.name}
+                          </span>
                         ))
                       : null}
                   </section>
 
                   <div class="colors">
-                    <button onClick={e => setShowingMissing(!showingMissing)}>
+                    <button
+                      aria-label="Show or hide chosen names"
+                      onClick={() => setShowingMissing(!showingMissing)}
+                    >
                       ?
                     </button>
                     {Secondary.map((item, index) => (
                       <button
-                        children={index + 1}
                         key={item + index}
-                        onClick={e => {
-                          setChosenNames([...chosenNames, item])
+                        aria-label={`Secondary ${index + 1}: ${item}`}
+                        title={item}
+                        onClick={() => {
+                          setChosenNames([
+                            ...chosenNames,
+                            {group: 'S', name: item, number: index + 1},
+                          ])
                         }}
-                      />
+                      >
+                        <small>S</small>
+                        {index + 1}
+                      </button>
                     ))}
                   </div>
                 </main>

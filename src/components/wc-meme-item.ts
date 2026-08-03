@@ -4,6 +4,7 @@ import './wc-meme-image'
 export type MemeType = {
   name: string
   audio: string
+  badWordRanks?: number[]
 }
 
 if (typeof window != 'undefined')
@@ -14,10 +15,17 @@ if (typeof window != 'undefined')
         const {item: _item, is_display} = this.dataset
         if (!_item) return
 
-        const item = (JSON.parse(_item || '{}') as MemeType) || {}
+        const item = JSON.parse(_item) as MemeType
+        const badWordRanks = Array.isArray(item.badWordRanks)
+          ? item.badWordRanks
+          : []
+        const rankSummary = badWordRanks.length
+          ? `<p class="bad-word-ranks has-ranks">Bad-word numbers: <strong>${badWordRanks.join(', ')}</strong></p>`
+          : '<p class="bad-word-ranks no-ranks">No ranking number in the name</p>'
 
         let html = `
   <h5>${item.name}</h5>
+  ${rankSummary}
   <wc-meme-image data-name="${item.name}"></wc-meme-image>
   <div>
     <button type="button" class="play">Play</button>
@@ -111,7 +119,7 @@ if (typeof window != 'undefined')
           onPlayInitial
         )
 
-        this.querySelector('button.add')?.addEventListener('click', e => {
+        this.querySelector('button.add')?.addEventListener('click', () => {
           if (is_display) {
             return this.parentElement?.removeChild(this)
           }

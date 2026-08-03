@@ -207,10 +207,10 @@ export const sound_effects = [
         "name": "YouTube UWUUUUU",
         "audio": "/media/sounds/youtube-uwuuuuu.mp3"
     },
-    // {
-    //     "name": "oh shit not good",
-    //     "audio": "/media/sounds/wcgertcz074.mp3"
-    // },
+    {
+        "name": "oh shit not good",
+        "audio": "/media/sounds/wcgertcz074.mp3"
+    },
     {
         "name": "the rock sound effect",
         "audio": "/media/sounds/the-rock-sound-effect.mp3"
@@ -1223,10 +1223,10 @@ export const sound_effects = [
         "name": "Michael jackson WOOOW",
         "audio": "/media/sounds/wow_8.mp3"
     },
-    // {
-    //     "name": "Oh Hell No",
-    //     "audio": "/media/sounds/ringtone_7.mp3"
-    // },
+    {
+        "name": "Oh Hell No",
+        "audio": "/media/sounds/ringtone_7.mp3"
+    },
     {
         "name": "Pharaoh's Curse",
         "audio": "/media/sounds/pharaohs-curse.mp3"
@@ -1703,10 +1703,10 @@ export const sound_effects = [
         "name": "Siren Head Sound",
         "audio": "/media/sounds/siren-head-sound.mp3"
     },
-    // {
-    //     "name": "who invited this kid",
-    //     "audio": "/media/sounds/9convert_JMEQrwL.mp3"
-    // },
+    {
+        "name": "who invited this kid",
+        "audio": "/media/sounds/9convert_JMEQrwL.mp3"
+    },
     {
         "name": "MMM (Rap)",
         "audio": "/media/sounds/mmm-6.mp3"
@@ -2031,10 +2031,10 @@ export const sound_effects = [
         "name": "sinterklaasjournaal earrape",
         "audio": "/media/sounds/sinterklaasjournaal-earrape.mp3"
     },
-    // {
-    //     "name": "KSI-YES YES YES NO NO NO FULL",
-    //     "audio": "/media/sounds/ksi-yes-yes-yes-no-no-no-full.mp3"
-    // },
+    {
+        "name": "KSI-YES YES YES NO NO NO FULL",
+        "audio": "/media/sounds/ksi-yes-yes-yes-no-no-no-full.mp3"
+    },
     {
         "name": "Cano de metal caindo",
         "audio": "/media/sounds/cano-de-metal-caindo.mp3"
@@ -2523,10 +2523,10 @@ export const sound_effects = [
         "name": "Japanese EAS alarm",
         "audio": "/media/sounds/japanese-eas-alarm.mp3"
     },
-    // {
-    //     "name": "No.1 bullshit guy",
-    //     "audio": "/media/sounds/no-1-bullshit-guy.mp3"
-    // },
+    {
+        "name": "No.1 bullshit guy",
+        "audio": "/media/sounds/no-1-bullshit-guy.mp3"
+    },
     {
         "name": "vineboom (long)",
         "audio": "/media/sounds/vineboom-long.mp3"
@@ -3019,10 +3019,10 @@ export const sound_effects = [
         "name": "Fart Moan2",
         "audio": "/media/sounds/fart-moan2.mp3"
     },
-    // {
-    //     "name": "Well Hello MF",
-    //     "audio": "/media/sounds/well-hello-mf.mp3"
-    // },
+    {
+        "name": "Well Hello MF",
+        "audio": "/media/sounds/well-hello-mf.mp3"
+    },
     {
         "name": "im over here strokin my",
         "audio": "/media/sounds/im-over-here-strokin-my_YOS1P9K.mp3"

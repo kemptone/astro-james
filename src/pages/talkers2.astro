@@ -36,8 +36,22 @@ import '../core/talkers2/style.css'
         <div>
           <wc-meme-board>
             <fieldset role="group">
-              <input type="search" placeholder="filter" name="filter" />
+              <input
+                type="search"
+                placeholder="filter"
+                name="filter"
+                aria-label="Filter sounds"
+              />
             </fieldset>
+            <div class="sound-ranking-help">
+              <p>
+                Bad-word numbers use the 40-word ranking: 1 is strongest and
+                40 is least. This checks the sound name, not the audio. Names
+                are matched without judging their meaning, so “cow” shows 40
+                even when it means the animal.
+              </p>
+              <output data-sound-count aria-live="polite">Loading sounds…</output>
+            </div>
             <div class="list"></div>
           </wc-meme-board>
         </div>
