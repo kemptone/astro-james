@@ -2961,10 +2961,6 @@ export const music = [
     audio: '/media/sounds/message_2.mp3',
   },
   {
-    name: 'Angry Voice Message!',
-    audio: '/media/sounds/angry-voice-message.mp3',
-  },
-  {
     name: 'Look at all those chickens',
     audio: '/media/sounds/chickens.mp3',
   },
@@ -3018,20 +3014,8 @@ export const music = [
     audio: '/media/sounds/cava-falta-porem-muito-ruim.mp3',
   },
   {
-    name: 'bing bop boom',
-    audio: '/media/sounds/bing-bop-boom.mp3',
-  },
-  {
-    name: 'when i hear music it makes me dance',
-    audio: '/media/sounds/when-i-hear-music-it-makes-me-dance.mp3',
-  },
-  {
     name: 'rusty Chevrolet',
     audio: '/media/sounds/rusty-chevrolet.mp3',
-  },
-  {
-    name: 'Juice Wrld Nger',
-    audio: '/media/sounds/juice-wrld-nger.mp3',
   },
   {
     name: 'Maps-by yeahyeahyeahmusic',

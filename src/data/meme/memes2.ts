@@ -228,10 +228,6 @@ export const memes2 = [
         "audio": "/media/sounds/40-let-kak-pod-narkozom.mp3"
     },
     {
-        "name": "Yes King AHHHHHHHHHHHHHHHH",
-        "audio": "/media/sounds/yes-king-ahhhhhhhhhhhhhhhh.mp3"
-    },
-    {
         "name": "i ghost the down cool",
         "audio": "/media/sounds/i-ghost-the-down-cool_G7s77J4.mp3"
     },
@@ -2800,10 +2796,6 @@ export const memes2 = [
         "audio": "/media/sounds/funny-laugh-sound-effect.mp3"
     },
     {
-        "name": "NINJA FORTNITE",
-        "audio": "/media/sounds/ninja_fLDiDns.mp3"
-    },
-    {
         "name": "Clash of Clans Startup",
         "audio": "/media/sounds/clash_of_clan_start_up_soundmp3converter.mp3"
     },
@@ -4039,10 +4031,6 @@ export const memes2 = [
         "name": "Cartoon bonk",
         "audio": "/media/sounds/cartoon-bonk.mp3"
     },
-    // {
-    //     "name": "loud shitpost fart",
-    //     "audio": "/media/sounds/loud-shitpost-fart.mp3"
-    // },
     {
         "name": "Angry Birds Bass Boosted",
         "audio": "/media/sounds/angry-birds-theme-song-audiotrimmer-1.mp3"

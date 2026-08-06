@@ -1193,10 +1193,6 @@ export const pranks = [
     audio: '/media/sounds/perdiozh_LWDgniX.mp3',
   },
   {
-    name: 'NINJA RAGE EXTRA BASS BOOSTED',
-    audio: '/media/sounds/ninja-rage-extra-bass-boosted_bKD8AOq.mp3',
-  },
-  {
     name: 'Я твой рот выебу',
     audio: '/media/sounds/ia-tvoi-rot-vyebu.mp3',
   },
@@ -2551,10 +2547,6 @@ export const pranks = [
     audio: '/media/sounds/magnum-p.mp3',
   },
   {
-    name: 'no mana by Tyler1vsPhreak',
-    audio: '/media/sounds/tyler1-vs-phreak-full-game-mp3cut.mp3',
-  },
-  {
     name: 'Feueralarm',
     audio: '/media/sounds/feueralarm.mp3',
   },
@@ -3161,10 +3153,6 @@ export const pranks = [
     audio: '/media/sounds/magnum-p.mp3',
   },
   {
-    name: 'no mana by Tyler1vsPhreak',
-    audio: '/media/sounds/tyler1-vs-phreak-full-game-mp3cut.mp3',
-  },
-  {
     name: 'буба орёт',
     audio: '/media/sounds/buba-oriot.mp3',
   },
@@ -3236,10 +3224,6 @@ export const pranks = [
   {
     name: 'it just a prank bro',
     audio: '/media/sounds/its-just-a-prank-bro-sound-effect.mp3',
-  },
-  {
-    name: 'no mana by Tyler1vsPhreak',
-    audio: '/media/sounds/tyler1-vs-phreak-full-game-mp3cut.mp3',
   },
   {
     name: 'LEVÁNTENSE (nuevo)',
