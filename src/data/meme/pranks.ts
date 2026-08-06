@@ -2373,10 +2373,6 @@ export const pranks = [
     audio: '/media/sounds/the-hand-noise_fVftxp4.mp3',
   },
   {
-    name: 'Sorry For Cussing',
-    audio: '/media/sounds/sorry-for-cussing.mp3',
-  },
-  {
     name: 'Lumine Laugh',
     audio: '/media/sounds/luminerindo.mp3',
   },
@@ -4687,10 +4683,6 @@ export const pranks = [
   {
     name: '1 2 patate poil maudit cave',
     audio: '/media/sounds/1-2-patate-poil-maudit-cave.mp3',
-  },
-  {
-    name: 'Dogsh*t (10yr old girl)',
-    audio: '/media/sounds/dogsh-t-10yr-old-girl.mp3',
   },
   {
     name: 'نغمه حزينه',

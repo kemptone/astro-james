@@ -3320,10 +3320,6 @@ export const memes2 = [
         "audio": "/media/sounds/eita-porra-relacoes.mp3"
     },
     {
-        "name": "Ahh BullShet",
-        "audio": "/media/sounds/ahh-bullshet.mp3"
-    },
-    {
         "name": "Something In My Ass!",
         "audio": "/media/sounds/something-in-my-ass_gCDhPgd.mp3"
     },
