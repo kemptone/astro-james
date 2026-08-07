@@ -28,5 +28,8 @@ pnpm-debug.log*
 # local Crush agent data
 .crush
 
+# resumable local Talkers2 audio-index state
+.talkers2-audio-backfill/
+
 microsoft.js
 ms.config.info

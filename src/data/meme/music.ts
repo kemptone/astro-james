@@ -77,6 +77,10 @@ export const music = [
     audio: '/media/sounds/calma-calabreso.mp3',
   },
   {
+    name: 'Merry Christmas MotherF´s',
+    audio: '/media/sounds/record-27-11-2018_16-41-34.mp3',
+  },
+  {
     name: 'Fein x nokia',
     audio: '/media/sounds/fein-x-nokia.mp3',
   },
@@ -421,10 +425,10 @@ export const music = [
     name: 'Drachenlord Sirene',
     audio: '/media/sounds/drachenlord-sirene.mp3',
   },
-  // {
-  //   name: 'Ah Shit, Here We Go Again.',
-  //   audio: '/media/sounds/gta-san-andreas-ah-shit-here-we-go-again_PHjnAqj.mp3',
-  // },
+  {
+    name: 'Ah Shit, Here We Go Again.',
+    audio: '/media/sounds/gta-san-andreas-ah-shit-here-we-go-again_PHjnAqj.mp3',
+  },
   {
     name: 'I love you, i love you',
     audio: '/media/sounds/i-love-you_1.mp3',
@@ -521,10 +525,10 @@ export const music = [
     name: 'Real punch',
     audio: '/media/sounds/punch-notification_sound-493565.mp3',
   },
-  // {
-  //   name: "Oh shit, I'm sorry",
-  //   audio: '/media/sounds/oh-shit-im-sorry_0001.mp3',
-  // },
+  {
+    name: "Oh shit, I'm sorry",
+    audio: '/media/sounds/oh-shit-im-sorry_0001.mp3',
+  },
   {
     name: 'Dun dun duuun',
     audio: '/media/sounds/dun_dun_dun.mp3',
@@ -2026,10 +2030,10 @@ export const music = [
     name: 'Bakit Papa',
     audio: '/media/sounds/bakit-papa.mp3',
   },
-  // {
-  //   name: 'Puss-chant',
-  //   audio: '/media/sounds/puss-chant.mp3',
-  // },
+  {
+    name: 'Puss-chant',
+    audio: '/media/sounds/puss-chant.mp3',
+  },
   {
     name: 'Подлая музыка',
     audio: '/media/sounds/podlaia-muzyka.mp3',
@@ -2961,6 +2965,10 @@ export const music = [
     audio: '/media/sounds/message_2.mp3',
   },
   {
+    name: 'Angry Voice Message!',
+    audio: '/media/sounds/angry-voice-message.mp3',
+  },
+  {
     name: 'Look at all those chickens',
     audio: '/media/sounds/chickens.mp3',
   },
@@ -3014,8 +3022,20 @@ export const music = [
     audio: '/media/sounds/cava-falta-porem-muito-ruim.mp3',
   },
   {
+    name: 'bing bop boom',
+    audio: '/media/sounds/bing-bop-boom.mp3',
+  },
+  {
+    name: 'when i hear music it makes me dance',
+    audio: '/media/sounds/when-i-hear-music-it-makes-me-dance.mp3',
+  },
+  {
     name: 'rusty Chevrolet',
     audio: '/media/sounds/rusty-chevrolet.mp3',
+  },
+  {
+    name: 'Juice Wrld Nger',
+    audio: '/media/sounds/juice-wrld-nger.mp3',
   },
   {
     name: 'Maps-by yeahyeahyeahmusic',

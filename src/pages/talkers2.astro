@@ -35,9 +35,79 @@ import '../core/talkers2/style.css'
       <WCDialogWrap id="sounds">
         <div>
           <wc-meme-board>
-            <fieldset role="group">
-              <input type="search" placeholder="filter" name="filter" />
+            <fieldset
+              class="sound-mode-filters"
+              aria-describedby="sound-mode-help"
+            >
+              <legend>Show sound types</legend>
+              <label>
+                <input
+                  type="checkbox"
+                  name="kid_mode"
+                  autocomplete="off"
+                  checked
+                />
+                Kid mode
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="adult_mode"
+                  autocomplete="off"
+                />
+                Adult mode
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="bad_words_mode"
+                  autocomplete="off"
+                />
+                Bad words (1–40)
+              </label>
+              <p id="sound-mode-help">
+                Choose one or more. Kid is checked clean audio. Adult currently
+                means unchecked or unclear audio. Bad words is checked audio
+                with rankings 1–40. Turn all three off to show every sound.
+                Number searches show their matches regardless of these modes.
+              </p>
             </fieldset>
+            <fieldset role="group" class="sound-search-filters">
+              <input
+                type="search"
+                placeholder="Name or audio number (1–40; 41 = ranked/unchecked)"
+                name="filter"
+                aria-label="Filter by sound name or checked-audio bad-word numbers"
+              />
+              <input
+                type="text"
+                name="exclude_ranks"
+                inputmode="numeric"
+                placeholder="Hide numbers: 4, 25, 41"
+                aria-label="Hide sounds with these checked-audio numbers"
+              />
+            </fieldset>
+            <div class="sound-ranking-help">
+              <p>
+                Bad-word numbers use the 40-word ranking: 1 is strongest and
+                40 is least. Search numbers separated by commas to show checked
+                audio containing any of them. Search 41 to show sounds with at
+                least one bad-word number plus sounds whose audio has not been
+                checked yet. After an unchecked sound is checked, it stays in
+                the 41 list if it has a number and disappears if it is clean.
+                The numbers come from the audio, never the sound name, so spoken
+                “cow” gets 40 even when it means the animal. Use Hide numbers to
+                leave matching sounds out; hiding 41 leaves only checked sounds
+                with no ranked words. Inconclusive audio is not included in
+                number searches, and automated checks can miss words.
+              </p>
+              <div class="sound-count-controls">
+                <output data-sound-count aria-live="polite">Loading sounds…</output>
+                <button type="button" class="show-more-sounds" hidden>
+                  Show more
+                </button>
+              </div>
+            </div>
             <div class="list"></div>
           </wc-meme-board>
         </div>

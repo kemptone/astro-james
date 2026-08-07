@@ -1,5 +1,6 @@
 import {playTextAzure, compressWordGaps} from './wc-talkers.helpers'
 import {type AzureVoiceInfo} from './types'
+import {swapBadWordRanksForPlayback} from './playback-text'
 import '../../components/wc-texarea-sizer'
 
 const BuildValue = () => {
@@ -108,15 +109,19 @@ if (typeof window != 'undefined')
           .querySelector('button.play_sample')
           ?.addEventListener('click', async e => {
             const inputs = e_wrapper.querySelectorAll('input, select, textarea')
-            const values = {}
-            // @ts-ignore
+            const values: Record<string, string> = {}
             inputs?.forEach?.((input: HTMLInputElement) => {
-              // @ts-ignore
               values[input.name] = input.value
             })
+            const playbackValues = {
+              ...values,
+              text: swapBadWordRanksForPlayback(
+                values.text || values.text_hidden || ''
+              ),
+            }
 
             // @ts-ignore
-            let audio = await playTextAzure({values}, false)
+            let audio = await playTextAzure({values: playbackValues}, false)
 
             const e_gap_percent = document.querySelector(
               'input[name="gap_percent"]'

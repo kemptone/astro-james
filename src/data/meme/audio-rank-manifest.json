@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": null,
+  "catalogDigest": "sha256-c6b5b664b610e5d99a23d67c762d0efd4627c8cc00ed80a12276e3acc3feafd1",
+  "catalogUrlCount": 3541,
+  "analyzedUrlCount": 0,
+  "lastSequence": 0,
+  "urlToFingerprint": {},
+  "analysesByPipeline": {
+    "audio-ranking-2026-08-02-v1-azure-fast-2025-10-15-confidence-065-v4": {}
+  }
+}

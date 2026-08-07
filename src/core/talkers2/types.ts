@@ -17,6 +17,18 @@ export type AzureVoiceInfo = {
 
 
 export type Talkers2VoiceDetails = {
+  is_meme?: boolean
+  audio?: string
+  name?: string
+  badWordRanks?: number[] | null
+  audioFingerprint?: string | null
+  audioCheckedAt?: string | null
+  audioCheckStatus?:
+    | 'unchecked'
+    | 'checking'
+    | 'checked'
+    | 'inconclusive'
+    | 'error'
   Name?: string
   DisplayName?: string
   LocalName?: string
