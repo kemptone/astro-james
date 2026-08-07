@@ -499,10 +499,10 @@ export const reactions = [
         "name": "DIRIRI",
         "audio": "/media/sounds/diriri.mp3"
     },
-    // {
-    //     "name": "Okay Jaja Igennem en fkn stair",
-    //     "audio": "/media/sounds/okay-jaja-igennem-en-fkn-stair.mp3"
-    // },
+    {
+        "name": "Okay Jaja Igennem en fkn stair",
+        "audio": "/media/sounds/okay-jaja-igennem-en-fkn-stair.mp3"
+    },
     {
         "name": "pam pam pammm",
         "audio": "/media/sounds/pam-pam-pammm.mp3"
@@ -1191,10 +1191,10 @@ export const reactions = [
         "name": "Correct bell",
         "audio": "/media/sounds/correct.swf.mp3"
     },
-    // {
-    //     "name": "hell nahhhh",
-    //     "audio": "/media/sounds/hell-nahhhh.mp3"
-    // },
+    {
+        "name": "hell nahhhh",
+        "audio": "/media/sounds/hell-nahhhh.mp3"
+    },
     {
         "name": "crowd cheer",
         "audio": "/media/sounds/crowd-cheer.mp3"
@@ -1367,10 +1367,6 @@ export const reactions = [
         "name": "Magic-coins",
         "audio": "/media/sounds/magic-coins.mp3"
     },
-    // {
-    //     "name": "hell nahhhh",
-    //     "audio": "/media/sounds/hell-nahhhh.mp3"
-    // },
     {
         "name": "CSGO  INHUMAN REACTIONS",
         "audio": "/media/sounds/inhuman-reactions_1.mp3"
@@ -1807,10 +1803,10 @@ export const reactions = [
         "name": "Ai que Deliciaaan (Pablo Vittar)",
         "audio": "/media/sounds/pabllo-vittar-aiin-q-deliciaann-uarroinn-original.mp3"
     },
-    // {
-    //     "name": "YOUR BROKE andrew tate",
-    //     "audio": "/media/sounds/your-broke-andrew-tate_fQJoCVt.mp3"
-    // },
+    {
+        "name": "YOUR BROKE andrew tate",
+        "audio": "/media/sounds/your-broke-andrew-tate_fQJoCVt.mp3"
+    },
     {
         "name": "سافل تبا لك ياصعلوك",
         "audio": "/media/sounds/sfl-tb-lk-ys-lwk.mp3"

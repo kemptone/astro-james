@@ -579,10 +579,10 @@ export const pranks = [
     name: "enjoy mario's agony",
     audio: '/media/sounds/tmpcoj3v_01_0TBRB2b.mp3',
   },
-  // {
-  //   name: 'OOOh shit a rat',
-  //   audio: '/media/sounds/a-rat.mp3',
-  // },
+  {
+    name: 'OOOh shit a rat',
+    audio: '/media/sounds/a-rat.mp3',
+  },
   {
     name: 'Chicken',
     audio: '/media/sounds/chicken_1.mp3',
@@ -712,10 +712,10 @@ export const pranks = [
     name: 'soco',
     audio: '/media/sounds/efeito-de-socos.mp3',
   },
-  // {
-  //   name: "I Don't Give A Shit | Gilbert Gottfried",
-  //   audio: '/media/sounds/penguingilbertgottfriedbuttonsound.mp3',
-  // },
+  {
+    name: "I Don't Give A Shit | Gilbert Gottfried",
+    audio: '/media/sounds/penguingilbertgottfriedbuttonsound.mp3',
+  },
   {
     name: 'FNaF BooP',
     audio: '/media/sounds/partyfavorraspypart_ac01_3_5HTQ8CW.mp3',
@@ -1193,6 +1193,10 @@ export const pranks = [
     audio: '/media/sounds/perdiozh_LWDgniX.mp3',
   },
   {
+    name: 'NINJA RAGE EXTRA BASS BOOSTED',
+    audio: '/media/sounds/ninja-rage-extra-bass-boosted_bKD8AOq.mp3',
+  },
+  {
     name: 'Я твой рот выебу',
     audio: '/media/sounds/ia-tvoi-rot-vyebu.mp3',
   },
@@ -1440,10 +1444,10 @@ export const pranks = [
     name: 'Oh Yesss~',
     audio: '/media/sounds/mettaton_oh_yes_1.mp3',
   },
-  // {
-  //   name: 'Scammer wtf are you doing joker',
-  //   audio: '/media/sounds/scammer-wtf-are-you-doing-joker.mp3',
-  // },
+  {
+    name: 'Scammer wtf are you doing joker',
+    audio: '/media/sounds/scammer-wtf-are-you-doing-joker.mp3',
+  },
   {
     name: 'KNOCKOUT!',
     audio:
@@ -2373,6 +2377,10 @@ export const pranks = [
     audio: '/media/sounds/the-hand-noise_fVftxp4.mp3',
   },
   {
+    name: 'Sorry For Cussing',
+    audio: '/media/sounds/sorry-for-cussing.mp3',
+  },
+  {
     name: 'Lumine Laugh',
     audio: '/media/sounds/luminerindo.mp3',
   },
@@ -2541,6 +2549,10 @@ export const pranks = [
   {
     name: 'MAGNUM, P.I.',
     audio: '/media/sounds/magnum-p.mp3',
+  },
+  {
+    name: 'no mana by Tyler1vsPhreak',
+    audio: '/media/sounds/tyler1-vs-phreak-full-game-mp3cut.mp3',
   },
   {
     name: 'Feueralarm',
@@ -3149,6 +3161,10 @@ export const pranks = [
     audio: '/media/sounds/magnum-p.mp3',
   },
   {
+    name: 'no mana by Tyler1vsPhreak',
+    audio: '/media/sounds/tyler1-vs-phreak-full-game-mp3cut.mp3',
+  },
+  {
     name: 'буба орёт',
     audio: '/media/sounds/buba-oriot.mp3',
   },
@@ -3222,13 +3238,17 @@ export const pranks = [
     audio: '/media/sounds/its-just-a-prank-bro-sound-effect.mp3',
   },
   {
+    name: 'no mana by Tyler1vsPhreak',
+    audio: '/media/sounds/tyler1-vs-phreak-full-game-mp3cut.mp3',
+  },
+  {
     name: 'LEVÁNTENSE (nuevo)',
     audio: '/media/sounds/levantense-nuevo.mp3',
   },
-  // {
-  //   name: 'Whaaat the Fuuuccckk?',
-  //   audio: '/media/sounds/dfbdf_xKGIb5C.mp3',
-  // },
+  {
+    name: 'Whaaat the Fuuuccckk?',
+    audio: '/media/sounds/dfbdf_xKGIb5C.mp3',
+  },
   {
     name: 'Slammed',
     audio: '/media/sounds/slammed.mp3',
@@ -3934,6 +3954,10 @@ export const pranks = [
     audio: '/media/sounds/game-boy-freakout.mp3',
   },
   {
+    name: 'i_like_to_suck_cocks',
+    audio: '/media/sounds/i-like-to-suck-cocks.mp3',
+  },
+  {
     name: 'Dr Evil Laugh',
     audio: '/media/sounds/evil-laugh_P09y72y.mp3',
   },
@@ -4198,10 +4222,10 @@ export const pranks = [
     name: 'Да толстая',
     audio: '/media/sounds/da-tolstaia.mp3',
   },
-  // {
-  //   name: 'run for cover you dirty slut',
-  //   audio: '/media/sounds/run-for-cover-you-dirty-slut.mp3',
-  // },
+  {
+    name: 'run for cover you dirty slut',
+    audio: '/media/sounds/run-for-cover-you-dirty-slut.mp3',
+  },
   {
     name: 'Vixennn',
     audio: '/media/sounds/vixennn.mp3',
@@ -4572,6 +4596,10 @@ export const pranks = [
     audio: '/media/sounds/elderly-miku-fart.mp3',
   },
   {
+    name: 'tense your mother is call you',
+    audio: '/media/sounds/1583442859779.mp3',
+  },
+  {
     name: 'Caillou Tiles YouTube Poop Record',
     audio: '/media/sounds/caillou-tiles-youtube-poop-record.mp3',
   },
@@ -4683,6 +4711,10 @@ export const pranks = [
   {
     name: '1 2 patate poil maudit cave',
     audio: '/media/sounds/1-2-patate-poil-maudit-cave.mp3',
+  },
+  {
+    name: 'Dogsh*t (10yr old girl)',
+    audio: '/media/sounds/dogsh-t-10yr-old-girl.mp3',
   },
   {
     name: 'نغمه حزينه',
@@ -5110,6 +5142,10 @@ export const pranks = [
     audio: '/media/sounds/mimimimi-snakes.mp3',
   },
   {
+    name: 'Gift your mother number',
+    audio: '/media/sounds/gift-your-mother-number.mp3',
+  },
+  {
     name: 'бум метрополітену робить його бумом',
     audio: '/media/sounds/bum-metropolitenu-robit-iogo-bumom.mp3',
   },
@@ -5436,10 +5472,10 @@ export const pranks = [
     name: 'Jumpscare SFX (music and vocal)',
     audio: '/media/sounds/jumpscare-sfx-music-and-vocal.mp3',
   },
-  // {
-  //   name: 'Baldi Shits Himself',
-  //   audio: '/media/sounds/baldi-shits-himself.mp3',
-  // },
+  {
+    name: 'Baldi Shits Himself',
+    audio: '/media/sounds/baldi-shits-himself.mp3',
+  },
   {
     name: 'Bomb Defused CT Wins',
     audio:
@@ -5817,10 +5853,10 @@ export const pranks = [
     name: 'Shut up. (10 yr old girl)',
     audio: '/media/sounds/shut-up-10-yr-old-girl.mp3',
   },
-  // {
-  //   name: 'Get yo black ass in the line',
-  //   audio: '/media/sounds/video0_Knn06Ay.mp3',
-  // },
+  {
+    name: 'Get yo black ass in the line',
+    audio: '/media/sounds/video0_Knn06Ay.mp3',
+  },
   {
     name: 'Kolnese',
     audio: '/media/sounds/kolnese.mp3',
@@ -6353,10 +6389,10 @@ export const pranks = [
     name: 'Yayayden2',
     audio: '/media/sounds/yayayden2.mp3',
   },
-  // {
-  //   name: 'This mf cheating',
-  //   audio: '/media/sounds/this-mf-cheating.mp3',
-  // },
+  {
+    name: 'This mf cheating',
+    audio: '/media/sounds/this-mf-cheating.mp3',
+  },
   {
     name: 'Neveeva',
     audio: '/media/sounds/neveeva.mp3',

@@ -1,8 +1,8 @@
-import {memes2} from '../../data/meme/memes2'
-import {reactions} from '../../data/meme/reactions'
-import {music} from '@/data/meme/music'
-import {pranks} from '@/data/meme/pranks'
+import {allMemeSounds} from '@/data/meme/all-sounds'
 import type {MemeType} from '@/components/wc-meme-item'
+import {getManifestAudioCheck} from '@/server/talkers2-audio-manifest'
+
+const MYINSTANTS_ORIGIN = 'https://www.myinstants.com'
 
 function clean(str: string) {
   if (str) {
@@ -19,11 +19,22 @@ export async function GET() {
 
   const ret: MemeType[] = []
 
-  ;[...reactions, ...memes2, ...music, ...pranks]
-    .map(item => ({
-      name: clean(item.name),
-      audio: 'https://www.myinstants.com' + clean(item.audio),
-    }))
+  allMemeSounds
+    .map(item => {
+      const name = clean(item.name)
+      const audio = new URL(item.audio, MYINSTANTS_ORIGIN).href
+      const completedCheck = getManifestAudioCheck(audio)
+
+      return {
+        name,
+        audio,
+        badWordRanks: completedCheck?.badWordRanks ?? null,
+        audioFingerprint: completedCheck?.audioFingerprint ?? null,
+        audioCheckedAt: completedCheck?.checkedAt ?? null,
+        audioCheckStatus:
+          completedCheck?.audioCheckStatus || ('unchecked' as const),
+      }
+    })
     .forEach(item => {
       if (map[item.audio]) return
       map[item.audio] = true

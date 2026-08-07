@@ -12,6 +12,7 @@
     "start": "astro dev",
     "build": "astro build",
     "build:sites:star": "astro build && node scripts/prepare-star-sites.mjs",
+    "backfill:talkers2-audio": "node --env-file-if-exists=.env scripts/backfill-talkers2-audio.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "test:wordle": "node --test src/core/wordle/game.test.ts",

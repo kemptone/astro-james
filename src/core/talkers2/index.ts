@@ -6,7 +6,8 @@ import {
 } from './wc-talkers.helpers'
 import type {Talkers2VoiceDetails as VoiceDetails} from './types'
 import './wc-talker-azure'
-import '../../components/wc-meme-item'
+import {swapBadWordRanksForPlayback} from './playback-text'
+import {getPreferredAudioCheck} from '../../components/wc-meme-item'
 import {$, $$, d} from '../grok/grok.helpers'
 import type {MemeType} from '@/components/wc-meme-item'
 
@@ -85,13 +86,54 @@ d.addEventListener('DOMContentLoaded', async e => {
       'wc-talker-azure, wc-meme-item'
     )
     const fields: VoiceDetails[] = []
+    const uncheckedSounds: string[] = []
+    const inconclusiveSounds: string[] = []
+    const rankedSounds: Array<{name: string; ranks: number[]}> = []
 
     all_talkers.forEach(item => {
       if (item.tagName === 'WC-MEME-ITEM') {
         try {
-          let obj = JSON.parse(item?.dataset?.item || '{}')
+          const memeElement = item as HTMLElement
+          const obj = JSON.parse(memeElement.dataset.item || '{}') as MemeType
+          const preferredCheck = getPreferredAudioCheck(obj)
+
+          if (preferredCheck) {
+            obj.audioCheckStatus = preferredCheck.audioCheckStatus
+            obj.badWordRanks = preferredCheck.badWordRanks
+            obj.audioFingerprint = preferredCheck.audioFingerprint
+            obj.audioCheckedAt = new Date(
+              preferredCheck.checkedAt
+            ).toISOString()
+            memeElement.dataset.item = JSON.stringify(obj)
+          }
+          const hasValidRanks =
+            Array.isArray(obj.badWordRanks) &&
+            obj.badWordRanks.every(
+              rank => Number.isInteger(rank) && rank >= 1 && rank <= 40
+            ) &&
+            new Set(obj.badWordRanks).size === obj.badWordRanks.length
+          const hasValidFingerprint =
+            typeof obj.audioFingerprint === 'string' &&
+            /^sha256-[a-f0-9]{64}$/.test(obj.audioFingerprint)
+
+          if (obj.audioCheckStatus === 'inconclusive') {
+            if (hasValidFingerprint) {
+              inconclusiveSounds.push(obj.name)
+            } else {
+              uncheckedSounds.push(obj.name)
+            }
+          } else if (
+            obj.audioCheckStatus !== 'checked' ||
+            !hasValidRanks ||
+            !hasValidFingerprint
+          ) {
+            uncheckedSounds.push(obj.name)
+          } else if (obj.badWordRanks.length) {
+            rankedSounds.push({name: obj.name, ranks: obj.badWordRanks})
+          }
+
           // let audio = new Audio(obj.audio)
-          let fakeField: VoiceDetails = {is_meme: true, ...obj}
+          const fakeField: VoiceDetails = {is_meme: true, ...obj}
           fields.push(fakeField)
           return
         } catch (error) {
@@ -108,6 +150,37 @@ d.addEventListener('DOMContentLoaded', async e => {
           thing[item.name] = item.value
         })
     })
+
+    if (uncheckedSounds.length || inconclusiveSounds.length) {
+      const reasons: string[] = []
+      if (uncheckedSounds.length) {
+        reasons.push(
+          `check these sounds first: ${uncheckedSounds.join(', ')}`
+        )
+      }
+      if (inconclusiveSounds.length) {
+        reasons.push(
+          `no clear words could be verified in: ${inconclusiveSounds.join(
+            ', '
+          )}; play those individually or remove them`
+        )
+      }
+      alert(
+        `Play All stopped because audio safety is unknown — ${reasons.join(
+          '; '
+        )}.`
+      )
+      return
+    }
+
+    if (rankedSounds.length) {
+      alert(
+        `Play All stopped because these sounds have bad-word numbers: ${rankedSounds
+          .map(item => `${item.name} (${item.ranks.join(', ')})`)
+          .join('; ')}. You can still use Play on a sound by itself.`
+      )
+      return
+    }
 
     if (!fields.length) {
       alert("No text to play")
@@ -137,14 +210,26 @@ d.addEventListener('DOMContentLoaded', async e => {
       let field = fields[x]
 
       if (field.is_meme) {
-        let audio = await playMeme(field)
-        audios.push(audio)
+        if (!field.audio || !field.audioFingerprint) continue
+        try {
+          const audio = await playMeme({
+            audio: field.audio,
+            audioFingerprint: field.audioFingerprint,
+          })
+          audios.push(audio)
+        } catch (error) {
+          console.error('Could not safely load a sound for Play All', error)
+          alert(
+            `Could not safely load ${field.name || 'a sound'}. Check its audio again.`
+          )
+          return
+        }
         // audios.push(field.audio)
       } else {
-        let text_to_say = field.text
+        let text_to_say = swapBadWordRanksForPlayback(field.text || '')
 
         if (is_textreversed) {
-          text_to_say = field.text.split(" ").reverse().join(" ")
+          text_to_say = text_to_say.split(" ").reverse().join(" ")
         }
 
         let audio = await playTextAzure(
