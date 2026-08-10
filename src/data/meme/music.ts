@@ -813,10 +813,10 @@ export const music = [
     name: 'romantic sound',
     audio: '/media/sounds/romantic-sound.mp3',
   },
-  {
-    name: 'i dont give a sheten',
-    audio: '/media/sounds/i-dont-give-a-sheten.mp3',
-  },
+  // {
+  //   name: 'i dont give a sheten',
+  //   audio: '/media/sounds/i-dont-give-a-sheten.mp3',
+  // },
   {
     name: 'Você não tem inimigos thorfinn',
     audio: '/media/sounds/voce-nao-tem-inimigos-thorfinn.mp3',
@@ -1115,10 +1115,10 @@ export const music = [
     name: 'Стой сучка',
     audio: '/media/sounds/stoi-suchka.mp3',
   },
-  {
-    name: 'i dont give a sheten',
-    audio: '/media/sounds/i-dont-give-a-sheten.mp3',
-  },
+  // {
+  //   name: 'i dont give a sheten',
+  //   audio: '/media/sounds/i-dont-give-a-sheten.mp3',
+  // },
   {
     name: 'Michael Jackson Billie Jean',
     audio: '/media/sounds/michael-jackson-billie-jean.mp3',

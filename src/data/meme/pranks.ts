@@ -491,10 +491,10 @@ export const pranks = [
     audio:
       '/media/sounds/phasmophobia-sound-board-effects-06-sound-effects-death-jumpscare.mp3',
   },
-  {
-    name: 'Ohio ahh sound effect',
-    audio: '/media/sounds/ohio-ahh-sound-effect.mp3',
-  },
+  // {
+  //   name: 'Ohio ahh sound effect',
+  //   audio: '/media/sounds/ohio-ahh-sound-effect.mp3',
+  // },
   {
     name: 'Smack!',
     audio: '/media/sounds/sharp-punch-soundbible.mp3',
@@ -856,10 +856,10 @@ export const pranks = [
     name: 'ГойДА 2',
     audio: '/media/sounds/goida-2.mp3',
   },
-  {
-    name: 'you stupid little boy aruuuuuuuuuugh',
-    audio: '/media/sounds/you-stupid-little-boy-aruuuuuuuuuugh.mp3',
-  },
+  // {
+  //   name: 'you stupid little boy aruuuuuuuuuugh',
+  //   audio: '/media/sounds/you-stupid-little-boy-aruuuuuuuuuugh.mp3',
+  // },
   {
     name: 'Mario reacts to a spicy meme',
     audio: '/media/sounds/sm64_mario_oof_jCpnBTB.mp3',
@@ -1420,10 +1420,10 @@ export const pranks = [
     name: 'right to jail',
     audio: '/media/sounds/right_to_jail.mp3',
   },
-  {
-    name: 'Get back you bastard',
-    audio: '/media/sounds/774.mp3',
-  },
+  // {
+  //   name: 'Get back you bastard',
+  //   audio: '/media/sounds/774.mp3',
+  // },
   {
     name: 'Glitch Contained',
     audio: '/media/sounds/glitch-contained.mp3',
@@ -2200,10 +2200,10 @@ export const pranks = [
     name: 'McNutts',
     audio: '/media/sounds/mcnutts.mp3',
   },
-  {
-    name: 'fag nga',
-    audio: '/media/sounds/fag-nga.mp3',
-  },
+  // {
+  //   name: 'fag nga',
+  //   audio: '/media/sounds/fag-nga.mp3',
+  // },
   {
     name: 'gorilla tag ghost noise',
     audio: '/media/sounds/gorilla-tag-ghost-noise.mp3',
@@ -4806,10 +4806,10 @@ export const pranks = [
     name: 'от тебя гавной воняет',
     audio: '/media/sounds/ot-tebia-gavnoi-voniaet.mp3',
   },
-  {
-    name: 'Metal as Fuck, Apparently',
-    audio: '/media/sounds/metal-as-fuck-apparently.mp3',
-  },
+  // {
+  //   name: 'Metal as Fuck, Apparently',
+  //   audio: '/media/sounds/metal-as-fuck-apparently.mp3',
+  // },
   {
     name: 'i like ya cut g (Taco Bell)',
     audio: '/media/sounds/i-like-ya-cut-g-taco-bell_Bis4GQX.mp3',
@@ -4935,10 +4935,10 @@ export const pranks = [
     name: 'LeverSound',
     audio: '/media/sounds/lever_bnxyanA.mp3',
   },
-  {
-    name: 'Metal as Fuck, Apparently',
-    audio: '/media/sounds/metal-as-fuck-apparently.mp3',
-  },
+  // {
+  //   name: 'Metal as Fuck, Apparently',
+  //   audio: '/media/sounds/metal-as-fuck-apparently.mp3',
+  // },
   {
     name: 'Omg Controller Player',
     audio:
