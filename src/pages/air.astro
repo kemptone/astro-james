@@ -1,181 +1,922 @@
 ---
 import Menu3 from '@/components/menu.astro'
-// src/pages/air.astro
-const entities = [
-  { name: 'Wrockley', id: 'wrockley' },
-  { name: 'Kufty', id: 'kufty' },
-  { name: 'Mormage', id: 'mormage' },
-  { name: 'Parad', id: 'parad' },
-];
-
-// Helper function to generate a random number within a range
-function getRandomValue(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+import {
+  airQualityStandards,
+  formatAirQualityRange,
+} from '@/core/air-quality/standards'
 ---
 
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Air Quality Management Game</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 20px;
-      background-color: #f4f4f9;
-      color: #333;
-    }
-    .container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h1 {
-      color: #333;
-      text-align: center;
-    }
-    .entity-controls {
-      margin-bottom: 20px;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      background-color: #fafafa;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    input[type="range"] {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-    .value-display {
-      font-size: 1.1em;
-      font-weight: bold;
-      color: #007bff;
-    }
-    button {
-        background-color: #007bff;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Create fantasy places and compare their air quality with public indexes from around the world."
+    />
+    <title>Fantasy Air Quality Game</title>
+    <style is:global>
+      :root {
+        color-scheme: light;
+        --ink: #173042;
+        --muted: #5f7180;
+        --line: #d8e4e8;
+        --panel: rgba(255, 255, 255, 0.94);
+        --blue: #146c94;
+        --blue-dark: #0e4e6c;
+        --mint: #dff6ee;
+        --shadow: 0 18px 48px rgba(25, 68, 88, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        color: var(--ink);
+        font-family:
+          Inter, ui-rounded, "SF Pro Rounded", "Segoe UI", system-ui,
+          sans-serif;
+        background:
+          radial-gradient(circle at 15% 5%, #d9f8ee 0, transparent 30rem),
+          radial-gradient(circle at 90% 15%, #dcecff 0, transparent 28rem),
+          #f3f8f9;
+      }
+
+      main button,
+      main input,
+      main select,
+      .goal button {
+        font: inherit;
+      }
+
+      main button,
+      main select,
+      main input[type="text"],
+      main input[type="number"],
+      .goal button {
+        border-radius: 0.75rem;
+      }
+
+      main button,
+      .goal button {
+        min-height: 2.75rem;
+        border: 0;
+        padding: 0.65rem 1rem;
         color: white;
-        border: none;
-        padding: 10px 15px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
+        font-weight: 750;
+        background: var(--blue);
         cursor: pointer;
-        border-radius: 4px;
-    }
-    button:hover {
-        background-color: #0056b3;
-    }
-  </style>
-</head>
-<body>
-  <Menu3 />
-  <div class="container">
-    <h1>Air Quality Management Game</h1>
-
-    <div id="game-goal" style="margin-bottom: 20px; padding: 10px; border: 1px solid #007bff; border-radius: 4px; background-color: #e7f3ff;">
-      <p><strong>Goal:</strong> Get the air quality for all entities (Wrockley, Kufty, Mormage, Parad) to 'Good' (50 or less).</p>
-    </div>
-
-    <div id="win-message" style="display: none; margin-bottom: 20px; padding: 15px; border: 1px solid #28a745; border-radius: 4px; background-color: #d4edda; color: #155724; text-align: center; font-size: 1.2em;">
-      <p>Congratulations! You've achieved the goal and improved everyone's air quality!</p>
-    </div>
-
-    {entities.map(entity => (
-      <div class="entity-controls" id={`entity-${entity.id}-controls`}>
-        <label for={`${entity.id}-slider`}>{entity.name}'s Air Quality: <span id={`${entity.id}-value`} class="value-display"></span></label>
-        <input type="range" id={`${entity.id}-slider`} name={`${entity.id}-slider`} min="1" max="500">
-      </div>
-    ))}
-
-    <div id="actions">
-      <h2>Take Action:</h2>
-      <button id="action-usa">USA</button>
-      <button id="action-india">India</button>
-      <button id="action-china">China</button>
-      <button id="action-skorea">South Korea</button>
-      <button id="action-singapore">Singapore</button>
-    </div>
-
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const entities = [
-        { name: 'Wrockley', id: 'wrockley' },
-        { name: 'Kufty', id: 'kufty' },
-        { name: 'Mormage', id: 'mormage' },
-        { name: 'Parad', id: 'parad' },
-      ];
-
-      type CountryId = 'usa' | 'india' | 'china' | 'skorea' | 'singapore';
-
-      const countryActions: Record<CountryId, Record<string, number>> = {
-        usa: { wrockley: 10, kufty: -5, mormage: 0, parad: 5 }, // Placeholder values
-        india: { wrockley: -10, kufty: 15, mormage: 5, parad: -5 },
-        china: { wrockley: -15, kufty: -10, mormage: 20, parad: 10 },
-        skorea: { wrockley: 5, kufty: 10, mormage: -5, parad: -10 },
-        singapore: { wrockley: 0, kufty: 5, mormage: 10, parad: 15 },
-      };
-
-      function getRandomValue(min: number, max: number): number {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        transition:
+          transform 140ms ease,
+          background 140ms ease;
       }
 
-      entities.forEach(entity => {
-        const slider = document.getElementById(`${entity.id}-slider`) as HTMLInputElement;
-        const valueDisplay = document.getElementById(`${entity.id}-value`);
-        if (slider && valueDisplay) {
-          const randomValue = getRandomValue(1, 500);
-          slider.value = String(randomValue);
-          valueDisplay.textContent = String(randomValue);
+      main button:hover,
+      .goal button:hover {
+        background: var(--blue-dark);
+        transform: translateY(-1px);
+      }
 
-          // Add event listener to update display when slider changes
-          slider.addEventListener('input', (event) => {
-            if (event.target instanceof HTMLInputElement) {
-              valueDisplay.textContent = event.target.value;
-            }
-          });
+      main button:focus-visible,
+      main input:focus-visible,
+      main select:focus-visible,
+      main a:focus-visible,
+      .goal button:focus-visible {
+        outline: 3px solid #63b9e3;
+        outline-offset: 2px;
+      }
+
+      main button.secondary,
+      .goal button.secondary {
+        border: 1px solid #b9d0d9;
+        color: var(--blue-dark);
+        background: #edf6f8;
+      }
+
+      main button.danger,
+      .goal button.danger {
+        border: 1px solid #efc2c6;
+        color: #8c2731;
+        background: #fff1f2;
+      }
+
+      .page-shell {
+        width: min(1180px, calc(100% - 2rem));
+        margin: 0 auto;
+        padding: 1.25rem 0 4rem;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        margin: 1rem 0 1.25rem;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 1.5rem;
+        padding: clamp(1.4rem, 4vw, 3rem);
+        color: white;
+        background: linear-gradient(135deg, #0e607f, #188b8a 65%, #55ad79);
+        box-shadow: var(--shadow);
+      }
+
+      .hero::after {
+        position: absolute;
+        right: -2rem;
+        bottom: -4rem;
+        width: 18rem;
+        height: 18rem;
+        border: 2.5rem solid rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+        content: "";
+      }
+
+      .eyebrow {
+        margin: 0 0 0.55rem;
+        font-size: 0.78rem;
+        font-weight: 850;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin-bottom: 0.75rem;
+        font-size: clamp(2rem, 5vw, 4.2rem);
+        line-height: 0.98;
+        letter-spacing: -0.04em;
+      }
+
+      .hero p:last-child {
+        max-width: 690px;
+        margin-bottom: 0;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: clamp(1rem, 2vw, 1.15rem);
+      }
+
+      .goal,
+      .add-place,
+      .standards-guide {
+        border: 1px solid var(--line);
+        border-radius: 1.25rem;
+        background: var(--panel);
+        box-shadow: 0 10px 30px rgba(25, 68, 88, 0.08);
+      }
+
+      .goal {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        padding: 1rem 1.15rem;
+      }
+
+      .goal p {
+        margin: 0;
+      }
+
+      .goal strong {
+        color: #0d684f;
+      }
+
+      #win-message {
+        display: none;
+        margin-bottom: 1rem;
+        border: 1px solid #8ed4b6;
+        border-radius: 1rem;
+        padding: 1rem 1.15rem;
+        color: #0a5a43;
+        font-weight: 750;
+        background: var(--mint);
+      }
+
+      #win-message[data-visible="true"] {
+        display: block;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+      }
+
+      .places-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
+        gap: 1rem;
+      }
+
+      .place-card {
+        --band-color: #2e9b50;
+        --band-text: #ffffff;
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        gap: 1rem;
+        border: 1px solid var(--line);
+        border-top: 0.55rem solid var(--band-color);
+        border-radius: 1.25rem;
+        padding: 1.1rem;
+        background: var(--panel);
+        box-shadow: 0 10px 26px rgba(25, 68, 88, 0.09);
+      }
+
+      .card-heading {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.7rem;
+        align-items: center;
+      }
+
+      .place-name {
+        min-width: 0;
+        width: 100%;
+        border: 1px solid transparent;
+        padding: 0.45rem 0.55rem;
+        color: var(--ink);
+        font-size: 1.32rem;
+        font-weight: 850;
+        background: transparent;
+      }
+
+      .place-name:hover,
+      .place-name:focus {
+        border-color: var(--line);
+        background: white;
+      }
+
+      .remove-place {
+        min-height: 2.2rem;
+        padding: 0.35rem 0.65rem;
+        font-size: 0.82rem;
+      }
+
+      .field-label {
+        display: grid;
+        gap: 0.42rem;
+        color: var(--muted);
+        font-size: 0.84rem;
+        font-weight: 750;
+      }
+
+      main select,
+      main input[type="text"],
+      main input[type="number"] {
+        width: 100%;
+        min-height: 2.8rem;
+        border: 1px solid #b9ccd4;
+        padding: 0.6rem 0.75rem;
+        color: var(--ink);
+        background: white;
+      }
+
+      .reading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+
+      .reading-number {
+        color: var(--ink);
+        font-size: clamp(2.3rem, 8vw, 3.7rem);
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.06em;
+      }
+
+      .reading-unit {
+        display: block;
+        margin-top: 0.25rem;
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: normal;
+      }
+
+      .category-badge {
+        max-width: 58%;
+        border-radius: 999px;
+        padding: 0.5rem 0.75rem;
+        color: var(--band-text);
+        font-size: 0.83rem;
+        font-weight: 850;
+        text-align: center;
+        background: var(--band-color);
+      }
+
+      .meter {
+        position: relative;
+        height: 2.1rem;
+        border: 0.28rem solid white;
+        border-radius: 999px;
+        background: var(--meter-gradient);
+        box-shadow:
+          0 0 0 1px #bfd0d7,
+          inset 0 1px 4px rgba(23, 48, 66, 0.18);
+      }
+
+      .meter-marker {
+        position: absolute;
+        top: 50%;
+        left: var(--meter-position);
+        width: 0.35rem;
+        height: 2.7rem;
+        border: 2px solid white;
+        border-radius: 999px;
+        background: #102f41;
+        box-shadow: 0 2px 7px rgba(0, 0, 0, 0.35);
+        transform: translate(-50%, -50%);
+        transition: left 100ms linear;
+      }
+
+      .meter-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.35rem;
+        color: var(--muted);
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      main input[type="range"] {
+        width: 100%;
+        margin: 0;
+        accent-color: var(--band-color);
+        cursor: ew-resize;
+      }
+
+      .number-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(7rem, 0.55fr);
+        gap: 0.75rem;
+        align-items: end;
+      }
+
+      .advice {
+        min-height: 3.3rem;
+        margin: 0;
+        border-left: 0.3rem solid var(--band-color);
+        padding: 0.65rem 0.75rem;
+        border-radius: 0 0.65rem 0.65rem 0;
+        color: #334d5c;
+        font-size: 0.91rem;
+        line-height: 1.45;
+        background: #f3f7f8;
+      }
+
+      .add-place {
+        margin-top: 1rem;
+        padding: 1.2rem;
+      }
+
+      .add-place h2,
+      .standards-guide h2 {
+        margin-bottom: 0.35rem;
+      }
+
+      .add-form {
+        display: grid;
+        grid-template-columns: minmax(12rem, 1fr) minmax(14rem, 1fr) auto;
+        gap: 0.75rem;
+        align-items: end;
+        margin-top: 1rem;
+      }
+
+      .standards-guide {
+        margin-top: 1rem;
+        padding: 1.2rem;
+      }
+
+      .guide-intro,
+      .science-note {
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .science-note {
+        border-radius: 0.85rem;
+        padding: 0.85rem 1rem;
+        background: #edf5f7;
+      }
+
+      .standards-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      details {
+        border: 1px solid var(--line);
+        border-radius: 0.9rem;
+        padding: 0.8rem;
+        background: white;
+      }
+
+      summary {
+        cursor: pointer;
+        font-weight: 850;
+      }
+
+      .standard-name {
+        display: block;
+        margin: 0.65rem 0;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .band-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .band-list li {
+        border-radius: 999px;
+        padding: 0.35rem 0.55rem;
+        font-size: 0.75rem;
+        font-weight: 800;
+      }
+
+      details p {
+        margin: 0.75rem 0 0;
+        color: var(--muted);
+        font-size: 0.84rem;
+        line-height: 1.45;
+      }
+
+      details a {
+        color: var(--blue-dark);
+        font-weight: 750;
+      }
+
+      @media (max-width: 720px) {
+        .page-shell {
+          width: min(100% - 1rem, 1180px);
         }
-      });
 
-      function applyCountryAction(countryId: CountryId) {
-        const effects = countryActions[countryId];
-        if (!effects) return;
+        .goal,
+        .add-form {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
 
-        entities.forEach(entity => {
-          const slider = document.getElementById(`${entity.id}-slider`) as HTMLInputElement;
-          const valueDisplay = document.getElementById(`${entity.id}-value`);
-
-          if (slider && valueDisplay) {
-            let currentValue = parseInt(slider.value, 10);
-            const change = effects[entity.id] || 0;
-            let newValue = currentValue + change;
-
-            // Clamp value between 1 and 500
-            newValue = Math.max(1, Math.min(500, newValue));
-
-            slider.value = String(newValue);
-            valueDisplay.textContent = String(newValue);
-          }
-        });
-        console.log(`Action by ${countryId} applied. New values set.`);
+        .toolbar button,
+        .add-form button {
+          width: 100%;
+        }
       }
 
-      document.getElementById('action-usa')?.addEventListener('click', () => applyCountryAction('usa'));
-      document.getElementById('action-india')?.addEventListener('click', () => applyCountryAction('india'));
-      document.getElementById('action-china')?.addEventListener('click', () => applyCountryAction('china'));
-      document.getElementById('action-skorea')?.addEventListener('click', () => applyCountryAction('skorea'));
-      document.getElementById('action-singapore')?.addEventListener('click', () => applyCountryAction('singapore'));
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <Menu3 />
 
-    });
-  </script>
-</body>
+      <header class="hero">
+        <p class="eyebrow">Build a cleaner fantasy world</p>
+        <h1>Fantasy Air Quality Game</h1>
+        <p>
+          Set the air for every place, switch between country standards, and
+          watch the meter translate each number into a local category.
+        </p>
+      </header>
+
+      <section class="goal" aria-labelledby="game-goal-title">
+        <p id="game-goal-title">
+          <strong>Goal:</strong> Move every fantasy place into the first,
+          cleanest band on its selected air-quality scale.
+        </p>
+        <div class="toolbar">
+          <button type="button" class="secondary" id="randomize-all"
+            >Randomize</button
+          >
+          <button type="button" class="danger" id="reset-game">Reset</button>
+        </div>
+      </section>
+
+      <div id="win-message" role="status" aria-live="polite">
+        🎉 Every fantasy place is in its cleanest air-quality band!
+      </div>
+
+      <main>
+        <div id="places" class="places-grid" aria-live="polite"></div>
+
+        <section class="add-place" aria-labelledby="add-place-title">
+          <h2 id="add-place-title">Add a fantasy place</h2>
+          <p class="guide-intro">
+            Name a new world, island, city, or any place you imagine.
+          </p>
+          <form id="add-place-form" class="add-form">
+            <label class="field-label">
+              Place name
+              <input
+                id="new-place-name"
+                name="placeName"
+                type="text"
+                maxlength="50"
+                placeholder="Example: Cloudberry Island"
+                required
+              />
+            </label>
+            <label class="field-label">
+              Air-quality standard
+              <select id="new-place-standard" name="standardId">
+                {
+                  airQualityStandards.map(standard => (
+                    <option value={standard.id}>
+                      {standard.flag} {standard.country} — {standard.indexName}
+                    </option>
+                  ))
+                }
+              </select>
+            </label>
+            <button type="submit">Add place</button>
+          </form>
+        </section>
+
+        <section class="standards-guide" aria-labelledby="guide-title">
+          <h2 id="guide-title">Country scale guide</h2>
+          <p class="guide-intro">
+            Open a country to see the exact bands used by its game meter.
+          </p>
+          <p class="science-note">
+            These meters compare public reporting scales. Real agencies
+            calculate air quality from specific pollutants and averaging times;
+            this game lets you choose an index value or category and is not a
+            scientific air sensor.
+          </p>
+          <div class="standards-list">
+            {
+              airQualityStandards.map(standard => (
+                <details>
+                  <summary>
+                    {standard.flag} {standard.country}
+                  </summary>
+                  <span class="standard-name">
+                    {standard.indexName} · {standard.min}–{standard.max}{' '}
+                    {standard.unit}
+                  </span>
+                  <ul class="band-list">
+                    {standard.bands.map(band => (
+                      <li
+                        style={`background:${band.color};color:${band.textColor}`}
+                      >
+                        {formatAirQualityRange(band)} {band.label}
+                      </li>
+                    ))}
+                  </ul>
+                  <p>{standard.note}</p>
+                  <p>
+                    <a
+                      href={standard.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View official scale
+                    </a>
+                  </p>
+                </details>
+              ))
+            }
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      import {
+        airQualityStandards,
+        buildAirQualityGradient,
+        clampAirQualityValue,
+        getAirQualityBand,
+        getAirQualityPercentage,
+        getAirQualityStandard,
+        initialFantasyAirQualityPlaces,
+      } from '../core/air-quality/standards'
+
+      type PlaceState = {
+        id: string
+        name: string
+        standardId: string
+        value: number
+      }
+
+      const storageKey = 'fantasy-air-quality-game-v2'
+      const placesContainer = document.getElementById('places')
+      const winMessage = document.getElementById('win-message')
+      const addPlaceForm = document.getElementById(
+        'add-place-form'
+      ) as HTMLFormElement | null
+      const newPlaceName = document.getElementById(
+        'new-place-name'
+      ) as HTMLInputElement | null
+      const newPlaceStandard = document.getElementById(
+        'new-place-standard'
+      ) as HTMLSelectElement | null
+
+      function copyInitialPlaces(): PlaceState[] {
+        return initialFantasyAirQualityPlaces.map(place => ({...place}))
+      }
+
+      function isPlaceState(value: unknown): value is PlaceState {
+        if (!value || typeof value !== 'object') return false
+        const place = value as Partial<PlaceState>
+        return (
+          typeof place.id === 'string' &&
+          typeof place.name === 'string' &&
+          place.name.trim().length > 0 &&
+          typeof place.standardId === 'string' &&
+          airQualityStandards.some(
+            standard => standard.id === place.standardId
+          ) &&
+          typeof place.value === 'number' &&
+          Number.isFinite(place.value)
+        )
+      }
+
+      function loadPlaces(): PlaceState[] {
+        try {
+          const saved = JSON.parse(localStorage.getItem(storageKey) || 'null')
+          if (Array.isArray(saved) && saved.length && saved.every(isPlaceState)) {
+            return saved.map(place => {
+              const standard = getAirQualityStandard(place.standardId)
+              return {
+                ...place,
+                value: clampAirQualityValue(standard, place.value),
+              }
+            })
+          }
+        } catch (error) {
+          console.warn('Could not restore the air-quality game', error)
+        }
+        return copyInitialPlaces()
+      }
+
+      let places: PlaceState[] = loadPlaces()
+
+      function savePlaces() {
+        localStorage.setItem(storageKey, JSON.stringify(places))
+      }
+
+      function makeId() {
+        if ('randomUUID' in crypto) return crypto.randomUUID()
+        return `place-${Date.now()}-${Math.random().toString(16).slice(2)}`
+      }
+
+      function standardOptions(selectedId: string) {
+        return airQualityStandards
+          .map(
+            standard =>
+              `<option value="${standard.id}" ${
+                standard.id === selectedId ? 'selected' : ''
+              }>${standard.flag} ${standard.country} — ${standard.indexName}</option>`
+          )
+          .join('')
+      }
+
+      function updateCard(card: HTMLElement, place: PlaceState) {
+        const standard = getAirQualityStandard(place.standardId)
+        const band = getAirQualityBand(standard, place.value)
+        const position = getAirQualityPercentage(standard, place.value)
+
+        card.style.setProperty('--band-color', band.color)
+        card.style.setProperty('--band-text', band.textColor)
+        card.style.setProperty(
+          '--meter-gradient',
+          buildAirQualityGradient(standard)
+        )
+        card.style.setProperty('--meter-position', `${position}%`)
+
+        const reading = card.querySelector('.reading-number')
+        const unit = card.querySelector('.reading-unit')
+        const badge = card.querySelector('.category-badge')
+        const advice = card.querySelector('.advice')
+        const meter = card.querySelector('.meter')
+        const minimum = card.querySelector('.meter-min')
+        const maximum = card.querySelector('.meter-max')
+
+        if (reading) reading.firstChild!.textContent = String(place.value)
+        if (unit) unit.textContent = standard.unit
+        if (badge) badge.textContent = band.label
+        if (advice) advice.textContent = band.advice
+        if (meter) {
+          meter.setAttribute('aria-valuemin', String(standard.min))
+          meter.setAttribute('aria-valuemax', String(standard.max))
+          meter.setAttribute('aria-valuenow', String(place.value))
+          meter.setAttribute(
+            'aria-valuetext',
+            `${place.value} ${standard.unit}, ${band.label}`,
+          )
+        }
+        if (minimum) minimum.textContent = String(standard.min)
+        if (maximum) maximum.textContent = String(standard.max)
+      }
+
+      function checkGoal() {
+        const won =
+          places.length > 0 &&
+          places.every(place => {
+            const standard = getAirQualityStandard(place.standardId)
+            return getAirQualityBand(standard, place.value) === standard.bands[0]
+          })
+        winMessage?.setAttribute('data-visible', String(won))
+      }
+
+      function buildPlaceCard(place: PlaceState) {
+        const standard = getAirQualityStandard(place.standardId)
+        const card = document.createElement('article')
+        card.className = 'place-card'
+        card.dataset.placeId = place.id
+        card.innerHTML = `
+          <div class="card-heading">
+            <input class="place-name" type="text" maxlength="50" aria-label="Fantasy place name">
+            <button type="button" class="danger remove-place" aria-label="Remove this fantasy place">Remove</button>
+          </div>
+          <label class="field-label">
+            Country standard
+            <select class="standard-select">${standardOptions(place.standardId)}</select>
+          </label>
+          <div class="reading" aria-live="polite">
+            <div class="reading-number">${place.value}<span class="reading-unit">${standard.unit}</span></div>
+            <span class="category-badge"></span>
+          </div>
+          <div>
+            <div class="meter" role="meter" aria-label="Air-quality meter">
+              <span class="meter-marker" aria-hidden="true"></span>
+            </div>
+            <div class="meter-labels" aria-hidden="true">
+              <span class="meter-min"></span>
+              <span>cleaner ← air → more polluted</span>
+              <span class="meter-max"></span>
+            </div>
+          </div>
+          <div class="number-row">
+            <label class="field-label">
+              Set the air quality
+              <input class="quality-slider" type="range">
+            </label>
+            <label class="field-label">
+              Exact value
+              <input class="quality-number" type="number">
+            </label>
+          </div>
+          <p class="advice"></p>
+        `
+
+        const nameInput = card.querySelector(
+          '.place-name'
+        ) as HTMLInputElement | null
+        const standardSelect = card.querySelector(
+          '.standard-select'
+        ) as HTMLSelectElement | null
+        const rangeInput = card.querySelector(
+          '.quality-slider'
+        ) as HTMLInputElement | null
+        const numberInput = card.querySelector(
+          '.quality-number'
+        ) as HTMLInputElement | null
+
+        if (nameInput) nameInput.value = place.name
+
+        function configureValueInputs() {
+          const currentStandard = getAirQualityStandard(place.standardId)
+          ;[rangeInput, numberInput].forEach(input => {
+            if (!input) return
+            input.min = String(currentStandard.min)
+            input.max = String(currentStandard.max)
+            input.step = String(currentStandard.step)
+            input.value = String(place.value)
+          })
+        }
+
+        function setValue(rawValue: string) {
+          const currentStandard = getAirQualityStandard(place.standardId)
+          const parsed = Number(rawValue)
+          place.value = clampAirQualityValue(currentStandard, parsed)
+          if (rangeInput) rangeInput.value = String(place.value)
+          if (numberInput) numberInput.value = String(place.value)
+          updateCard(card, place)
+          savePlaces()
+          checkGoal()
+        }
+
+        nameInput?.addEventListener('input', () => {
+          const nextName = nameInput.value.trim()
+          if (nextName) {
+            place.name = nextName
+            savePlaces()
+          }
+        })
+
+        standardSelect?.addEventListener('change', () => {
+          const previousStandard = getAirQualityStandard(place.standardId)
+          const previousPosition = getAirQualityPercentage(
+            previousStandard,
+            place.value
+          )
+          place.standardId = standardSelect.value
+          const nextStandard = getAirQualityStandard(place.standardId)
+          place.value = clampAirQualityValue(
+            nextStandard,
+            nextStandard.min +
+              (previousPosition / 100) *
+                (nextStandard.max - nextStandard.min)
+          )
+          configureValueInputs()
+          updateCard(card, place)
+          savePlaces()
+          checkGoal()
+        })
+
+        rangeInput?.addEventListener('input', () => setValue(rangeInput.value))
+        numberInput?.addEventListener('input', () => {
+          if (numberInput.value !== '') setValue(numberInput.value)
+        })
+        numberInput?.addEventListener('change', () => {
+          if (numberInput.value === '') numberInput.value = String(place.value)
+          setValue(numberInput.value)
+        })
+
+        card.querySelector('.remove-place')?.addEventListener('click', () => {
+          places = places.filter(candidate => candidate.id !== place.id)
+          savePlaces()
+          renderPlaces()
+        })
+
+        configureValueInputs()
+        updateCard(card, place)
+        return card
+      }
+
+      function renderPlaces() {
+        if (!placesContainer) return
+        placesContainer.replaceChildren(...places.map(buildPlaceCard))
+        checkGoal()
+      }
+
+      addPlaceForm?.addEventListener('submit', event => {
+        event.preventDefault()
+        const name = newPlaceName?.value.trim()
+        const standardId = newPlaceStandard?.value
+        if (!name || !standardId) return
+
+        const standard = getAirQualityStandard(standardId)
+        places.push({
+          id: makeId(),
+          name,
+          standardId,
+          value: standard.min,
+        })
+        savePlaces()
+        renderPlaces()
+        addPlaceForm.reset()
+        newPlaceName?.focus()
+      })
+
+      document.getElementById('randomize-all')?.addEventListener('click', () => {
+        places.forEach(place => {
+          const standard = getAirQualityStandard(place.standardId)
+          const steps = Math.round(
+            (standard.max - standard.min) / standard.step
+          )
+          place.value = clampAirQualityValue(
+            standard,
+            standard.min + Math.floor(Math.random() * (steps + 1)) * standard.step
+          )
+        })
+        savePlaces()
+        renderPlaces()
+      })
+
+      document.getElementById('reset-game')?.addEventListener('click', () => {
+        places = copyInitialPlaces()
+        savePlaces()
+        renderPlaces()
+      })
+
+      renderPlaces()
+    </script>
+  </body>
 </html>
