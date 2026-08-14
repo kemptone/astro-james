@@ -1320,10 +1320,6 @@ export const pranks = [
     audio: '/media/sounds/girl-fart.mp3',
   },
   {
-    name: 'HELLO MR PUTIN IM AN ODINARY MAN FROM DENMARK',
-    audio: '/media/sounds/hello-mr-putin-im-an-odinary-man-from-denmark.mp3',
-  },
-  {
     name: 'Risada Zacarias Burocrata',
     audio: '/media/sounds/risada-de-zacarias.mp3',
   },
@@ -1561,10 +1557,6 @@ export const pranks = [
   {
     name: 'HELLO - LIONEL RICHIE',
     audio: '/media/sounds/hello_8.mp3',
-  },
-  {
-    name: 'HELLO MR PUTIN IM AN ODINARY MAN FROM DENMARK',
-    audio: '/media/sounds/hello-mr-putin-im-an-odinary-man-from-denmark.mp3',
   },
   {
     name: 'Sezon na leszcza - Spierdalaj',
@@ -4779,10 +4771,6 @@ export const pranks = [
     audio: '/media/sounds/buba-oriot.mp3',
   },
   {
-    name: 'KEEPITCOOOLSLSLSLSLSLSSL',
-    audio: '/media/sounds/keepitcooolslslslslslssl.mp3',
-  },
-  {
     name: 'Vine boom full',
     audio: '/media/sounds/vine-boom-full.mp3',
   },
@@ -5141,10 +5129,6 @@ export const pranks = [
   {
     name: 'Click me frfrfr',
     audio: '/media/sounds/click-me-frfrfr.mp3',
-  },
-  {
-    name: 'KEEPITCOOOLSLSLSLSLSLSSL',
-    audio: '/media/sounds/keepitcooolslslslslslssl.mp3',
   },
   {
     name: 'Jonathan Guachi 3',

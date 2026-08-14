@@ -1557,10 +1557,6 @@ export const music = [
     audio: '/media/sounds/woo.mp3',
   },
   {
-    name: 'Everybody Shut up!',
-    audio: '/media/sounds/i-have-an-erection.mp3',
-  },
-  {
     name: 'Hold up!',
     audio: '/media/sounds/thenextepisodeuncensored_cutted.mp3',
   },
