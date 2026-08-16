@@ -1,16 +1,30 @@
 import type {APIRoute} from 'astro'
+import moderationManifest from '@/data/meme/moderation-manifest.json'
+import {
+  canonicalizeAudioPath,
+  MEME_AUDIO_ORIGIN,
+} from '@/data/meme/inventory'
+import {getBlockedAudioPaths} from '@/data/meme/moderation'
 
 export const prerender = false
 
+const blockedAudioPaths = getBlockedAudioPaths(moderationManifest)
+
 export const POST: APIRoute = async ({request}) => {
-  let requestBody
   try {
-    requestBody = await request.json()
-    const {audio, name} = requestBody
+    const requestBody = await request.json()
+    const audioUrl = new URL(requestBody?.audio)
 
-    console.log({audio, name, requestBody})
+    if (audioUrl.origin !== MEME_AUDIO_ORIGIN) {
+      return new Response('Invalid audio URL', {status: 400})
+    }
 
-    const response = await fetch(audio)
+    const audioPath = canonicalizeAudioPath(audioUrl.pathname)
+    if (blockedAudioPaths.has(audioPath)) {
+      return new Response('Audio not found', {status: 404})
+    }
+
+    const response = await fetch(audioUrl)
 
     if (!response.ok) {
       return new Response('Failed to fetch the MP3 file', {

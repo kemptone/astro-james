@@ -1,7 +1,9 @@
-import {memes2} from '../../data/meme/memes2'
-import {reactions} from '../../data/meme/reactions'
-import {music} from '@/data/meme/music'
-import {pranks} from '@/data/meme/pranks'
+import moderationManifest from '@/data/meme/moderation-manifest.json'
+import {
+  getPublishedMemeItems,
+  MEME_AUDIO_ORIGIN,
+} from '@/data/meme/inventory'
+import {getBlockedAudioPaths} from '@/data/meme/moderation'
 import type {MemeType} from '@/components/wc-meme-item'
 
 function clean(str: string) {
@@ -13,22 +15,11 @@ function clean(str: string) {
 
 export const prerender = false
 export async function GET() {
-  const map: {
-    [key: string]: boolean
-  } = {}
-
-  const ret: MemeType[] = []
-
-  ;[...reactions, ...memes2, ...music, ...pranks]
-    .map(item => ({
-      name: clean(item.name),
-      audio: 'https://www.myinstants.com' + clean(item.audio),
-    }))
-    .forEach(item => {
-      if (map[item.audio]) return
-      map[item.audio] = true
-      ret.push(item)
-    })
+  const blockedAudioPaths = getBlockedAudioPaths(moderationManifest)
+  const ret: MemeType[] = getPublishedMemeItems(blockedAudioPaths).map(item => ({
+    name: clean(item.name),
+    audio: MEME_AUDIO_ORIGIN + clean(item.audio),
+  }))
 
   // const data = [ ...reactions, ...memes2 ].slice(0, 2000).map(item => ({
   //   name: clean(item.name),

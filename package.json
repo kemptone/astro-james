@@ -14,6 +14,8 @@
     "build:sites:star": "astro build && node scripts/prepare-star-sites.mjs",
     "preview": "astro preview",
     "astro": "astro",
+    "memes:moderate": "node --experimental-strip-types --env-file-if-exists=.env scripts/meme-moderation/cli.mjs",
+    "test:memes": "node --experimental-strip-types --test scripts/meme-moderation/*.test.mjs",
     "test:wordle": "node --test src/core/wordle/game.test.ts",
     "wordle:words": "node scripts/generate-wordle-words.mjs",
     "test:ms": "node microsoft.js"

@@ -3,11 +3,7 @@ import type {MemeType} from './wc-meme-item'
 const SOUNDS = 'get_memes'
 
 const dog = {
-  [SOUNDS]: (function () {
-    let _t = localStorage.getItem(SOUNDS)
-    if (_t) return JSON.parse(_t) as MemeType[]
-    return null
-  })(),
+  [SOUNDS]: null as MemeType[] | null,
 }
 
 export const getMemes = async () => {
@@ -19,7 +15,6 @@ export const getMemes = async () => {
   })
   try {
     const data = (dog[SOUNDS] = await results.json())
-    localStorage.setItem(SOUNDS, JSON.stringify(data))
     return data
   } catch (error) {
     console.error(error)
