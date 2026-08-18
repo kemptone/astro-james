@@ -29,10 +29,17 @@ test('inventory loads all sources and deduplicates canonical audio paths', () =>
     0
   )
   const inventory = buildMemeInventory()
+  const canonicalPaths = allMemeSources.flatMap(source =>
+    source.items.map(item => canonicalizeAudioPath(item.audio))
+  )
 
-  assert.equal(entryCount, 4836)
-  assert.equal(inventory.length, 3473)
-  assert.equal(new Set(inventory.map(item => item.audioPath)).size, 3473)
+  assert.ok(entryCount > 0)
+  assert.equal(canonicalPaths.length, entryCount)
+  assert.equal(inventory.length, new Set(canonicalPaths).size)
+  assert.equal(
+    new Set(inventory.map(item => item.audioPath)).size,
+    inventory.length
+  )
   assert.deepEqual(
     publishedMemeSources.map(source => source.name),
     ['reactions', 'memes2', 'music', 'pranks']
