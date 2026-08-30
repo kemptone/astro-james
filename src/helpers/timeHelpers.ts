@@ -1,56 +1,79 @@
-export function MetaFlipTime(
-  e_timeInput: HTMLInputElement,
-  e_flippedDisplay: HTMLElement,
-) {
-  function flipTime() {
-    const timeStr = e_timeInput.value.trim()
-    if (!timeStr) return
+const MINUTES_PER_DAY = 24 * 60
+const HOURS_PER_DAY = 24
 
-    // Parse the native time input format (HH:MM in 24-hour format)
-    const [hours, minutes] = timeStr.split(':').map(Number)
+export type ParsedTime =
+  | {ok: true; value: number}
+  | {ok: false; error: string}
 
-    // Apply flipping rules from the prompt
-    let flippedHours = flipHours(hours)
-    let flippedMinutes = flipMinutes(minutes)
+function wrap(value: number, size: number): number {
+  return ((value % size) + size) % size
+}
 
-    // If minutes were flipped (not 0), we need to subtract 1 from hours
-    // because we're "borrowing" from the next hour
-    if (minutes !== 0) {
-      flippedHours = flippedHours - 1
-      if (flippedHours < 0) {
-        flippedHours = 23
-      }
-    }
-
-    // Display flipped time
-    e_flippedDisplay.textContent = formatTime12Hour(
-      flippedHours,
-      flippedMinutes,
-    )
+export function parseFullTime(raw: string): ParsedTime {
+  const value = raw.trim()
+  if (!value) {
+    return {ok: false, error: 'Enter a time from 0:00 through 23:59.'}
   }
 
-  function flipHours(hours: number): number {
-    // Based on the prompt's hour flipping rules
-    if (hours === 0) return 0
-    return 24 - hours
+  const match = /^(\d{1,2}):(\d{2})$/.exec(value)
+  if (!match) {
+    return {ok: false, error: 'Use hours and two minute digits, like 0:00 or 14:25.'}
   }
 
-  function flipMinutes(minutes: number): number {
-    // Based on the prompt's minute flipping rules
-    if (minutes === 0) return 0
-    return 60 - minutes
+  const hours = Number(match[1])
+  const minutes = Number(match[2])
+  if (hours > 23 || minutes > 59) {
+    return {ok: false, error: 'The time must be between 0:00 and 23:59.'}
   }
 
-  function formatTime12Hour(hours24: number, minutes: number): string {
-    const period = hours24 >= 12 ? 'PM' : 'AM'
-    const hours12 = hours24 === 0 ? 12 : hours24 > 12 ? hours24 - 12 : hours24
-    return `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`
+  return {ok: true, value: hours * 60 + minutes}
+}
+
+export function parseHoursOnly(raw: string): ParsedTime {
+  const value = raw.trim()
+  if (!value) {
+    return {ok: false, error: 'Enter a whole hour from 0 through 23.'}
   }
 
-  return {
-    flipHours,
-    flipMinutes,
-    formatTime12Hour,
-    flipTime,
+  if (!/^\d{1,2}$/.test(value)) {
+    return {ok: false, error: 'Hours-only mode accepts a whole number from 0 through 23.'}
   }
+
+  const hours = Number(value)
+  if (hours > 23) {
+    return {ok: false, error: 'The hour must be between 0 and 23.'}
+  }
+
+  return {ok: true, value: hours}
+}
+
+export function timeLeftToTimeOfDay(
+  inputMinutes: number,
+  boundaryMinutes: number,
+): number {
+  return wrap(boundaryMinutes - inputMinutes - 1, MINUTES_PER_DAY)
+}
+
+export function hoursLeftToTimeOfDay(
+  inputHours: number,
+  boundaryMinutes: number,
+): number {
+  const boundaryHour = Math.floor(boundaryMinutes / 60)
+  return wrap(boundaryHour - inputHours - 1, HOURS_PER_DAY)
+}
+
+export function formatTimeOfDay(totalMinutes: number): string {
+  const wrappedMinutes = wrap(totalMinutes, MINUTES_PER_DAY)
+  const hours24 = Math.floor(wrappedMinutes / 60)
+  const minutes = wrappedMinutes % 60
+  const period = hours24 >= 12 ? 'PM' : 'AM'
+  const hours12 = hours24 % 12 || 12
+  return `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`
+}
+
+export function formatHourOfDay(hours24: number): string {
+  const wrappedHours = wrap(hours24, HOURS_PER_DAY)
+  const period = wrappedHours >= 12 ? 'PM' : 'AM'
+  const hours12 = wrappedHours % 12 || 12
+  return `${hours12} ${period}`
 }

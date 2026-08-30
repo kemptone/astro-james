@@ -3,108 +3,74 @@ import Layout from '../../layouts/Layout.astro'
 import './_styles.css'
 ---
 
-<Layout title="SRO9 - Malia Time Flipper">
+<Layout title="SRO9 - Time Left to Time of Day">
   <main>
-    <div class="header-section">
-      <h1>🕐 SRO9 - Malia Time Flipper 🕐</h1>
+    <header class="header-section">
+      <p class="eyebrow">SRO9</p>
+      <h1>Time Left to Time of Day</h1>
       <p class="subtitle">
-        3rd decoration of SRO9 - Ask Malia anything and flip time!
+        Enter how much time is left and discover its time of day.
       </p>
-    </div>
+    </header>
 
-    <div class="game-container">
-      <div class="bitbibbies-section">
-        <h3>🎯 BitBibbies Required</h3>
-        <button id="bitbibbies-btn" class="bitbibbies-btn"
-          >Add BitBibbies</button
+    <section class="game-container" aria-labelledby="converter-title">
+      <div class="converter-heading">
+        <div>
+          <p class="step">Choose a version</p>
+          <h2 id="converter-title">Time converter</h2>
+        </div>
+        <label class="version-field" for="boundary-select">
+          Boundary version
+          <select id="boundary-select" name="boundary">
+            <option value="0">Midnight</option>
+            <option value="860">2:20 PM</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="mode-panel">
+        <div>
+          <p class="step">Input mode</p>
+          <h3 id="mode-title">Full time</h3>
+          <p id="mode-description">Type hours and minutes from 0:00 to 23:59.</p>
+        </div>
+        <button
+          id="mode-switch"
+          class="mode-switch is-on"
+          type="button"
+          role="switch"
+          aria-checked="true"
+          aria-labelledby="mode-title"
+          aria-describedby="mode-description"
         >
-        <div id="bitbibbies-status" class="bitbibbies-status">
-          ❌ BitBibbies Not Added
-        </div>
+          <img src="/lights/light_on2.png" alt="" />
+          <span>Switch to hours only</span>
+        </button>
       </div>
 
-      <div class="malia-section">
-        <div class="malia-avatar">
-          <div class="face">👧🏻</div>
-          <div class="voice-indicator">🎤</div>
-        </div>
-
-        <div class="malia-info">
-          <h3>Meet Malia</h3>
-          <p>A child who speaks English with Ana's voice from Microsoft</p>
-          <div class="voice-info">
-            <strong>Voice:</strong> Ana (Child) from Microsoft - like in talkers2
-          </div>
-          <p class="intro-text">You never talked with a child before!</p>
-        </div>
-      </div>
-
-      <div class="chat-interface">
-        <h3>💬 Ask Malia Anything You'd Like</h3>
-        <div class="chat-messages" id="chat-messages">
-          <div class="malia-message">
-            <strong>Malia:</strong> Hi! I'm Malia! Ask me anything you'd like and
-            I'll respond in my Ana voice from Microsoft!
-          </div>
-        </div>
-
-        <div class="chat-input-section">
+      <form id="time-form" class="time-form" novalidate>
+        <label for="time-input">How much time is left?</label>
+        <div class="input-row">
           <input
+            id="time-input"
+            name="time"
             type="text"
-            id="chat-input"
-            placeholder="Ask Malia anything..."
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="0:00"
+            aria-describedby="input-help input-error"
           />
-          <button id="send-btn" class="send-btn">Send</button>
-          <button id="speak-btn" class="speak-btn">🔊 Speak</button>
+          <button class="submit-btn" type="submit">Show time of day</button>
         </div>
-      </div>
+        <p id="input-help">Use a value from 0:00 through 23:59.</p>
+        <p id="input-error" class="input-error" aria-live="assertive"></p>
+      </form>
 
-      <div class="time-flipper-section">
-        <h3>⏰ Time Flipper</h3>
-        <div class="time-explanation">
-          <p>Dive into how it works - you can flip time!</p>
-          <p>
-            Example: Type 2:00 PM and it will generate 10:00 AM after pressing
-            submit!
-          </p>
-        </div>
-
-        <div class="time-input-section">
-          <label for="time-input">Enter Time:</label>
-          <input type="time" id="time-input" value="14:00" />
-          <button id="submit-time-btn" class="submit-btn">Submit</button>
-        </div>
-
-        <div class="time-result" id="time-result">
-          <div class="flipped-time">
-            <h4>Flipped Time:</h4>
-            <div id="flipped-display">--:--</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="flip-rules-section">
-        <h3>📋 How Time Flipping Works</h3>
-        <div class="rules-grid">
-          <div class="rule-category">
-            <h4>Minutes Flip:</h4>
-            <div class="rule-examples">
-              <div>1 → 59, 2 → 58, 3 → 57</div>
-              <div>30 → 30 (stays same)</div>
-              <div>59 → 1, 0 → 0</div>
-            </div>
-          </div>
-          <div class="rule-category">
-            <h4>Hours Flip:</h4>
-            <div class="rule-examples">
-              <div>1 → 23, 2 → 22, 3 → 21</div>
-              <div>12 → 12 (stays same)</div>
-              <div>23 → 1, 0 → 0</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <output id="time-result" class="time-result" aria-live="polite">
+        <span>Time of day</span>
+        <strong id="time-display">--:--</strong>
+      </output>
+    </section>
   </main>
 </Layout>
 

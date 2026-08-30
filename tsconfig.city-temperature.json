@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "moduleResolution": "Bundler",
+    "noEmit": true
+  },
+  "include": [
+    ".astro/types.d.ts",
+    "src/core/city-temperature/**/*.ts",
+    "src/lib/auth-client.ts",
+    "src/pages/api/auth/**/*.ts",
+    "src/pages/api/city-temperature/**/*.ts",
+    "src/server/city-temperature/**/*.ts",
+    "drizzle.config.ts"
+  ]
+}

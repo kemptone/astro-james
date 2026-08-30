@@ -17,6 +17,12 @@
     "memes:moderate": "node --experimental-strip-types --env-file-if-exists=.env scripts/meme-moderation/cli.mjs",
     "test:memes": "node --experimental-strip-types --test scripts/meme-moderation/*.test.mjs",
     "test:wordle": "node --test src/core/wordle/game.test.ts",
+    "test:sro9": "node --experimental-strip-types --test src/helpers/timeHelpers.test.ts",
+    "test:wavegame": "node --experimental-strip-types --test src/core/wavegame/logic.test.ts",
+    "check:city-temperature": "tsc -p tsconfig.city-temperature.json",
+    "test:city-temperature": "node --experimental-strip-types --test src/core/city-temperature/*.test.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
     "wordle:words": "node scripts/generate-wordle-words.mjs",
     "test:ms": "node microsoft.js"
   },
@@ -30,6 +36,8 @@
     "@neondatabase/serverless": "^1.0.0",
     "@preact/signals": "^1.3.0",
     "astro": "^7.1.0",
+    "better-auth": "^1.7.1",
+    "drizzle-orm": "^0.45.2",
     "fabric": "^6.7.1",
     "howler": "^2.2.4",
     "leaflet": "^1.9.4",
@@ -47,6 +55,7 @@
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.21",
-    "@types/node": "^24.13.3"
+    "@types/node": "^24.13.3",
+    "drizzle-kit": "^0.31.10"
   }
 }
