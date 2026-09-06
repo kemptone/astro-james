@@ -109,3 +109,14 @@ export function getPublishedMemeItems(
 
   return published
 }
+
+export function getPublishedAudioPaths(
+  blockedAudioPaths: ReadonlySet<string>,
+  sources: MemeDataSource[] = publishedMemeSources
+) {
+  return new Set(
+    getPublishedMemeItems(blockedAudioPaths, sources).map(item =>
+      canonicalizeAudioPath(item.audio)
+    )
+  )
+}

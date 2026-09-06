@@ -61,10 +61,6 @@ export const memes2 = [
     audio: '/media/sounds/goodmorn1.mp3',
   },
   {
-    name: 'Wait wait wait what the hell legend sound',
-    audio: '/media/sounds/wait-wait-wait-what-the-hell-legend-sound.mp3',
-  },
-  {
     name: 'Emotional Damage Meme',
     audio: '/media/sounds/emotional-damage-meme.mp3',
   },
@@ -81,16 +77,8 @@ export const memes2 = [
     audio: '/media/sounds/akh.mp3',
   },
   {
-    name: 'P DIDDY NO (this is absurd)',
-    audio: '/media/sounds/p-diddy-no-this-is-absurd.mp3',
-  },
-  {
     name: 'Long brain fart',
     audio: '/media/sounds/long-brain-fart.mp3',
-  },
-  {
-    name: 'Бу испугался не бойся, я друг, я твою маму',
-    audio: '/media/sounds/bu-ispugalsia-ne-boisia-ia-drug-ia-tvoiu-mamu.mp3',
   },
   {
     name: 'punch sound effect meme',
@@ -122,10 +110,6 @@ export const memes2 = [
     audio: '/media/sounds/get-out-tuco.mp3',
   },
   {
-    name: 'oh my god bro oh hell nah man',
-    audio: '/media/sounds/oh-my-god-bro-oh-hell-nah-man.mp3',
-  },
-  {
     name: 'YAAAAAAAAY',
     audio: '/media/sounds/kids-saying-yay-sound-effect_3.mp3',
   },
@@ -143,10 +127,6 @@ export const memes2 = [
       '/media/sounds/what-bottom-text-meme-sanctuary-guardian-sound-effect-hd.mp3',
   },
   {
-    name: 'lack of a father figure?',
-    audio: '/media/sounds/lack-of-a-father-figure.mp3',
-  },
-  {
     name: 'erm what the sigma',
     audio: '/media/sounds/erm-what-the-sigma_su7GnzC.mp3',
   },
@@ -159,24 +139,12 @@ export const memes2 = [
     audio: '/media/sounds/dobroe-utro-moia-devochka.mp3',
   },
   {
-    name: 'Ты видишь какие у меня огромные яйца, ЙОУ',
-    audio: '/media/sounds/ty-vidish-kakie-u-menia-ogromnye-iaitsa-iou.mp3',
-  },
-  {
     name: 'Арматура',
     audio: '/media/sounds/armatura_P29FH2w.mp3',
   },
   {
-    name: 'Гимн твича mzlf',
-    audio: '/media/sounds/gimn-tvicha-mzlf.mp3',
-  },
-  {
     name: 'iPhone Notification',
     audio: '/media/sounds/notification_o14egLP.mp3',
-  },
-  {
-    name: 'Сосать америка!',
-    audio: '/media/sounds/sosat-amerika.mp3',
   },
   {
     name: 'Гойда Охлобыстин',
@@ -203,10 +171,6 @@ export const memes2 = [
     audio: '/media/sounds/and-his-name-is-john-cena-1.mp3',
   },
   {
-    name: 'Я украинка?',
-    audio: '/media/sounds/ia-ukrainka_LonlTUE.mp3',
-  },
-  {
     name: 'lego breaking',
     audio: '/media/sounds/lego-breaking.mp3',
   },
@@ -219,28 +183,12 @@ export const memes2 = [
     audio: '/media/sounds/musica-de-sigma-estourado.mp3',
   },
   {
-    name: 'Жёсткая отрыжка',
-    audio: '/media/sounds/zhiostkaia-otryzhka.mp3',
-  },
-  {
-    name: 'Hawk Tuah (Short)',
-    audio: '/media/sounds/hawk-tuah-short.mp3',
-  },
-  {
-    name: '40 лет как под наркозом',
-    audio: '/media/sounds/40-let-kak-pod-narkozom.mp3',
-  },
-  {
     name: 'i ghost the down cool',
     audio: '/media/sounds/i-ghost-the-down-cool_G7s77J4.mp3',
   },
   {
     name: 'PEGA O JACK',
     audio: '/media/sounds/pega-o-jack.mp3',
-  },
-  {
-    name: 'Жесткий стон Артёма',
-    audio: '/media/sounds/zhestkii-ston-artioma.mp3',
   },
   {
     name: 'frog laughing meme',
@@ -263,24 +211,12 @@ export const memes2 = [
     audio: '/media/sounds/eu-finjo-que-nao-percebo-mas-tudo-esta-sendo-obs.mp3',
   },
   {
-    name: 'С Х**ЛИ ТИША ТАКАЯ!',
-    audio: '/media/sounds/s-kh-li-tisha-takaia.mp3',
-  },
-  {
     name: 'windows xp shutdown',
     audio: '/media/sounds/preview_4.mp3',
   },
   {
-    name: 'What The Hell Meme Sound Effect',
-    audio: '/media/sounds/what-the-hell-meme-sound-effect.mp3',
-  },
-  {
     name: 'Lobotomy Sound Effect',
     audio: '/media/sounds/lobotomy-sound-effect.mp3',
-  },
-  {
-    name: 'С Х**ЛИ ТИША ТАКАЯ!',
-    audio: '/media/sounds/s-kh-li-tisha-takaia.mp3',
   },
   {
     name: 'Bad to the Bone Riff',
@@ -295,20 +231,8 @@ export const memes2 = [
     audio: '/media/sounds/that-feeling-when-knee-surgery-is-tomorrow.mp3',
   },
   {
-    name: 'Ab tu Gaya beta ab dekh tu (puneet',
-    audio: '/media/sounds/ab-tu-gaya-beta-ab-dekh-tu-puneet.mp3',
-  },
-  {
     name: 'Nani FULL',
     audio: '/media/sounds/nani-meme-sound-effect.mp3',
-  },
-  {
-    name: 'Shut up!',
-    audio: '/media/sounds/shutup.swf.mp3',
-  },
-  {
-    name: 'СЛЫШ 1',
-    audio: '/media/sounds/slysh-1.mp3',
   },
   {
     name: 'го го го го',
@@ -321,10 +245,6 @@ export const memes2 = [
   {
     name: 'Meri jung Emotional',
     audio: '/media/sounds/meri-jung-emotional.mp3',
-  },
-  {
-    name: 'Я ем пенисы на завтра',
-    audio: '/media/sounds/ia-em-penisy-na-zavtra.mp3',
   },
   {
     name: 'Slap *oh*',
@@ -347,24 +267,12 @@ export const memes2 = [
     audio: '/media/sounds/minecraft-villager-sound-effect.mp3',
   },
   {
-    name: 'Ja pode gozar?',
-    audio: '/media/sounds/ja-pode-gozar.mp3',
-  },
-  {
-    name: 'CALA A BOCA PUTA!!!',
-    audio: '/media/sounds/cala-a-boca-puta_HhGAK6D.mp3',
-  },
-  {
     name: 'Arkh',
     audio: '/media/sounds/arkh.mp3',
   },
   {
     name: 'БУ ИСПУГАЛСЯ НЕ БОЙСЯ',
     audio: '/media/sounds/bu-ispugalsia-ne-boisia.mp3',
-  },
-  {
-    name: 'Tu dar muito é teu c* rapaz',
-    audio: '/media/sounds/tu-dar-muito-e-teu-c-rapaz.mp3',
   },
   {
     name: 'Happy happy happy song',
@@ -383,10 +291,6 @@ export const memes2 = [
     audio: '/media/sounds/bombastic-side-eye.mp3',
   },
   {
-    name: 'иди нахуй пудж',
-    audio: '/media/sounds/idi-nakhui-pudzh.mp3',
-  },
-  {
     name: 'BYE BYE! ~ Lumi Athena SFX',
     audio: '/media/sounds/bye-bye-lumi-athena-sfx.mp3',
   },
@@ -397,18 +301,6 @@ export const memes2 = [
   {
     name: 'Кондиции',
     audio: '/media/sounds/konditsii.mp3',
-  },
-  {
-    name: 'Ai que delicia mickey',
-    audio: '/media/sounds/ai-que-delicia-mickey.mp3',
-  },
-  {
-    name: 'Un tio tranquilo',
-    audio: '/media/sounds/un-tio-tranquilo.mp3',
-  },
-  {
-    name: 'Сегодня какал',
-    audio: '/media/sounds/segodnia-kakal.mp3',
   },
   {
     name: 'Bad to the Bone Meme',
@@ -431,24 +323,12 @@ export const memes2 = [
     audio: '/media/sounds/the-price-is-right-losing-horn.mp3',
   },
   {
-    name: 'Пися жопа сися кака',
-    audio: '/media/sounds/pisia-zhopa-sisia-kaka.mp3',
-  },
-  {
     name: 'DEJA VU MEME',
     audio: '/media/sounds/deja-vu.mp3',
   },
   {
     name: 'DOM DOM TAVA AQUI NO BAILE',
     audio: '/media/sounds/dom-dom-tava-aqui-no-baile.mp3',
-  },
-  {
-    name: 'Zé da Manga',
-    audio: '/media/sounds/ze-da-manga_G3QwWGi.mp3',
-  },
-  {
-    name: 'Вы чё все геи чоли тут?',
-    audio: '/media/sounds/vy-chio-vse-gei-choli-tut.mp3',
   },
   {
     name: 'Жди докс жди сват',
@@ -503,16 +383,8 @@ export const memes2 = [
     audio: '/media/sounds/s-kim-chin-ynom-vyshel-v-put.mp3',
   },
   {
-    name: 'ещё раз позвонишь убью нафек',
-    audio: '/media/sounds/eshchio-raz-pozvonish-ubiu-nafek.mp3',
-  },
-  {
     name: 'омагад поко (взрыв версия)',
     audio: '/media/sounds/omagad-poko-vzryv-versiia.mp3',
-  },
-  {
-    name: 'Казахстан угрожает нам бомбардировкой',
-    audio: '/media/sounds/kazakhstan-ugrozhaet-nam-bombardirovkoi.mp3',
   },
   {
     name: 'Lingan guli wacha',
@@ -521,10 +393,6 @@ export const memes2 = [
   {
     name: 'Привет пупсик',
     audio: '/media/sounds/privet-pupsik.mp3',
-  },
-  {
-    name: 'Pakad MC',
-    audio: '/media/sounds/pakad-mc.mp3',
   },
   {
     name: 'FIRE IN THE HOLE Geometry Dash',
@@ -539,16 +407,8 @@ export const memes2 = [
     audio: '/media/sounds/aku-berlutut.mp3',
   },
   {
-    name: 'Пердуляция',
-    audio: '/media/sounds/perduliatsiia.mp3',
-  },
-  {
     name: 'Наша квадроберская жизнь',
     audio: '/media/sounds/nasha-kvadroberskaia-zhizn.mp3',
-  },
-  {
-    name: 'Escreve e apaga',
-    audio: '/media/sounds/escreve-e-apaga.mp3',
   },
   {
     name: 'J’ai été investi d’une grande mission',
@@ -559,40 +419,16 @@ export const memes2 = [
     audio: '/media/sounds/you-are-my-sunshine-lebron-james.mp3',
   },
   {
-    name: 'Cid Acp behn*choo',
-    audio: '/media/sounds/cid-acp-behn-choo.mp3',
-  },
-  {
-    name: 'Hell yeeeah',
-    audio: '/media/sounds/hell-yeeeah.mp3',
-  },
-  {
-    name: 'Cid Acp behn*choo',
-    audio: '/media/sounds/cid-acp-behn-choo.mp3',
-  },
-  {
     name: 'Aku berlutut?',
     audio: '/media/sounds/aku-berlutut.mp3',
-  },
-  {
-    name: 'летит на самокате',
-    audio: '/media/sounds/letit-na-samokate.mp3',
   },
   {
     name: 'Poco X3 Phone',
     audio: '/media/sounds/poco-x3-phone.mp3',
   },
   {
-    name: 'allez le nwar',
-    audio: '/media/sounds/allez-le-nwar.mp3',
-  },
-  {
     name: 'saari umar main joker',
     audio: '/media/sounds/saari-umar-main-joker.mp3',
-  },
-  {
-    name: 'lula tira',
-    audio: '/media/sounds/lula-tira.mp3',
   },
   {
     name: 'Sad Hamster',
@@ -601,10 +437,6 @@ export const memes2 = [
   {
     name: 'squidward walking sound',
     audio: '/media/sounds/squidward-walking-sound.mp3',
-  },
-  {
-    name: 'Вадим и будильник',
-    audio: '/media/sounds/vadim-i-budilnik.mp3',
   },
   {
     name: 'brain fart',
@@ -617,10 +449,6 @@ export const memes2 = [
   {
     name: 'Wilhelm Scream',
     audio: '/media/sounds/wilhelmscream.mp3',
-  },
-  {
-    name: 'Pakad MC',
-    audio: '/media/sounds/pakad-mc.mp3',
   },
   {
     name: 'Indian under the water',
@@ -643,20 +471,12 @@ export const memes2 = [
     audio: '/media/sounds/valorant-spike-plant.mp3',
   },
   {
-    name: 'lets go gambling',
-    audio: '/media/sounds/lets-go-gambling.mp3',
-  },
-  {
     name: 'ЗДЕСЬ ЖЕ ЧЕРНЫМ ПО БЕЛОМУ НАПИСАНО',
     audio: '/media/sounds/zdes-zhe-chernym-po-belomu-napisano.mp3',
   },
   {
     name: "They're eating the dogs",
     audio: '/media/sounds/theyre-eating-the-dogs.mp3',
-  },
-  {
-    name: 'LULA FREE FIRE',
-    audio: '/media/sounds/lula-free-fire.mp3',
   },
   {
     name: 'OSKAR!!!',
@@ -711,14 +531,6 @@ export const memes2 = [
     audio: '/media/sounds/go-and-ask-your-grandfather.mp3',
   },
   {
-    name: 'Бу испугался устал(',
-    audio: '/media/sounds/bu-ispugalsia-ustal.mp3',
-  },
-  {
-    name: 'а я знаю что ты дрочишь',
-    audio: '/media/sounds/a-ia-znaiu-chto-ty-drochish.mp3',
-  },
-  {
     name: 'Meme omgs',
     audio: '/media/sounds/meme_lgkJmX6.mp3',
   },
@@ -727,28 +539,8 @@ export const memes2 = [
     audio: '/media/sounds/he-he-he-ha-clash-royale-deep-fried.mp3',
   },
   {
-    name: 'саня хуй соси mp3',
-    audio: '/media/sounds/sania-khui-sosi-mp3.mp3',
-  },
-  {
-    name: 'старый бог вовчик',
-    audio: '/media/sounds/staryi-bog-vovchik.mp3',
-  },
-  {
-    name: 'Что? Почему я чë рный?!!!!',
-    audio: '/media/sounds/chto-pochemu-ia-che-rnyi.mp3',
-  },
-  {
-    name: 'Cuidado com a Pika mano',
-    audio: '/media/sounds/cuidado-com-a-pika-mano.mp3',
-  },
-  {
     name: 'Confused cross eyed kitten meme',
     audio: '/media/sounds/confused-cross-eyed-kitten-meme.mp3',
-  },
-  {
-    name: 'goyda',
-    audio: '/media/sounds/goyda.mp3',
   },
   {
     name: 'Awwwwwwwwww',
@@ -761,10 +553,6 @@ export const memes2 = [
   {
     name: 'Akhhhh...',
     audio: '/media/sounds/akhhhh.mp3',
-  },
-  {
-    name: 'LULA FREE FIRE',
-    audio: '/media/sounds/lula-free-fire.mp3',
   },
   {
     name: 'imagine if ninja got a low taper fade',
@@ -819,68 +607,24 @@ export const memes2 = [
     audio: '/media/sounds/zab-zab-zab-bla-bla-blu-blu-alien-tiktok-meme.mp3',
   },
   {
-    name: 'старый бог - ты видел какие у меня огромные',
-    audio: '/media/sounds/staryi-bog-ty-videl-kakie-u-menia-ogromnye.mp3',
-  },
-  {
-    name: 'УБИВАТЬ УБИВАТЬ УБИВАТЬ',
-    audio: '/media/sounds/ubivat-ubivat-ubivat.mp3',
-  },
-  {
     name: 'buy',
     audio: '/media/sounds/buy_1.mp3',
-  },
-  {
-    name: 'Что за пидор на моем рабочем месте?',
-    audio: '/media/sounds/chto-za-pidor-na-moem-rabochem-meste.mp3',
-  },
-  {
-    name: 'Women haha',
-    audio: '/media/sounds/women-haha.mp3',
   },
   {
     name: 'Cave Ambience 1',
     audio: '/media/sounds/cave11_0QWMESM.mp3',
   },
   {
-    name: 'omg bruh oh hell nah',
-    audio: '/media/sounds/omg-bruh-oh-hell-nah.mp3',
-  },
-  {
     name: 'I am Steve',
     audio: '/media/sounds/i-am-steve.mp3',
-  },
-  {
-    name: 'старый бог - ты видел какие у меня огромные',
-    audio: '/media/sounds/staryi-bog-ty-videl-kakie-u-menia-ogromnye.mp3',
   },
   {
     name: "Ain't No Party Like A Diddy Party",
     audio: '/media/sounds/aint-no-party-like-a-diddy-party.mp3',
   },
   {
-    name: 'Women haha',
-    audio: '/media/sounds/women-haha.mp3',
-  },
-  {
-    name: 'Me chama de lorde',
-    audio: '/media/sounds/me-chama-de-lorde.mp3',
-  },
-  {
-    name: 'Tmkc Mahavirwa wala',
-    audio: '/media/sounds/tmkc-mahavirwa-wala.mp3',
-  },
-  {
     name: 'подлая еврейская музыка',
     audio: '/media/sounds/podlaia-evreiskaia-muzyka.mp3',
-  },
-  {
-    name: 'Что за пидор на моем рабочем месте?',
-    audio: '/media/sounds/chto-za-pidor-na-moem-rabochem-meste.mp3',
-  },
-  {
-    name: 'а я знаю что ты дрочишь',
-    audio: '/media/sounds/a-ia-znaiu-chto-ty-drochish.mp3',
   },
   {
     name: 'Asian Gong &amp; Music',
@@ -900,18 +644,6 @@ export const memes2 = [
     audio: '/media/sounds/boo-tu-as-peur-nai-pas-peur.mp3',
   },
   {
-    name: 'УБИВАТЬ УБИВАТЬ УБИВАТЬ',
-    audio: '/media/sounds/ubivat-ubivat-ubivat.mp3',
-  },
-  {
-    name: 'Бу испугался устал(',
-    audio: '/media/sounds/bu-ispugalsia-ustal.mp3',
-  },
-  {
-    name: 'дима там все в гов не',
-    audio: '/media/sounds/dima-tam-vse-v-gov-ne.mp3',
-  },
-  {
     name: 'Cái gì dợ bà nội',
     audio: '/media/sounds/cai-gi-do-ba-noi.mp3',
   },
@@ -922,10 +654,6 @@ export const memes2 = [
   {
     name: 'My Name Is Jeff',
     audio: '/media/sounds/ringtone_20.mp3',
-  },
-  {
-    name: 'с писюном блин поиграй',
-    audio: '/media/sounds/s-pisiunom-blin-poigrai.mp3',
   },
   {
     name: 'Shabash beta',
@@ -940,16 +668,8 @@ export const memes2 = [
     audio: '/media/sounds/clown-horn-sound-effect_1.mp3',
   },
   {
-    name: 'Что? Почему я чë рный?!!!!',
-    audio: '/media/sounds/chto-pochemu-ia-che-rnyi.mp3',
-  },
-  {
     name: 'Gegagedigedagedago (Full)',
     audio: '/media/sounds/gegagedigedagedago-full.mp3',
-  },
-  {
-    name: 'bomboclat',
-    audio: '/media/sounds/bomboclat.mp3',
   },
   {
     name: 'sans voice',
@@ -970,14 +690,6 @@ export const memes2 = [
   {
     name: 'trollface smile',
     audio: '/media/sounds/trollface-smile.mp3',
-  },
-  {
-    name: 'саня хуй соси mp3',
-    audio: '/media/sounds/sania-khui-sosi-mp3.mp3',
-  },
-  {
-    name: 'Я хочу вонючий хуй',
-    audio: '/media/sounds/ia-khochu-voniuchii-khui.mp3',
   },
   {
     name: 'soundpad',
@@ -1002,14 +714,6 @@ export const memes2 = [
   {
     name: 'enderpel',
     audio: '/media/sounds/enderpel.mp3',
-  },
-  {
-    name: 'bomboclat',
-    audio: '/media/sounds/bomboclat.mp3',
-  },
-  {
-    name: 'Fils de puteuuuu',
-    audio: '/media/sounds/fils-de-puteuuuu.mp3',
   },
   {
     name: 'LET ME TELL YOU SOMETHING',
@@ -1040,10 +744,6 @@ export const memes2 = [
     audio: '/media/sounds/its-time-mariah-carey.mp3',
   },
   {
-    name: 'Я батю в танки выйграл',
-    audio: '/media/sounds/ia-batiu-v-tanki-vyigral.mp3',
-  },
-  {
     name: 'MUSTARDDDDDDDD',
     audio: '/media/sounds/mustardddddddd.mp3',
   },
@@ -1054,10 +754,6 @@ export const memes2 = [
   {
     name: 'Да ты че',
     audio: '/media/sounds/da-ty-che.mp3',
-  },
-  {
-    name: 'УХ ТЫ БЛЯ°•°',
-    audio: '/media/sounds/ukh-ty-bliadeg-deg.mp3',
   },
   {
     name: 'Olha a mensagem !b',
@@ -1080,10 +776,6 @@ export const memes2 = [
     audio: '/media/sounds/tienes-un-mensajeee.mp3',
   },
   {
-    name: 'Lá ele',
-    audio: '/media/sounds/la-ele.mp3',
-  },
-  {
     name: 'omae wa mou shindeiru NANI',
     audio: '/media/sounds/nani_Pmxf5n3.mp3',
   },
@@ -1098,14 +790,6 @@ export const memes2 = [
   {
     name: 'The Nut Button',
     audio: '/media/sounds/nut_ZKo5FA9.mp3',
-  },
-  {
-    name: 'Ich bin mortis eine Kreatur der Nacht',
-    audio: '/media/sounds/ich-bin-mortis-eine-kreatur-der-nacht.mp3',
-  },
-  {
-    name: 'tu madre tiene una p',
-    audio: '/media/sounds/tu-madre-tiene-una-p.mp3',
   },
   {
     name: 'AI CACHORRO ESTOURADO',
@@ -1132,14 +816,6 @@ export const memes2 = [
     audio: '/media/sounds/elon-musk-uma-vez-disse-estourado.mp3',
   },
   {
-    name: 'Lá ele',
-    audio: '/media/sounds/la-ele.mp3',
-  },
-  {
-    name: 'VA A JUGAR O QUE',
-    audio: '/media/sounds/va-jugar-o-que.mp3',
-  },
-  {
     name: 'que é isso moreno',
     audio: '/media/sounds/que-isso-moreno.mp3',
   },
@@ -1154,10 +830,6 @@ export const memes2 = [
   {
     name: 'МЕМ ВЗРЫВ',
     audio: '/media/sounds/mem-vzryv.mp3',
-  },
-  {
-    name: 'Я батю в танки выйграл',
-    audio: '/media/sounds/ia-batiu-v-tanki-vyigral.mp3',
   },
   {
     name: 'GunShottttt',
@@ -1180,10 +852,6 @@ export const memes2 = [
     audio: '/media/sounds/hello-its-john-cena.mp3',
   },
   {
-    name: 'УХ ТЫ БЛЯ°•°',
-    audio: '/media/sounds/ukh-ty-bliadeg-deg.mp3',
-  },
-  {
     name: '"Fish!" you, me, gas station clip',
     audio: '/media/sounds/fish-you-me-gas-station-clip.mp3',
   },
@@ -1194,10 +862,6 @@ export const memes2 = [
   {
     name: 'trời ơi cứu tui trời ơi',
     audio: '/media/sounds/troi-oi-cuu-tui-troi-oi.mp3',
-  },
-  {
-    name: 'да пошёл ты нахуй',
-    audio: '/media/sounds/da-poshiol-ty-nakhui.mp3',
   },
   {
     name: 'DJ Scratch sound efff',
@@ -1228,10 +892,6 @@ export const memes2 = [
     audio: '/media/sounds/ling-gang-guli-guli.mp3',
   },
   {
-    name: 'Monte',
-    audio: '/media/sounds/monte.mp3',
-  },
-  {
     name: 'vine boom sound effect full',
     audio: '/media/sounds/vine-boom-sound-effect-full.mp3',
   },
@@ -1244,10 +904,6 @@ export const memes2 = [
     audio: '/media/sounds/samsung-notification-sound-bass-boosted.mp3',
   },
   {
-    name: 'Kissing Sound',
-    audio: '/media/sounds/smoochykiss.mp3',
-  },
-  {
     name: 'Yang semangat dong',
     audio: '/media/sounds/yang-semangat-dong.mp3',
   },
@@ -1256,16 +912,8 @@ export const memes2 = [
     audio: '/media/sounds/get-out-tuco_f3lRYvs.mp3',
   },
   {
-    name: 'Dir mach ich Beine',
-    audio: '/media/sounds/dir-mach-ich-beine.mp3',
-  },
-  {
     name: 'Со мной воюет США',
     audio: '/media/sounds/so-mnoi-voiuet-ssha.mp3',
-  },
-  {
-    name: 'Stop the Cap',
-    audio: '/media/sounds/zias-stop-the-cap_RjHQpxU.mp3',
   },
   {
     name: 'Kendrick screaming "mustard"',
@@ -1274,10 +922,6 @@ export const memes2 = [
   {
     name: 'GET OUT - tuco',
     audio: '/media/sounds/get-out-tuco_f3lRYvs.mp3',
-  },
-  {
-    name: 'Monte',
-    audio: '/media/sounds/monte.mp3',
   },
   {
     name: 'боже помилуй',
@@ -1316,18 +960,6 @@ export const memes2 = [
     audio: '/media/sounds/bo-womp.mp3',
   },
   {
-    name: 'Stop the Cap',
-    audio: '/media/sounds/zias-stop-the-cap_RjHQpxU.mp3',
-  },
-  {
-    name: 'Kissing Sound',
-    audio: '/media/sounds/smoochykiss.mp3',
-  },
-  {
-    name: 'DERZKO69',
-    audio: '/media/sounds/derzko69.mp3',
-  },
-  {
     name: 'tenge tenge',
     audio: '/media/sounds/tenge-tenge.mp3',
   },
@@ -1342,10 +974,6 @@ export const memes2 = [
   {
     name: '何を四天王！？',
     audio: '/media/sounds/he-wosi-tian-wang.mp3',
-  },
-  {
-    name: 'встаём залупа',
-    audio: '/media/sounds/vstaiom-zalupa.mp3',
   },
   {
     name: 'BOM DIAAAAAAAAAAAAAAAA',
@@ -1382,20 +1010,8 @@ export const memes2 = [
     audio: '/media/sounds/tolong-kaki-saya-sakit.mp3',
   },
   {
-    name: 'Дядя Серёжа',
-    audio: '/media/sounds/diadia-seriozha.mp3',
-  },
-  {
-    name: 'Eu Gosto é assim Amostradinho',
-    audio: '/media/sounds/eu-gosto-e-assim-amostradinho.mp3',
-  },
-  {
     name: 'AK',
     audio: '/media/sounds/ak.mp3',
-  },
-  {
-    name: 'БАМ, второй, БАМ',
-    audio: '/media/sounds/bam-vtoroi-bam.mp3',
   },
   {
     name: 'Узбеки спят',
@@ -1406,20 +1022,8 @@ export const memes2 = [
     audio: '/media/sounds/que-dificil-me-la-pusiste.mp3',
   },
   {
-    name: 'Ek Gand pe Repta mara n Sarak pe Hagta firega',
-    audio: '/media/sounds/ek-gand-pe-repta-mara-n-sarak-pe-hagta-firega.mp3',
-  },
-  {
-    name: 'Я щас пойду пиво открывать',
-    audio: '/media/sounds/ia-shchas-poidu-pivo-otkryvat.mp3',
-  },
-  {
     name: 'YA MI AMOR',
     audio: '/media/sounds/ya-mi-amor.mp3',
-  },
-  {
-    name: 'Vos mères c’est des dinosaures Tk78',
-    audio: '/media/sounds/vos-meres-cest-des-dinosaures-tk78.mp3',
   },
   {
     name: 'Звуки распада ссср',
@@ -1438,10 +1042,6 @@ export const memes2 = [
     audio: '/media/sounds/skibidi-sigma-pomni.mp3',
   },
   {
-    name: 'Ek Gand pe Repta mara n Sarak pe Hagta firega',
-    audio: '/media/sounds/ek-gand-pe-repta-mara-n-sarak-pe-hagta-firega.mp3',
-  },
-  {
     name: 'kya re bhik mangya deepak kalal',
     audio: '/media/sounds/kya-re-bhik-mangya-deepak-kalal.mp3',
   },
@@ -1450,24 +1050,12 @@ export const memes2 = [
     audio: '/media/sounds/salamaleico-mini.mp3',
   },
   {
-    name: 'Я щас пойду пиво открывать',
-    audio: '/media/sounds/ia-shchas-poidu-pivo-otkryvat.mp3',
-  },
-  {
-    name: 'А тебя это ебать не должно большие города',
-    audio: '/media/sounds/a-tebia-eto-ebat-ne-dolzhno-bolshie-goroda.mp3',
-  },
-  {
     name: 'Burbuja Hola Adiós',
     audio: '/media/sounds/burbuja-hola-adios.mp3',
   },
   {
     name: 'Mago falando eligebete',
     audio: '/media/sounds/mago-falando-eligebete.mp3',
-  },
-  {
-    name: 'my mommy said no more skibidi toilet',
-    audio: '/media/sounds/my-mommy-said-no-more-skibidi-toilet.mp3',
   },
   {
     name: 'doner kebab',
@@ -1485,10 +1073,6 @@ export const memes2 = [
     name: 'KBC question',
     audio: '/media/sounds/kbc-question.mp3',
   },
-  {
-    name: 'иван курапов пранк',
-    audio: '/media/sounds/ivan-kurapov-prank.mp3',
-  },
   // {
   //     "name": "Oh Hell No (Vine)",
   //     "audio": "/media/sounds/oh-hell-no-sound-effect-free-download.mp3"
@@ -1500,18 +1084,6 @@ export const memes2 = [
   {
     name: 'miaw miaw miaw',
     audio: '/media/sounds/miaw-miaw-miaw.mp3',
-  },
-  {
-    name: 'Trollface Phonk',
-    audio: '/media/sounds/trollface-phonk.mp3',
-  },
-  {
-    name: 'СЪЕБАЛОСЬ ЧУДИЩЕ',
-    audio: '/media/sounds/sebalos-chudishche_BUZtIiF.mp3',
-  },
-  {
-    name: 'Oui je suis raciste',
-    audio: '/media/sounds/oui-je-suis-raciste.mp3',
   },
   {
     name: 'toilet sounds',
@@ -1535,24 +1107,8 @@ export const memes2 = [
     audio: '/media/sounds/r2d2_scream_converted.mp3',
   },
   {
-    name: 'Даня данечка даня',
-    audio: '/media/sounds/dania-danechka-dania.mp3',
-  },
-  {
-    name: 'CID',
-    audio: '/media/sounds/cid.mp3',
-  },
-  {
-    name: 'Твоя попочка возбуждает',
-    audio: '/media/sounds/tvoia-popochka-vozbuzhdaet.mp3',
-  },
-  {
     name: 'NUH UH MEME',
     audio: '/media/sounds/nuh-uh-meme.mp3',
-  },
-  {
-    name: 'ПРОСТО ДАЙТЕ УЖЕ ПУЛЬТ ОТ ЯДЕРКИ',
-    audio: '/media/sounds/prosto-daite-uzhe-pult-ot-iaderki.mp3',
   },
   {
     name: 'Sad violin (14sec)',
@@ -1585,16 +1141,8 @@ export const memes2 = [
     audio: '/media/sounds/sigma-boy-slowed.mp3',
   },
   {
-    name: 'Trollface Phonk',
-    audio: '/media/sounds/trollface-phonk.mp3',
-  },
-  {
     name: 'KBC question',
     audio: '/media/sounds/kbc-question.mp3',
-  },
-  {
-    name: 'СЪЕБАЛОСЬ ЧУДИЩЕ',
-    audio: '/media/sounds/sebalos-chudishche_BUZtIiF.mp3',
   },
   {
     name: 'SKIBIDI TOILETTE',
@@ -1641,10 +1189,6 @@ export const memes2 = [
     audio: '/media/sounds/rolaa-jamana-hai_zoLCy7S.mp3',
   },
   {
-    name: 'CID',
-    audio: '/media/sounds/cid.mp3',
-  },
-  {
     name: 'Yippee meme sound effect',
     audio: '/media/sounds/yippee-meme-sound-effect.mp3',
   },
@@ -1661,24 +1205,8 @@ export const memes2 = [
     audio: '/media/sounds/punch.mp3',
   },
   {
-    name: 'my mommy said no more skibidi toilet',
-    audio: '/media/sounds/my-mommy-said-no-more-skibidi-toilet.mp3',
-  },
-  {
     name: 'akrobeto',
     audio: '/media/sounds/akrobeto.mp3',
-  },
-  {
-    name: 'Даня данечка даня',
-    audio: '/media/sounds/dania-danechka-dania.mp3',
-  },
-  {
-    name: 'Ya иди нахуй',
-    audio: '/media/sounds/ya-idi-nakhui.mp3',
-  },
-  {
-    name: 'Preto não quero não',
-    audio: '/media/sounds/preto-nao-quero-nao_knc0nCH.mp3',
   },
   {
     name: 'QUE ES ESO BOB ESPONJA',
@@ -1709,20 +1237,8 @@ export const memes2 = [
     audio: '/media/sounds/indian-guy-laughing.mp3',
   },
   {
-    name: 'ALLARME FROCI',
-    audio: '/media/sounds/allarme-froci_rIbdwjz.mp3',
-  },
-  {
-    name: 'my mommy said no more skibidi toilet',
-    audio: '/media/sounds/my-mommy-said-no-more-skibidi-toilet.mp3',
-  },
-  {
     name: 'Tonton Allemand',
     audio: '/media/sounds/tonton-allemand.mp3',
-  },
-  {
-    name: "excuse moi t'aurais pas un zob dans l'cul",
-    audio: '/media/sounds/excuse-moi-taurais-pas-un-zob-dans-lcul.mp3',
   },
   {
     name: 'spiderman meme song 2.0',
@@ -1735,10 +1251,6 @@ export const memes2 = [
   {
     name: 'boee',
     audio: '/media/sounds/boee.mp3',
-  },
-  {
-    name: 'Preto não quero não',
-    audio: '/media/sounds/preto-nao-quero-nao_knc0nCH.mp3',
   },
   {
     name: 'Aisa mat karo',
@@ -1805,10 +1317,6 @@ export const memes2 = [
     audio: '/media/sounds/suara-jarjit.mp3',
   },
   {
-    name: 'Gali bhaiya mere muh se nikal gaye',
-    audio: '/media/sounds/gali-bhaiya-mere-muh-se-nikal-gaye.mp3',
-  },
-  {
     name: 'Ayo pukul aku',
     audio: '/media/sounds/ayo-pukul-aku.mp3',
   },
@@ -1819,10 +1327,6 @@ export const memes2 = [
   {
     name: 'the rock meme sound effect',
     audio: '/media/sounds/the-rock-meme-sound-effect.mp3',
-  },
-  {
-    name: 'No digas mamadas mary jane',
-    audio: '/media/sounds/no-digas-mamadas-mary-jane.mp3',
   },
   {
     name: 'QUE ES ESO BOB ESPONJA',
@@ -1841,20 +1345,8 @@ export const memes2 = [
     audio: '/media/sounds/musica-thegrefg-epica.mp3',
   },
   {
-    name: 'Сука нахуя тебе телефон бля',
-    audio: '/media/sounds/suka-nakhuia-tebe-telefon-blia.mp3',
-  },
-  {
-    name: 'TAHLAHON',
-    audio: '/media/sounds/tahlahon.mp3',
-  },
-  {
     name: 'Bob Esponja - Fail Sound',
     audio: '/media/sounds/bob-esponja-fail-sound.mp3',
-  },
-  {
-    name: 'SCP СОСАТЬ',
-    audio: '/media/sounds/scp.mp3',
   },
   {
     name: 'Singing Angels',
@@ -1875,10 +1367,6 @@ export const memes2 = [
   {
     name: 'Só um cara tranquilo',
     audio: '/media/sounds/so-um-cara-tranquilo.mp3',
-  },
-  {
-    name: 'OH YEAH JACKPOT JACKPOT',
-    audio: '/media/sounds/oh-yeah-jackpot-jackpot.mp3',
   },
   {
     name: 'boee',
@@ -1921,10 +1409,6 @@ export const memes2 = [
     audio: '/media/sounds/sigma-boy-sped-up.mp3',
   },
   {
-    name: 'TAHLAHON',
-    audio: '/media/sounds/tahlahon.mp3',
-  },
-  {
     name: 'let him cook now',
     audio: '/media/sounds/let-him-cook-now.mp3',
   },
@@ -1949,16 +1433,8 @@ export const memes2 = [
     audio: '/media/sounds/rasha-derzhava-nasha.mp3',
   },
   {
-    name: 'Preto não quero não',
-    audio: '/media/sounds/preto-nao-quero-nao_knc0nCH.mp3',
-  },
-  {
     name: 'MUSICA THEGREFG EPICA',
     audio: '/media/sounds/musica-thegrefg-epica.mp3',
-  },
-  {
-    name: 'Сука блять нахуй',
-    audio: '/media/sounds/suka-bliat-nakhui.mp3',
   },
   {
     name: 'Kirby falling',
@@ -1981,20 +1457,12 @@ export const memes2 = [
     audio: '/media/sounds/ya.mp3',
   },
   {
-    name: 'Новогодний качок',
-    audio: '/media/sounds/novogodnii-kachok.mp3',
-  },
-  {
     name: '何やってるんですか！？勉強してください！！',
     audio: '/media/sounds/he-yatsuterundesuka-mian-qiang-shitekudasai.mp3',
   },
   {
     name: 'Пасхалко Эщкере 1488',
     audio: '/media/sounds/paskhalko-eshchkere-1488.mp3',
-  },
-  {
-    name: 'OH YEAH JACKPOT JACKPOT',
-    audio: '/media/sounds/oh-yeah-jackpot-jackpot.mp3',
   },
   {
     name: 'i just lost my dawg',
@@ -2021,20 +1489,12 @@ export const memes2 = [
     audio: '/media/sounds/i-woke-up-in-a-new-bugatti.mp3',
   },
   {
-    name: 'Russian meme',
-    audio: '/media/sounds/russian-meme.mp3',
-  },
-  {
     name: 'can i pet that dog',
     audio: '/media/sounds/can-i-pet-dat-dog-mp3.mp3',
   },
   {
     name: 'hamburger',
     audio: '/media/sounds/hamburger-sound-effect.mp3',
-  },
-  {
-    name: 'VAMO USA DROGA DISGRAÇAAAAAAA',
-    audio: '/media/sounds/vamos-usar-droga-desgraca.mp3',
   },
   {
     name: 'TV Total Nippel',
@@ -2045,28 +1505,12 @@ export const memes2 = [
     audio: '/media/sounds/barrel-exploding-soundbible.mp3',
   },
   {
-    name: 'Новогодний качок',
-    audio: '/media/sounds/novogodnii-kachok.mp3',
-  },
-  {
     name: 'DAA DABA BEKSTEZİ',
     audio: '/media/sounds/daa-daba-bekstezi.mp3',
   },
   {
-    name: 'El diablo, que malditos tenis',
-    audio: '/media/sounds/el-diablo-que-malditos-tenis.mp3',
-  },
-  {
-    name: 'TAHLAHON',
-    audio: '/media/sounds/tahlahon.mp3',
-  },
-  {
     name: 'Раша держава наша',
     audio: '/media/sounds/rasha-derzhava-nasha.mp3',
-  },
-  {
-    name: 'Pobre carlitos',
-    audio: '/media/sounds/pobre-carlitos.mp3',
   },
   {
     name: 'cry banana cat',
@@ -2075,10 +1519,6 @@ export const memes2 = [
   {
     name: 'Mr Beast Phonk Meme',
     audio: '/media/sounds/mr-beast-phonk-meme.mp3',
-  },
-  {
-    name: 'lobo pidao',
-    audio: '/media/sounds/lobo-pidao.mp3',
   },
   {
     name: 'Doom Eternal',
@@ -2097,20 +1537,8 @@ export const memes2 = [
     audio: '/media/sounds/super-mario-64-yahoo-sound.mp3',
   },
   {
-    name: 'NEIN, HALT DIE FRESSE!',
-    audio: '/media/sounds/fresse.mp3',
-  },
-  {
     name: 'Oh yeah',
     audio: '/media/sounds/01-oh-yeah.mp3',
-  },
-  {
-    name: 'YOU DIGGING IN ME YOU DIGGING IN ME',
-    audio: '/media/sounds/you-digging-in-me-you-digging-in-me.mp3',
-  },
-  {
-    name: 'Talahon mark forster',
-    audio: '/media/sounds/talahon-mark-forster_IrRCeen.mp3',
   },
   {
     name: 'Squidward Walking',
@@ -2121,16 +1549,8 @@ export const memes2 = [
     audio: '/media/sounds/vstavai-shan-tsung.mp3',
   },
   {
-    name: 'Para tira',
-    audio: '/media/sounds/para-tira.mp3',
-  },
-  {
     name: 'Astaghfirullah kamu ini berdosa banget',
     audio: '/media/sounds/astaghfirullah-kamu-ini-berdosa-banget.mp3',
-  },
-  {
-    name: 'Я сброшу на вас 250000 тонн тротила',
-    audio: '/media/sounds/ia-sbroshu-na-vas-250000-tonn-trotila.mp3',
   },
   {
     name: 'Meow Sleigh Ride',
@@ -2157,20 +1577,8 @@ export const memes2 = [
     audio: '/media/sounds/yoshi-tongue.mp3',
   },
   {
-    name: 'NEIN, HALT DIE FRESSE!',
-    audio: '/media/sounds/fresse.mp3',
-  },
-  {
     name: 'Xaropinho - Rapaz',
     audio: '/media/sounds/vinheta-xaropinho-rapaz-cut-mp3.mp3',
-  },
-  {
-    name: 'Alex "eu vou gozar"',
-    audio: '/media/sounds/alex-eu-vou-gozar.mp3',
-  },
-  {
-    name: 'Talahon mark forster',
-    audio: '/media/sounds/talahon-mark-forster_IrRCeen.mp3',
   },
   {
     name: '小林製薬-音割れ',
@@ -2181,16 +1589,8 @@ export const memes2 = [
     audio: '/media/sounds/vstavai-shan-tsung.mp3',
   },
   {
-    name: 'Para tira',
-    audio: '/media/sounds/para-tira.mp3',
-  },
-  {
     name: 'Steh jetzt auf',
     audio: '/media/sounds/steh-jetzt-auf.mp3',
-  },
-  {
-    name: 'ALLUHAKBAAAR THIJMEN',
-    audio: '/media/sounds/alluhakbaaar-thijmen.mp3',
   },
   {
     name: 'Maxwell the cat theme',
@@ -2221,16 +1621,8 @@ export const memes2 = [
     audio: '/media/sounds/skachat-foto.mp3',
   },
   {
-    name: 'NOIS DA O CV P0RRA KKKKKKKKKK',
-    audio: '/media/sounds/nois-da-o-cv-p0rra-kkkkkkkkkk.mp3',
-  },
-  {
     name: 'OIIAOIIA',
     audio: '/media/sounds/oiiaoiia.mp3',
-  },
-  {
-    name: 'Эээ анимэшник',
-    audio: '/media/sounds/eee-animeshnik.mp3',
   },
   {
     name: 'Saul Goodman Better Call Saul',
@@ -2241,24 +1633,8 @@ export const memes2 = [
     audio: '/media/sounds/verkhovna-rada-tablo.mp3',
   },
   {
-    name: 'Да блять я не могу',
-    audio: '/media/sounds/da-bliat-ia-ne-mogu.mp3',
-  },
-  {
-    name: 'SCP СОСАТЬ',
-    audio: '/media/sounds/scp.mp3',
-  },
-  {
-    name: 'broke fein',
-    audio: '/media/sounds/broke-fein.mp3',
-  },
-  {
     name: 'Selebew',
     audio: '/media/sounds/selebew.mp3',
-  },
-  {
-    name: 'Я потяну тебя записку',
-    audio: '/media/sounds/ia-potianu-tebia-zapisku.mp3',
   },
   {
     name: 'ik ben turk',
@@ -2269,33 +1645,17 @@ export const memes2 = [
     audio: '/media/sounds/1-000-000-000-iq.mp3',
   },
   {
-    name: 'eu vou comer teu c - kid b',
-    audio: '/media/sounds/eu-vou-comer-teu-c-kid-b.mp3',
-  },
-  {
     name: 'Squidward Walking',
     audio: '/media/sounds/squidward-walking.mp3',
-  },
-  {
-    name: 'lobo pidao',
-    audio: '/media/sounds/lobo-pidao.mp3',
   },
   {
     name: 'Saul Goodman Better Call Saul',
     audio: '/media/sounds/saul-goodman-better-call-saul.mp3',
   },
   {
-    name: 'Да блять я не могу',
-    audio: '/media/sounds/da-bliat-ia-ne-mogu.mp3',
-  },
-  {
     name: 'moai',
     audio: '/media/sounds/moai.mp3',
   },
-  // {
-  //     "name": "Käften sluta babbla",
-  //     "audio": "/media/sounds/kek_3.mp3"
-  // },
   {
     name: 'FNAF 4 Jumpscare',
     audio: '/media/sounds/jumpscare-sound-fnaf-4.mp3',
@@ -2311,10 +1671,6 @@ export const memes2 = [
   {
     name: 'Cat laughing at you',
     audio: '/media/sounds/cat-laughing-at-you.mp3',
-  },
-  {
-    name: 'Para tira',
-    audio: '/media/sounds/para-tira.mp3',
   },
   {
     name: 'Gekreun remix',
@@ -2333,28 +1689,12 @@ export const memes2 = [
     audio: '/media/sounds/testo-taylan-dim-dis.mp3',
   },
   {
-    name: 'YOU DIGGING IN ME YOU DIGGING IN ME',
-    audio: '/media/sounds/you-digging-in-me-you-digging-in-me.mp3',
-  },
-  {
-    name: 'Я потяну тебя записку',
-    audio: '/media/sounds/ia-potianu-tebia-zapisku.mp3',
-  },
-  {
-    name: 'Земля круглая. Как поймаю сразу в рот дам.',
-    audio: '/media/sounds/zemlia-kruglaia-kak-poimaiu-srazu-v-rot-dam.mp3',
-  },
-  {
     name: 'Derzko',
     audio: '/media/sounds/derzko_UIGrGjp.mp3',
   },
   {
     name: 'OIIAOIIA',
     audio: '/media/sounds/oiiaoiia.mp3',
-  },
-  {
-    name: 'Что у вас здесь происходит',
-    audio: '/media/sounds/chto-u-vas-zdes-proiskhodit.mp3',
   },
   {
     name: 'pablo meme song',
@@ -2381,14 +1721,6 @@ export const memes2 = [
     audio: '/media/sounds/super-mario-64-yahoo-sound.mp3',
   },
   {
-    name: 'иди нахуй я твою мать ебал',
-    audio: '/media/sounds/idi-nakhui-ia-tvoiu-mat-ebal_b11NIxQ.mp3',
-  },
-  {
-    name: 'eu vou comer teu c - kid b',
-    audio: '/media/sounds/eu-vou-comer-teu-c-kid-b.mp3',
-  },
-  {
     name: 'last rizzmas i gave u my gyatt',
     audio: '/media/sounds/last-rizzmas-i-gave-u-my-gyatt.mp3',
   },
@@ -2409,24 +1741,12 @@ export const memes2 = [
     audio: '/media/sounds/the-voicechair-choice-button-sound-effect.mp3',
   },
   {
-    name: 'Ding Dong Eat it up.',
-    audio: '/media/sounds/ding-dong-eat-it-up_ZhlIYUe.mp3',
-  },
-  {
     name: 'oi oi oi meme',
     audio: '/media/sounds/oi-oi-oi-meme.mp3',
   },
   {
     name: 'cihuyy wielino ino',
     audio: '/media/sounds/cihuyy-wielino-ino_kO92s4H.mp3',
-  },
-  {
-    name: 'eu vou comer teu c - kid b',
-    audio: '/media/sounds/eu-vou-comer-teu-c-kid-b.mp3',
-  },
-  {
-    name: 'Нихуя себе - Данте',
-    audio: '/media/sounds/nikhuia-sebe-dante.mp3',
   },
   {
     name: 'Hello im under the water',
@@ -2441,28 +1761,12 @@ export const memes2 = [
     audio: '/media/sounds/the-voicechair-choice-button-sound-effect.mp3',
   },
   {
-    name: 'Alex "eu vou gozar"',
-    audio: '/media/sounds/alex-eu-vou-gozar.mp3',
-  },
-  {
     name: 'Alamak duit nih',
     audio: '/media/sounds/alamak-duit-nih.mp3',
   },
   {
-    name: 'ИДИ НАХУЙ СУКА',
-    audio: '/media/sounds/idi-nakhui-suka_9p27MbW.mp3',
-  },
-  {
     name: 'last rizzmas i gave u my gyatt',
     audio: '/media/sounds/last-rizzmas-i-gave-u-my-gyatt.mp3',
-  },
-  {
-    name: 'Para tira',
-    audio: '/media/sounds/para-tira.mp3',
-  },
-  {
-    name: 'ядерная бомба китайка',
-    audio: '/media/sounds/iadernaia-bomba-kitaika.mp3',
   },
   {
     name: 'Me betha hu kismat ke bharose',
@@ -2471,10 +1775,6 @@ export const memes2 = [
   {
     name: 'Death Splat',
     audio: '/media/sounds/death-splat.mp3',
-  },
-  {
-    name: 'quandale dingle',
-    audio: '/media/sounds/quandale-dingle.mp3',
   },
   {
     name: 'fotosintesis',
@@ -2495,14 +1795,6 @@ export const memes2 = [
   {
     name: 'большой жесткий пердеж',
     audio: '/media/sounds/bolshoi-zhestkii-perdezh.mp3',
-  },
-  {
-    name: 'what the hell goofy ahh (slv_sounds)',
-    audio: '/media/sounds/what-the-hell-goofy-ahh-slv-sounds.mp3',
-  },
-  {
-    name: 'Pq não trabaia, tomá sua gu',
-    audio: '/media/sounds/pq-nao-trabaia-toma-sua-gu.mp3',
   },
   {
     name: 'Juego',
@@ -2526,24 +1818,12 @@ export const memes2 = [
       '/media/sounds/metal-gear-solid-snake-death-scream-sound-effect_fR1Ryqk.mp3',
   },
   {
-    name: 'Требуется минетчица',
-    audio: '/media/sounds/trebuetsia-minetchitsa.mp3',
-  },
-  {
     name: 'manoel gomes parabens',
     audio: '/media/sounds/manoel-gomes-parabens.mp3',
   },
   {
     name: 'Bro que buena información ( Quevedo)',
     audio: '/media/sounds/bro-que-buena-informacion-quevedo.mp3',
-  },
-  {
-    name: 'Swan meme without AAAAAAA',
-    audio: '/media/sounds/swan-meme-without-aaaaaaa.mp3',
-  },
-  {
-    name: 'broke fein',
-    audio: '/media/sounds/broke-fein.mp3',
   },
   {
     name: 'Пасхалко Эщкере 1488',
@@ -2554,28 +1834,12 @@ export const memes2 = [
     audio: '/media/sounds/nerd-emoji-sound.mp3',
   },
   {
-    name: 'chora nao vagabunda (meme)',
-    audio: '/media/sounds/chora-nao-vagabunda-meme.mp3',
-  },
-  {
-    name: 'Yo he peleado contra mi tio',
-    audio: '/media/sounds/yo-he-peleado-contra-mi-tio.mp3',
-  },
-  {
-    name: 'Что у вас здесь происходит',
-    audio: '/media/sounds/chto-u-vas-zdes-proiskhodit.mp3',
-  },
-  {
     name: 'Wega Jumpscare',
     audio: '/media/sounds/wega-jumpscare.mp3',
   },
   {
     name: 'drole!!!',
     audio: '/media/sounds/drole_wHRGv1v.mp3',
-  },
-  {
-    name: 'Droga a la llama',
-    audio: '/media/sounds/droga-a-la-llama.mp3',
   },
   {
     name: 'iluminati',
@@ -2594,10 +1858,6 @@ export const memes2 = [
     audio: '/media/sounds/school-bell-ringing-sound-effect.mp3',
   },
   {
-    name: 'Käften sluta babbla',
-    audio: '/media/sounds/kek_3.mp3',
-  },
-  {
     name: 'Woosh Sound',
     audio: '/media/sounds/woosh.mp3',
   },
@@ -2610,28 +1870,12 @@ export const memes2 = [
     audio: '/media/sounds/testo-taylan-dim-dis.mp3',
   },
   {
-    name: 'Hitting that Spot',
-    audio: '/media/sounds/hitting-that-spot.mp3',
-  },
-  {
     name: 'Oreia Seca essa casa vai cair',
     audio: '/media/sounds/oreia-seca-essa-casa-vai-cair.mp3',
   },
   {
-    name: 'ГОООООЛ',
-    audio: '/media/sounds/goooool_gRygBSS.mp3',
-  },
-  {
-    name: 'иди нахуй я твою мать ебал',
-    audio: '/media/sounds/idi-nakhui-ia-tvoiu-mat-ebal_b11NIxQ.mp3',
-  },
-  {
     name: 'moving stone',
     audio: '/media/sounds/moving-stone.mp3',
-  },
-  {
-    name: 'ИДИ НАХУЙ СУКА',
-    audio: '/media/sounds/idi-nakhui-suka_9p27MbW.mp3',
   },
   {
     name: 'Low Taper Fade',
@@ -2646,16 +1890,8 @@ export const memes2 = [
     audio: '/media/sounds/olha-o-porcoo-estourado.mp3',
   },
   {
-    name: 'Bhosdike madarchod been k loray - roadies',
-    audio: '/media/sounds/bhosdike-madarchod-been-k-loray-roadies.mp3',
-  },
-  {
     name: 'Rahhh',
     audio: '/media/sounds/rahhh.mp3',
-  },
-  {
-    name: 'what the hell goofy ahh (slv_sounds)',
-    audio: '/media/sounds/what-the-hell-goofy-ahh-slv-sounds.mp3',
   },
   {
     name: 'Battotai drip remix',
@@ -2680,10 +1916,6 @@ export const memes2 = [
   {
     name: 'family feud buzzer',
     audio: '/media/sounds/family-feud-strike-sfx_kN6Z99k.mp3',
-  },
-  {
-    name: 'Why are you gay?',
-    audio: '/media/sounds/why-online-audio-converter.mp3',
   },
   {
     name: 'Risada Quico (Chaves)',
@@ -2718,10 +1950,6 @@ export const memes2 = [
     audio: '/media/sounds/yyy-standof-2-govno.mp3',
   },
   {
-    name: 'Ты педик а я гомик',
-    audio: '/media/sounds/ty-pedik-a-ia-gomik.mp3',
-  },
-  {
     name: 'welll well well well',
     audio: '/media/sounds/welll-well-well-well.mp3',
   },
@@ -2742,24 +1970,12 @@ export const memes2 = [
     audio: '/media/sounds/sticking-out-your-gyatt-for-the-rizzler.mp3',
   },
   {
-    name: 'ядерная бомба китайка',
-    audio: '/media/sounds/iadernaia-bomba-kitaika.mp3',
-  },
-  {
     name: 'Tiktok du badu',
     audio: '/media/sounds/tiktok-du-badu.mp3',
   },
   {
     name: '消しゴムマジック',
     audio: '/media/sounds/xiao-shigomumazitsuku.mp3',
-  },
-  {
-    name: 'Agora deu o carai mesmo viu',
-    audio: '/media/sounds/agora-deu-o-carai-mesmo-viu.mp3',
-  },
-  {
-    name: 'Swan meme without AAAAAAA',
-    audio: '/media/sounds/swan-meme-without-aaaaaaa.mp3',
   },
   {
     name: 'acaba pelo amor deus acabaaa',
@@ -2782,16 +1998,8 @@ export const memes2 = [
     audio: '/media/sounds/heheheha.mp3',
   },
   {
-    name: 'me corro',
-    audio: '/media/sounds/me-corro.mp3',
-  },
-  {
     name: 'Phasmophobia singing Ghost',
     audio: '/media/sounds/phasmophobia-singing-ghost.mp3',
-  },
-  {
-    name: 'callese señora auronplay',
-    audio: '/media/sounds/callese-senora-vayase-a-la-mierda-meme-auronplay.mp3',
   },
   {
     name: "Homer Simpson - D'OH",
@@ -2846,14 +2054,6 @@ export const memes2 = [
     audio: '/media/sounds/vine-boom-e-a-r-r-a-p-e.mp3',
   },
   {
-    name: 'Сколько да ты шо ахуел',
-    audio: '/media/sounds/skolko-da-ty-sho-akhuel.mp3',
-  },
-  {
-    name: 'Mi bomboclaut',
-    audio: '/media/sounds/mi-bomboclaut_linGNm7.mp3',
-  },
-  {
     name: 'I have no enemy',
     audio: '/media/sounds/i-have-no-enemy.mp3',
   },
@@ -2864,10 +2064,6 @@ export const memes2 = [
   {
     name: 'Goofy Ahh Ringtone',
     audio: '/media/sounds/goofy-ahh-ringtone.mp3',
-  },
-  {
-    name: 'what the hell oh my god no way',
-    audio: '/media/sounds/what-the-hell-oh-my-god-no-way.mp3',
   },
   {
     name: 'pablo meme song',
@@ -2887,28 +2083,12 @@ export const memes2 = [
       '/media/sounds/the-benny-hill-show-theme-short-sound-clip-and-quote-hark.mp3',
   },
   {
-    name: 'Mr Electric',
-    audio: '/media/sounds/mr-electric_3cWcqvc.mp3',
-  },
-  {
-    name: 'Hitting that Spot',
-    audio: '/media/sounds/hitting-that-spot.mp3',
-  },
-  {
     name: 'Đã làm gì đâu',
     audio: '/media/sounds/da-lam-gi-dau.mp3',
   },
   {
-    name: 'Чё за пидор на моём рабочем месте',
-    audio: '/media/sounds/chio-za-pidor-na-moiom-rabochem-meste.mp3',
-  },
-  {
     name: 'Double chunk chocolate cookie',
     audio: '/media/sounds/double-chunk-chocolate-cookie.mp3',
-  },
-  {
-    name: 'Э пацаны, это называется просто',
-    audio: '/media/sounds/e-patsany-eto-nazyvaetsia-prosto.mp3',
   },
   {
     name: 'AI CACHORRO FUNK',
@@ -3001,10 +2181,6 @@ export const memes2 = [
     audio: '/media/sounds/bonk_AgRFvsD.mp3',
   },
   {
-    name: 'ROASTED YAOW YAOW',
-    audio: '/media/sounds/roasted_2.mp3',
-  },
-  {
     name: 'May god bless you with mountains of gold',
     audio: '/media/sounds/may-god-bless-you-with-mountains-of-gold.mp3',
   },
@@ -3021,24 +2197,12 @@ export const memes2 = [
     audio: '/media/sounds/your-phone-lingoging.mp3',
   },
   {
-    name: 'Э пацаны, это называется просто',
-    audio: '/media/sounds/e-patsany-eto-nazyvaetsia-prosto.mp3',
-  },
-  {
     name: 'everybody was kungfu fighting',
     audio: '/media/sounds/everybody-was-kungfu-fighting.mp3',
   },
   {
-    name: 'Вы приговариваетесь (мармелад)',
-    audio: '/media/sounds/vy-prigovarivaetes-marmelad.mp3',
-  },
-  {
     name: 'Cotton eye joe (nuggets)',
     audio: '/media/sounds/cotton-eye-joe-nuggets.mp3',
-  },
-  {
-    name: 'Сколько да ты шо ахуел',
-    audio: '/media/sounds/skolko-da-ty-sho-akhuel.mp3',
   },
   {
     name: 'budiono siregar',
@@ -3069,14 +2233,6 @@ export const memes2 = [
     audio: '/media/sounds/rapaz-ele-ta-sem-zap.mp3',
   },
   {
-    name: 'Blue Label de Johnnie Walker',
-    audio: '/media/sounds/blue-label-de-johnnie-walker.mp3',
-  },
-  {
-    name: 'KWAI SEU APP DE VIDEOS CURTOS ESTOURADOS',
-    audio: '/media/sounds/kwai-seu-app-de-videos-curtos-estourados.mp3',
-  },
-  {
     name: '5 minutes later - Spongebob',
     audio: '/media/sounds/5-minutes-later-spongebob.mp3',
   },
@@ -3097,10 +2253,6 @@ export const memes2 = [
     audio: '/media/sounds/chinese-girl-laugh.mp3',
   },
   {
-    name: 'olha o relampago',
-    audio: '/media/sounds/olha-o-relampago.mp3',
-  },
-  {
     name: 'Kid Screaming Meme meme',
     audio: '/media/sounds/kid-screaming-meme-meme.mp3',
   },
@@ -3109,17 +2261,9 @@ export const memes2 = [
     audio: '/media/sounds/giga-chad-theme.mp3',
   },
   {
-    name: 'la place de la femme',
-    audio: '/media/sounds/la-place-de-la-femme-cest-a-la-cuisine_IIN8gAy.mp3',
-  },
-  {
     name: "you're going to Brazil",
     audio:
       '/media/sounds/your_going_to_brazil_among_us_meme_-526181161000490320.mp3',
-  },
-  {
-    name: 'нихуя себе',
-    audio: '/media/sounds/new-project_DswLARH.mp3',
   },
   {
     name: 'HQ Coffin Dance, Funeral',
@@ -3147,20 +2291,12 @@ export const memes2 = [
     audio: '/media/sounds/mr-beast-scream.mp3',
   },
   {
-    name: 'what the hell oh my god no way',
-    audio: '/media/sounds/what-the-hell-oh-my-god-no-way.mp3',
-  },
-  {
     name: 'Acha',
     audio: '/media/sounds/acha.mp3',
   },
   {
     name: 'Si meme spiderman',
     audio: '/media/sounds/si-meme-spiderman.mp3',
-  },
-  {
-    name: 'PH intro x See you again',
-    audio: '/media/sounds/ph-intro-x-see-you-again.mp3',
   },
   {
     name: 'glitch sound effect',
@@ -3182,14 +2318,6 @@ export const memes2 = [
     name: 'tazo dorado',
     audio: '/media/sounds/tazo-dorado.mp3',
   },
-  {
-    name: 'Арбуз пернул со всей силы',
-    audio: '/media/sounds/arbuz-pernul-so-vsei-sily.mp3',
-  },
-  {
-    name: 'Oh ta grand mere',
-    audio: '/media/sounds/oh-ta-grand-mere.mp3',
-  },
   // {
   //     "name": "Gotcha Bit** by Dave Chapelle",
   //     "audio": "/media/sounds/gotcha-bit-by-dave-chapelle.mp3"
@@ -3199,16 +2327,8 @@ export const memes2 = [
     audio: '/media/sounds/ryan-gosling-burp.mp3',
   },
   {
-    name: 'Э пацаны, это называется просто',
-    audio: '/media/sounds/e-patsany-eto-nazyvaetsia-prosto.mp3',
-  },
-  {
     name: 'that one josh hutcherson whistle edit',
     audio: '/media/sounds/that-one-josh-hutcherson-whistle-edit.mp3',
-  },
-  {
-    name: 'Bah alors on est nul',
-    audio: '/media/sounds/bah-alors-on-est-nul.mp3',
   },
   {
     name: 'Weezer Riff',
@@ -3219,32 +2339,12 @@ export const memes2 = [
     audio: '/media/sounds/motivatsiiu-nado-podniat.mp3',
   },
   {
-    name: 'tira lula estourado2',
-    audio: '/media/sounds/tira-lula-estourado2.mp3',
-  },
-  {
     name: 'gwenchana',
     audio: '/media/sounds/gwenchana.mp3',
   },
   {
-    name: 'Eita porra relações',
-    audio: '/media/sounds/eita-porra-relacoes.mp3',
-  },
-  {
     name: 'Свинтус придет!!!',
     audio: '/media/sounds/svintus-pridet.mp3',
-  },
-  {
-    name: 'Something In My Ass!',
-    audio: '/media/sounds/something-in-my-ass_gCDhPgd.mp3',
-  },
-  {
-    name: 'пердеж',
-    audio: '/media/sounds/perdezh_YQ5l54B.mp3',
-  },
-  {
-    name: 'Yo he peleado contra mi tio',
-    audio: '/media/sounds/yo-he-peleado-contra-mi-tio.mp3',
   },
   {
     name: 'black suit spider man',
@@ -3263,20 +2363,8 @@ export const memes2 = [
     audio: '/media/sounds/juego-audiotrimmer.mp3',
   },
   {
-    name: 'Chala Jaa bhosdike',
-    audio: '/media/sounds/y2mate_dIJjTNw.mp3',
-  },
-  {
-    name: 'нихуя себе',
-    audio: '/media/sounds/new-project_DswLARH.mp3',
-  },
-  {
     name: 'gangsta paradise scream',
     audio: '/media/sounds/gangstas-paradise-scream-sound-effect-1.mp3',
-  },
-  {
-    name: 'ROASTED YAOW YAOW',
-    audio: '/media/sounds/roasted_2.mp3',
   },
   {
     name: 'gangsta paradise scream',
@@ -3292,20 +2380,12 @@ export const memes2 = [
     audio: '/media/sounds/aa-aaa-aaaa.mp3',
   },
   {
-    name: 'ROASTED YAOW YAOW',
-    audio: '/media/sounds/roasted_2.mp3',
-  },
-  {
     name: "Köfteci Yusuf'un yanındayız",
     audio: '/media/sounds/kofteci-yusufun-yanindayiz.mp3',
   },
   {
     name: 'tazo dorado',
     audio: '/media/sounds/tazo-dorado.mp3',
-  },
-  {
-    name: 'Ok пидор',
-    audio: '/media/sounds/ok-pidor.mp3',
   },
   {
     name: 'Your phone lingoging',
@@ -3316,36 +2396,8 @@ export const memes2 = [
     audio: '/media/sounds/mewing-bye-bye-sigma.mp3',
   },
   {
-    name: 'Bah alors on est nul',
-    audio: '/media/sounds/bah-alors-on-est-nul.mp3',
-  },
-  {
     name: 'Weezer Riff',
     audio: '/media/sounds/weezer-riff.mp3',
-  },
-  {
-    name: 'tira lula estourado2',
-    audio: '/media/sounds/tira-lula-estourado2.mp3',
-  },
-  {
-    name: 'Szatanie moja dupa',
-    audio: '/media/sounds/szatanie-moja-dupa.mp3',
-  },
-  {
-    name: 'Eita porra relações',
-    audio: '/media/sounds/eita-porra-relacoes.mp3',
-  },
-  {
-    name: 'Something In My Ass!',
-    audio: '/media/sounds/something-in-my-ass_gCDhPgd.mp3',
-  },
-  {
-    name: 'пердеж',
-    audio: '/media/sounds/perdezh_YQ5l54B.mp3',
-  },
-  {
-    name: 'Yo he peleado contra mi tio',
-    audio: '/media/sounds/yo-he-peleado-contra-mi-tio.mp3',
   },
   {
     name: 'black suit spider man',
@@ -3360,16 +2412,8 @@ export const memes2 = [
     audio: '/media/sounds/tutorial-music-meme.mp3',
   },
   {
-    name: 'Chala Jaa bhosdike',
-    audio: '/media/sounds/y2mate_dIJjTNw.mp3',
-  },
-  {
     name: 'minecraft dead sound',
     audio: '/media/sounds/minecraft-steves-sounds-damage-and-deaths.mp3',
-  },
-  {
-    name: 'Whisper Song',
-    audio: '/media/sounds/barney-the-whisper-song.mp3',
   },
   {
     name: '4380',
@@ -3384,24 +2428,12 @@ export const memes2 = [
     audio: '/media/sounds/superman-meme.mp3',
   },
   {
-    name: 'эхххх блять',
-    audio: '/media/sounds/ekhkhkhkh-bliat.mp3',
-  },
-  {
     name: 'TAPI BOONG!!! HAHAHAHA',
     audio: '/media/sounds/tapi-boong-hahahaha.mp3',
   },
   {
     name: 'Lula - eu to meio gripadinha',
     audio: '/media/sounds/lula-eu-to-meio-gripadinha.mp3',
-  },
-  {
-    name: 'IK KRIJG EEN STIJVE!!! (V2)',
-    audio: '/media/sounds/ik-krijg-een-stijve-v2.mp3',
-  },
-  {
-    name: 'sexy and i know it',
-    audio: '/media/sounds/sexy-and-i-know-it_crWNUGY.mp3',
   },
   {
     name: 'Я АБСОЛЮТ! Я ВИЖУ ВСЕ',
@@ -3414,22 +2446,6 @@ export const memes2 = [
   {
     name: 'Baby launghing bass boosted',
     audio: '/media/sounds/baby-launghing-bass-boosted.mp3',
-  },
-  {
-    name: 'KWAI SEU APP DE VIDEOS CURTOS ESTOURADOS',
-    audio: '/media/sounds/kwai-seu-app-de-videos-curtos-estourados.mp3',
-  },
-  {
-    name: 'LOOK AT YOU YOU GRIPPING DADDY???',
-    audio: '/media/sounds/look-at-you-you-gripping-daddy.mp3',
-  },
-  {
-    name: 'Арбуз пернул со всей силы',
-    audio: '/media/sounds/arbuz-pernul-so-vsei-sily.mp3',
-  },
-  {
-    name: 'malupiton kamusta ang buhay buhay',
-    audio: '/media/sounds/malupiton-kamusta-ang-buhay-buhay.mp3',
   },
   {
     name: 'omg poco',
@@ -3448,10 +2464,6 @@ export const memes2 = [
     audio: '/media/sounds/a-mimir_75XdOGP.mp3',
   },
   {
-    name: 'nog even en ik geef je een klap voor je kanis',
-    audio: '/media/sounds/nog-even-en-ik-geef-je-een-klap-voor-je-kanis.mp3',
-  },
-  {
     name: 'Shirakami Fubuki - Glasses are really versatile',
     audio:
       '/media/sounds/shirakami-fubuki-glasses-are-just-really-versatile.mp3',
@@ -3459,10 +2471,6 @@ export const memes2 = [
   {
     name: 'Scooby doo running sound effect',
     audio: '/media/sounds/scooby-doo-turning-test.mp3',
-  },
-  {
-    name: 'ROASTED YAOW YAOW',
-    audio: '/media/sounds/roasted_2.mp3',
   },
   {
     name: 'P DIDDY NOOO',
@@ -3473,28 +2481,12 @@ export const memes2 = [
     audio: '/media/sounds/darius-alarm.mp3',
   },
   {
-    name: 'Mr Electric',
-    audio: '/media/sounds/mr-electric_3cWcqvc.mp3',
-  },
-  {
     name: 'повезло повезло _____________',
     audio: '/media/sounds/povezlo-povezlo_YB8fw8r.mp3',
   },
   {
     name: 'Тайлер исчез',
     audio: '/media/sounds/tailer-ischez.mp3',
-  },
-  {
-    name: 'эхххх блять',
-    audio: '/media/sounds/ekhkhkhkh-bliat.mp3',
-  },
-  {
-    name: 'MC picha mucha',
-    audio: '/media/sounds/mc-picha-mucha.mp3',
-  },
-  {
-    name: 'gemidos de ardillas',
-    audio: '/media/sounds/gemidos-de-ardillas.mp3',
   },
   {
     name: 'Tole Tole kawaii',
@@ -3529,10 +2521,6 @@ export const memes2 = [
     audio: '/media/sounds/acha.mp3',
   },
   {
-    name: 'Wallah Krise',
-    audio: '/media/sounds/wallah-krise.mp3',
-  },
-  {
     name: 'Illuminati Confirmed Meme',
     audio: '/media/sounds/x-files-theme-song-copy_dLYAyUk.mp3',
   },
@@ -3559,10 +2547,6 @@ export const memes2 = [
   {
     name: 'Wow Kongouratulations!',
     audio: '/media/sounds/kc78v26.mp3',
-  },
-  {
-    name: 'Thick of it but.....',
-    audio: '/media/sounds/thick-of-it-but.mp3',
   },
   {
     name: 'risada do gato',
@@ -3597,16 +2581,8 @@ export const memes2 = [
     audio: '/media/sounds/descansar-ne-ninguem-e-de-ferro.mp3',
   },
   {
-    name: 'Wallah Krise',
-    audio: '/media/sounds/wallah-krise.mp3',
-  },
-  {
     name: 'hay morrones ajo perejil',
     audio: '/media/sounds/y2mate_1lLaYg7.mp3',
-  },
-  {
-    name: 'BOI WHAT THE HELL BRUH',
-    audio: '/media/sounds/boi-what-da-hell-boi-sound-effect_sstnVvi.mp3',
   },
   {
     name: "'What'meme",
@@ -3625,14 +2601,6 @@ export const memes2 = [
     audio: '/media/sounds/alguem-vai-se-machucar-amegan-smzinho.mp3',
   },
   {
-    name: 'ay ay necesito pito',
-    audio: '/media/sounds/ay-ay-necesito-pito.mp3',
-  },
-  {
-    name: 'sexy and i know it',
-    audio: '/media/sounds/sexy-and-i-know-it_crWNUGY.mp3',
-  },
-  {
     name: 'ALL MY FELLAS',
     audio: '/media/sounds/all-my-fellas.mp3',
   },
@@ -3641,24 +2609,12 @@ export const memes2 = [
     audio: '/media/sounds/motivatsiiu-nado-podniat.mp3',
   },
   {
-    name: 'bakchodi mat kar laude',
-    audio: '/media/sounds/bakchodi-mat-kar-laude.mp3',
-  },
-  {
     name: 'Стук в дверь',
     audio: '/media/sounds/stuk-v-dver.mp3',
   },
   {
-    name: 'Plankton Meme',
-    audio: '/media/sounds/plankton-meme.mp3',
-  },
-  {
     name: 'Chick Fila HELP ME HELLLLP (just help)',
     audio: '/media/sounds/chick-fila-help-me-hellllp-just-help.mp3',
-  },
-  {
-    name: 'Something In My Ass!',
-    audio: '/media/sounds/something-in-my-ass_gCDhPgd.mp3',
   },
   {
     name: 'goofy ahh fart',
@@ -3693,10 +2649,6 @@ export const memes2 = [
     audio: '/media/sounds/ich-muss-raus.mp3',
   },
   {
-    name: 'Gung-gong',
-    audio: '/media/sounds/gunggong-barilin-kita-sa-muka-eh-from-youtube.mp3',
-  },
-  {
     name: "Ew brother ew what's that brother meme",
     audio: '/media/sounds/ew-brother-ew-whats-that-brother-meme.mp3',
   },
@@ -3709,18 +2661,6 @@ export const memes2 = [
     audio: '/media/sounds/nicolas-jackson_h9zsB7M.mp3',
   },
   {
-    name: 'Эхх блять',
-    audio: '/media/sounds/ekhkh-bliat.mp3',
-  },
-  {
-    name: 'MC picha mucha',
-    audio: '/media/sounds/mc-picha-mucha.mp3',
-  },
-  {
-    name: 'cara al sol rmx',
-    audio: '/media/sounds/cara-al-sol-rmx.mp3',
-  },
-  {
     name: 'Джеки токсик мем',
     audio: '/media/sounds/dzheki-toksik-mem.mp3',
   },
@@ -3731,10 +2671,6 @@ export const memes2 = [
   {
     name: 'Rapaz ele ta sem zap',
     audio: '/media/sounds/rapaz-ele-ta-sem-zap.mp3',
-  },
-  {
-    name: 'Blue Label de Johnnie Walker',
-    audio: '/media/sounds/blue-label-de-johnnie-walker.mp3',
   },
   {
     name: 'Freddy beatbox',
@@ -3751,14 +2687,6 @@ export const memes2 = [
   {
     name: 'うわっ、前から車が！！',
     audio: '/media/sounds/uwatsu-qian-karache-ga.mp3',
-  },
-  {
-    name: 'IshowspeedN',
-    audio: '/media/sounds/ishowspeedn.mp3',
-  },
-  {
-    name: 'Миша: Иди нах*й',
-    audio: '/media/sounds/misha-idi-nakh-i.mp3',
   },
   {
     name: 'Linder',
@@ -3806,16 +2734,8 @@ export const memes2 = [
     audio: '/media/sounds/pop_1lzEdx1.mp3',
   },
   {
-    name: 'Gung-gong',
-    audio: '/media/sounds/gunggong-barilin-kita-sa-muka-eh-from-youtube.mp3',
-  },
-  {
     name: 'Totally Spies Ringtone',
     audio: '/media/sounds/toque-tres-espias-demais.mp3',
-  },
-  {
-    name: 'Thick of it but.....',
-    audio: '/media/sounds/thick-of-it-but.mp3',
   },
   {
     name: "È l'ora dello sbusto",
@@ -3834,28 +2754,12 @@ export const memes2 = [
     audio: '/media/sounds/sende-gazanacan.mp3',
   },
   {
-    name: 'лютая отрыжка',
-    audio: '/media/sounds/liutaia-otryzhka.mp3',
-  },
-  {
-    name: 'Тотально похуй',
-    audio: '/media/sounds/totalno-pokhui.mp3',
-  },
-  {
     name: 'oh my god chris griffin',
     audio: '/media/sounds/oh-my-god-chris-griffin.mp3',
   },
   {
-    name: 'gemidos de ardillas',
-    audio: '/media/sounds/gemidos-de-ardillas.mp3',
-  },
-  {
     name: 'Maldito o homem CARIANI',
     audio: '/media/sounds/maldito-o-homem-cariani.mp3',
-  },
-  {
-    name: 'БЛЯЯЯЯЯТЬ',
-    audio: '/media/sounds/bliaiaiaiaiat.mp3',
   },
   {
     name: 'cuando pagan',
@@ -3866,20 +2770,12 @@ export const memes2 = [
     audio: '/media/sounds/fnaf-meme-har-har.mp3',
   },
   {
-    name: 'Чехословакия она такая тварь',
-    audio: '/media/sounds/chekhoslovakiia-ona-takaia-tvar.mp3',
-  },
-  {
     name: 'UN APLAUSO PARA ESTA PAREJA K ESTA ENAMORADA',
     audio: '/media/sounds/un-aplauso-para-esta-pareja-k-esta-enamorada.mp3',
   },
   {
     name: 'kara gümrük yanıyor köylü',
     audio: '/media/sounds/kara-gumruk-yaniyor-koylu.mp3',
-  },
-  {
-    name: 'saale itne chaate marunga puneet superstar',
-    audio: '/media/sounds/saale-itne-chaate-marunga-puneet-superstar.mp3',
   },
   {
     name: 'Crying cat',
@@ -3908,10 +2804,6 @@ export const memes2 = [
   {
     name: 'ai cachorro',
     audio: '/media/sounds/ai-cachorro.mp3',
-  },
-  {
-    name: 'Shut your Stupid Ass Up',
-    audio: '/media/sounds/shut-yo-stupid-ass-up.mp3',
   },
   {
     name: 'Nyanyanyanyanyanyanya',
@@ -3950,16 +2842,8 @@ export const memes2 = [
     audio: '/media/sounds/kava-o-vot-tak-mne-nrav.mp3',
   },
   {
-    name: "LET'S GO GAMBLING AW DANG IT",
-    audio: '/media/sounds/lets-go-gambling-aw-dang-it.mp3',
-  },
-  {
     name: 'erm what the sigma (full)',
     audio: '/media/sounds/erm-what-the-sigma-full.mp3',
-  },
-  {
-    name: 'Hacete caca',
-    audio: '/media/sounds/hacete-caca.mp3',
   },
   {
     name: "Ew brother ew what's that brother meme",
@@ -3982,10 +2866,6 @@ export const memes2 = [
     audio: '/media/sounds/napoleon-song.mp3',
   },
   {
-    name: 'O cholera, czy to freddy fazbear?',
-    audio: '/media/sounds/o-cholera-czy-to-freddy-fazbear.mp3',
-  },
-  {
     name: 'Ingpo Min',
     audio: '/media/sounds/ingpo-min.mp3',
   },
@@ -4000,10 +2880,6 @@ export const memes2 = [
   {
     name: 'pew pew vỗ tay',
     audio: '/media/sounds/pew-pew-vo-tay.mp3',
-  },
-  {
-    name: 'Belgen zijn geen ras',
-    audio: '/media/sounds/belgen-zijn-geen-ras.mp3',
   },
   {
     name: 'Ketawaaa',
@@ -4034,10 +2910,6 @@ export const memes2 = [
     audio: '/media/sounds/sleeping_HwTkaox.mp3',
   },
   {
-    name: 'Jägermeister Schrei',
-    audio: '/media/sounds/jagermeister-schrei.mp3',
-  },
-  {
     name: 'Cartoon bonk',
     audio: '/media/sounds/cartoon-bonk.mp3',
   },
@@ -4056,10 +2928,6 @@ export const memes2 = [
   {
     name: 'Microsoft Teams call',
     audio: '/media/sounds/enregistrement-_11_.mp3',
-  },
-  {
-    name: "I'm Going to Kill You, And then Kill you again.",
-    audio: '/media/sounds/final_5f99b14b144d4b004b4e5eac_638028.mp3',
   },
   {
     name: 'Scooby doo running sound effect',
@@ -4106,20 +2974,12 @@ export const memes2 = [
     audio: '/media/sounds/acumalaka-slowed.mp3',
   },
   {
-    name: 'Did you just talk back to me? - Yes King',
-    audio: '/media/sounds/did-you-just-talk-back-to-me-yes-king.mp3',
-  },
-  {
     name: 'кто рылся в мусорном ведре? SCHOOLBOY runaway',
     audio: '/media/sounds/kto-rylsia-v-musornom-vedre-schoolboy-runaway.mp3',
   },
   {
     name: 'Chinese Meme Song',
     audio: '/media/sounds/chinese-meme-song.mp3',
-  },
-  {
-    name: 'Porco di quel piselloneeeeeee',
-    audio: '/media/sounds/porco-di-quel-piselloneeeeeee_EcWSNad.mp3',
   },
   {
     name: 'İMPARATOR',
@@ -4158,10 +3018,6 @@ export const memes2 = [
     audio: '/media/sounds/el-batido.mp3',
   },
   {
-    name: 'Vai dar merda vaaaai',
-    audio: '/media/sounds/vai-dar-merda-vaaaai.mp3',
-  },
-  {
     name: 'TOBOL',
     audio: '/media/sounds/tobol.mp3',
   },
@@ -4174,20 +3030,12 @@ export const memes2 = [
     audio: '/media/sounds/risada-do-gato.mp3',
   },
   {
-    name: 'O cholera, czy to freddy fazbear?',
-    audio: '/media/sounds/o-cholera-czy-to-freddy-fazbear.mp3',
-  },
-  {
     name: 'Si a bueno',
     audio: '/media/sounds/si-a-bueno.mp3',
   },
   {
     name: 'Würd mir stinken, wenn ich du wär',
     audio: '/media/sounds/wurd-mir-stinken-wenn-ich-du-war.mp3',
-  },
-  {
-    name: 'IshowspeedN',
-    audio: '/media/sounds/ishowspeedn.mp3',
   },
   {
     name: 'bora bill',
@@ -4218,11 +3066,6 @@ export const memes2 = [
     audio: '/media/sounds/twitchhitbox-followdonation-sound-2_lXgMZdf.mp3',
   },
   {
-    name: "Sardoche - MAIS C'ETAIT SUR",
-    audio:
-      '/media/sounds/sardoche-mais-voila-mais-cetait-sur-en-fait_s9qhFsx.mp3',
-  },
-  {
     name: 'pechee to dekho',
     audio:
       '/media/sounds/tik-tok-trending-viral-video-orignal-kon-hai-wo-oye-piche-dekho-little-boy-pathan_LErXa4H.mp3',
@@ -4234,10 +3077,6 @@ export const memes2 = [
   {
     name: "Mario 64 let's a go",
     audio: '/media/sounds/sm64_mario_lets_go.mp3',
-  },
-  {
-    name: 'Gung-gong',
-    audio: '/media/sounds/gunggong-barilin-kita-sa-muka-eh-from-youtube.mp3',
   },
   {
     name: 'Ba Ba Ba Banana - Minion',
@@ -4265,14 +3104,6 @@ export const memes2 = [
     audio: '/media/sounds/sende-gazanacan.mp3',
   },
   {
-    name: 'lula vai todo mundo se fud#',
-    audio: '/media/sounds/lula-vai-todo-mundo-se-fud.mp3',
-  },
-  {
-    name: 'Geh scheißen sonst...',
-    audio: '/media/sounds/geh-scheissen-sonst_gERuGWL.mp3',
-  },
-  {
     name: 'Errrm actually',
     audio: '/media/sounds/errrm-actually.mp3',
   },
@@ -4285,16 +3116,8 @@ export const memes2 = [
     audio: '/media/sounds/qui-fase-que-ta-o-curintia.mp3',
   },
   {
-    name: 'Yesss king',
-    audio: '/media/sounds/yesss-king.mp3',
-  },
-  {
     name: 'pew pew vỗ tay',
     audio: '/media/sounds/pew-pew-vo-tay.mp3',
-  },
-  {
-    name: 'ai meu c',
-    audio: '/media/sounds/ai-meu-c.mp3',
   },
   {
     name: 'metal bar',
@@ -4345,17 +3168,8 @@ export const memes2 = [
     audio: '/media/sounds/xue-hua-piao-piao_FOynuVG.mp3',
   },
   {
-    name: 'rafonix na huj',
-    audio: '/media/sounds/rafonix-matka-taraboni-w-drzwi-mp3cut.mp3',
-  },
-  {
     name: 'Hold up wait a minute',
     audio: '/media/sounds/hold-up-wait-a-minute-sound-effect.mp3',
-  },
-  {
-    name: "Sardoche - MAIS C'ETAIT SUR",
-    audio:
-      '/media/sounds/sardoche-mais-voila-mais-cetait-sur-en-fait_s9qhFsx.mp3',
   },
   {
     name: 'pechee to dekho',
@@ -4379,14 +3193,6 @@ export const memes2 = [
     audio: '/media/sounds/lightsaber_02.mp3',
   },
   {
-    name: 'n word spam',
-    audio: '/media/sounds/n-word-spam.mp3',
-  },
-  {
-    name: 'You stupid NIG',
-    audio: '/media/sounds/you-stupid-nig_gSacTCg.mp3',
-  },
-  {
     name: 'JINGO BEU(ESTOURADO)',
     audio: '/media/sounds/jingo-beu-estourado.mp3',
   },
@@ -4399,24 +3205,8 @@ export const memes2 = [
     audio: '/media/sounds/akiramennayo-song-gang-xiu-zao.mp3',
   },
   {
-    name: 'vine "no nigga!"',
-    audio: '/media/sounds/vine-no-nigga.mp3',
-  },
-  {
     name: 'Mr jackson was a great guy',
     audio: '/media/sounds/mr-jackson-was-a-great-guy.mp3',
-  },
-  {
-    name: 'gemidaododaniel',
-    audio: '/media/sounds/gemidaododaniel.mp3',
-  },
-  {
-    name: 'gemidos ahy',
-    audio: '/media/sounds/gemidos-ahy.mp3',
-  },
-  {
-    name: 'Vai tomar no cu-palhaço gozo',
-    audio: '/media/sounds/vai-tomar-no-cu-palhaco-gozo.mp3',
   },
   {
     name: "Köfteci Yusuf'un yanındayız",
@@ -4425,14 +3215,6 @@ export const memes2 = [
   {
     name: 'Тун Ти Тун (Натурал Альбертович )',
     audio: '/media/sounds/tun-ti-tun-natural-albertovich.mp3',
-  },
-  {
-    name: 'vine "no nigga!"',
-    audio: '/media/sounds/vine-no-nigga.mp3',
-  },
-  {
-    name: 'gemidos ahy',
-    audio: '/media/sounds/gemidos-ahy.mp3',
   },
   {
     name: 'อย่าให้มีครั้งที่ 3',
@@ -4447,16 +3229,8 @@ export const memes2 = [
     audio: '/media/sounds/piper-song-tutorial.mp3',
   },
   {
-    name: 'Эхх блять',
-    audio: '/media/sounds/ekhkh-bliat.mp3',
-  },
-  {
     name: 'ketawa jack',
     audio: '/media/sounds/ketawa-jack.mp3',
-  },
-  {
-    name: 'GOKU MAN',
-    audio: '/media/sounds/goku-man.mp3',
   },
   {
     name: 'Я ЧЕ ЕМЕЛЯ???',
@@ -4479,32 +3253,12 @@ export const memes2 = [
     audio: '/media/sounds/cuando-pagan.mp3',
   },
   {
-    name: 'сука ну мёд',
-    audio: '/media/sounds/suka-nu-miod.mp3',
-  },
-  {
-    name: 'Freddy fazbear rizz',
-    audio: '/media/sounds/freddy-fazbear-rizz.mp3',
-  },
-  {
-    name: 'Vai Novinha - Lula e Bolsonaro',
-    audio: '/media/sounds/vai-novinha-lula-e-bolsonaro.mp3',
-  },
-  {
     name: 'mahesh dalle meme',
     audio: '/media/sounds/mahesh-dalle-meme.mp3',
   },
   {
-    name: 'you should kill yourself now',
-    audio: '/media/sounds/you-should-kill-yourself-now_HWQcyfz.mp3',
-  },
-  {
     name: 'kara gümrük yanıyor köylü',
     audio: '/media/sounds/kara-gumruk-yaniyor-koylu.mp3',
-  },
-  {
-    name: 'Ambatukam dies',
-    audio: '/media/sounds/ambatukam-dies.mp3',
   },
   {
     name: 'Qui fase que tá o curintia',
@@ -4519,10 +3273,6 @@ export const memes2 = [
     audio: '/media/sounds/pew-pew-vo-tay.mp3',
   },
   {
-    name: 'PEGUEI O ESQUEMA SMZINHO',
-    audio: '/media/sounds/peguei-o-esquema-smzinho.mp3',
-  },
-  {
     name: 'metal bar',
     audio: '/media/sounds/metal-bar.mp3',
   },
@@ -4533,14 +3283,6 @@ export const memes2 = [
   {
     name: 'Ronquidos y silbidos',
     audio: '/media/sounds/ronquidos-y-silbidos.mp3',
-  },
-  {
-    name: 'oh my god hell no bruh',
-    audio: '/media/sounds/oh-my-god-hell-no-bruh.mp3',
-  },
-  {
-    name: 'que olor a puto',
-    audio: '/media/sounds/que-olor-a-puto.mp3',
   },
   {
     name: 'dbz rapid punches sfx',
@@ -4557,9 +3299,5 @@ export const memes2 = [
   {
     name: 'xue hua piao piao bei feng xiao xiao meme',
     audio: '/media/sounds/xue-hua-piao-piao_FOynuVG.mp3',
-  },
-  {
-    name: 'Tarkov angry scav best insult',
-    audio: '/media/sounds/angryscav.mp3',
   },
 ]

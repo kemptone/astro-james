@@ -2,13 +2,16 @@ import type {APIRoute} from 'astro'
 import moderationManifest from '@/data/meme/moderation-manifest.json'
 import {
   canonicalizeAudioPath,
+  getPublishedAudioPaths,
   MEME_AUDIO_ORIGIN,
 } from '@/data/meme/inventory'
 import {getBlockedAudioPaths} from '@/data/meme/moderation'
 
 export const prerender = false
 
-const blockedAudioPaths = getBlockedAudioPaths(moderationManifest)
+const publishedAudioPaths = getPublishedAudioPaths(
+  getBlockedAudioPaths(moderationManifest)
+)
 
 export const POST: APIRoute = async ({request}) => {
   try {
@@ -20,7 +23,7 @@ export const POST: APIRoute = async ({request}) => {
     }
 
     const audioPath = canonicalizeAudioPath(audioUrl.pathname)
-    if (blockedAudioPaths.has(audioPath)) {
+    if (!publishedAudioPaths.has(audioPath)) {
       return new Response('Audio not found', {status: 404})
     }
 

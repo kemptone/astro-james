@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict'
+import {readFileSync} from 'node:fs'
 import test from 'node:test'
 
 import {
   allMemeSources,
   buildMemeInventory,
   canonicalizeAudioPath,
+  getPublishedAudioPaths,
   getPublishedMemeItems,
   publishedMemeSources,
 } from '../../src/data/meme/inventory.ts'
@@ -90,6 +92,42 @@ test('published items remain deduplicated and blocked duplicates are removed', (
     {name: 'failed', audio: '/media/sounds/failed.mp3'},
     {name: 'unscanned', audio: '/media/sounds/unscanned.mp3'},
   ])
+})
+
+test('published audio access excludes removed and moderated paths', () => {
+  const sources = [{
+    name: 'memes2',
+    published: true,
+    items: [
+      {name: 'available', audio: '/media/sounds/available.mp3?version=1'},
+      {name: 'held', audio: '/media/sounds/held.mp3'},
+    ],
+  }]
+  const paths = getPublishedAudioPaths(
+    new Set(['/media/sounds/held.mp3']),
+    sources
+  )
+
+  assert.deepEqual([...paths], ['/media/sounds/available.mp3'])
+  assert.equal(paths.has('/media/sounds/removed.mp3'), false)
+  assert.equal(paths.has('/media/sounds/held.mp3'), false)
+})
+
+test('catalog and manifest contain no retained blocked content', () => {
+  const manifest = JSON.parse(readFileSync(
+    new URL('../../src/data/meme/moderation-manifest.json', import.meta.url),
+    'utf8'
+  ))
+  const inventoryPaths = new Set(buildMemeInventory().map(item => item.audioPath))
+
+  assert.equal(getBlockedAudioPaths(manifest).size, 0)
+  for (const audioPath of inventoryPaths) {
+    assert.ok(manifest.decisions[audioPath])
+  }
+  const publishedPaths = getPublishedAudioPaths(new Set())
+  for (const item of buildMemeInventory()) {
+    assert.equal(publishedPaths.has(item.audioPath), item.published)
+  }
 })
 
 test('pilot sample is deterministic, unique, and split 80/20', () => {

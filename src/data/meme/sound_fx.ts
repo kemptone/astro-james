@@ -117,10 +117,6 @@ export const sound_effects = [
     audio: '/media/sounds/a-few-moments-later-sponge-bob-sfx-fun.mp3',
   },
   {
-    name: 'Hub Intro Sound',
-    audio: '/media/sounds/hub-intro-sound.mp3',
-  },
-  {
     name: 'Chalo',
     audio: '/media/sounds/chalo.mp3',
   },
@@ -155,10 +151,6 @@ export const sound_effects = [
   {
     name: 'MLG AIR HORN!!!!!!!!!!!',
     audio: '/media/sounds/mlg-airhorn.mp3',
-  },
-  {
-    name: 'Тренболон X Let It Snow',
-    audio: '/media/sounds/trenbolon-x-let-it-snow.mp3',
   },
   {
     name: 'Discord Leave Noise',
@@ -278,20 +270,12 @@ export const sound_effects = [
     audio: '/media/sounds/y2mate_HrgsElu.mp3',
   },
   {
-    name: 'Diddy done',
-    audio: '/media/sounds/diddy-done.mp3',
-  },
-  {
     name: 'magic fairy',
     audio: '/media/sounds/magic-fairy.mp3',
   },
   {
     name: 'Minecraft Click',
     audio: '/media/sounds/minecraft_click.mp3',
-  },
-  {
-    name: 'Я потяну тебя за писку и оторву',
-    audio: '/media/sounds/ia-potianu-tebia-za-pisku-i-otorvu_m8p7Vxl.mp3',
   },
   {
     name: 'Punch Effect',
@@ -320,10 +304,6 @@ export const sound_effects = [
   {
     name: 'Pistol-shot',
     audio: '/media/sounds/pistol-shot.mp3',
-  },
-  {
-    name: 'DE COPÃO NA MÃO (ESTOURADO)',
-    audio: '/media/sounds/de-copao-na-mao-estourado.mp3',
   },
   {
     name: 'wut',
@@ -402,10 +382,6 @@ export const sound_effects = [
     audio: '/media/sounds/bereal.mp3',
   },
   {
-    name: 'Pookie Bear',
-    audio: '/media/sounds/pookie-bear.mp3',
-  },
-  {
     name: 'Hyper-Reallistic Knocking',
     audio: '/media/sounds/crazy-realistic-knocking-sound-trim.mp3',
   },
@@ -426,16 +402,8 @@ export const sound_effects = [
     audio: '/media/sounds/stone-sliding.mp3',
   },
   {
-    name: 'You are an idiot!',
-    audio: '/media/sounds/you-are-an-idiot.mp3',
-  },
-  {
     name: 'FNAF Yay Children',
     audio: '/media/sounds/crowd_small_chil_ec049202_9klCwI6.mp3',
-  },
-  {
-    name: 'You are an idiot!',
-    audio: '/media/sounds/you-are-an-idiot.mp3',
   },
   {
     name: 'Wet fart meme',
@@ -464,10 +432,6 @@ export const sound_effects = [
   {
     name: 'lol mising ping',
     audio: '/media/sounds/ping_missing.mp3',
-  },
-  {
-    name: 'Stöhnender Junge',
-    audio: '/media/sounds/stohnender-junge_HmneKwP.mp3',
   },
   {
     name: 'SUARA KAMBING',
@@ -606,14 +570,6 @@ export const sound_effects = [
     audio: '/media/sounds/gunshot1-connor_p-8650_hifi.mp3',
   },
   {
-    name: 'Duar kontol',
-    audio: '/media/sounds/duar-kontol.mp3',
-  },
-  {
-    name: "I'm new bro",
-    audio: '/media/sounds/im-new-bro.mp3',
-  },
-  {
     name: 'ih takotnyee',
     audio: '/media/sounds/ih-takotnyee.mp3',
   },
@@ -646,10 +602,6 @@ export const sound_effects = [
     audio: '/media/sounds/krasnaia-knopka-dlinnyi.mp3',
   },
   {
-    name: 'I am going to commit great crime',
-    audio: '/media/sounds/i-am-going-to-commit-great-crime.mp3',
-  },
-  {
     name: 'Mario screaming 1',
     audio: '/media/sounds/tmpcoj3v_01.mp3',
   },
@@ -676,10 +628,6 @@ export const sound_effects = [
   {
     name: '“Mwahahaha”',
     audio: '/media/sounds/mwahahaha.mp3',
-  },
-  {
-    name: 'Service Bell (2)',
-    audio: '/media/sounds/stupid-f__king-bird.mp3',
   },
   {
     name: 'Мяу мяу мяумяу',
@@ -730,20 +678,12 @@ export const sound_effects = [
     audio: '/media/sounds/danger-siren-alarm_BfknMds.mp3',
   },
   {
-    name: 'Memang Babi Kau Nih',
-    audio: '/media/sounds/memang-babi-kau-nih.mp3',
-  },
-  {
     name: 'Мощний отрижка',
     audio: '/media/sounds/moshchnii-otrizhka.mp3',
   },
   {
     name: 'anjay gede',
     audio: '/media/sounds/anjay-gede_jHI20Dx.mp3',
-  },
-  {
-    name: 'Alan: Tira que eu vou cagar!',
-    audio: '/media/sounds/alan-tira-que-eu-vou-cagar.mp3',
   },
   {
     name: 'Cartoon Strings',
@@ -814,10 +754,6 @@ export const sound_effects = [
     audio: '/media/sounds/aire-la-rosa-188442622.mp3',
   },
   {
-    name: 'Ah si tu pouvais fermer ta gueule',
-    audio: '/media/sounds/ha-si-tu-pouvais-fermer-ta-gueule.mp3',
-  },
-  {
     name: 'Windows 7 Startup',
     audio: '/media/sounds/windows-7-startup.mp3',
   },
@@ -854,16 +790,8 @@ export const sound_effects = [
     audio: '/media/sounds/s100rr-cortando-giro.mp3',
   },
   {
-    name: 'Death Bong',
-    audio: '/media/sounds/death-bong.mp3',
-  },
-  {
     name: 'Minecraft TNT explosion!!!',
     audio: '/media/sounds/tnt-explosion.mp3',
-  },
-  {
-    name: 'Death Bong',
-    audio: '/media/sounds/death-bong.mp3',
   },
   {
     name: 'Party Horn thing',
@@ -892,10 +820,6 @@ export const sound_effects = [
   {
     name: 'confetti pop sound',
     audio: '/media/sounds/confetti-pop-sound.mp3',
-  },
-  {
-    name: 'Efeito Pi- censura',
-    audio: '/media/sounds/pi-de-palavrao-da-tv-08112013.mp3',
   },
   {
     name: 'Dog Clicker',
@@ -932,10 +856,6 @@ export const sound_effects = [
   {
     name: 'alarma saturada',
     audio: '/media/sounds/alarma-saturada.mp3',
-  },
-  {
-    name: 'gemidane',
-    audio: '/media/sounds/gemidane.mp3',
   },
   {
     name: 'Can We Get Much Higher-One Piece Meme',
@@ -1066,10 +986,6 @@ export const sound_effects = [
     audio: '/media/sounds/piuw.mp3',
   },
   {
-    name: 'ulan sende bi sg amk',
-    audio: '/media/sounds/ulan-sende-bi-sg-amk.mp3',
-  },
-  {
     name: 'U Got That (meme)',
     audio: '/media/sounds/u-got-that-mp3-fix.mp3',
   },
@@ -1088,10 +1004,6 @@ export const sound_effects = [
   {
     name: 'toc toc toc 8D Sound',
     audio: '/media/sounds/toc-toc-toc.mp3',
-  },
-  {
-    name: 'what the hell (speed up)',
-    audio: '/media/sounds/what-the-hell-speed-up.mp3',
   },
   {
     name: 'Baldi - All 7 Notebooks',
@@ -1198,10 +1110,6 @@ export const sound_effects = [
     audio: '/media/sounds/johnny-test-whip-crack.mp3',
   },
   {
-    name: 'oh hell naw man wtf man',
-    audio: '/media/sounds/oh-hell-naw-man-wtf-man.mp3',
-  },
-  {
     name: 'Prowler',
     audio: '/media/sounds/prowler.mp3',
   },
@@ -1251,16 +1159,8 @@ export const sound_effects = [
     audio: '/media/sounds/roblox-old-winning-sound-effect.mp3',
   },
   {
-    name: 'Andas Valiendo Vrg',
-    audio: '/media/sounds/andas-valiendo-vrg_WV1Vytn.mp3',
-  },
-  {
     name: 'goofy spring sound',
     audio: '/media/sounds/goofy-spring-sound.mp3',
-  },
-  {
-    name: 'Je dikke moeder',
-    audio: '/media/sounds/je-dikke-moeder.mp3',
   },
   {
     name: 'Slow baby laugh',
@@ -1492,14 +1392,6 @@ export const sound_effects = [
     audio: '/media/sounds/oh-no-our-table-its-broken.mp3',
   },
   {
-    name: 'มีอีกไหมไองามไส้เสียงคน น้าค่อม',
-    audio: '/media/sounds/untitled_p4tjn43_sJNuyvU.mp3',
-  },
-  {
-    name: 'Fiau',
-    audio: '/media/sounds/fiau.mp3',
-  },
-  {
     name: 'creeper aww man',
     audio: '/media/sounds/revenge3.mp3',
   },
@@ -1654,10 +1546,6 @@ export const sound_effects = [
     audio: '/media/sounds/animatronic-in-door.mp3',
   },
   {
-    name: 'Cállate baboso MM',
-    audio: '/media/sounds/callate-baboso-mm.mp3',
-  },
-  {
     name: 'DOORS Figure growl',
     audio: '/media/sounds/doors-figure-growl.mp3',
   },
@@ -1680,10 +1568,6 @@ export const sound_effects = [
   {
     name: 'Clock Ticking',
     audio: '/media/sounds/clock_ticking_edited-2.mp3',
-  },
-  {
-    name: 'Mustard on the beat hoe',
-    audio: '/media/sounds/mustard-on-the-beat-hoe.mp3',
   },
   {
     name: 'Dramatic Chipmunk',
@@ -1851,10 +1735,6 @@ export const sound_effects = [
     audio: '/media/sounds/woosh-mark_diangelo-4778593.mp3',
   },
   {
-    name: 'Mustard on the beat hoe',
-    audio: '/media/sounds/mustard-on-the-beat-hoe.mp3',
-  },
-  {
     name: 'Disco arranhado efeito sonoro',
     audio: '/media/sounds/record-scratch-sound-effect.mp3',
   },
@@ -1867,14 +1747,6 @@ export const sound_effects = [
     audio: '/media/sounds/father-death-mk1-ghostface.mp3',
   },
   {
-    name: 'Tenang ketawa ngakak',
-    audio: '/media/sounds/tenang-ketawa-ngakak.mp3',
-  },
-  {
-    name: 'UY BOSS?',
-    audio: '/media/sounds/uy-boss.mp3',
-  },
-  {
     name: 'Teleport of tvman',
     audio: '/media/sounds/teleport-of-tvman.mp3',
   },
@@ -1885,10 +1757,6 @@ export const sound_effects = [
   {
     name: 'Tyler the Creator SIKE!',
     audio: '/media/sounds/tyler-the-creator-sike_ItZTbtq.mp3',
-  },
-  {
-    name: 'rizzzzzzzzing',
-    audio: '/media/sounds/rizzzzzzzzing.mp3',
   },
   {
     name: 'ahh 169 Roland',
@@ -1905,10 +1773,6 @@ export const sound_effects = [
   {
     name: 'star wars Seismic charge',
     audio: '/media/sounds/star-wars-seismic-charge.mp3',
-  },
-  {
-    name: 'Ayo-',
-    audio: '/media/sounds/ayo_ngawHKc.mp3',
   },
   {
     name: 'Generic Ka-ching',
@@ -1999,10 +1863,6 @@ export const sound_effects = [
     audio: '/media/sounds/father-death-mk1-ghostface.mp3',
   },
   {
-    name: 'Tenang ketawa ngakak',
-    audio: '/media/sounds/tenang-ketawa-ngakak.mp3',
-  },
-  {
     name: 'bye bye deadpool',
     audio: '/media/sounds/bye-bye-deadpool.mp3',
   },
@@ -2011,20 +1871,12 @@ export const sound_effects = [
     audio: '/media/sounds/britains-got-talent-buzzer.mp3',
   },
   {
-    name: 'Abrindo Latinha',
-    audio: '/media/sounds/abrindo-latinha.mp3',
-  },
-  {
     name: 'Depósito BBVA Bancomer',
     audio: '/media/sounds/deposito-bbva-bancomer.mp3',
   },
   {
     name: "Britain's Got Talent Buzzer",
     audio: '/media/sounds/britains-got-talent-buzzer.mp3',
-  },
-  {
-    name: 'Abrindo Latinha',
-    audio: '/media/sounds/abrindo-latinha.mp3',
   },
   {
     name: 'Depósito BBVA Bancomer',
@@ -2113,10 +1965,6 @@ export const sound_effects = [
   {
     name: 'UNDERTALE DISSAPER',
     audio: '/media/sounds/undertale-sound-effect-battle-encounter.mp3',
-  },
-  {
-    name: 'IM JOKING STOP',
-    audio: '/media/sounds/im-joking-stop-stop.mp3',
   },
   {
     name: 'Skype Ringtone (New)',
@@ -2212,10 +2060,6 @@ export const sound_effects = [
     audio: '/media/sounds/wario_oh_my_god_-_mario_party.mp3',
   },
   {
-    name: 'IM JOKING STOP',
-    audio: '/media/sounds/im-joking-stop-stop.mp3',
-  },
-  {
     name: 'Skype Ringtone (New)',
     audio: '/media/sounds/skype_ringtone_new.mp3',
   },
@@ -2240,14 +2084,6 @@ export const sound_effects = [
     audio: '/media/sounds/roblox-death-sound-loud.mp3',
   },
   {
-    name: 'Quagmire Giggity',
-    audio: '/media/sounds/giggity.mp3',
-  },
-  {
-    name: 'I Will Kill You',
-    audio: '/media/sounds/taken-i-will-find-you-and-i-will-kill-you-hd.mp3',
-  },
-  {
     name: 'light switch',
     audio: '/media/sounds/168860__orginaljun__light-switch-01.mp3',
   },
@@ -2260,24 +2096,12 @@ export const sound_effects = [
     audio: '/media/sounds/scream1.mp3',
   },
   {
-    name: 'moan100',
-    audio: '/media/sounds/moan100.mp3',
-  },
-  {
-    name: 'UY BOSS?',
-    audio: '/media/sounds/uy-boss.mp3',
-  },
-  {
     name: 'Tinky Winky scream (EARAPE)',
     audio: '/media/sounds/tinky-winky-scream-earape.mp3',
   },
   {
     name: 'confetti pop sound effect',
     audio: '/media/sounds/confetti-pop-sound-effect.mp3',
-  },
-  {
-    name: 'DJ SALSAYOGURT',
-    audio: '/media/sounds/dj-salsayogurt.mp3',
   },
   {
     name: 'Samsung Chime Ringtone',
@@ -2360,10 +2184,6 @@ export const sound_effects = [
     audio: '/media/sounds/sad-piano.mp3',
   },
   {
-    name: 'gachiGasm',
-    audio: '/media/sounds/right-version5.mp3',
-  },
-  {
     name: 'Hey wake up (Teamspeak)',
     audio: '/media/sounds/you_were_poked.mp3',
   },
@@ -2396,10 +2216,6 @@ export const sound_effects = [
     audio: '/media/sounds/valorant-1-5-kills-sounds-with-ace-sound.mp3',
   },
   {
-    name: 'Subway surfers "HUY"',
-    audio: '/media/sounds/subway-surfers-huy.mp3',
-  },
-  {
     name: 'eagle screech/caw sound',
     audio: '/media/sounds/eagle-screech-caw-sound.mp3',
   },
@@ -2422,10 +2238,6 @@ export const sound_effects = [
   {
     name: 'Clock Tick Tock',
     audio: '/media/sounds/clock-tick-tock.mp3',
-  },
-  {
-    name: 'Chili Chili Fart',
-    audio: '/media/sounds/chili-chili-fart_0ikahyN.mp3',
   },
   {
     name: 'noise is calling',
@@ -2488,10 +2300,6 @@ export const sound_effects = [
     audio: '/media/sounds/pizza-tower-noise-scream.mp3',
   },
   {
-    name: 'อาจารย์แดง ด่า',
-    audio: '/media/sounds/aacchaaryaedng-daa.mp3',
-  },
-  {
     name: 'blinky',
     audio: '/media/sounds/blinky.mp3',
   },
@@ -2502,10 +2310,6 @@ export const sound_effects = [
   {
     name: 'Philippine National Police Manual Siren',
     audio: '/media/sounds/philippine-national-police-manual-siren.mp3',
-  },
-  {
-    name: 'packgod packing',
-    audio: '/media/sounds/packgod-packing.mp3',
   },
   {
     name: '1_ตลกตบมุก_1',
@@ -2534,10 +2338,6 @@ export const sound_effects = [
   {
     name: 'vineboom (long)',
     audio: '/media/sounds/vineboom-long.mp3',
-  },
-  {
-    name: 'bRo wHaT dA hElL bRo wHaT dA hElL',
-    audio: '/media/sounds/boi-what-da-hell-boi-sound-effect.mp3',
   },
   {
     name: 'Undertale - Dust Swoosh',
@@ -2584,11 +2384,6 @@ export const sound_effects = [
     audio: '/media/sounds/merry-christmas-genji-voice-line.mp3',
   },
   {
-    name: 'Mas que porra é essa (goku)',
-    audio:
-      '/media/sounds/audio-m4a-mas-que-porra-e-essa_-goku-dragon-anime.mp3',
-  },
-  {
     name: 'Return By Death',
     audio: '/media/sounds/return-by-death.mp3',
   },
@@ -2609,10 +2404,6 @@ export const sound_effects = [
     audio: '/media/sounds/water-splash-9.mp3',
   },
   {
-    name: 'bRo wHaT dA hElL bRo wHaT dA hElL',
-    audio: '/media/sounds/boi-what-da-hell-boi-sound-effect.mp3',
-  },
-  {
     name: 'Salvini - ti sfido su fortnite',
     audio: '/media/sounds/ti-sfido-su-fortnite.mp3',
   },
@@ -2623,10 +2414,6 @@ export const sound_effects = [
   {
     name: 'Body Fall',
     audio: '/media/sounds/body-fall-sound-effect.mp3',
-  },
-  {
-    name: 'RTE',
-    audio: '/media/sounds/yav-sen-gerizekali-misin.mp3',
   },
   {
     name: 'Shirakami Fubuki - Yabe',
@@ -2659,11 +2446,6 @@ export const sound_effects = [
   {
     name: 'MERRY CHRISTMAS DONKEH',
     audio: '/media/sounds/merry-christmas-genji-voice-line.mp3',
-  },
-  {
-    name: 'Mas que porra é essa (goku)',
-    audio:
-      '/media/sounds/audio-m4a-mas-que-porra-e-essa_-goku-dragon-anime.mp3',
   },
   {
     name: 'Return By Death',
@@ -2700,10 +2482,6 @@ export const sound_effects = [
   {
     name: 'Tertawa',
     audio: '/media/sounds/tertawa.mp3',
-  },
-  {
-    name: 'Fart Moan2',
-    audio: '/media/sounds/fart-moan2.mp3',
   },
   {
     name: 'Valorant 1 - 5 Kills Sounds With Ace Sound',
@@ -2750,10 +2528,6 @@ export const sound_effects = [
     audio: '/media/sounds/incoming-call-discord-winter-2024.mp3',
   },
   {
-    name: 'Dah Yatim Goblok Main Ling Kek Tolol Anjing',
-    audio: '/media/sounds/dah-yatim-goblok-main-ling-kek-tolol-anjing.mp3',
-  },
-  {
     name: 'DAP UP',
     audio: '/media/sounds/dap-up.mp3',
   },
@@ -2778,10 +2552,6 @@ export const sound_effects = [
     audio: '/media/sounds/erm-what-the-sigmaa.mp3',
   },
   {
-    name: 'kuntul',
-    audio: '/media/sounds/kuntul.mp3',
-  },
-  {
     name: 'Titan cameraman moving',
     audio: '/media/sounds/titan-cameraman-moving.mp3',
   },
@@ -2796,14 +2566,6 @@ export const sound_effects = [
   {
     name: 'Мяу кошка',
     audio: '/media/sounds/miau-koshka.mp3',
-  },
-  {
-    name: 'Boka choda...',
-    audio: '/media/sounds/boka-choda.mp3',
-  },
-  {
-    name: 'Subway surfers "HUY"',
-    audio: '/media/sounds/subway-surfers-huy.mp3',
   },
   {
     name: 'Roar of titan speakerman',
@@ -2830,10 +2592,6 @@ export const sound_effects = [
     audio: '/media/sounds/clock-tick-tock.mp3',
   },
   {
-    name: 'STRETCH THIS AH',
-    audio: '/media/sounds/stretch-this-ah.mp3',
-  },
-  {
     name: "Ambush's Full Arrival",
     audio: '/media/sounds/ambushs-full-arrival.mp3',
   },
@@ -2856,10 +2614,6 @@ export const sound_effects = [
   {
     name: 'car hub intro premium',
     audio: '/media/sounds/car-hub-intro-premium.mp3',
-  },
-  {
-    name: 'อาจารย์แดง หีหอม',
-    audio: '/media/sounds/aacchaaryaedng-hiih-m.mp3',
   },
   {
     name: 'Apple Pay Sound',
@@ -2892,10 +2646,6 @@ export const sound_effects = [
   {
     name: 'Philippine National Police Manual Siren',
     audio: '/media/sounds/philippine-national-police-manual-siren.mp3',
-  },
-  {
-    name: "fart on my roommate's door",
-    audio: '/media/sounds/fart-on-my-roommates-door.mp3',
   },
   {
     name: 'Quandale Dingle Minion Laugh',
@@ -2999,10 +2749,6 @@ export const sound_effects = [
     audio: '/media/sounds/sangue-de-jesus-tem-poder-parte-1.mp3',
   },
   {
-    name: 'cool videos',
-    audio: '/media/sounds/coolvideos.mp3',
-  },
-  {
     name: 'team fortress 2',
     audio: '/media/sounds/team-fortress-22.mp3',
   },
@@ -3022,18 +2768,10 @@ export const sound_effects = [
     name: 'M16 Burst Shot Long Interior',
     audio: '/media/sounds/m16-burst-shot-long-interior.mp3',
   },
-  {
-    name: 'Fart Moan2',
-    audio: '/media/sounds/fart-moan2.mp3',
-  },
   // {
   //     "name": "Well Hello MF",
   //     "audio": "/media/sounds/well-hello-mf.mp3"
   // },
-  {
-    name: 'im over here strokin my',
-    audio: '/media/sounds/im-over-here-strokin-my_YOS1P9K.mp3',
-  },
   {
     name: 'Oh Yeah Vector R6',
     audio: '/media/sounds/oh-yeah-vector-r6.mp3',
@@ -3055,10 +2793,6 @@ export const sound_effects = [
     audio: '/media/sounds/muhehehe.mp3',
   },
   {
-    name: 'Pada śnieg, piździ śnieg',
-    audio: '/media/sounds/pada-snieg-pizdzi-snieg.mp3',
-  },
-  {
     name: 'Dang it Biboo',
     audio: '/media/sounds/dang-it-biboo.mp3',
   },
@@ -3075,16 +2809,8 @@ export const sound_effects = [
     audio: '/media/sounds/micheal-jackson-rizz.mp3',
   },
   {
-    name: 'A tere mun vich lul',
-    audio: '/media/sounds/a-tere-mun-vich-lul.mp3',
-  },
-  {
     name: 'Chal ja pan yaka kam pr ja ka',
     audio: '/media/sounds/chal-ja-pan-yaka-kam-pr-ja-ka.mp3',
-  },
-  {
-    name: 'Bandy da putr ban ja',
-    audio: '/media/sounds/bandy-da-putr-ban-ja.mp3',
   },
   {
     name: 'Notificação GTA V',
@@ -3115,10 +2841,6 @@ export const sound_effects = [
     audio: '/media/sounds/ramiel-attack-scream.mp3',
   },
   {
-    name: 'STRETCH THIS AH',
-    audio: '/media/sounds/stretch-this-ah.mp3',
-  },
-  {
     name: 'good boy papa meat',
     audio: '/media/sounds/good-boy-papa-meat.mp3',
   },
@@ -3133,10 +2855,6 @@ export const sound_effects = [
   {
     name: 'Fairy twinkle',
     audio: '/media/sounds/fairy-twinkle.mp3',
-  },
-  {
-    name: 'quick kiss',
-    audio: '/media/sounds/quick-kiss.mp3',
   },
   {
     name: 'Grilled cheese Obama sandwich',
@@ -3163,20 +2881,8 @@ export const sound_effects = [
     audio: '/media/sounds/buzzer-wrong-answer_yuGG23T.mp3',
   },
   {
-    name: "fart on my roommate's door",
-    audio: '/media/sounds/fart-on-my-roommates-door.mp3',
-  },
-  {
     name: 'windows 8 - 10 unlock sound',
     audio: '/media/sounds/windows-8-10-unlock-sound.mp3',
-  },
-  {
-    name: 'shut up patrick stfu up',
-    audio: '/media/sounds/shut-up-patrick-stfu-up.mp3',
-  },
-  {
-    name: 'Pada śnieg, piździ śnieg',
-    audio: '/media/sounds/pada-snieg-pizdzi-snieg.mp3',
   },
   {
     name: 'I HATE EVERYTHING ABOUT YOU',
@@ -3201,10 +2907,6 @@ export const sound_effects = [
   {
     name: 'poncho risa',
     audio: '/media/sounds/poncho-risa.mp3',
-  },
-  {
-    name: 'A tere mun vich lul',
-    audio: '/media/sounds/a-tere-mun-vich-lul.mp3',
   },
   {
     name: 'Chal ja pan yaka kam pr ja ka',
@@ -3259,24 +2961,12 @@ export const sound_effects = [
     audio: '/media/sounds/mauricio-i-cant-move-it-move-it-anymore.mp3',
   },
   {
-    name: 'อาจารย์แดงดับเบิ้ลหี',
-    audio: '/media/sounds/aacchaaryaedngdabebilhii.mp3',
-  },
-  {
     name: 'Roblox RPG Sound',
     audio: '/media/sounds/roblox-rpg-sound.mp3',
   },
   {
-    name: 'Epsilon-11 dsignated at Nine Tailed Fox',
-    audio: '/media/sounds/epsilon-11-dsignated-at-nine-tailed-fox.mp3',
-  },
-  {
     name: 'Philippine National Police Manual Siren',
     audio: '/media/sounds/philippine-national-police-manual-siren.mp3',
-  },
-  {
-    name: 'shut up patrick stfu up',
-    audio: '/media/sounds/shut-up-patrick-stfu-up.mp3',
   },
   {
     name: 'Button click',
@@ -3333,10 +3023,6 @@ export const sound_effects = [
   {
     name: 'truck beep',
     audio: '/media/sounds/truck_beep.mp3',
-  },
-  {
-    name: 'gachiGasm',
-    audio: '/media/sounds/right-version5.mp3',
   },
   {
     name: 'COD zombies nuke',
@@ -3403,10 +3089,6 @@ export const sound_effects = [
     audio: '/media/sounds/pillar-chase-mx-spawn.mp3',
   },
   {
-    name: 'no llores mi niña, chupa chupaa chupaaa',
-    audio: '/media/sounds/no-llores-mi-nina-chupa-chupaa-chupaaa.mp3',
-  },
-  {
     name: 'chiamata dottore affari tuoi',
     audio: '/media/sounds/chiamata-dottore-affari-tuoi.mp3',
   },
@@ -3425,10 +3107,6 @@ export const sound_effects = [
   {
     name: 'crying baby sound',
     audio: '/media/sounds/crying-baby-sound.mp3',
-  },
-  {
-    name: 'Pada śnieg, piździ śnieg',
-    audio: '/media/sounds/pada-snieg-pizdzi-snieg.mp3',
   },
   {
     name: 'I HATE EVERYTHING ABOUT YOU',
@@ -3491,16 +3169,8 @@ export const sound_effects = [
     audio: '/media/sounds/door_EJ1ESwu.mp3',
   },
   {
-    name: 'Quagmire Giggity',
-    audio: '/media/sounds/giggity.mp3',
-  },
-  {
     name: 'Runescape Ice Barrage',
     audio: '/media/sounds/ice-barrage1.mp3',
-  },
-  {
-    name: 'Piccolo - Que nojo!',
-    audio: '/media/sounds/piccolo-que-nojo.mp3',
   },
   {
     name: 'Mockingjay Whistle',
@@ -3517,10 +3187,6 @@ export const sound_effects = [
   {
     name: 'Samsung Galaxy S1',
     audio: '/media/sounds/samsung-galaxy-s1.mp3',
-  },
-  {
-    name: 'Erotica asmr',
-    audio: '/media/sounds/erotica-asmr.mp3',
   },
   {
     name: 'Turner Entertainment',
@@ -3547,10 +3213,6 @@ export const sound_effects = [
     audio: '/media/sounds/figure-footstep.mp3',
   },
   {
-    name: 'GRACIAS PAPA DIOS!!',
-    audio: '/media/sounds/gracias-papa-dios.mp3',
-  },
-  {
     name: 'звук пси излучения',
     audio: '/media/sounds/zvuk-psi-izlucheniia.mp3',
   },
@@ -3573,14 +3235,6 @@ export const sound_effects = [
   {
     name: 'Old tv beep',
     audio: '/media/sounds/old-tv-beep.mp3',
-  },
-  {
-    name: 'child discipline sound effect original',
-    audio: '/media/sounds/child-discipline-sound-effect-original.mp3',
-  },
-  {
-    name: 'Иди нахуй басс буст',
-    audio: '/media/sounds/idi-nakhui-bass-bust.mp3',
   },
   {
     name: 'Scientist skibidi toilet(large)',

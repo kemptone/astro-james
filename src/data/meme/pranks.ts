@@ -12,10 +12,6 @@ export const pranks = [
     audio: '/media/sounds/oh-no-no-no-no-laugh.mp3',
   },
   {
-    name: 'Стон 1488',
-    audio: '/media/sounds/ston-1488.mp3',
-  },
-  {
     name: 'Smoke Detector Beep',
     audio: '/media/sounds/smoke-detector-beep.mp3',
   },
@@ -42,10 +38,6 @@ export const pranks = [
   {
     name: 'BASS BOOST discord call',
     audio: '/media/sounds/bass-boost-discord-call.mp3',
-  },
-  {
-    name: 'Со мной ебется пидорас',
-    audio: '/media/sounds/so-mnoi-ebetsia-pidoras.mp3',
   },
   {
     name: 'They ask you how you are meme',
@@ -77,10 +69,6 @@ export const pranks = [
     audio: '/media/sounds/aud-20160823-wa0001.mp3',
   },
   {
-    name: 'yamette kudasai loud',
-    audio: '/media/sounds/yamette-kudasai-loud.mp3',
-  },
-  {
     name: 'Roblox Explosion Sound',
     audio: '/media/sounds/roblox-explosion-sound.mp3',
   },
@@ -103,14 +91,6 @@ export const pranks = [
   {
     name: 'Pew',
     audio: '/media/sounds/pew-pew-lame-sound-effect.mp3',
-  },
-  {
-    name: '/',
-    audio: '/media/sounds/m_fixed_PLoG4ep.mp3',
-  },
-  {
-    name: 'Gemidos xdd',
-    audio: '/media/sounds/gemidos-xdd.mp3',
   },
   {
     name: 'Censor Beep 3',
@@ -158,48 +138,20 @@ export const pranks = [
     audio: '/media/sounds/bad-joke-drums.mp3',
   },
   {
-    name: 'Geiler Wecker',
-    audio: '/media/sounds/geiler-wecker.mp3',
-  },
-  {
     name: 'WHAT DID HE SAY',
     audio: '/media/sounds/5s_to_7s_what_did_he_say_tik_tok.mp3',
-  },
-  {
-    name: 'TU PREF MOI OU TA MERE',
-    audio: '/media/sounds/tu-pref-moi-ou-ta-mere.mp3',
-  },
-  {
-    name: 'сейчас я вывалю свой пенис',
-    audio: '/media/sounds/seichas-ia-vyvaliu-svoi-penis.mp3',
-  },
-  {
-    name: 'ALLER SALE ESCLAVE',
-    audio: '/media/sounds/aller-sale-esclave.mp3',
   },
   {
     name: 'UwU mommy',
     audio: '/media/sounds/uwu-mommy_dP6eEG8.mp3',
   },
   {
-    name: 'tezgah lan bu',
-    audio: '/media/sounds/tezgah-lan-bu.mp3',
-  },
-  {
     name: 'True Oi Sound Effect',
     audio: '/media/sounds/oisoundeffect-online-audio-converter.mp3',
   },
   {
-    name: 'tu veux mon zizi',
-    audio: '/media/sounds/tu-veux-mon-zizi_jwdSTZd.mp3',
-  },
-  {
     name: 'THE LOUDEST NOISE EVER!',
     audio: '/media/sounds/the-loudest-noise-ever.mp3',
-  },
-  {
-    name: "non c'est pas une matraque",
-    audio: '/media/sounds/non-cest-pas-une-matraque-cest-ma-bite.mp3',
   },
   {
     name: 'Sqeeling Pig',
@@ -208,10 +160,6 @@ export const pranks = [
   {
     name: 'Its A Me, Mario',
     audio: '/media/sounds/its-me-mario.mp3',
-  },
-  {
-    name: 'bawakdewak',
-    audio: '/media/sounds/bawakdewak.mp3',
   },
   {
     name: 'Kitchen Nightmare Dramatic Sound Effect',
@@ -232,10 +180,6 @@ export const pranks = [
   {
     name: 'tom da tank meme',
     audio: '/media/sounds/loud-version_7n1qEm2.mp3',
-  },
-  {
-    name: 'ete grupo no e pa pasa cosas pono',
-    audio: '/media/sounds/ete-grupo-no-e-pa-pasa-cosas-pono.mp3',
   },
   {
     name: 'iPhone Screenshot',
@@ -266,10 +210,6 @@ export const pranks = [
     audio: '/media/sounds/its-in-the-game_TyOFKRF.mp3',
   },
   {
-    name: 'Ya sabır',
-    audio: '/media/sounds/ya-sabir.mp3',
-  },
-  {
     name: 'Смех, Ха',
     audio: '/media/sounds/ha_MQFSg1a.mp3',
   },
@@ -286,20 +226,8 @@ export const pranks = [
     audio: '/media/sounds/random-button.mp3',
   },
   {
-    name: 'boy what the hell boy',
-    audio: '/media/sounds/boy-what-the-hell-boy-meme.mp3',
-  },
-  {
-    name: 'Adolf speech',
-    audio: '/media/sounds/adolf-speech.mp3',
-  },
-  {
     name: 'Смех, Ха',
     audio: '/media/sounds/ha_MQFSg1a.mp3',
-  },
-  {
-    name: 'boy what the hell boy',
-    audio: '/media/sounds/boy-what-the-hell-boy-meme.mp3',
   },
   {
     name: "Techies' Proximity Mines",
@@ -308,10 +236,6 @@ export const pranks = [
   {
     name: 'indian song Mundian Tu Bach Ke',
     audio: '/media/sounds/panjabi-mc-mundian-tu-bach-ke-0s-16s-kfmq4pgaove.mp3',
-  },
-  {
-    name: 'Ben wiegel kut',
-    audio: '/media/sounds/ben-wiegel-kut_4H4GS0a.mp3',
   },
   {
     name: 'Curb Your Enthusiasm',
@@ -323,10 +247,6 @@ export const pranks = [
       '/media/sounds/sanjay-dutt-nahi-meme-template-munna-bhai-mbbs-nahi.mp3',
   },
   {
-    name: 'I Want To Be Ninja',
-    audio: '/media/sounds/i-want-to-be-ninja.mp3',
-  },
-  {
     name: 'THATS A LOT OF DAMAGE',
     audio: '/media/sounds/now-thats.mp3',
   },
@@ -335,24 +255,8 @@ export const pranks = [
     audio: '/media/sounds/gawk-gawk.mp3',
   },
   {
-    name: 'long wet smelly ass fart',
-    audio: '/media/sounds/long-wet-smelly-ass-fart.mp3',
-  },
-  {
-    name: 'They see me rollin',
-    audio: '/media/sounds/chamillionaire-ridin-ft-krayzie-bone.mp3',
-  },
-  {
-    name: 'Mama i muss Kacken',
-    audio: '/media/sounds/mama-i-muss-kacken.mp3',
-  },
-  {
     name: 'photo',
     audio: '/media/sounds/photo.mp3',
-  },
-  {
-    name: 'Arcangel jingle bell feliz navidad',
-    audio: '/media/sounds/arcangel-jingle-bell-feliz-navidad.mp3',
   },
   {
     name: 'FNAF Balloon Boy Laugh',
@@ -381,14 +285,6 @@ export const pranks = [
   {
     name: 'Juice Pilado',
     audio: '/media/sounds/juice-pilado.mp3',
-  },
-  {
-    name: 'ALERTE AU GOGOLE',
-    audio: '/media/sounds/alerte-au-gogole.mp3',
-  },
-  {
-    name: 'Boi what the hell boi',
-    audio: '/media/sounds/boi-what-da-hell-boi.mp3',
   },
   {
     name: 'Oi lindo, sua mulher tá perto?',
@@ -420,10 +316,6 @@ export const pranks = [
     audio: '/media/sounds/daisy-daisy.mp3',
   },
   {
-    name: 'grup kontol',
-    audio: '/media/sounds/grup-kontol.mp3',
-  },
-  {
     name: 'Caseoh your banned',
     audio: '/media/sounds/caseoh-your-banned.mp3',
   },
@@ -433,20 +325,8 @@ export const pranks = [
       '/media/sounds/phasmophobia-sound-board-effects-06-sound-effects-death-jumpscare.mp3',
   },
   {
-    name: 'Czesc cwelu',
-    audio: '/media/sounds/czesc_cwelu.mp3',
-  },
-  {
-    name: 'grup kontol',
-    audio: '/media/sounds/grup-kontol.mp3',
-  },
-  {
     name: 'THATS A LOT OF DAMAGE',
     audio: '/media/sounds/now-thats.mp3',
-  },
-  {
-    name: 'TU va la fermer ta geule',
-    audio: '/media/sounds/tu-va-la-fermer-ta-geule.mp3',
   },
   {
     name: 'runn',
@@ -468,10 +348,6 @@ export const pranks = [
     name: 'давай посмотрим кто лучше ломает звуковой барьер',
     audio:
       '/media/sounds/davai-posmotrim-kto-luchshe-lomaet-zvukovoi-barer.mp3',
-  },
-  {
-    name: 'rafonix-twojastara',
-    audio: '/media/sounds/6_dl3PycG.mp3',
   },
   {
     name: 'HOOYAH',
@@ -540,32 +416,12 @@ export const pranks = [
     audio: '/media/sounds/weee-hahaha-oh.mp3',
   },
   {
-    name: 'Arcangel jingle bell feliz navidad',
-    audio: '/media/sounds/arcangel-jingle-bell-feliz-navidad.mp3',
-  },
-  {
     name: '8d knocking sound',
     audio: '/media/sounds/8d-knocking-sound.mp3',
   },
   {
-    name: 'AVADA KEDAVRA KURWA',
-    audio: '/media/sounds/avada-kedavra-kurwa.mp3',
-  },
-  {
     name: 'Sonic Extra Life',
     audio: '/media/sounds/sonic-extra-life.mp3',
-  },
-  {
-    name: 'Gunshot (Play)',
-    audio: '/media/sounds/gunshot_9JDniTe.mp3',
-  },
-  {
-    name: 'Пердёж!',
-    audio: '/media/sounds/perdiozh.mp3',
-  },
-  {
-    name: 'klik hier niet',
-    audio: '/media/sounds/klik-hier-niet.mp3',
   },
   {
     name: 'Wer wird Millionär - Showstart',
@@ -612,16 +468,8 @@ export const pranks = [
     audio: '/media/sounds/wer-wird-millionar-soundtracks-soundstart.mp3',
   },
   {
-    name: 'New Follower - @Aymplify',
-    audio: '/media/sounds/newf.mp3',
-  },
-  {
     name: 'TASER',
     audio: '/media/sounds/lcso-taser-sound-effect.mp3',
-  },
-  {
-    name: 'TOUCH MY TRALALA',
-    audio: '/media/sounds/touch-my-tralala_voYRmI9.mp3',
   },
   {
     name: 'JJJ Jameson spiderman laugh',
@@ -638,10 +486,6 @@ export const pranks = [
   {
     name: 'discord user moved',
     audio: '/media/sounds/discord-user-moved.mp3',
-  },
-  {
-    name: 'cyka blyat sound',
-    audio: '/media/sounds/cyka-blyat-for-memes.mp3',
   },
   {
     name: 'merhabalar',
@@ -687,10 +531,6 @@ export const pranks = [
   {
     name: "I'm dying help me",
     audio: '/media/sounds/im-dying-help-me-sound-effect.mp3',
-  },
-  {
-    name: 'FART+MOAN',
-    audio: '/media/sounds/fart-moan.mp3',
   },
   {
     name: 'Sans Talking',
@@ -825,16 +665,8 @@ export const pranks = [
     audio: '/media/sounds/que-e-isso-meu-filho-calma.mp3',
   },
   {
-    name: 'سدي تبعك وانت تنتاك',
-    audio: '/media/sounds/my-video2_HKPo5jC.mp3',
-  },
-  {
     name: '2 C4 Rust',
     audio: '/media/sounds/two-c4.mp3',
-  },
-  {
-    name: 'Drachenlord: die Scheiße auf die ich bock hab',
-    audio: '/media/sounds/das-ist-genau-die-scheie-auf-die-ich-bock-hab.mp3',
   },
   {
     name: 'ambatublow',
@@ -843,10 +675,6 @@ export const pranks = [
   {
     name: 'amogus sussy',
     audio: '/media/sounds/amogus.mp3',
-  },
-  {
-    name: '9+10=21',
-    audio: '/media/sounds/9-10-vine.mp3',
   },
   {
     name: 'ouais les gars biens ou quoi discordjoin',
@@ -867,10 +695,6 @@ export const pranks = [
   {
     name: 'Morning Flower Bass Boost',
     audio: '/media/sounds/samsung-galaxy-morning-flower_MDaz7eV.mp3',
-  },
-  {
-    name: 'mom get the camera sound',
-    audio: '/media/sounds/mom-get-the-camera-loudtronix.mp3',
   },
   {
     name: 'Pistol fire',
@@ -913,10 +737,6 @@ export const pranks = [
     audio: '/media/sounds/record-4-2-2019_1-42-29.mp3',
   },
   {
-    name: 'CYKA BLYAT IDI NAHUI',
-    audio: '/media/sounds/cyka-blyat-idi-nahui.mp3',
-  },
-  {
     name: 'Monte Schmutz',
     audio: '/media/sounds/monte-schmutz.mp3',
   },
@@ -931,11 +751,6 @@ export const pranks = [
   {
     name: 'NUKE FART',
     audio: '/media/sounds/nuke-fart.mp3',
-  },
-  {
-    name: 'Dame Da Ne',
-    audio:
-      '/media/sounds/mmd-baka-mitai-dame-da-ne-meme-original-audio-64-kbps.mp3',
   },
   {
     name: 'Car Horn Beep Beep',
@@ -970,20 +785,8 @@ export const pranks = [
     audio: '/media/sounds/snoop-dogg_Xm0SJsU.mp3',
   },
   {
-    name: 'so free',
-    audio: '/media/sounds/free-1.mp3',
-  },
-  {
     name: 'minos prime talk',
     audio: '/media/sounds/minos-prime-talk.mp3',
-  },
-  {
-    name: 'Gawr Gura - Shut UP',
-    audio: '/media/sounds/shut-up-gawr-gura_new.mp3',
-  },
-  {
-    name: 'Mosconi1',
-    audio: '/media/sounds/mosconi1.mp3',
   },
   {
     name: 'GO GO GO GOOO!!!',
@@ -1022,16 +825,8 @@ export const pranks = [
     audio: '/media/sounds/deadlock-ult.mp3',
   },
   {
-    name: 'Скажи куда приехать',
-    audio: '/media/sounds/skazhi-kuda-priekhat.mp3',
-  },
-  {
     name: 'Stop whining',
     audio: '/media/sounds/stop-whining.mp3',
-  },
-  {
-    name: 'major - nie przeklinac',
-    audio: '/media/sounds/prosze_nie_przeklinac.mp3',
   },
   {
     name: 'Мем с домофоном',
@@ -1046,10 +841,6 @@ export const pranks = [
     audio: '/media/sounds/ty-uzhe-pokakal.mp3',
   },
   {
-    name: 'Drachenlord: die Scheiße auf die ich bock hab',
-    audio: '/media/sounds/das-ist-genau-die-scheie-auf-die-ich-bock-hab.mp3',
-  },
-  {
     name: 'EZ4ENCE',
     audio: '/media/sounds/roundmvpanthem_01.mp3',
   },
@@ -1062,16 +853,8 @@ export const pranks = [
     audio: '/media/sounds/spokoinogo-sna.mp3',
   },
   {
-    name: 'Apenas Clique',
-    audio: '/media/sounds/apenas-clique.mp3',
-  },
-  {
     name: 'System is corrupted',
     audio: '/media/sounds/system-is-corrupted.mp3',
-  },
-  {
-    name: 'Adam Öldü Amk',
-    audio: '/media/sounds/cio_adam_oldu_amk_reismp3.mp3',
   },
   {
     name: 'wolf - howling . mp3',
@@ -1082,25 +865,12 @@ export const pranks = [
     audio: '/media/sounds/pwhuu-online-audio-converter.mp3',
   },
   {
-    name: 'minos prime talking',
-    audio: '/media/sounds/minos-prime-talking.mp3',
-  },
-  {
     name: 'Ninja YOURE TRASH KID',
     audio: '/media/sounds/ninja-your-trash-kid.mp3',
   },
   {
-    name: 'Russian Swearing',
-    audio: '/media/sounds/anomaly-haix-russian-rage.mp3',
-  },
-  {
     name: 'The Champ is Here',
     audio: '/media/sounds/the-champ-is-here-instrumental-cut-fixed.mp3',
-  },
-  {
-    name: 'Dame Da Ne',
-    audio:
-      '/media/sounds/mmd-baka-mitai-dame-da-ne-meme-original-audio-64-kbps.mp3',
   },
   {
     name: 'Bonkz',
@@ -1109,14 +879,6 @@ export const pranks = [
   {
     name: 'dokkaebi hack',
     audio: '/media/sounds/dokkaebi-hacking-sound-effect.mp3',
-  },
-  {
-    name: 'Uh Oh Stinky Poop',
-    audio: '/media/sounds/stinky.mp3',
-  },
-  {
-    name: 'سدي تبعك وانت تنتاك',
-    audio: '/media/sounds/my-video2_HKPo5jC.mp3',
   },
   {
     name: 'Kirov Reporting',
@@ -1136,20 +898,8 @@ export const pranks = [
     audio: '/media/sounds/notification-spam.mp3',
   },
   {
-    name: 'so free',
-    audio: '/media/sounds/free-1.mp3',
-  },
-  {
-    name: 'Baphomeeet',
-    audio: '/media/sounds/baphomeeet.mp3',
-  },
-  {
     name: 'Woman Scream 1',
     audio: '/media/sounds/woman-scream-1.mp3',
-  },
-  {
-    name: 'CYKA BLYAT IDI NAHUI',
-    audio: '/media/sounds/cyka-blyat-idi-nahui.mp3',
   },
   {
     name: 'Woomy',
@@ -1158,10 +908,6 @@ export const pranks = [
   {
     name: 'omg bist du lost',
     audio: '/media/sounds/omg_bist_du_lost.mp3',
-  },
-  {
-    name: 'mom get the camera sound',
-    audio: '/media/sounds/mom-get-the-camera-loudtronix.mp3',
   },
   {
     name: 'Panjabi',
@@ -1185,24 +931,8 @@ export const pranks = [
     audio: '/media/sounds/one-eternity-later-spongebob-time-card-9_pZPzxp4.mp3',
   },
   {
-    name: 'papi kchame',
-    audio: '/media/sounds/papi-kchame.mp3',
-  },
-  {
-    name: 'Пердёж!!!',
-    audio: '/media/sounds/perdiozh_LWDgniX.mp3',
-  },
-  {
-    name: 'Я твой рот выебу',
-    audio: '/media/sounds/ia-tvoi-rot-vyebu.mp3',
-  },
-  {
     name: 'Deadlock ult',
     audio: '/media/sounds/deadlock-ult.mp3',
-  },
-  {
-    name: 'minos prime talking',
-    audio: '/media/sounds/minos-prime-talking.mp3',
   },
   {
     name: 'Ryujin no ken wo kurae !',
@@ -1225,10 +955,6 @@ export const pranks = [
     audio: '/media/sounds/notification-spam.mp3',
   },
   {
-    name: 'Why Are You Redeeming The Card? You mad?',
-    audio: '/media/sounds/why-are-you-redeeming-the-card-you-mad.mp3',
-  },
-  {
     name: 'indian music loud like me hahahahahahahah',
     audio: '/media/sounds/indian-music-loud-like-me-hahahahahahahah.mp3',
   },
@@ -1239,10 +965,6 @@ export const pranks = [
   {
     name: 'vv_laugh minions',
     audio: '/media/sounds/laugh-minoins.mp3',
-  },
-  {
-    name: 'meine chicken nuggets',
-    audio: '/media/sounds/meine-chicken-nuggets-verbrennen.mp3',
   },
   {
     name: 'Bocina Prank :)',
@@ -1262,15 +984,6 @@ export const pranks = [
     audio: '/media/sounds/z1trxks.mp3',
   },
   {
-    name: 'Dame Da Ne',
-    audio:
-      '/media/sounds/mmd-baka-mitai-dame-da-ne-meme-original-audio-64-kbps.mp3',
-  },
-  {
-    name: 'Adam Öldü Amk',
-    audio: '/media/sounds/cio_adam_oldu_amk_reismp3.mp3',
-  },
-  {
     name: 'RonRit (legally blind)',
     audio: '/media/sounds/im-legally-blind-sound-effect.mp3',
   },
@@ -1281,14 +994,6 @@ export const pranks = [
   {
     name: 'STUPID DOG!',
     audio: '/media/sounds/stupid-dog-you-make-me-look-bad.mp3',
-  },
-  {
-    name: 'Carlinhos engulindo pint0 de cav4l0',
-    audio: '/media/sounds/carlinhos-engulindo-pint0-de-cav4l0.mp3',
-  },
-  {
-    name: 'Seu Madruga: BURRO!',
-    audio: '/media/sounds/chapolin-burro.mp3',
   },
   {
     name: 'Ninja YOURE TRASH KID',
@@ -1303,29 +1008,12 @@ export const pranks = [
     audio: '/media/sounds/y2mate_fRxoBaU.mp3',
   },
   {
-    name: 'Deez Nuts button',
-    audio: '/media/sounds/deeznuts_2.mp3',
-  },
-  {
-    name: 'звук пердежа',
-    audio: '/media/sounds/zvuk-perdezha.mp3',
-  },
-  {
-    name: 'Dame Da Ne',
-    audio:
-      '/media/sounds/mmd-baka-mitai-dame-da-ne-meme-original-audio-64-kbps.mp3',
-  },
-  {
     name: 'girl fart',
     audio: '/media/sounds/girl-fart.mp3',
   },
   {
     name: 'Risada Zacarias Burocrata',
     audio: '/media/sounds/risada-de-zacarias.mp3',
-  },
-  {
-    name: 'Seu Madruga: BURRO!',
-    audio: '/media/sounds/chapolin-burro.mp3',
   },
   {
     name: 'cat vomit',
@@ -1357,10 +1045,6 @@ export const pranks = [
     audio: '/media/sounds/sound-effects_small.mp3',
   },
   {
-    name: 'Tequila 1',
-    audio: '/media/sounds/tequila_bdUiT5z.mp3',
-  },
-  {
     name: 'NUKE FART',
     audio: '/media/sounds/nuke-fart.mp3',
   },
@@ -1383,10 +1067,6 @@ export const pranks = [
   {
     name: 'HEAD SHOT',
     audio: '/media/sounds/headshot_3.mp3',
-  },
-  {
-    name: 'TA GUEULE FrZ',
-    audio: '/media/sounds/ta-gueule_2.mp3',
   },
   {
     name: 'Ó o GÁS',
@@ -1432,10 +1112,6 @@ export const pranks = [
     name: 'Vomito ok',
     audio: '/media/sounds/vomito-ok.mp3',
   },
-  {
-    name: 'Oh Yesss~',
-    audio: '/media/sounds/mettaton_oh_yes_1.mp3',
-  },
   // {
   //   name: 'Scammer wtf are you doing joker',
   //   audio: '/media/sounds/scammer-wtf-are-you-doing-joker.mp3',
@@ -1452,10 +1128,6 @@ export const pranks = [
   {
     name: 'Plop 2',
     audio: '/media/sounds/plop-2.mp3',
-  },
-  {
-    name: 'Seu Madruga: BURRO!',
-    audio: '/media/sounds/chapolin-burro.mp3',
   },
   {
     name: 'звук перезарядки оружия',
@@ -1498,10 +1170,6 @@ export const pranks = [
     audio: '/media/sounds/soda_MNac5G8.mp3',
   },
   {
-    name: 'سدي تبعك وانت تنتاك',
-    audio: '/media/sounds/my-video2_HKPo5jC.mp3',
-  },
-  {
     name: 'Tim Allen Ugh',
     audio: '/media/sounds/ugh.mp3',
   },
@@ -1521,10 +1189,6 @@ export const pranks = [
   {
     name: 'Choo choo',
     audio: '/media/sounds/choo-choo_GcAv6Jz.mp3',
-  },
-  {
-    name: 'İslama Dön Sönmez Reis',
-    audio: '/media/sounds/y2mate_a75tvSc.mp3',
   },
   {
     name: 'Purge Siren Extended',
@@ -1551,16 +1215,8 @@ export const pranks = [
     audio: '/media/sounds/nichtskonner.mp3',
   },
   {
-    name: 'Carlinhos engulindo pint0 de cav4l0',
-    audio: '/media/sounds/carlinhos-engulindo-pint0-de-cav4l0.mp3',
-  },
-  {
     name: 'HELLO - LIONEL RICHIE',
     audio: '/media/sounds/hello_8.mp3',
-  },
-  {
-    name: 'Sezon na leszcza - Spierdalaj',
-    audio: '/media/sounds/editor.mp3',
   },
   {
     name: 'Knock 3D !',
@@ -1595,10 +1251,6 @@ export const pranks = [
     audio: '/media/sounds/zvuk-perezariadki-oruzhiia.mp3',
   },
   {
-    name: 'Автоответчик',
-    audio: '/media/sounds/avtootvetchik.mp3',
-  },
-  {
     name: 'HELLO - LIONEL RICHIE',
     audio: '/media/sounds/hello_8.mp3',
   },
@@ -1615,17 +1267,9 @@ export const pranks = [
     audio: '/media/sounds/plop-2.mp3',
   },
   {
-    name: 'İslama Dön Sönmez Reis',
-    audio: '/media/sounds/y2mate_a75tvSc.mp3',
-  },
-  {
     name: 'Spanish guy laughing (full)',
     audio:
       '/media/sounds/very-funny-old-spanish-man-laughing-hard-flv-audiotrimmer_mulqfi0.mp3',
-  },
-  {
-    name: 'Dai che è venerdì',
-    audio: '/media/sounds/dai-che-e-venerdi.mp3',
   },
   {
     name: 'Орел хияяя',
@@ -1652,24 +1296,12 @@ export const pranks = [
     audio: '/media/sounds/fortnite-your-dog-water.mp3',
   },
   {
-    name: 'Carlinhos engulindo pint0 de cav4l0',
-    audio: '/media/sounds/carlinhos-engulindo-pint0-de-cav4l0.mp3',
-  },
-  {
     name: 'Risada Zacarias Burocrata',
     audio: '/media/sounds/risada-de-zacarias.mp3',
   },
   {
     name: 'Badang takip',
     audio: '/media/sounds/kahit-takpan-mo-pa-mukha-mo.mp3',
-  },
-  {
-    name: 'Пердёж!!!',
-    audio: '/media/sounds/perdiozh_LWDgniX.mp3',
-  },
-  {
-    name: 'Seu Madruga: BURRO!',
-    audio: '/media/sounds/chapolin-burro.mp3',
   },
   {
     name: 'Fiu Fiu',
@@ -1704,10 +1336,6 @@ export const pranks = [
     audio: '/media/sounds/oh-la-fete.mp3',
   },
   {
-    name: 'Tequila Heineken',
-    audio: '/media/sounds/tequila-heineken.mp3',
-  },
-  {
     name: 'พ่ามพาม',
     audio: '/media/sounds/555_J26YgJG.mp3',
   },
@@ -1728,20 +1356,12 @@ export const pranks = [
     audio: '/media/sounds/ian.mp3',
   },
   {
-    name: 'Сын фермера',
-    audio: '/media/sounds/syn-fermera.mp3',
-  },
-  {
     name: 'Вид Скример | Vid of DOOM',
     audio: '/media/sounds/vid-skrimer-vid-of-doom.mp3',
   },
   {
     name: 'THE DOOM SLAYER',
     audio: '/media/sounds/tmpb1ci9teh.mp3',
-  },
-  {
-    name: 'Пайтон блять',
-    audio: '/media/sounds/paiton-bliat.mp3',
   },
   {
     name: 'ya like jazz',
@@ -1768,24 +1388,12 @@ export const pranks = [
     audio: '/media/sounds/soda_MNac5G8.mp3',
   },
   {
-    name: 'gemi2ksound',
-    audio: '/media/sounds/gemi2ksound.mp3',
-  },
-  {
     name: 'DON DEMARCO AIR HORN',
     audio: '/media/sounds/url_dj_don_demarco_soundbestvideoconverter.mp3',
   },
   {
     name: 'พ่ามพาม',
     audio: '/media/sounds/555_J26YgJG.mp3',
-  },
-  {
-    name: 'SeLaM bEn AdAl 1.20 SKŞ MODU',
-    audio: '/media/sounds/selam-ben-adal-1-20-sks-modu.mp3',
-  },
-  {
-    name: 'Jogue na minha papai',
-    audio: '/media/sounds/jogue-na-minha-papai.mp3',
   },
   {
     name: 'Micheal P Scream',
@@ -1802,10 +1410,6 @@ export const pranks = [
   {
     name: 'Directed By Robert B Weide Remix',
     audio: '/media/sounds/directed-by-robert-b-weide-remix.mp3',
-  },
-  {
-    name: "I'll get you, b*tch!",
-    audio: '/media/sounds/untitled_1cY5ILI.mp3',
   },
   {
     name: 'Fortnite - Your dog water',
@@ -1857,21 +1461,12 @@ export const pranks = [
     audio: '/media/sounds/rec_4s_vZUSRA8.mp3',
   },
   {
-    name: 'hot in here',
-    audio:
-      '/media/sounds/nelly-hot-in-herre-official-music-video-audiotrimmer.mp3',
-  },
-  {
     name: 'Ян',
     audio: '/media/sounds/ian.mp3',
   },
   {
     name: 'Someone come look at this',
     audio: '/media/sounds/someone-come-look-at-this.mp3',
-  },
-  {
-    name: 'Tequila Heineken',
-    audio: '/media/sounds/tequila-heineken.mp3',
   },
   {
     name: 'AAAAAA Tyler1',
@@ -1898,24 +1493,8 @@ export const pranks = [
     audio: '/media/sounds/gemid2-troll-secten.mp3',
   },
   {
-    name: 'Даун, мать твою в канаву',
-    audio: '/media/sounds/daun-mat-tvoiu-v-kanavu.mp3',
-  },
-  {
     name: 'Вид Скример | Vid of DOOM',
     audio: '/media/sounds/vid-skrimer-vid-of-doom.mp3',
-  },
-  {
-    name: 'Ay sss despacito',
-    audio: '/media/sounds/ay-sss-despacito.mp3',
-  },
-  {
-    name: 'CBT',
-    audio: '/media/sounds/untitled-1_6xicz3R.mp3',
-  },
-  {
-    name: 'meine chicken nuggets',
-    audio: '/media/sounds/meine-chicken-nuggets-verbrennen.mp3',
   },
   {
     name: 'Disney Crowd Laughing Sound',
@@ -1970,24 +1549,8 @@ export const pranks = [
     audio: '/media/sounds/chinise-homie-looses-it-at-the-vine-boom-sfx.mp3',
   },
   {
-    name: 'Tyrone jawlon',
-    audio: '/media/sounds/tyrone-jawlon.mp3',
-  },
-  {
     name: 'smash mouth all star bassboosted',
     audio: '/media/sounds/smash-mouth-all-star-bassboosted_lmyO40n.mp3',
-  },
-  {
-    name: 'gemi2ksound',
-    audio: '/media/sounds/gemi2ksound.mp3',
-  },
-  {
-    name: 'Сын фермера',
-    audio: '/media/sounds/syn-fermera.mp3',
-  },
-  {
-    name: 'Tequila Heineken',
-    audio: '/media/sounds/tequila-heineken.mp3',
   },
   {
     name: "prank'd",
@@ -2001,10 +1564,6 @@ export const pranks = [
   {
     name: 'spanish guy laugh',
     audio: '/media/sounds/spanish-guy-laugh_kYC8oHt.mp3',
-  },
-  {
-    name: 'Пайтон блять',
-    audio: '/media/sounds/paiton-bliat.mp3',
   },
   {
     name: 'SANSUNG RINGTONE',
@@ -2055,24 +1614,12 @@ export const pranks = [
     audio: '/media/sounds/zhoski-krik-ochko.mp3',
   },
   {
-    name: 'Сын фермера',
-    audio: '/media/sounds/syn-fermera.mp3',
-  },
-  {
-    name: 'Tequila Heineken',
-    audio: '/media/sounds/tequila-heineken.mp3',
-  },
-  {
     name: 'bell ringing',
     audio: '/media/sounds/school-bell-ringing-sound-effect_V44c6iH.mp3',
   },
   {
     name: 'DISAPPOINTED CROWD',
     audio: '/media/sounds/disapointed-crowd-oh.mp3',
-  },
-  {
-    name: 'Jogue na minha papai',
-    audio: '/media/sounds/jogue-na-minha-papai.mp3',
   },
   {
     name: 'Reload and shot',
@@ -2103,10 +1650,6 @@ export const pranks = [
     audio: '/media/sounds/mlb.swf.mp3',
   },
   {
-    name: 'SeLaM bEn AdAl 1.20 SKŞ MODU',
-    audio: '/media/sounds/selam-ben-adal-1-20-sks-modu.mp3',
-  },
-  {
     name: 'What Are You Doing Maam',
     audio: '/media/sounds/what-are-you-doing-maam.mp3',
   },
@@ -2127,25 +1670,13 @@ export const pranks = [
     audio: '/media/sounds/goofy-yeha-yeehaa-yeeha-yehaa-ohio-sigma-skibidi.mp3',
   },
   {
-    name: 'the pizza here',
-    audio: '/media/sounds/calebcity-the-pizza-is-here-vine.mp3',
-  },
-  {
     name: 'Someone come look at this',
     audio: '/media/sounds/someone-come-look-at-this.mp3',
-  },
-  {
-    name: 'chupame el pingo un ratito',
-    audio: '/media/sounds/videoplayback_W215RQr.mp3',
   },
   {
     name: 'darude sandstorm flute anime',
     audio:
       '/media/sounds/darude-sandstorm-flute-anime-version-mp3cut_N4AbqKq.mp3',
-  },
-  {
-    name: 'I Like Your Pee Pee',
-    audio: '/media/sounds/i-like-your-pee-pee.mp3',
   },
   {
     name: 'What are you doinggg what are you doing',
@@ -2181,10 +1712,6 @@ export const pranks = [
       '/media/sounds/372251__mpaol2023__standard-emergency-warning-signal-sews.mp3',
   },
   {
-    name: 'Kinski Dumme Sau',
-    audio: '/media/sounds/du-dumme-sau-klaus-kinski.mp3',
-  },
-  {
     name: 'bb hello w/o hi',
     audio: '/media/sounds/bb-hello_JFmO40N.mp3',
   },
@@ -2199,10 +1726,6 @@ export const pranks = [
   {
     name: 'gorilla tag ghost noise',
     audio: '/media/sounds/gorilla-tag-ghost-noise.mp3',
-  },
-  {
-    name: 'Hodensacki',
-    audio: '/media/sounds/hodensacki.mp3',
   },
   {
     name: 'PIPES',
@@ -2227,10 +1750,6 @@ export const pranks = [
   {
     name: 'FNAF 1 music box freddy',
     audio: '/media/sounds/fnaf-1-music-box-freddy.mp3',
-  },
-  {
-    name: 'lego yoda cbt',
-    audio: '/media/sounds/lego-yoda-cbt.mp3',
   },
   {
     name: 'DON DEMARCO AIR HORN',
@@ -2277,14 +1796,6 @@ export const pranks = [
     audio: '/media/sounds/jeez.mp3',
   },
   {
-    name: 'You are an Idiot meme1',
-    audio: '/media/sounds/you-are-an-idiot-meme1.mp3',
-  },
-  {
-    name: 'trakas hijoesuputamadre',
-    audio: '/media/sounds/trakas-hijoesuputamadre.mp3',
-  },
-  {
     name: 'Discord Desconnect',
     audio: '/media/sounds/all-discord-sounds-2020-mp3cut.mp3',
   },
@@ -2297,16 +1808,8 @@ export const pranks = [
     audio: '/media/sounds/sabotage.mp3',
   },
   {
-    name: 'Tired CJ SO COOL',
-    audio: '/media/sounds/tired-cj-so-cool.mp3',
-  },
-  {
     name: 'Baby Screaming Meme',
     audio: '/media/sounds/baby_screaming_.mp3',
-  },
-  {
-    name: 'Killersthreat',
-    audio: '/media/sounds/killersthreat.mp3',
   },
   {
     name: 'Knocking Sound',
@@ -2381,14 +1884,6 @@ export const pranks = [
     audio: '/media/sounds/what-are-you-doinggg-what-are-you-doing.mp3',
   },
   {
-    name: 'Homer Simpson Bande de nuls',
-    audio: '/media/sounds/salutbandedenuls.mp3',
-  },
-  {
-    name: 'I Like Your Pee Pee',
-    audio: '/media/sounds/i-like-your-pee-pee.mp3',
-  },
-  {
     name: 'We Are The Champions By.Rahim',
     audio: '/media/sounds/queen-we-are-the-champions-mp3cut.mp3',
   },
@@ -2405,17 +1900,9 @@ export const pranks = [
     audio: '/media/sounds/rus-3.mp3',
   },
   {
-    name: 'the pizza here',
-    audio: '/media/sounds/calebcity-the-pizza-is-here-vine.mp3',
-  },
-  {
     name: 'darude sandstorm flute anime',
     audio:
       '/media/sounds/darude-sandstorm-flute-anime-version-mp3cut_N4AbqKq.mp3',
-  },
-  {
-    name: 'chupame el pingo un ratito',
-    audio: '/media/sounds/videoplayback_W215RQr.mp3',
   },
   {
     name: 'italo sena - ainn',
@@ -2430,20 +1917,12 @@ export const pranks = [
     audio: '/media/sounds/what-are-you-doing-maam.mp3',
   },
   {
-    name: 'Moja 14',
-    audio: '/media/sounds/moja-14.mp3',
-  },
-  {
     name: 'Train half life',
     audio: '/media/sounds/train-half-life.mp3',
   },
   {
     name: 'Rasputin (first test)',
     audio: '/media/sounds/rasputin-first-test.mp3',
-  },
-  {
-    name: 'БОМБА ОТ НОЛИКА',
-    audio: '/media/sounds/bomba-ot-nolika.mp3',
   },
   {
     name: "C'est pas faux - Kaamelott",
@@ -2464,14 +1943,6 @@ export const pranks = [
   {
     name: 'MC Fioti - Bum Bum Tam Tam (KondZilla) | Officia',
     audio: '/media/sounds/mc-fioti-bum-bum-tam-tam-kondzilla-officia.mp3',
-  },
-  {
-    name: 'Patrick Sébastien',
-    audio: '/media/sounds/patrick-sebastien.mp3',
-  },
-  {
-    name: 'it just a prank bro',
-    audio: '/media/sounds/its-just-a-prank-bro-sound-effect.mp3',
   },
   {
     name: 'Espetaculo Heh Nyeh Heh',
@@ -2499,10 +1970,6 @@ export const pranks = [
     audio: '/media/sounds/what-are-you-doinggg-what-are-you-doing.mp3',
   },
   {
-    name: 'SeLaM bEn AdAl 1.20 SKŞ MODU',
-    audio: '/media/sounds/selam-ben-adal-1-20-sks-modu.mp3',
-  },
-  {
     name: 'i like ya cut g (Taco Bell)',
     audio: '/media/sounds/i-like-ya-cut-g-taco-bell_Bis4GQX.mp3',
   },
@@ -2511,24 +1978,12 @@ export const pranks = [
     audio: '/media/sounds/rus-3.mp3',
   },
   {
-    name: 'КТОТО СКАЗАЛ БОМБА',
-    audio: '/media/sounds/ktoto-skazal-bomba.mp3',
-  },
-  {
     name: 'Za Hando SFX',
     audio: '/media/sounds/the-hand-noise_fVftxp4.mp3',
   },
   {
-    name: 'AHH SEE YOU AGAIN',
-    audio: '/media/sounds/ahh-see-you-again.mp3',
-  },
-  {
     name: 'Knocking Sound',
     audio: '/media/sounds/crazy-realistic-knocking-sound-trim_vikhbo4.mp3',
-  },
-  {
-    name: 'retard? waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-    audio: '/media/sounds/retard-waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.mp3',
   },
   {
     name: 'MAGNUM, P.I.',
@@ -2537,14 +1992,6 @@ export const pranks = [
   {
     name: 'Feueralarm',
     audio: '/media/sounds/feueralarm.mp3',
-  },
-  {
-    name: 'Killersthreat',
-    audio: '/media/sounds/killersthreat.mp3',
-  },
-  {
-    name: 'Tequila Heineken',
-    audio: '/media/sounds/tequila-heineken.mp3',
   },
   {
     name: 'Venom Remix',
@@ -2561,18 +2008,6 @@ export const pranks = [
   {
     name: 'Ahhh yeaaahh',
     audio: '/media/sounds/ahhh-yeaaahh.mp3',
-  },
-  {
-    name: 'Oh Hello No!',
-    audio: '/media/sounds/tm9l4-vrbtp.mp3',
-  },
-  {
-    name: 'ties kreun',
-    audio: '/media/sounds/ties-kreun_OiVePTj.mp3',
-  },
-  {
-    name: 'MLG.exe',
-    audio: '/media/sounds/mlg.mp3',
   },
   {
     name: 'MP5 FIRING',
@@ -2595,16 +2030,8 @@ export const pranks = [
     audio: '/media/sounds/android-tada.mp3',
   },
   {
-    name: 'MLG.exe',
-    audio: '/media/sounds/mlg.mp3',
-  },
-  {
     name: 'Чипи чипи чапа чапа',
     audio: '/media/sounds/chipi-chipi-chapa-chapa_vBv19oR.mp3',
-  },
-  {
-    name: 'AGARAGÃ',
-    audio: '/media/sounds/agaraga.mp3',
   },
   {
     name: 'thx prank sound',
@@ -2619,14 +2046,6 @@ export const pranks = [
     audio: '/media/sounds/konosuba-ss2-arigatou-gozaimasu_HHQAj3K.mp3',
   },
   {
-    name: 'retard? waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-    audio: '/media/sounds/retard-waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.mp3',
-  },
-  {
-    name: 'БОМБА ОТ НОЛИКА',
-    audio: '/media/sounds/bomba-ot-nolika.mp3',
-  },
-  {
     name: 'All I do is bits',
     audio: '/media/sounds/alwaysdoingbits.mp3',
   },
@@ -2639,20 +2058,12 @@ export const pranks = [
     audio: '/media/sounds/illuminati-song-roblox-remix.mp3',
   },
   {
-    name: 'Oh Hello No!',
-    audio: '/media/sounds/tm9l4-vrbtp.mp3',
-  },
-  {
     name: 'Meow 2 Scratch sound effect',
     audio: '/media/sounds/meow-2-scratch-sound-effect.mp3',
   },
   {
     name: 'aeaeae',
     audio: '/media/sounds/aeaeae_85dcmkV.mp3',
-  },
-  {
-    name: 'Quico - Como você é preto',
-    audio: '/media/sounds/como-voce-e-preto_IZTdaIQ.mp3',
   },
   {
     name: '*WARNING* LOUD PITCH',
@@ -2677,22 +2088,6 @@ export const pranks = [
   {
     name: 'MP5 FIRING',
     audio: '/media/sounds/mp5-firing.mp3',
-  },
-  {
-    name: 'ties kreun',
-    audio: '/media/sounds/ties-kreun_OiVePTj.mp3',
-  },
-  {
-    name: 'jer mat ad',
-    audio: '/media/sounds/jer-mat-ad.mp3',
-  },
-  {
-    name: 'Date ca ma cac',
-    audio: '/media/sounds/date-ca-ma-cac.mp3',
-  },
-  {
-    name: 'КТОТО СКАЗАЛ БОМБА',
-    audio: '/media/sounds/ktoto-skazal-bomba.mp3',
   },
   {
     name: "Game Boy's RAGE",
@@ -2739,20 +2134,12 @@ export const pranks = [
     audio: '/media/sounds/uga-buga.mp3',
   },
   {
-    name: 'AHH SEE YOU AGAIN',
-    audio: '/media/sounds/ahh-see-you-again.mp3',
-  },
-  {
     name: 'Чипи чипи чапа чапа',
     audio: '/media/sounds/chipi-chipi-chapa-chapa_vBv19oR.mp3',
   },
   {
     name: 'FNAF4 Foxy Closet Jumpscare',
     audio: '/media/sounds/fnaf4-foxy-closet-jumpscare.mp3',
-  },
-  {
-    name: 'Quico - Como você é preto',
-    audio: '/media/sounds/como-voce-e-preto_IZTdaIQ.mp3',
   },
   {
     name: 'You Go, Girl',
@@ -2836,15 +2223,6 @@ export const pranks = [
     audio: '/media/sounds/dre-be-gulping.mp3',
   },
   {
-    name: 'Ti Optimus prime',
-    audio: '/media/sounds/ti-optimus-prime.mp3',
-  },
-  {
-    name: 'senin ananı avradı',
-    audio:
-      '/media/sounds/sonmez-reyiz-senin-anan-arvadn-sikiyim-ben-cibiliyeti-bozuk-orospu-cocugu-seni.mp3',
-  },
-  {
     name: '*WARNING* LOUD PITCH',
     audio: '/media/sounds/warning-loud-pitch_T5t76J2.mp3',
   },
@@ -2873,10 +2251,6 @@ export const pranks = [
     audio: '/media/sounds/big-time-rush-theme-song-mp3cut.mp3',
   },
   {
-    name: 'kazzio - que trolagem podre',
-    audio: '/media/sounds/kazzio-que-trolagem-podre.mp3',
-  },
-  {
     name: 'Fodrafhys',
     audio: '/media/sounds/fodrafhys.mp3',
   },
@@ -2889,24 +2263,12 @@ export const pranks = [
     audio: '/media/sounds/sabotage.mp3',
   },
   {
-    name: 'Quico - Como você é preto',
-    audio: '/media/sounds/como-voce-e-preto_IZTdaIQ.mp3',
-  },
-  {
     name: 'Baby Screaming Meme',
     audio: '/media/sounds/baby_screaming_.mp3',
   },
   {
-    name: 'clap butt cheeks',
-    audio: '/media/sounds/thicc_2s.mp3',
-  },
-  {
     name: 'CRAZY CRY!',
     audio: '/media/sounds/51191-audiotrimmer.mp3',
-  },
-  {
-    name: 'You are an Idiot meme1',
-    audio: '/media/sounds/you-are-an-idiot-meme1.mp3',
   },
   {
     name: 'vomito 1',
@@ -2937,20 +2299,8 @@ export const pranks = [
     audio: '/media/sounds/queen-we-are-the-champions-mp3cut.mp3',
   },
   {
-    name: 'toi taire ta gueule',
-    audio: '/media/sounds/toi-taire-ta-gueule.mp3',
-  },
-  {
-    name: 'Homer Simpson Bande de nuls',
-    audio: '/media/sounds/salutbandedenuls.mp3',
-  },
-  {
     name: '3 days until Mario steal your liver wahoo!',
     audio: '/media/sounds/3-days-until-mario-steal-your-liver-wahoo.mp3',
-  },
-  {
-    name: 'Les dépanateurs - Gitantech',
-    audio: '/media/sounds/les-depanateurs.mp3',
   },
   {
     name: 'android tada',
@@ -2975,10 +2325,6 @@ export const pranks = [
   {
     name: 'Furz 123',
     audio: '/media/sounds/furz-123-online-audio-converter.mp3',
-  },
-  {
-    name: 'Братишка это тебе не..',
-    audio: '/media/sounds/bratishka-eto-tebe-ne.mp3',
   },
   {
     name: 'БУ,ИСПУГАЛСЯ Я ГИПНО..',
@@ -3017,10 +2363,6 @@ export const pranks = [
     audio: '/media/sounds/monster-screach.mp3',
   },
   {
-    name: "UHU that's the cutest thing",
-    audio: '/media/sounds/cutest-thing.mp3',
-  },
-  {
     name: 'You Go, Girl',
     audio: '/media/sounds/you-go-girl.mp3',
   },
@@ -3037,16 +2379,8 @@ export const pranks = [
     audio: '/media/sounds/train-amtrak-horn.mp3',
   },
   {
-    name: 'Братишка это тебе не..',
-    audio: '/media/sounds/bratishka-eto-tebe-ne.mp3',
-  },
-  {
     name: 'Rooster Crow 2',
     audio: '/media/sounds/critical-stop.mp3',
-  },
-  {
-    name: 'Suu kinni',
-    audio: '/media/sounds/suu-kinni.mp3',
   },
   {
     name: 'Pausengong',
@@ -3055,10 +2389,6 @@ export const pranks = [
   {
     name: 'much rejoicing yay',
     audio: '/media/sounds/much_rejoicing.mp3',
-  },
-  {
-    name: 'Wouh Wouh te3refch 7ram',
-    audio: '/media/sounds/wouh-wouh-t7eb-temchi-jhanem.mp3',
   },
   {
     name: 'Skyrim Dragonborn song',
@@ -3089,20 +2419,8 @@ export const pranks = [
     audio: '/media/sounds/okh-zria-ia-tuda-polez2.mp3',
   },
   {
-    name: 'خرید کیر خر',
-    audio: '/media/sounds/khryd-khyr-khr.mp3',
-  },
-  {
     name: 'Sfumato',
     audio: '/media/sounds/y2mate-mp3cut_tbr7qkn.mp3',
-  },
-  {
-    name: 'Ni las bolas se le ven',
-    audio: '/media/sounds/ni-las-bolas-se-le-ven.mp3',
-  },
-  {
-    name: 'retard? waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-    audio: '/media/sounds/retard-waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.mp3',
   },
   {
     name: 'aeaeae',
@@ -3119,14 +2437,6 @@ export const pranks = [
   {
     name: 'avaya cheerful ringtone',
     audio: '/media/sounds/avaya-cheerful-ringtone.mp3',
-  },
-  {
-    name: 'Killersthreat',
-    audio: '/media/sounds/killersthreat.mp3',
-  },
-  {
-    name: 'ANTONIO DEJA LOS P*TOS BOTONES',
-    audio: '/media/sounds/antonio-deja-los-p-tos-botones.mp3',
   },
   {
     name: 'helloo daarling',
@@ -3161,10 +2471,6 @@ export const pranks = [
     audio: '/media/sounds/china_GN3TDUt.mp3',
   },
   {
-    name: 'КТОТО СКАЗАЛ БОМБА',
-    audio: '/media/sounds/ktoto-skazal-bomba.mp3',
-  },
-  {
     name: 'owl city - fireflies',
     audio: '/media/sounds/fireflies-but-im-screaming-the-lyrics.mp3',
   },
@@ -3189,10 +2495,6 @@ export const pranks = [
     audio: '/media/sounds/mc-fioti-bum-bum-tam-tam-kondzilla-officia.mp3',
   },
   {
-    name: 'КТОТО СКАЗАЛ БОМБА',
-    audio: '/media/sounds/ktoto-skazal-bomba.mp3',
-  },
-  {
     name: 'i wonder how i wonder why',
     audio: '/media/sounds/fools-garden-lemon-tree-audiotrimmer.mp3',
   },
@@ -3210,10 +2512,6 @@ export const pranks = [
     audio: '/media/sounds/magnum-p.mp3',
   },
   {
-    name: 'it just a prank bro',
-    audio: '/media/sounds/its-just-a-prank-bro-sound-effect.mp3',
-  },
-  {
     name: 'LEVÁNTENSE (nuevo)',
     audio: '/media/sounds/levantense-nuevo.mp3',
   },
@@ -3224,10 +2522,6 @@ export const pranks = [
   {
     name: 'Slammed',
     audio: '/media/sounds/slammed.mp3',
-  },
-  {
-    name: 'furt',
-    audio: '/media/sounds/furt.mp3',
   },
   {
     name: 'mira como esta la vaganciaaaa',
@@ -3258,20 +2552,8 @@ export const pranks = [
     audio: '/media/sounds/jay.mp3',
   },
   {
-    name: 'Patrick Sébastien',
-    audio: '/media/sounds/patrick-sebastien.mp3',
-  },
-  {
-    name: 'MLG.exe',
-    audio: '/media/sounds/mlg.mp3',
-  },
-  {
     name: 'Ох зря я туда полез2',
     audio: '/media/sounds/okh-zria-ia-tuda-polez2.mp3',
-  },
-  {
-    name: 'خرید کیر خر',
-    audio: '/media/sounds/khryd-khyr-khr.mp3',
   },
   {
     name: 'IceIceBB',
@@ -3290,10 +2572,6 @@ export const pranks = [
     audio: '/media/sounds/i-like-ya-cut-g-taco-bell_Bis4GQX.mp3',
   },
   {
-    name: 'retard? waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-    audio: '/media/sounds/retard-waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.mp3',
-  },
-  {
     name: 'Fart 3 Koula',
     audio: '/media/sounds/fart-3-koula.mp3',
   },
@@ -3304,10 +2582,6 @@ export const pranks = [
   {
     name: 'helloo daarling',
     audio: '/media/sounds/hellodarling.mp3',
-  },
-  {
-    name: 'Cornhub Prank',
-    audio: '/media/sounds/cornhub-prank.mp3',
   },
   {
     name: 'mira como esta la vaganciaaaa',
@@ -3330,20 +2604,12 @@ export const pranks = [
     audio: '/media/sounds/fireflies-but-im-screaming-the-lyrics.mp3',
   },
   {
-    name: 'Stupid America',
-    audio: '/media/sounds/stupid-america.mp3',
-  },
-  {
     name: 'i like ya cut g (Taco Bell)',
     audio: '/media/sounds/i-like-ya-cut-g-taco-bell_Bis4GQX.mp3',
   },
   {
     name: 'Big Ripper Fart',
     audio: '/media/sounds/big-ripper-fart_SLgBTpz.mp3',
-  },
-  {
-    name: 'Ni las bolas se le ven',
-    audio: '/media/sounds/ni-las-bolas-se-le-ven.mp3',
   },
   {
     name: 'RPStyles Comando PS5',
@@ -3390,10 +2656,6 @@ export const pranks = [
     audio: '/media/sounds/alwaysdoingbits.mp3',
   },
   {
-    name: 'Moaific',
-    audio: '/media/sounds/moaific.mp3',
-  },
-  {
     name: 'imbouttoblow',
     audio: '/media/sounds/imbouttoblow.mp3',
   },
@@ -3404,10 +2666,6 @@ export const pranks = [
   {
     name: 'Ferris whell!LEDJWOHD',
     audio: '/media/sounds/ferris-whell-ledjwohd.mp3',
-  },
-  {
-    name: 'Patrick Sébastien',
-    audio: '/media/sounds/patrick-sebastien.mp3',
   },
   {
     name: 'aeaeae',
@@ -3430,17 +2688,9 @@ export const pranks = [
     audio: '/media/sounds/chestrah.mp3',
   },
   {
-    name: 'خرید کیر خر',
-    audio: '/media/sounds/khryd-khyr-khr.mp3',
-  },
-  {
     name: 'Bomb Defused CT Wins',
     audio:
       '/media/sounds/bomb-has-been-defused-counter-terrorists-win-csgo-sound-effect_qijcE9O.mp3',
-  },
-  {
-    name: 'Stark1z - Ice Cream',
-    audio: '/media/sounds/stark-ice-cream.mp3',
   },
   {
     name: 'COME ON, PICK IT UP',
@@ -3459,16 +2709,8 @@ export const pranks = [
     audio: '/media/sounds/just-prank-bro-mp3cut.mp3',
   },
   {
-    name: 'Killersthreat',
-    audio: '/media/sounds/killersthreat.mp3',
-  },
-  {
     name: 'Pryor-LemonTurtleSoup',
     audio: '/media/sounds/pryor-lemonturtlesoup.mp3',
-  },
-  {
-    name: 'MLG.exe',
-    audio: '/media/sounds/mlg.mp3',
   },
   {
     name: 'deva_fiox_conectadox',
@@ -3495,16 +2737,8 @@ export const pranks = [
     audio: '/media/sounds/okh-zria-ia-tuda-polez2.mp3',
   },
   {
-    name: 'Cornhub Prank',
-    audio: '/media/sounds/cornhub-prank.mp3',
-  },
-  {
     name: 'you guys are kooky',
     audio: '/media/sounds/you-guys-are-kooky.mp3',
-  },
-  {
-    name: 'Donald Bobik',
-    audio: '/media/sounds/donald-bobik.mp3',
   },
   {
     name: 'jayfri',
@@ -3527,20 +2761,8 @@ export const pranks = [
     audio: '/media/sounds/buba-oriot.mp3',
   },
   {
-    name: 'Slap the Booty! Cute!',
-    audio: '/media/sounds/slap-the-booty-cute.mp3',
-  },
-  {
-    name: 'pa site nonm',
-    audio: '/media/sounds/pa-site-nonm.mp3',
-  },
-  {
     name: 'It´s soundboard time',
     audio: '/media/sounds/its-soundboard-time.mp3',
-  },
-  {
-    name: 'Ni las bolas se le ven',
-    audio: '/media/sounds/ni-las-bolas-se-le-ven.mp3',
   },
   {
     name: 'owl city - fireflies',
@@ -3572,10 +2794,6 @@ export const pranks = [
     audio: '/media/sounds/i-like-ya-cut-g-taco-bell_Bis4GQX.mp3',
   },
   {
-    name: 'КТОТО СКАЗАЛ БОМБА',
-    audio: '/media/sounds/ktoto-skazal-bomba.mp3',
-  },
-  {
     name: 'Sonic Fast',
     audio: '/media/sounds/hedgeh.mp3',
   },
@@ -3586,10 +2804,6 @@ export const pranks = [
   {
     name: 'up to faster jumpscare',
     audio: '/media/sounds/up-to-faster-jumpscare.mp3',
-  },
-  {
-    name: 'it just a prank bro',
-    audio: '/media/sounds/its-just-a-prank-bro-sound-effect.mp3',
   },
   {
     name: 'Jumpscare SFX (music and vocal)',
@@ -3614,10 +2828,6 @@ export const pranks = [
   {
     name: 'Plop 1',
     audio: '/media/sounds/plop-1.mp3',
-  },
-  {
-    name: 'AHH SEE YOU AGAIN',
-    audio: '/media/sounds/ahh-see-you-again.mp3',
   },
   {
     name: 'نغمه حزينه',
@@ -3648,25 +2858,13 @@ export const pranks = [
     audio: '/media/sounds/y2mate-mp3cut_tbr7qkn.mp3',
   },
   {
-    name: 'dont be filmin me brotha',
-    audio: '/media/sounds/dont-be-filmin-me-brotha.mp3',
-  },
-  {
     name: 'Bomb Defused CT Wins',
     audio:
       '/media/sounds/bomb-has-been-defused-counter-terrorists-win-csgo-sound-effect_qijcE9O.mp3',
   },
   {
-    name: 'Здравствуй пидорас',
-    audio: '/media/sounds/zdravstvui-pidoras.mp3',
-  },
-  {
     name: 'Fart 3 Koula',
     audio: '/media/sounds/fart-3-koula.mp3',
-  },
-  {
-    name: 'Cornhub Prank',
-    audio: '/media/sounds/cornhub-prank.mp3',
   },
   {
     name: 'Lovina',
@@ -3697,14 +2895,6 @@ export const pranks = [
     audio: '/media/sounds/rpstyles-comando-ps5.mp3',
   },
   {
-    name: 'Да толстая',
-    audio: '/media/sounds/da-tolstaia.mp3',
-  },
-  {
-    name: 'Wir brauchen ein bissl was',
-    audio: '/media/sounds/wir_brauchen_bissl_was_joZB6JL.mp3',
-  },
-  {
     name: 'Scary sound (Weird sound of Saturn)',
     audio: '/media/sounds/scary-sound-weird-sound-of-saturn.mp3',
   },
@@ -3717,28 +2907,12 @@ export const pranks = [
     audio: '/media/sounds/blue-lobster-bassboosted.mp3',
   },
   {
-    name: 'Donald Bobik',
-    audio: '/media/sounds/donald-bobik.mp3',
-  },
-  {
     name: 'go around again!',
     audio: '/media/sounds/go-around-again.mp3',
   },
   {
-    name: 'coolman123',
-    audio: '/media/sounds/coolman123.mp3',
-  },
-  {
-    name: 'MLG.exe',
-    audio: '/media/sounds/mlg.mp3',
-  },
-  {
     name: 'peter griffin bass boosted',
     audio: '/media/sounds/peter-griffin-bass-boosted.mp3',
-  },
-  {
-    name: 'it just a prank bro',
-    audio: '/media/sounds/its-just-a-prank-bro-sound-effect.mp3',
   },
   {
     name: 'owl city - fireflies',
@@ -3761,10 +2935,6 @@ export const pranks = [
     audio: '/media/sounds/i-like-ya-cut-g-taco-bell_Bis4GQX.mp3',
   },
   {
-    name: 'hey boy - ruby',
-    audio: '/media/sounds/hey-boy-ruby.mp3',
-  },
-  {
     name: 'AK-47 shooting',
     audio: '/media/sounds/ak-47-shooting.mp3',
   },
@@ -3777,24 +2947,8 @@ export const pranks = [
     audio: '/media/sounds/audio-cortado-2_TnIccSS.mp3',
   },
   {
-    name: 'Да толстая',
-    audio: '/media/sounds/da-tolstaia.mp3',
-  },
-  {
-    name: 'Ni las bolas se le ven',
-    audio: '/media/sounds/ni-las-bolas-se-le-ven.mp3',
-  },
-  {
     name: 'Ahhh yeaaahh',
     audio: '/media/sounds/ahhh-yeaaahh.mp3',
-  },
-  {
-    name: 'Воспитание',
-    audio: '/media/sounds/vospitanie.mp3',
-  },
-  {
-    name: 'furt',
-    audio: '/media/sounds/furt.mp3',
   },
   {
     name: 'prove it',
@@ -3818,10 +2972,6 @@ export const pranks = [
       '/media/sounds/bomb-has-been-defused-counter-terrorists-win-csgo-sound-effect_qijcE9O.mp3',
   },
   {
-    name: 'dont be filmin me brotha',
-    audio: '/media/sounds/dont-be-filmin-me-brotha.mp3',
-  },
-  {
     name: 'wth have i done aaaaa',
     audio: '/media/sounds/record-online-voice-recorder_ZTvqx9E.mp3',
   },
@@ -3832,10 +2982,6 @@ export const pranks = [
   {
     name: 'Street fighter China',
     audio: '/media/sounds/china_GN3TDUt.mp3',
-  },
-  {
-    name: 'КТОТО СКАЗАЛ БОМБА',
-    audio: '/media/sounds/ktoto-skazal-bomba.mp3',
   },
   {
     name: 'i wonder how i wonder why',
@@ -3854,32 +3000,12 @@ export const pranks = [
     audio: '/media/sounds/blue-lobster-bassboosted.mp3',
   },
   {
-    name: 'Patrick Sébastien',
-    audio: '/media/sounds/patrick-sebastien.mp3',
-  },
-  {
-    name: 'Donald Bobik',
-    audio: '/media/sounds/donald-bobik.mp3',
-  },
-  {
     name: 'LEVÁNTENSE (nuevo)',
     audio: '/media/sounds/levantense-nuevo.mp3',
   },
   {
-    name: 'retard? waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-    audio: '/media/sounds/retard-waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.mp3',
-  },
-  {
-    name: 'MLG.exe',
-    audio: '/media/sounds/mlg.mp3',
-  },
-  {
     name: 'Pbbv og audio',
     audio: '/media/sounds/pbbv-og-audio.mp3',
-  },
-  {
-    name: 'it just a prank bro',
-    audio: '/media/sounds/its-just-a-prank-bro-sound-effect.mp3',
   },
   {
     name: 'ooga booga spooky month 2',
@@ -3892,14 +3018,6 @@ export const pranks = [
   {
     name: 'peter griffin bass boosted',
     audio: '/media/sounds/peter-griffin-bass-boosted.mp3',
-  },
-  {
-    name: 'Wir brauchen ein bissl was',
-    audio: '/media/sounds/wir_brauchen_bissl_was_joZB6JL.mp3',
-  },
-  {
-    name: 'O gta vai começar as dez',
-    audio: '/media/sounds/jeff.mp3',
   },
   {
     name: 'УГА БУГА',
@@ -3934,14 +3052,6 @@ export const pranks = [
     audio: '/media/sounds/record-online-voice-recorder_ZTvqx9E.mp3',
   },
   {
-    name: 'MLG.exe',
-    audio: '/media/sounds/mlg.mp3',
-  },
-  {
-    name: 'it just a prank bro',
-    audio: '/media/sounds/its-just-a-prank-bro-sound-effect.mp3',
-  },
-  {
     name: 'coton',
     audio: '/media/sounds/coton.mp3',
   },
@@ -3962,10 +3072,6 @@ export const pranks = [
     audio: '/media/sounds/eek_mGXLzTI.mp3',
   },
   {
-    name: 'Cornhub Prank',
-    audio: '/media/sounds/cornhub-prank.mp3',
-  },
-  {
     name: 'K.O Sound Effect',
     audio: '/media/sounds/k_OQVZAZl.mp3',
   },
@@ -3978,28 +3084,12 @@ export const pranks = [
     audio: '/media/sounds/damagee.mp3',
   },
   {
-    name: 'furt',
-    audio: '/media/sounds/furt.mp3',
-  },
-  {
-    name: 'coolman123',
-    audio: '/media/sounds/coolman123.mp3',
-  },
-  {
     name: 'Drunk Zombies',
     audio: '/media/sounds/drunk-zombies.mp3',
   },
   {
     name: 'scary cat',
     audio: '/media/sounds/scary-cat.mp3',
-  },
-  {
-    name: 'hey boy - ruby',
-    audio: '/media/sounds/hey-boy-ruby.mp3',
-  },
-  {
-    name: 'dont be filmin me brotha',
-    audio: '/media/sounds/dont-be-filmin-me-brotha.mp3',
   },
   {
     name: 'Sonic Fast',
@@ -4042,10 +3132,6 @@ export const pranks = [
     audio: '/media/sounds/no-avon.mp3',
   },
   {
-    name: 'Wir brauchen ein bissl was',
-    audio: '/media/sounds/wir_brauchen_bissl_was_joZB6JL.mp3',
-  },
-  {
     name: 'ballenorsk99',
     audio: '/media/sounds/ballenorsk99.mp3',
   },
@@ -4062,20 +3148,8 @@ export const pranks = [
     audio: '/media/sounds/go-around-again.mp3',
   },
   {
-    name: 'Hoje eu tô muito gente boa',
-    audio: '/media/sounds/hoje-eu-to-muito-gente-boa.mp3',
-  },
-  {
     name: 'All doors entities screaming at the same time',
     audio: '/media/sounds/all-doors-entities-screaming-at-the-same-time.mp3',
-  },
-  {
-    name: 'MLG.exe',
-    audio: '/media/sounds/mlg.mp3',
-  },
-  {
-    name: 'it just a prank bro',
-    audio: '/media/sounds/its-just-a-prank-bro-sound-effect.mp3',
   },
   {
     name: 'aeaeae',
@@ -4130,14 +3204,6 @@ export const pranks = [
     audio: '/media/sounds/dre-be-gulping.mp3',
   },
   {
-    name: 'Con sur orbite',
-    audio: '/media/sounds/con-sur-orbite.mp3',
-  },
-  {
-    name: 'Moaific',
-    audio: '/media/sounds/moaific.mp3',
-  },
-  {
     name: 'er det helt barnehage',
     audio: '/media/sounds/er-det-helt-barnehage.mp3',
   },
@@ -4175,20 +3241,12 @@ export const pranks = [
     audio: '/media/sounds/k_OQVZAZl.mp3',
   },
   {
-    name: 'КТОТО СКАЗАЛ БОМБА',
-    audio: '/media/sounds/ktoto-skazal-bomba.mp3',
-  },
-  {
     name: 'Giga fart',
     audio: '/media/sounds/giga-fart.mp3',
   },
   {
     name: 'Scammer voice many customers',
     audio: '/media/sounds/scammer-voice-many-customers.mp3',
-  },
-  {
-    name: 'Да толстая',
-    audio: '/media/sounds/da-tolstaia.mp3',
   },
   // {
   //   name: 'run for cover you dirty slut',
@@ -4223,10 +3281,6 @@ export const pranks = [
     audio: '/media/sounds/peter-griffin-bass-boosted.mp3',
   },
   {
-    name: 'furt',
-    audio: '/media/sounds/furt.mp3',
-  },
-  {
     name: 'noicestream',
     audio: '/media/sounds/click-nice_OtCTKmr.mp3',
   },
@@ -4255,10 +3309,6 @@ export const pranks = [
     audio: '/media/sounds/webbies-k.mp3',
   },
   {
-    name: 'bonnet',
-    audio: '/media/sounds/bonnet.mp3',
-  },
-  {
     name: 'MEAN MUG',
     audio: '/media/sounds/mean-mug.mp3',
   },
@@ -4282,14 +3332,6 @@ export const pranks = [
   {
     name: 'Angry Heads shouting MR. RUDE! 3',
     audio: '/media/sounds/angry-heads-shouting-mr-rude-3.mp3',
-  },
-  {
-    name: 'jer mat ad',
-    audio: '/media/sounds/jer-mat-ad.mp3',
-  },
-  {
-    name: 'AHH SEE YOU AGAIN',
-    audio: '/media/sounds/ahh-see-you-again.mp3',
   },
   {
     name: 'i wonder how i wonder why',
@@ -4376,10 +3418,6 @@ export const pranks = [
     audio: '/media/sounds/svistok-fizruka.mp3',
   },
   {
-    name: 'piosenka o papiezu',
-    audio: '/media/sounds/zarp.mp3',
-  },
-  {
     name: 'girls farting',
     audio: '/media/sounds/girls-farting.mp3',
   },
@@ -4397,16 +3435,8 @@ export const pranks = [
     audio: '/media/sounds/blue-lobster-bassboosted.mp3',
   },
   {
-    name: 'Patrick Sébastien',
-    audio: '/media/sounds/patrick-sebastien.mp3',
-  },
-  {
     name: 'EPIC FACE JUMPSCARE',
     audio: '/media/sounds/epic-face-jumpscare.mp3',
-  },
-  {
-    name: 'خرید کیر خر',
-    audio: '/media/sounds/khryd-khyr-khr.mp3',
   },
   {
     name: 'Dr Evil Laugh',
@@ -4422,28 +3452,12 @@ export const pranks = [
       '/media/sounds/bad-connection-sound-effect-online-class-hack-hack.mp3',
   },
   {
-    name: 'Jonathan Guachi 3',
-    audio: '/media/sounds/jonathan-guachi-3.mp3',
-  },
-  {
-    name: 'Wir brauchen ein bissl was',
-    audio: '/media/sounds/wir_brauchen_bissl_was_joZB6JL.mp3',
-  },
-  {
     name: 'RPStyles Comando PS5',
     audio: '/media/sounds/rpstyles-comando-ps5.mp3',
   },
   {
-    name: 'ANTONIO DEJA LOS P*TOS BOTONES',
-    audio: '/media/sounds/antonio-deja-los-p-tos-botones.mp3',
-  },
-  {
     name: 'Plop 1',
     audio: '/media/sounds/plop-1.mp3',
-  },
-  {
-    name: 'Stark1z - Ice Cream',
-    audio: '/media/sounds/stark-ice-cream.mp3',
   },
   {
     name: 'Vigilante tetéu',
@@ -4454,20 +3468,8 @@ export const pranks = [
     audio: '/media/sounds/fools-garden-lemon-tree-audiotrimmer.mp3',
   },
   {
-    name: 'bonnet',
-    audio: '/media/sounds/bonnet.mp3',
-  },
-  {
     name: 'Wolf howl 2',
     audio: '/media/sounds/wolf3-online-audio-converter.mp3',
-  },
-  {
-    name: 'piosenka o papiezu',
-    audio: '/media/sounds/zarp.mp3',
-  },
-  {
-    name: 'Шлюха',
-    audio: '/media/sounds/shliukha.mp3',
   },
   {
     name: 'The red mist is coming',
@@ -4503,24 +3505,12 @@ export const pranks = [
     audio: '/media/sounds/jajajajja-djtot.mp3',
   },
   {
-    name: 'smth #98',
-    audio: '/media/sounds/smth-98.mp3',
-  },
-  {
     name: 'oi vida',
     audio: '/media/sounds/oi-vida.mp3',
   },
   {
-    name: 'lkyguyg',
-    audio: '/media/sounds/tukuruk-v2-sonmez-sound-effects-320-kbps_uSUF9pb.mp3',
-  },
-  {
     name: 'Android But VERY LOUD',
     audio: '/media/sounds/android-but-very-loud.mp3',
-  },
-  {
-    name: 'Merdee',
-    audio: '/media/sounds/merde_g7kmfTA.mp3',
   },
   {
     name: 'Omg Controller Player',
@@ -4542,10 +3532,6 @@ export const pranks = [
   {
     name: 'imbouttoblow',
     audio: '/media/sounds/imbouttoblow.mp3',
-  },
-  {
-    name: 'Stark1z - Ice Cream',
-    audio: '/media/sounds/stark-ice-cream.mp3',
   },
   {
     name: 'aeaeae',
@@ -4580,10 +3566,6 @@ export const pranks = [
     audio: '/media/sounds/risa-papanoel-piru.mp3',
   },
   {
-    name: 'stonoga jedyne co mogą zrobić',
-    audio: '/media/sounds/jedyne-co-moga-zrobic.mp3',
-  },
-  {
     name: 'Piep Pup Louder',
     audio: '/media/sounds/piep-pup-louder.mp3',
   },
@@ -4604,10 +3586,6 @@ export const pranks = [
     audio: '/media/sounds/evil-laugh_P09y72y.mp3',
   },
   {
-    name: 'Killersthreat',
-    audio: '/media/sounds/killersthreat.mp3',
-  },
-  {
     name: 'Caillou Tiles YouTube Poop Record',
     audio: '/media/sounds/caillou-tiles-youtube-poop-record.mp3',
   },
@@ -4620,16 +3598,8 @@ export const pranks = [
     audio: '/media/sounds/ooga-booga-spooky-month-2.mp3',
   },
   {
-    name: 'Hoje eu tô muito gente boa',
-    audio: '/media/sounds/hoje-eu-to-muito-gente-boa.mp3',
-  },
-  {
     name: 'botm Dramatic Impact 2',
     audio: '/media/sounds/botm-dramatic-impact-2.mp3',
-  },
-  {
-    name: 'Stark1z - Ice Cream',
-    audio: '/media/sounds/stark-ice-cream.mp3',
   },
   {
     name: 'coton',
@@ -4673,10 +3643,6 @@ export const pranks = [
     audio: '/media/sounds/i-going-to-do-a-poo-at-pauls.mp3',
   },
   {
-    name: '1 2 patate poil maudit cave',
-    audio: '/media/sounds/1-2-patate-poil-maudit-cave.mp3',
-  },
-  {
     name: 'نغمه حزينه',
     audio: '/media/sounds/audio-cortado-2_TnIccSS.mp3',
   },
@@ -4689,16 +3655,8 @@ export const pranks = [
     audio: '/media/sounds/laugh-annabelle.mp3',
   },
   {
-    name: 'Ezequiel Me Pela La Vrg',
-    audio: '/media/sounds/ezequiel-me-pela-la-vrg.mp3',
-  },
-  {
     name: 'It´s soundboard time',
     audio: '/media/sounds/its-soundboard-time.mp3',
-  },
-  {
-    name: 'stonoga jedyne co mogą zrobić',
-    audio: '/media/sounds/jedyne-co-moga-zrobic.mp3',
   },
   {
     name: 'Ох зря я туда полез2',
@@ -4711,10 +3669,6 @@ export const pranks = [
   {
     name: 'Knocking Sound',
     audio: '/media/sounds/crazy-realistic-knocking-sound-trim_vikhbo4.mp3',
-  },
-  {
-    name: 'lkyguyg',
-    audio: '/media/sounds/tukuruk-v2-sonmez-sound-effects-320-kbps_uSUF9pb.mp3',
   },
   {
     name: 'Mr lobon 2 BATHROOM',
@@ -4731,10 +3685,6 @@ export const pranks = [
   {
     name: 'Bass иван курапов',
     audio: '/media/sounds/bass-ivan-kurapov.mp3',
-  },
-  {
-    name: 'hey boy - ruby',
-    audio: '/media/sounds/hey-boy-ruby.mp3',
   },
   {
     name: 'Drunk Zombies',
@@ -4762,11 +3712,6 @@ export const pranks = [
     audio: '/media/sounds/sardoche_-_concentre_toi_yh4EbME.mp3',
   },
   {
-    name: 'jaja (mickey)',
-    audio:
-      '/media/sounds/es-la-hora-de-la-paja-video-original-audiotrimmer_vd8sIsN.mp3',
-  },
-  {
     name: 'буба орёт',
     audio: '/media/sounds/buba-oriot.mp3',
   },
@@ -4775,24 +3720,12 @@ export const pranks = [
     audio: '/media/sounds/vine-boom-full.mp3',
   },
   {
-    name: 'Hey kid want some candy',
-    audio: '/media/sounds/hey-kid-want-some-candy.mp3',
-  },
-  {
     name: 'COME ON, PICK IT UP',
     audio: '/media/sounds/come-on-pick-it-up.mp3',
   },
   {
     name: 'RISA PAPANOEL PIRU',
     audio: '/media/sounds/risa-papanoel-piru.mp3',
-  },
-  {
-    name: 'stonoga jedyne co mogą zrobić',
-    audio: '/media/sounds/jedyne-co-moga-zrobic.mp3',
-  },
-  {
-    name: 'от тебя гавной воняет',
-    audio: '/media/sounds/ot-tebia-gavnoi-voniaet.mp3',
   },
   // {
   //   name: 'Metal as Fuck, Apparently',
@@ -4823,10 +3756,6 @@ export const pranks = [
     audio: '/media/sounds/pbbv-og-audio.mp3',
   },
   {
-    name: 'gggtttyyy',
-    audio: '/media/sounds/gggtttyyy.mp3',
-  },
-  {
     name: 'PLECATI UNPIC-',
     audio: '/media/sounds/plecati-unpic.mp3',
   },
@@ -4847,20 +3776,12 @@ export const pranks = [
     audio: '/media/sounds/the-red-mist-is-coming.mp3',
   },
   {
-    name: 'Wir brauchen ein bissl was',
-    audio: '/media/sounds/wir_brauchen_bissl_was_joZB6JL.mp3',
-  },
-  {
     name: 'Mehdi Mehdi',
     audio: '/media/sounds/mehdi-mehdi.mp3',
   },
   {
     name: 'noicestream',
     audio: '/media/sounds/click-nice_OtCTKmr.mp3',
-  },
-  {
-    name: 'StrikePro Vou Desistir',
-    audio: '/media/sounds/strikepro-vou-desistir.mp3',
   },
   {
     name: 'Omg Controller Player',
@@ -4884,20 +3805,8 @@ export const pranks = [
     audio: '/media/sounds/ne-knutselaar.mp3',
   },
   {
-    name: 'Baldi roasts badsum original template',
-    audio: '/media/sounds/baldi-roasts-badsum-original-template.mp3',
-  },
-  {
     name: 'EPIC FACE JUMPSCARE',
     audio: '/media/sounds/epic-face-jumpscare.mp3',
-  },
-  {
-    name: 'O gta vai começar as dez',
-    audio: '/media/sounds/jeff.mp3',
-  },
-  {
-    name: 'succcc my dik',
-    audio: '/media/sounds/succcc-my-dik.mp3',
   },
   {
     name: 'نغمه حزينه',
@@ -4943,10 +3852,6 @@ export const pranks = [
   {
     name: 'julle',
     audio: '/media/sounds/julle.mp3',
-  },
-  {
-    name: 'Redgod Gae',
-    audio: '/media/sounds/redgod-gae.mp3',
   },
   {
     name: 'nene leakes',
@@ -5001,18 +3906,6 @@ export const pranks = [
     audio: '/media/sounds/funny-oggy-crying-sound_9FEApYV.mp3',
   },
   {
-    name: 'bantai chup tmkc',
-    audio: '/media/sounds/bantai-chup-tmkc.mp3',
-  },
-  {
-    name: 'Воспитание',
-    audio: '/media/sounds/vospitanie.mp3',
-  },
-  {
-    name: 'Slap the Booty! Cute!',
-    audio: '/media/sounds/slap-the-booty-cute.mp3',
-  },
-  {
     name: 'Fart 3 Koula',
     audio: '/media/sounds/fart-3-koula.mp3',
   },
@@ -5029,16 +3922,8 @@ export const pranks = [
     audio: '/media/sounds/dux-green.mp3',
   },
   {
-    name: 'hey boy - ruby',
-    audio: '/media/sounds/hey-boy-ruby.mp3',
-  },
-  {
     name: 'Erþaðsamt?',
     audio: '/media/sounds/erthadsamt.mp3',
-  },
-  {
-    name: 'Какие-то деньги',
-    audio: '/media/sounds/kakie-to-dengi.mp3',
   },
   {
     name: 'Demy - Discord msg noti',
@@ -5053,16 +3938,8 @@ export const pranks = [
     audio: '/media/sounds/avaya-cheerful-ringtone.mp3',
   },
   {
-    name: 'от тебя гавной воняет',
-    audio: '/media/sounds/ot-tebia-gavnoi-voniaet.mp3',
-  },
-  {
     name: 'Daisy bell for gtag',
     audio: '/media/sounds/daisy-bell-for-gtag.mp3',
-  },
-  {
-    name: 'Fittå di e liiten',
-    audio: '/media/sounds/fitta-di-e-liiten.mp3',
   },
   {
     name: 'MAMA AHHH AHRHGHH',
@@ -5070,20 +3947,8 @@ export const pranks = [
       '/media/sounds/mario-is-screaming-the-chill-elevator-2-roblox-4_caCdXJ8.mp3',
   },
   {
-    name: 'CLICK NOW',
-    audio: '/media/sounds/click-now.mp3',
-  },
-  {
-    name: 'Twist it!!',
-    audio: '/media/sounds/twist-it_wx3H2r1.mp3',
-  },
-  {
     name: 'No Dic',
     audio: '/media/sounds/no-dic.mp3',
-  },
-  {
-    name: 'Cornhub Prank',
-    audio: '/media/sounds/cornhub-prank.mp3',
   },
   {
     name: 'Vixennn',
@@ -5106,11 +3971,6 @@ export const pranks = [
     audio: '/media/sounds/caillou-tiles-youtube-poop-record.mp3',
   },
   {
-    name: 'senin ananı avradı',
-    audio:
-      '/media/sounds/sonmez-reyiz-senin-anan-arvadn-sikiyim-ben-cibiliyeti-bozuk-orospu-cocugu-seni.mp3',
-  },
-  {
     name: 'Pbbv og audio',
     audio: '/media/sounds/pbbv-og-audio.mp3',
   },
@@ -5127,36 +3987,8 @@ export const pranks = [
     audio: '/media/sounds/tomou_RMsWkod.mp3',
   },
   {
-    name: 'Click me frfrfr',
-    audio: '/media/sounds/click-me-frfrfr.mp3',
-  },
-  {
-    name: 'Jonathan Guachi 3',
-    audio: '/media/sounds/jonathan-guachi-3.mp3',
-  },
-  {
-    name: 'Enfoncer',
-    audio: '/media/sounds/enfoncer.mp3',
-  },
-  {
-    name: 'succcc my dik',
-    audio: '/media/sounds/succcc-my-dik.mp3',
-  },
-  {
     name: 'pee wee playhouse music laugh',
     audio: '/media/sounds/pee-wee-playhouse-music-laugh.mp3',
-  },
-  {
-    name: 'jer mat ad',
-    audio: '/media/sounds/jer-mat-ad.mp3',
-  },
-  {
-    name: '4092 broke fein',
-    audio: '/media/sounds/4092-broke-fein.mp3',
-  },
-  {
-    name: 'James Jerk',
-    audio: '/media/sounds/james-jerk.mp3',
   },
   {
     name: 'Demy - Discord msg noti',
@@ -5165,15 +3997,6 @@ export const pranks = [
   {
     name: 'NOKIA Klingelton',
     audio: '/media/sounds/nokia-ringtone-1994-youtubemp3free.mp3',
-  },
-  {
-    name: 'КТОТО СКАЗАЛ БОМБА',
-    audio: '/media/sounds/ktoto-skazal-bomba.mp3',
-  },
-  {
-    name: 'JE TAIME YANIS',
-    audio:
-      '/media/sounds/mais-arrete-arrete-ya-quoi-sur-fortnite-battle-royal-de-merde_Z2P1b7b.mp3',
   },
   {
     name: 'merguez',
@@ -5204,10 +4027,6 @@ export const pranks = [
     audio: '/media/sounds/tchado-garga.mp3',
   },
   {
-    name: 'coolman123',
-    audio: '/media/sounds/coolman123.mp3',
-  },
-  {
     name: 'Airinho pede Donation',
     audio: '/media/sounds/airinho-pede-donation.mp3',
   },
@@ -5228,33 +4047,12 @@ export const pranks = [
     audio: '/media/sounds/brighteyes-witches-brew-hat-cackle-3.mp3',
   },
   {
-    name: 'senin ananı avradı',
-    audio:
-      '/media/sounds/sonmez-reyiz-senin-anan-arvadn-sikiyim-ben-cibiliyeti-bozuk-orospu-cocugu-seni.mp3',
-  },
-  {
-    name: 'خرید کیر خر',
-    audio: '/media/sounds/khryd-khyr-khr.mp3',
-  },
-  {
     name: 'Bouh - Asterix',
     audio: '/media/sounds/audio2_fsMHUi2.mp3',
   },
   {
-    name: 'Wir brauchen ein bissl was',
-    audio: '/media/sounds/wir_brauchen_bissl_was_joZB6JL.mp3',
-  },
-  {
     name: 'Kolnese',
     audio: '/media/sounds/kolnese.mp3',
-  },
-  {
-    name: 'Click me frfrfr',
-    audio: '/media/sounds/click-me-frfrfr.mp3',
-  },
-  {
-    name: 'Да толстая',
-    audio: '/media/sounds/da-tolstaia.mp3',
   },
   {
     name: 'bronx cheer',
@@ -5263,10 +4061,6 @@ export const pranks = [
   {
     name: 'Street fighter China',
     audio: '/media/sounds/china_GN3TDUt.mp3',
-  },
-  {
-    name: 'bantai chup tmkc',
-    audio: '/media/sounds/bantai-chup-tmkc.mp3',
   },
   {
     name: 'Drunk Zombies',
@@ -5286,21 +4080,8 @@ export const pranks = [
     audio: '/media/sounds/eutanasia.mp3',
   },
   {
-    name: 'senin ananı avradı',
-    audio:
-      '/media/sounds/sonmez-reyiz-senin-anan-arvadn-sikiyim-ben-cibiliyeti-bozuk-orospu-cocugu-seni.mp3',
-  },
-  {
     name: 'Привет пока',
     audio: '/media/sounds/privet-poka.mp3',
-  },
-  {
-    name: 'Везде открыто , я в ахуе .',
-    audio: '/media/sounds/vezde-otkryto-ia-v-akhue.mp3',
-  },
-  {
-    name: 'خرید کیر خر',
-    audio: '/media/sounds/khryd-khyr-khr.mp3',
   },
   {
     name: 'Bouh - Asterix',
@@ -5311,16 +4092,8 @@ export const pranks = [
     audio: '/media/sounds/y2mate-mp3cut_tbr7qkn.mp3',
   },
   {
-    name: 'Killersthreat',
-    audio: '/media/sounds/killersthreat.mp3',
-  },
-  {
     name: 'Uh oh fart',
     audio: '/media/sounds/uh-oh-fart.mp3',
-  },
-  {
-    name: 'andrew2',
-    audio: '/media/sounds/andrew2.mp3',
   },
   {
     name: 'Симбочка кричит',
@@ -5347,16 +4120,8 @@ export const pranks = [
     audio: '/media/sounds/fools-garden-lemon-tree-audiotrimmer.mp3',
   },
   {
-    name: 'bantai chup tmkc',
-    audio: '/media/sounds/bantai-chup-tmkc.mp3',
-  },
-  {
     name: 'wannes',
     audio: '/media/sounds/wannes.mp3',
-  },
-  {
-    name: 'Cheiro de Xoxó',
-    audio: '/media/sounds/cheiro-de-xoxo.mp3',
   },
   {
     name: 'Aiman',
@@ -5376,20 +4141,12 @@ export const pranks = [
       '/media/sounds/i_dont_think_you_have_the_facilities_big_manyoutubetomp3.mp3',
   },
   {
-    name: 'oqpudjwjw',
-    audio: '/media/sounds/oqpudjwjw.mp3',
-  },
-  {
     name: 'Webbies $K',
     audio: '/media/sounds/webbies-k.mp3',
   },
   {
     name: 'bashar',
     audio: '/media/sounds/god_syria_and_bashar.mp3',
-  },
-  {
-    name: 'EP EP EP',
-    audio: '/media/sounds/ep-ep-ep.mp3',
   },
   {
     name: 'Gummy bear album',
@@ -5403,10 +4160,6 @@ export const pranks = [
   {
     name: 'gadza',
     audio: '/media/sounds/gadza-topsoundboard.mp3',
-  },
-  {
-    name: 'Да это жопа',
-    audio: '/media/sounds/da-eto-zhopa.mp3',
   },
   {
     name: 'PLECATI UNPIC-',
@@ -5454,10 +4207,6 @@ export const pranks = [
     audio: '/media/sounds/qual-foi-man.mp3',
   },
   {
-    name: 'Воспитание',
-    audio: '/media/sounds/vospitanie.mp3',
-  },
-  {
     name: 'Unity RP V2',
     audio: '/media/sounds/unity-rp-v2.mp3',
   },
@@ -5491,20 +4240,12 @@ export const pranks = [
     audio: '/media/sounds/tmpylco0ee7.mp3',
   },
   {
-    name: 'yung trappa ft. kuplinov',
-    audio: '/media/sounds/yung-trappa-ft-kuplinov.mp3',
-  },
-  {
     name: 'mario slap',
     audio: '/media/sounds/mario-slap.mp3',
   },
   {
     name: 'Wii sports You cheated',
     audio: '/media/sounds/wii-sports-you-cheated.mp3',
-  },
-  {
-    name: 'oqpudjwjw',
-    audio: '/media/sounds/oqpudjwjw.mp3',
   },
   {
     name: 'Ninj_Kerem',
@@ -5516,24 +4257,12 @@ export const pranks = [
       '/media/sounds/bomb-has-been-defused-counter-terrorists-win-csgo-sound-effect_qijcE9O.mp3',
   },
   {
-    name: 'canta um louvor pra mim bater siririca',
-    audio: '/media/sounds/canta-um-louvor-pra-mim-bater-siririca.mp3',
-  },
-  {
-    name: 'Powergaming',
-    audio: '/media/sounds/pauargeimingg_1.mp3',
-  },
-  {
     name: 'Falling Mario',
     audio: '/media/sounds/falling-mario.mp3',
   },
   {
     name: 'Pryor-LemonTurtleSoup',
     audio: '/media/sounds/pryor-lemonturtlesoup.mp3',
-  },
-  {
-    name: 'O gta vai começar as dez',
-    audio: '/media/sounds/jeff.mp3',
   },
   {
     name: 'Eutanásia',
@@ -5555,10 +4284,6 @@ export const pranks = [
   {
     name: 'angry man 1',
     audio: '/media/sounds/angry-man-1.mp3',
-  },
-  {
-    name: 'Kanna Remix',
-    audio: '/media/sounds/kobayashi-kanna-kamui-cute-singing-remix-0-13.mp3',
   },
   {
     name: 'plz fearless',
@@ -5585,10 +4310,6 @@ export const pranks = [
     audio: '/media/sounds/zozolol.mp3',
   },
   {
-    name: 'oqpudjwjw',
-    audio: '/media/sounds/oqpudjwjw.mp3',
-  },
-  {
     name: 'Bomb Defused CT Wins',
     audio:
       '/media/sounds/bomb-has-been-defused-counter-terrorists-win-csgo-sound-effect_qijcE9O.mp3',
@@ -5602,24 +4323,12 @@ export const pranks = [
     audio: '/media/sounds/bdubsss.mp3',
   },
   {
-    name: 'Здравствуй пидорас',
-    audio: '/media/sounds/zdravstvui-pidoras.mp3',
-  },
-  {
-    name: 'O gta vai começar as dez',
-    audio: '/media/sounds/jeff.mp3',
-  },
-  {
     name: 'Hot Dog Kazoo',
     audio: '/media/sounds/hot-dog-kazoo.mp3',
   },
   {
     name: 'Falling Mario',
     audio: '/media/sounds/falling-mario.mp3',
-  },
-  {
-    name: 'hey boy - ruby',
-    audio: '/media/sounds/hey-boy-ruby.mp3',
   },
   {
     name: 'Zog Scream',
@@ -5634,18 +4343,6 @@ export const pranks = [
     audio: '/media/sounds/gnoma-su.mp3',
   },
   {
-    name: 'yung trappa ft. kuplinov',
-    audio: '/media/sounds/yung-trappa-ft-kuplinov.mp3',
-  },
-  {
-    name: 'murder phone',
-    audio: '/media/sounds/murder-phone.mp3',
-  },
-  {
-    name: 'dio_ladro',
-    audio: '/media/sounds/dio-ladro.mp3',
-  },
-  {
     name: 'Carl wheezer is dummy thicc',
     audio: '/media/sounds/carl-wheezer-is-dummy-thicc.mp3',
   },
@@ -5654,20 +4351,8 @@ export const pranks = [
     audio: '/media/sounds/ee-one-d-activenot-clear.mp3',
   },
   {
-    name: 'xSku1L',
-    audio: '/media/sounds/xsku1l.mp3',
-  },
-  {
-    name: 'James Jerk',
-    audio: '/media/sounds/james-jerk.mp3',
-  },
-  {
     name: 'Fodrafhys',
     audio: '/media/sounds/fodrafhys.mp3',
-  },
-  {
-    name: 'Kanna Remix',
-    audio: '/media/sounds/kobayashi-kanna-kamui-cute-singing-remix-0-13.mp3',
   },
   {
     name: 'AMINAKE',
@@ -5682,20 +4367,8 @@ export const pranks = [
     audio: '/media/sounds/untitled-song-20.mp3',
   },
   {
-    name: 'Jonathan Guachi 3',
-    audio: '/media/sounds/jonathan-guachi-3.mp3',
-  },
-  {
     name: 'Alarma de Israel',
     audio: '/media/sounds/alarma-de-israel.mp3',
-  },
-  {
-    name: 'Да толстая',
-    audio: '/media/sounds/da-tolstaia.mp3',
-  },
-  {
-    name: 'Воспитание',
-    audio: '/media/sounds/vospitanie.mp3',
   },
   {
     name: 'botm Dramatic Impact 2',
@@ -5708,10 +4381,6 @@ export const pranks = [
   {
     name: 'Aiman',
     audio: '/media/sounds/aiman.mp3',
-  },
-  {
-    name: 'bonnet',
-    audio: '/media/sounds/bonnet.mp3',
   },
   {
     name: 'Vitos secret',
@@ -5746,32 +4415,12 @@ export const pranks = [
     audio: '/media/sounds/pocoyo-tuba-dramatic.mp3',
   },
   {
-    name: 'do not click here',
-    audio: '/media/sounds/do-not-click-here_f0VwHTU.mp3',
-  },
-  {
     name: 'Meow 2 Scratch sound effect',
     audio: '/media/sounds/meow-2-scratch-sound-effect.mp3',
   },
   {
     name: 'Combat Warriors C4 (PRANK)',
     audio: '/media/sounds/combat-warriors-c4-prank.mp3',
-  },
-  {
-    name: 'Жопааааа',
-    audio: '/media/sounds/zhopaaaaa.mp3',
-  },
-  {
-    name: 'luis',
-    audio: '/media/sounds/luis_5uHau3n.mp3',
-  },
-  {
-    name: 'On va manger a Quick wesh',
-    audio: '/media/sounds/on-va-manger-a-quick-wesh.mp3',
-  },
-  {
-    name: 'Slap the Booty! Cute!',
-    audio: '/media/sounds/slap-the-booty-cute.mp3',
   },
   {
     name: 'i going to do a Poo at Pauls',
@@ -5786,20 +4435,12 @@ export const pranks = [
     audio: '/media/sounds/ahhh-yeaaahh.mp3',
   },
   {
-    name: 'succcc my dik',
-    audio: '/media/sounds/succcc-my-dik.mp3',
-  },
-  {
     name: 'elderly miku fart',
     audio: '/media/sounds/elderly-miku-fart.mp3',
   },
   {
     name: 'shouting at me no good man',
     audio: '/media/sounds/shouting-at-me-no-good-man-me-no-shout-at-you.mp3',
-  },
-  {
-    name: 'Shut up. (10 yr old girl)',
-    audio: '/media/sounds/shut-up-10-yr-old-girl.mp3',
   },
   // {
   //   name: 'Get yo black ass in the line',
@@ -5814,10 +4455,6 @@ export const pranks = [
     audio: '/media/sounds/ruth-kraak.mp3',
   },
   {
-    name: 'CLICK NOW',
-    audio: '/media/sounds/click-now.mp3',
-  },
-  {
     name: 'W dream',
     audio: '/media/sounds/w-dream.mp3',
   },
@@ -5826,29 +4463,12 @@ export const pranks = [
     audio: '/media/sounds/0ooo0.mp3',
   },
   {
-    name: 'zorra',
-    audio:
-      '/media/sounds/sou-obrigado-a-falar-que-esse-programa-ta-uma-porra2-online-audio-converter.mp3',
-  },
-  {
     name: 'Dj totote',
     audio: '/media/sounds/dj-totote.mp3',
   },
   {
-    name: 'bising laa pundek',
-    audio: '/media/sounds/banyak_bising_lah_ridhuan.mp3',
-  },
-  {
-    name: 'Con sur orbite',
-    audio: '/media/sounds/con-sur-orbite.mp3',
-  },
-  {
     name: 'And My Axe!',
     audio: '/media/sounds/and-my-axe.mp3',
-  },
-  {
-    name: 'xSku1L',
-    audio: '/media/sounds/xsku1l.mp3',
   },
   {
     name: 'IceIceBB',
@@ -5875,20 +4495,12 @@ export const pranks = [
     audio: '/media/sounds/aaefafa.mp3',
   },
   {
-    name: 'I am going to commit great crime in water tower',
-    audio: '/media/sounds/i-am-going-to-commit-great-crime-in-water-tower.mp3',
-  },
-  {
     name: 'Jäänny',
     audio: '/media/sounds/jaanny.mp3',
   },
   {
     name: 'L1a',
     audio: '/media/sounds/l1a.mp3',
-  },
-  {
-    name: '4092 broke fein',
-    audio: '/media/sounds/4092-broke-fein.mp3',
   },
   {
     name: 'garci',
@@ -5951,24 +4563,12 @@ export const pranks = [
     audio: '/media/sounds/papa-princesa-1.mp3',
   },
   {
-    name: 'Ewa isaac',
-    audio: '/media/sounds/ewa-isaac.mp3',
-  },
-  {
-    name: 'yeet lazerbeam',
-    audio: '/media/sounds/yeet-lazerbeam.mp3',
-  },
-  {
     name: 'Hij is nog maar binnen',
     audio: '/media/sounds/hij-is-nog-maar-binnen.mp3',
   },
   {
     name: 'the SIMP button',
     audio: '/media/sounds/the-simp-button.mp3',
-  },
-  {
-    name: 'Да блять!',
-    audio: '/media/sounds/da-bliat_SiQGN1F.mp3',
   },
   {
     name: 'GET STICKBUGGED LOL',
@@ -5983,29 +4583,12 @@ export const pranks = [
     audio: '/media/sounds/angry-man-1.mp3',
   },
   {
-    name: 'Damjans rumpa',
-    audio: '/media/sounds/damjans-rumpa.mp3',
-  },
-  {
     name: 'wth have i done aaaaa',
     audio: '/media/sounds/record-online-voice-recorder_ZTvqx9E.mp3',
   },
   {
-    name: 'JE TAIME YANIS',
-    audio:
-      '/media/sounds/mais-arrete-arrete-ya-quoi-sur-fortnite-battle-royal-de-merde_Z2P1b7b.mp3',
-  },
-  {
-    name: 'Gordo Casaretto',
-    audio: '/media/sounds/gordo-casaretto.mp3',
-  },
-  {
     name: 'Fimbul',
     audio: '/media/sounds/rogue-lineage-fimbulvetr-sound-effect.mp3',
-  },
-  {
-    name: 'Goddamn You Rob Perillo',
-    audio: '/media/sounds/rob_perilo.mp3',
   },
   {
     name: 'Cade da-te mă ca cade',
@@ -6028,24 +4611,12 @@ export const pranks = [
     audio: '/media/sounds/quick-n-small-fart.mp3',
   },
   {
-    name: 'dont be filmin me brotha',
-    audio: '/media/sounds/dont-be-filmin-me-brotha.mp3',
-  },
-  {
-    name: 'hold nu skæft sut min pik',
-    audio: '/media/sounds/hold-nu-skaeft-sut-min-pik.mp3',
-  },
-  {
     name: 'bei burps',
     audio: '/media/sounds/bei-burps.mp3',
   },
   {
     name: 'GET STICKBUGGED LOL',
     audio: '/media/sounds/y2mate_cugxMaG.mp3',
-  },
-  {
-    name: 'hey boy - ruby',
-    audio: '/media/sounds/hey-boy-ruby.mp3',
   },
   {
     name: 'dre be gulping',
@@ -6064,25 +4635,12 @@ export const pranks = [
     audio: '/media/sounds/nun-t-o-nega.mp3',
   },
   {
-    name: 'bising laa pundek',
-    audio: '/media/sounds/banyak_bising_lah_ridhuan.mp3',
-  },
-  {
     name: 'wth have i done aaaaa',
     audio: '/media/sounds/record-online-voice-recorder_ZTvqx9E.mp3',
   },
   {
-    name: 'JE TAIME YANIS',
-    audio:
-      '/media/sounds/mais-arrete-arrete-ya-quoi-sur-fortnite-battle-royal-de-merde_Z2P1b7b.mp3',
-  },
-  {
     name: 'Fimbul',
     audio: '/media/sounds/rogue-lineage-fimbulvetr-sound-effect.mp3',
-  },
-  {
-    name: 'Goddamn You Rob Perillo',
-    audio: '/media/sounds/rob_perilo.mp3',
   },
   {
     name: 'Drunk Zombies',
@@ -6101,33 +4659,9 @@ export const pranks = [
     audio: '/media/sounds/tomou_RMsWkod.mp3',
   },
   {
-    name: 'CLICK NOW',
-    audio: '/media/sounds/click-now.mp3',
-  },
-  {
-    name: 'Ezequiel Me Pela La Vrg',
-    audio: '/media/sounds/ezequiel-me-pela-la-vrg.mp3',
-  },
-  {
-    name: 'Ski-buddy',
-    audio: '/media/sounds/ski-buddy.mp3',
-  },
-  {
-    name: '4 Big Guys (BUT BETTER)',
-    audio: '/media/sounds/4-big-guys-but-better.mp3',
-  },
-  {
     name: "I DON'T THINK YOU HAVE THE FACILITIES",
     audio:
       '/media/sounds/i_dont_think_you_have_the_facilities_big_manyoutubetomp3.mp3',
-  },
-  {
-    name: 'Я чеченец бля',
-    audio: '/media/sounds/ia-chechenets-blia.mp3',
-  },
-  {
-    name: 'me chupa tre pingos',
-    audio: '/media/sounds/me-chupa-3-pingos-original_pOm71PV.mp3',
   },
   {
     name: 'helloo daarling',
@@ -6136,10 +4670,6 @@ export const pranks = [
   {
     name: 'ima make u pop like that',
     audio: '/media/sounds/ima-make-u-pop-like-that.mp3',
-  },
-  {
-    name: 'furt',
-    audio: '/media/sounds/furt.mp3',
   },
   {
     name: 'сирена бро',
@@ -6158,10 +4688,6 @@ export const pranks = [
     audio: '/media/sounds/west-jami-2-online-audio-converter.mp3',
   },
   {
-    name: 'me chupa tre pingos',
-    audio: '/media/sounds/me-chupa-3-pingos-original_pOm71PV.mp3',
-  },
-  {
     name: 'TCHADO GARGA',
     audio: '/media/sounds/tchado-garga.mp3',
   },
@@ -6172,10 +4698,6 @@ export const pranks = [
   {
     name: 'Elevator doors closing',
     audio: '/media/sounds/elevator-doors-closing.mp3',
-  },
-  {
-    name: 'IM NACIST',
-    audio: '/media/sounds/im-nacist.mp3',
   },
   {
     name: 'My name is Dion Ducker',
@@ -6226,20 +4748,12 @@ export const pranks = [
     audio: '/media/sounds/mnia.mp3',
   },
   {
-    name: 'orangemorange du wurdest gefickt',
-    audio: '/media/sounds/orangemorange-du-wurdest-gefickt.mp3',
-  },
-  {
     name: 'Ero erro',
     audio: '/media/sounds/erro_CNZ8fWd.mp3',
   },
   {
     name: 'LomAUGHT',
     audio: '/media/sounds/lomaught_s5SYXM7.mp3',
-  },
-  {
-    name: 'mnmn chyen',
-    audio: '/media/sounds/mnmn-chyen.mp3',
   },
   {
     name: 'Not good for my rage',
@@ -6258,16 +4772,8 @@ export const pranks = [
     audio: '/media/sounds/spanish-man-cry.mp3',
   },
   {
-    name: 'Vape hljóð',
-    audio: '/media/sounds/vape-hljod.mp3',
-  },
-  {
     name: 'sit down',
     audio: '/media/sounds/m_fixed_e69K9W8.mp3',
-  },
-  {
-    name: 'Benthe',
-    audio: '/media/sounds/benthe.mp3',
   },
   {
     name: 'Yayayden2',
@@ -6294,10 +4800,6 @@ export const pranks = [
     audio: '/media/sounds/sleepyivan.mp3',
   },
   {
-    name: 'ELMO KNOWS WHERE U LIVE',
-    audio: '/media/sounds/elmo-knows-where-u-live.mp3',
-  },
-  {
     name: 'hey hey hey hey hey hey',
     audio: '/media/sounds/hey_listen_XGp3IGx.mp3',
   },
@@ -6308,10 +4810,6 @@ export const pranks = [
   {
     name: 'LomAUGHT',
     audio: '/media/sounds/lomaught_s5SYXM7.mp3',
-  },
-  {
-    name: 'gsbsnxwqodd',
-    audio: '/media/sounds/gsbsnxwqodd.mp3',
   },
   {
     name: 'Panida cute jumpscare',
@@ -6370,16 +4868,8 @@ export const pranks = [
     audio: '/media/sounds/m_fixed_e69K9W8.mp3',
   },
   {
-    name: 'orangemorange du wurdest gefickt',
-    audio: '/media/sounds/orangemorange-du-wurdest-gefickt.mp3',
-  },
-  {
     name: 'fart6978 (fixed)',
     audio: '/media/sounds/fart6978-fixed.mp3',
-  },
-  {
-    name: 'BURP REMIX',
-    audio: '/media/sounds/remix-burp.mp3',
   },
   {
     name: 'Смачный uwu',
@@ -6406,10 +4896,6 @@ export const pranks = [
     audio: '/media/sounds/yall-got-any-beans-but-better.mp3',
   },
   {
-    name: 'ELMO KNOWS WHERE U LIVE',
-    audio: '/media/sounds/elmo-knows-where-u-live.mp3',
-  },
-  {
     name: 'Emine',
     audio: '/media/sounds/limon1_xxBQY6l.mp3',
   },
@@ -6434,10 +4920,6 @@ export const pranks = [
     audio: '/media/sounds/dag-vriendjes-tv-versie-mp3cut.mp3',
   },
   {
-    name: 'Kontneuken',
-    audio: '/media/sounds/kontneuken.mp3',
-  },
-  {
     name: 'Arinkiking',
     audio: '/media/sounds/arinkiking.mp3',
   },
@@ -6452,10 +4934,6 @@ export const pranks = [
   {
     name: 'Hirsch',
     audio: '/media/sounds/marcel_cWTwL5X.mp3',
-  },
-  {
-    name: 'ELMO KNOWS WHERE U LIVE',
-    audio: '/media/sounds/elmo-knows-where-u-live.mp3',
   },
   {
     name: 'HOLOLAIBU',
@@ -6486,10 +4964,6 @@ export const pranks = [
     audio: '/media/sounds/m4a1_single-kibblesbob-8540445_mK0Ebbk.mp3',
   },
   {
-    name: 'Уверяю вас',
-    audio: '/media/sounds/uveriaiu-vas.mp3',
-  },
-  {
     name: 'E - Looking good',
     audio: '/media/sounds/e-looking-good_XNj0YaJ.mp3',
   },
@@ -6510,10 +4984,6 @@ export const pranks = [
     audio: '/media/sounds/coolin.mp3',
   },
   {
-    name: 'mnmn chyen',
-    audio: '/media/sounds/mnmn-chyen.mp3',
-  },
-  {
     name: 'dixculpa_deva',
     audio: '/media/sounds/dixculpa-deva.mp3',
   },
@@ -6528,10 +4998,6 @@ export const pranks = [
   {
     name: 'menm nonw ou paka ekri',
     audio: '/media/sounds/menm-nonw-ou-paka-ekri.mp3',
-  },
-  {
-    name: 'Vape hljóð',
-    audio: '/media/sounds/vape-hljod.mp3',
   },
   {
     name: 'i love toy trains oh no 14',
@@ -6556,10 +5022,6 @@ export const pranks = [
   {
     name: 'Bassie en adriaan',
     audio: '/media/sounds/dag-vriendjes-tv-versie-mp3cut.mp3',
-  },
-  {
-    name: 'Kontneuken',
-    audio: '/media/sounds/kontneuken.mp3',
   },
   {
     name: 'Arinkiking',

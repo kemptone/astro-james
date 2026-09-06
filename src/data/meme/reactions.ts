@@ -28,20 +28,12 @@ export const reactions = [
         "audio": "/media/sounds/gato-riendo_6bOc2ur.mp3"
     },
     {
-        "name": "Это не просто член",
-        "audio": "/media/sounds/eto-ne-prosto-chlen_8sua431.mp3"
-    },
-    {
         "name": "i feel good !!!",
         "audio": "/media/sounds/james_brown_-_i_got_you_i_feel_good-1-i-got-you-i-feel-goodtrack-1.mp3"
     },
     {
         "name": "Michael Jackson Hee Hee",
         "audio": "/media/sounds/michael-jackson-hee-hee.mp3"
-    },
-    {
-        "name": "hahaha gago",
-        "audio": "/media/sounds/gago-effect-by-cong-tv.mp3"
     },
     {
         "name": "Eww brother eww",
@@ -64,16 +56,8 @@ export const reactions = [
         "audio": "/media/sounds/tmp8ljn9e7h.mp3"
     },
     {
-        "name": "CEBOLINHA MALTRATANDO",
-        "audio": "/media/sounds/cebolinha-maltratando.mp3"
-    },
-    {
         "name": "Babalu wow",
         "audio": "/media/sounds/babalu-wow.mp3"
-    },
-    {
-        "name": "Hawk Tuah!",
-        "audio": "/media/sounds/hawk-tuah_SRaUp2L.mp3"
     },
     {
         "name": "goofy ahh runnin",
@@ -92,20 +76,12 @@ export const reactions = [
         "audio": "/media/sounds/dorime_WdWNsGk.mp3"
     },
     {
-        "name": "detector de marica",
-        "audio": "/media/sounds/79177.mp3"
-    },
-    {
         "name": "Jesus is Lord",
         "audio": "/media/sounds/jesus-is-lord-sound-effect.mp3"
     },
     {
         "name": "Anong Kailangan",
         "audio": "/media/sounds/pinoy-reference-mp3cut.mp3"
-    },
-    {
-        "name": "Chalti Firti Cocaine ...",
-        "audio": "/media/sounds/chalti-firti-cocaine.mp3"
     },
     {
         "name": "Disconnect discord",
@@ -122,10 +98,6 @@ export const reactions = [
     {
         "name": "Bongo Feet",
         "audio": "/media/sounds/bongo-feet.mp3"
-    },
-    {
-        "name": "AHHH IK KRIJG EEN STIJVE",
-        "audio": "/media/sounds/ahhh-ik-krijg-een-stijve.mp3"
     },
     {
         "name": "KAK GEM PAHAM",
@@ -176,10 +148,6 @@ export const reactions = [
         "audio": "/media/sounds/answer-correct.mp3"
     },
     {
-        "name": "zizi fesse",
-        "audio": "/media/sounds/zizi-fesse.mp3"
-    },
-    {
         "name": "GERMAN SPONGEBOB (LOUD AF)",
         "audio": "/media/sounds/german-spongebob.mp3"
     },
@@ -216,10 +184,6 @@ export const reactions = [
         "audio": "/media/sounds/oh_no_1.mp3"
     },
     {
-        "name": "What the Hell Oh My Gawd No Way",
-        "audio": "/media/sounds/wthomg-pt-2.mp3"
-    },
-    {
         "name": "Punch! Sound",
         "audio": "/media/sounds/punch-sound-effect.mp3"
     },
@@ -236,16 +200,8 @@ export const reactions = [
         "audio": "/media/sounds/final_60108db6919bc200b087a3a2_239343.mp3"
     },
     {
-        "name": "On s'en bat les couilles 2",
-        "audio": "/media/sounds/mon-film_1.mp3"
-    },
-    {
         "name": "Gõ bàn phím",
         "audio": "/media/sounds/go-ban-phim.mp3"
-    },
-    {
-        "name": "vai mazé po crl pá",
-        "audio": "/media/sounds/vai-maze-po-crl-pa.mp3"
     },
     {
         "name": "TF2 Nom nom nom",
@@ -262,10 +218,6 @@ export const reactions = [
     {
         "name": "The Simpsons - Nelson's HA-HA!",
         "audio": "/media/sounds/the-simpsons-nelsons-haha.mp3"
-    },
-    {
-        "name": "mim",
-        "audio": "/media/sounds/meme-online-audio-converter_1.mp3"
     },
     {
         "name": "Star Platinum Ora Ora Ora",
@@ -312,16 +264,8 @@ export const reactions = [
         "audio": "/media/sounds/tiro.mp3"
     },
     {
-        "name": "Maa ka bhosda madarchod",
-        "audio": "/media/sounds/maa-ka-bhosda-madarchod.mp3"
-    },
-    {
         "name": "THX",
         "audio": "/media/sounds/thx.mp3"
-    },
-    {
-        "name": "einfach mal fresse halten",
-        "audio": "/media/sounds/pinguin-wennman-keine-ahnung-hateinfach-mal-die-fresse-halten.mp3"
     },
     {
         "name": "AWP CSGO",
@@ -348,16 +292,8 @@ export const reactions = [
         "audio": "/media/sounds/general-lee-horn.mp3"
     },
     {
-        "name": "Merry Christmas, ya filthy...",
-        "audio": "/media/sounds/merry-christmas-you-filthy-animal.mp3"
-    },
-    {
         "name": "Aplausos eeee",
         "audio": "/media/sounds/aplausos-eeee.mp3"
-    },
-    {
-        "name": "Дед орёт АЙ БЛЯТЬ!",
-        "audio": "/media/sounds/ded-oriot-ai-bliat.mp3"
     },
     {
         "name": "SpongeBob - A Few Moments Later",
@@ -370,14 +306,6 @@ export const reactions = [
     {
         "name": "Grito de Terror",
         "audio": "/media/sounds/grito-de-terror.mp3"
-    },
-    {
-        "name": "zamknij pizde bo cie podpale",
-        "audio": "/media/sounds/zamknij-pizde-bo-cie-podpale.mp3"
-    },
-    {
-        "name": "Indian Kid Funny asf",
-        "audio": "/media/sounds/record-online-voice-recorder_37uPSci.mp3"
     },
     {
         "name": "cristiano ronaldo buenas noches",
@@ -432,10 +360,6 @@ export const reactions = [
         "audio": "/media/sounds/neil-degrasse-tyson-saying-nyoom-neil-degrasse-tyson-saying-nyoom.mp3"
     },
     {
-        "name": "le caca c'est délicieux",
-        "audio": "/media/sounds/caca_c_d_licieux_.mp3"
-    },
-    {
         "name": "Epic Sax Guy",
         "audio": "/media/sounds/epicsaxguy.mp3"
     },
@@ -474,10 +398,6 @@ export const reactions = [
     {
         "name": "Chewbacca ROAR",
         "audio": "/media/sounds/chewy_roar.mp3"
-    },
-    {
-        "name": "Cala-te crl",
-        "audio": "/media/sounds/cala-te-crl.mp3"
     },
     {
         "name": "Gotta go fast",
@@ -520,10 +440,6 @@ export const reactions = [
         "audio": "/media/sounds/shame-1.mp3"
     },
     {
-        "name": "Deja de Llorar maldita p4ta",
-        "audio": "/media/sounds/deja-de-llorar-maldita-p4ta.mp3"
-    },
-    {
         "name": "индус смех",
         "audio": "/media/sounds/indus-smekh.mp3"
     },
@@ -548,10 +464,6 @@ export const reactions = [
         "audio": "/media/sounds/xiao-lin-zhi-yao.mp3"
     },
     {
-        "name": "Tuar Memek",
-        "audio": "/media/sounds/tuar-memek.mp3"
-    },
-    {
         "name": "como é amigo?",
         "audio": "/media/sounds/como-e-amigo.mp3"
     },
@@ -560,16 +472,8 @@ export const reactions = [
         "audio": "/media/sounds/roblox-laugh.mp3"
     },
     {
-        "name": "bomboclaat",
-        "audio": "/media/sounds/bomboclaat.mp3"
-    },
-    {
         "name": "bass phonk",
         "audio": "/media/sounds/record-online-voice-recorder_bkb6PUo.mp3"
-    },
-    {
-        "name": "bomboclaat",
-        "audio": "/media/sounds/bomboclaat.mp3"
     },
     {
         "name": "como é amigo?",
@@ -578,10 +482,6 @@ export const reactions = [
     {
         "name": "bomba",
         "audio": "/media/sounds/bomba_www.mp3"
-    },
-    {
-        "name": "TAK TY SI KOKOT",
-        "audio": "/media/sounds/tak-ty-si-kokot.mp3"
     },
     {
         "name": "Ooh Wah Ah Ah Ah",
@@ -596,24 +496,12 @@ export const reactions = [
         "audio": "/media/sounds/amenbopurasu-usodaroo.mp3"
     },
     {
-        "name": "Tava fora do brasil irmão?",
-        "audio": "/media/sounds/tu-tava-fora-do-brasil-irmao__128k.mp3"
-    },
-    {
         "name": "spongebob Hi How Are Ya?",
         "audio": "/media/sounds/spongebob-hi-how-are-ya-.mp3"
     },
     {
-        "name": "Terrorists Win",
-        "audio": "/media/sounds/terrorist-wins.mp3"
-    },
-    {
         "name": "Grito da aguia",
         "audio": "/media/sounds/grito-de-aguila-efecto.mp3"
-    },
-    {
-        "name": "Nos vimos giles ctm",
-        "audio": "/media/sounds/nos-vimou0027-giles-ctm-nuevoexito.mp3"
     },
     {
         "name": "ICQ Sound",
@@ -660,10 +548,6 @@ export const reactions = [
         "audio": "/media/sounds/hellou.mp3"
     },
     {
-        "name": "silence! i kill you",
-        "audio": "/media/sounds/ahmed-the-dead-terrorist-silence-i-kill-you_.mp3"
-    },
-    {
         "name": "Rage Scream",
         "audio": "/media/sounds/thank-you-for-200-000-subscribers-mp3cut.mp3"
     },
@@ -700,10 +584,6 @@ export const reactions = [
         "audio": "/media/sounds/era-hoy-ramon-daniel-peredo.mp3"
     },
     {
-        "name": "Jacek- gorące mamuśki",
-        "audio": "/media/sounds/jacek-gorace-mamuski.mp3"
-    },
-    {
         "name": "Adele- Hello, It's Me",
         "audio": "/media/sounds/helloitsmemusic.mp3"
     },
@@ -712,16 +592,8 @@ export const reactions = [
         "audio": "/media/sounds/hellou.mp3"
     },
     {
-        "name": "Nos vimos giles ctm",
-        "audio": "/media/sounds/nos-vimou0027-giles-ctm-nuevoexito.mp3"
-    },
-    {
         "name": "Undertale squeak",
         "audio": "/media/sounds/sqek.mp3"
-    },
-    {
-        "name": "Jacek- gorące mamuśki",
-        "audio": "/media/sounds/jacek-gorace-mamuski.mp3"
     },
     {
         "name": "Nooooooooob",
@@ -740,14 +612,6 @@ export const reactions = [
         "audio": "/media/sounds/void_2.mp3"
     },
     {
-        "name": "Erdoganin Götkılı",
-        "audio": "/media/sounds/erdoganin-gotkili.mp3"
-    },
-    {
-        "name": "German Spongebob",
-        "audio": "/media/sounds/german-spongebob_Qwr5UGa.mp3"
-    },
-    {
         "name": "Its raining Tacos",
         "audio": "/media/sounds/vlc-record-2020-04-05-08h19m15s-parry-gripp-boonebum-.mp3"
     },
@@ -764,16 +628,8 @@ export const reactions = [
         "audio": "/media/sounds/female-voice-saying-hello-sound-effect_ER6JhPd.mp3"
     },
     {
-        "name": "los insultos de dross",
-        "audio": "/media/sounds/los-insultos-de-dross_yfzhm0bb.mp3"
-    },
-    {
         "name": "Im dead AHH- tf2 scout",
         "audio": "/media/sounds/im-dead-ahh-tf2-scout.mp3"
-    },
-    {
-        "name": "Minggir lu miskin",
-        "audio": "/media/sounds/minggir-lu-miskin_PZ9aaBO.mp3"
     },
     {
         "name": "Shade Button",
@@ -800,10 +656,6 @@ export const reactions = [
         "audio": "/media/sounds/company-carryminati.mp3"
     },
     {
-        "name": "Ya me crecio la verga",
-        "audio": "/media/sounds/ya-me-crecio-la-verga.mp3"
-    },
-    {
         "name": "berrante",
         "audio": "/media/sounds/toque-de-berrante-para-celular.mp3"
     },
@@ -820,16 +672,8 @@ export const reactions = [
         "audio": "/media/sounds/neighbor-gasp.mp3"
     },
     {
-        "name": "вот блять ты нахуй",
-        "audio": "/media/sounds/vot-bliat-ty-nakhui.mp3"
-    },
-    {
         "name": "glogloglo",
         "audio": "/media/sounds/record-online-voice-recorder_pRIdcz7.mp3"
-    },
-    {
-        "name": "te voy a romper bien el - el bananero",
-        "audio": "/media/sounds/te-voy-a-romper-bien-el-el-bananero.mp3"
     },
     {
         "name": "Goal goal goal goal gooooaaaaalllllll",
@@ -856,10 +700,6 @@ export const reactions = [
         "audio": "/media/sounds/the-x-files-theme.mp3"
     },
     {
-        "name": "вот блять ты нахуй",
-        "audio": "/media/sounds/vot-bliat-ty-nakhui.mp3"
-    },
-    {
         "name": "Discord notification sound",
         "audio": "/media/sounds/discord-notification_at5DQrf.mp3"
     },
@@ -878,10 +718,6 @@ export const reactions = [
     {
         "name": "GODFATHER THEME",
         "audio": "/media/sounds/godfather-5.mp3"
-    },
-    {
-        "name": "te voy a romper bien el - el bananero",
-        "audio": "/media/sounds/te-voy-a-romper-bien-el-el-bananero.mp3"
     },
     {
         "name": "EU SOU RICA",
@@ -920,16 +756,8 @@ export const reactions = [
         "audio": "/media/sounds/all-of-tf2-laughing-at-you-at-once.mp3"
     },
     {
-        "name": "Milan Kreun",
-        "audio": "/media/sounds/milan-kreun.mp3"
-    },
-    {
         "name": "This. Is. Rocket League!",
         "audio": "/media/sounds/this-is-rl.mp3"
-    },
-    {
-        "name": "boller",
-        "audio": "/media/sounds/boller.mp3"
     },
     {
         "name": "Un forastero",
@@ -946,10 +774,6 @@ export const reactions = [
     {
         "name": "Wow Babalu",
         "audio": "/media/sounds/wow-babalu.mp3"
-    },
-    {
-        "name": "Nobru gelo invertido",
-        "audio": "/media/sounds/nobru-gelo-invertido.mp3"
     },
     {
         "name": "Bouten",
@@ -980,10 +804,6 @@ export const reactions = [
         "audio": "/media/sounds/crowd-cheer.mp3"
     },
     {
-        "name": "skeleton roasting minecraft meme",
-        "audio": "/media/sounds/skeleton-roasting-minecraft-meme.mp3"
-    },
-    {
         "name": "Melcochita - No Vayan",
         "audio": "/media/sounds/melcochita-no-vayan.mp3"
     },
@@ -1004,10 +824,6 @@ export const reactions = [
         "audio": "/media/sounds/san-francisco-49ers-foghorn.mp3"
     },
     {
-        "name": "skeleton roasting minecraft meme",
-        "audio": "/media/sounds/skeleton-roasting-minecraft-meme.mp3"
-    },
-    {
         "name": "I Will Remember You",
         "audio": "/media/sounds/i-will-remember-you-1.mp3"
     },
@@ -1016,20 +832,8 @@ export const reactions = [
         "audio": "/media/sounds/hehe-boi.mp3"
     },
     {
-        "name": "South Park - Wiener Chorus",
-        "audio": "/media/sounds/my-song-32.mp3"
-    },
-    {
-        "name": "Не хочу учиться хочу обдрачится",
-        "audio": "/media/sounds/ne-khochu-uchitsia-khochu-obdrachitsia.mp3"
-    },
-    {
         "name": " Mario Gibberish 2",
         "audio": "/media/sounds/grabish.mp3"
-    },
-    {
-        "name": "Kanawa thowa",
-        "audio": "/media/sounds/kanawa-thowa.mp3"
     },
     {
         "name": "Predator Effect Sound",
@@ -1116,14 +920,6 @@ export const reactions = [
         "audio": "/media/sounds/pero-por-favor-compaltan.mp3"
     },
     {
-        "name": "CR7 Casa do Chocapitos",
-        "audio": "/media/sounds/cr7-casa-do-chocapitos.mp3"
-    },
-    {
-        "name": "sapeee - el bananero",
-        "audio": "/media/sounds/sapeee-el-bananero.mp3"
-    },
-    {
         "name": "Eeeee..........",
         "audio": "/media/sounds/its-in-the-game.mp3"
     },
@@ -1134,10 +930,6 @@ export const reactions = [
     {
         "name": "war drums",
         "audio": "/media/sounds/war-drums1.mp3"
-    },
-    {
-        "name": "Чего бл**ть?",
-        "audio": "/media/sounds/m_fixed_h33v121.mp3"
     },
     {
         "name": "Lil Jon - whaaat",
@@ -1164,16 +956,8 @@ export const reactions = [
         "audio": "/media/sounds/eas-alert-sound-fx.mp3"
     },
     {
-        "name": "sapeee - el bananero",
-        "audio": "/media/sounds/sapeee-el-bananero.mp3"
-    },
-    {
         "name": "EA Sports Meme",
         "audio": "/media/sounds/ea-sports-meme-eeee_xHt17Ki.mp3"
-    },
-    {
-        "name": "Чего бл**ть?",
-        "audio": "/media/sounds/m_fixed_h33v121.mp3"
     },
     {
         "name": "que me está pasando - el bananero",
@@ -1248,14 +1032,6 @@ export const reactions = [
         "audio": "/media/sounds/euy-kobo-kanaeru.mp3"
     },
     {
-        "name": "Mervin Silva - Mona Pakayada",
-        "audio": "/media/sounds/mervin-silva-mona-pakayada.mp3"
-    },
-    {
-        "name": "Nando Moura - Estou Lascado",
-        "audio": "/media/sounds/meme-base-putz-grila-estou-lascado-nando-moura.mp3"
-    },
-    {
         "name": "Oh my god!! girl screaming",
         "audio": "/media/sounds/oh-my-god_ekYm7s9.mp3"
     },
@@ -1266,10 +1042,6 @@ export const reactions = [
     {
         "name": "Fart and Vomiting infra",
         "audio": "/media/sounds/fart-and-vomit-01_DCHENod.mp3"
-    },
-    {
-        "name": "Polska Gurom Louder",
-        "audio": "/media/sounds/polska-gurom-louder.mp3"
     },
     {
         "name": "someone watching me",
@@ -1294,10 +1066,6 @@ export const reactions = [
     {
         "name": "HAH_Tercengang",
         "audio": "/media/sounds/hah-tercengang.mp3"
-    },
-    {
-        "name": "sapeee - el bananero",
-        "audio": "/media/sounds/sapeee-el-bananero.mp3"
     },
     {
         "name": "yeter ulan yeter",
@@ -1358,10 +1126,6 @@ export const reactions = [
     {
         "name": "Hatt Nishant jindal",
         "audio": "/media/sounds/hatt-nishant-jindal.mp3"
-    },
-    {
-        "name": "ruh roh raggy",
-        "audio": "/media/sounds/raggy.mp3"
     },
     {
         "name": "Magic-coins",
@@ -1488,14 +1252,6 @@ export const reactions = [
         "audio": "/media/sounds/y-mjnwwwwwwwwn-bw-byr.mp3"
     },
     {
-        "name": "Tele van a tököm veled",
-        "audio": "/media/sounds/tele-van-a-tokom-veled.mp3"
-    },
-    {
-        "name": "Mastu Theodort Mcdo",
-        "audio": "/media/sounds/mastu-theodort-mcdo.mp3"
-    },
-    {
         "name": "someone watching me",
         "audio": "/media/sounds/rockwell-somebodys-watching-me-official-video.mp3"
     },
@@ -1512,10 +1268,6 @@ export const reactions = [
         "audio": "/media/sounds/n-mlt-yh.mp3"
     },
     {
-        "name": "Sora thinks you're stupid",
-        "audio": "/media/sounds/sora-thinks-youre-stupid.mp3"
-    },
-    {
         "name": "HEHEHEHEHEHEHEHEHEHEHEHEHHEHEE",
         "audio": "/media/sounds/he.mp3"
     },
@@ -1524,16 +1276,8 @@ export const reactions = [
         "audio": "/media/sounds/im-so-excited.mp3"
     },
     {
-        "name": "Ferme ta gueule (Bassem)",
-        "audio": "/media/sounds/ferme-ta-gueule-bassem.mp3"
-    },
-    {
         "name": "crowd cheer",
         "audio": "/media/sounds/crowd-cheer.mp3"
-    },
-    {
-        "name": "kurwo z wykopu rafonix",
-        "audio": "/media/sounds/ty_kurwo_z_wykopu.mp3"
     },
     {
         "name": "Limp Bizkit Rollin",
@@ -1542,10 +1286,6 @@ export const reactions = [
     {
         "name": "yuhu",
         "audio": "/media/sounds/yuhu.mp3"
-    },
-    {
-        "name": "Ana Big Toilet Girl Farts",
-        "audio": "/media/sounds/ana-big-toilet-girl-farts.mp3"
     },
     {
         "name": "wait a minute, who are you lite",
@@ -1564,16 +1304,8 @@ export const reactions = [
         "audio": "/media/sounds/jigsaw-puppet-laugh.mp3"
     },
     {
-        "name": "OH YEAH BABY",
-        "audio": "/media/sounds/oh_yeah.mp3"
-    },
-    {
         "name": "Eeeee..........",
         "audio": "/media/sounds/its-in-the-game.mp3"
-    },
-    {
-        "name": "Who the hell cares Family guy peter",
-        "audio": "/media/sounds/who-the-hell-cares-family-guy-peter.mp3"
     },
     {
         "name": "AuronPlay - COMO",
@@ -1596,10 +1328,6 @@ export const reactions = [
         "audio": "/media/sounds/cartoon-spring.mp3"
     },
     {
-        "name": "ايدك جمبك",
-        "audio": "/media/sounds/ydk-jmbk.mp3"
-    },
-    {
         "name": "JOHN CENA - Acapella Edition",
         "audio": "/media/sounds/jao_1.mp3"
     },
@@ -1616,10 +1344,6 @@ export const reactions = [
         "audio": "/media/sounds/inhuman-reactions_1.mp3"
     },
     {
-        "name": "ruh roh raggy",
-        "audio": "/media/sounds/raggy.mp3"
-    },
-    {
         "name": "Wa Wa Wa WAAAAAAA!!!",
         "audio": "/media/sounds/wa-wa-wa-waaaaaaa.mp3"
     },
@@ -1632,20 +1356,12 @@ export const reactions = [
         "audio": "/media/sounds/who-r-u-1.mp3"
     },
     {
-        "name": "Auf Alkohol (deutsch)",
-        "audio": "/media/sounds/auf-alkohol.mp3"
-    },
-    {
         "name": "why is it spicy",
         "audio": "/media/sounds/why-is-it-spicy-kissmytisha.mp3"
     },
     {
         "name": "Cake At Stake theme",
         "audio": "/media/sounds/cake-at-stake-theme.mp3"
-    },
-    {
-        "name": "Tele van a tököm veled",
-        "audio": "/media/sounds/tele-van-a-tokom-veled.mp3"
     },
     {
         "name": "смех",
@@ -1676,18 +1392,6 @@ export const reactions = [
         "audio": "/media/sounds/audio-lemons.mp3"
     },
     {
-        "name": "Sora thinks you're stupid",
-        "audio": "/media/sounds/sora-thinks-youre-stupid.mp3"
-    },
-    {
-        "name": "foda-se",
-        "audio": "/media/sounds/foda-se_NZuuIjf.mp3"
-    },
-    {
-        "name": "Valorant Omen",
-        "audio": "/media/sounds/inshot_20210803_175152419.mp3"
-    },
-    {
         "name": "Message - Dont be a menace",
         "audio": "/media/sounds/message_TiB9qhX.mp3"
     },
@@ -1714,14 +1418,6 @@ export const reactions = [
     {
         "name": "combinedonut",
         "audio": "/media/sounds/combinedonuteater.mp3"
-    },
-    {
-        "name": "Mastu Theodort Mcdo",
-        "audio": "/media/sounds/mastu-theodort-mcdo.mp3"
-    },
-    {
-        "name": "Who the hell cares Family guy peter",
-        "audio": "/media/sounds/who-the-hell-cares-family-guy-peter.mp3"
     },
     {
         "name": "Ram rider scream",
@@ -1792,10 +1488,6 @@ export const reactions = [
         "audio": "/media/sounds/avengers-endgame-i-love-you-3000-scene-mp3cut.mp3"
     },
     {
-        "name": "มึงควายหรือมึงควายไอเหี้ย",
-        "audio": "/media/sounds/muengkhwaayhruue-muengkhwaayai-ehiiy.mp3"
-    },
-    {
         "name": "ESPN Update",
         "audio": "/media/sounds/the-espn-sound.mp3"
     },
@@ -1803,18 +1495,10 @@ export const reactions = [
         "name": "AI SUQUIN DE MURUCUJA",
         "audio": "/media/sounds/ai-suquin-de-murucuja.mp3"
     },
-    {
-        "name": "Ai que Deliciaaan (Pablo Vittar)",
-        "audio": "/media/sounds/pabllo-vittar-aiin-q-deliciaann-uarroinn-original.mp3"
-    },
     // {
     //     "name": "YOUR BROKE andrew tate",
     //     "audio": "/media/sounds/your-broke-andrew-tate_fQJoCVt.mp3"
     // },
-    {
-        "name": "سافل تبا لك ياصعلوك",
-        "audio": "/media/sounds/sfl-tb-lk-ys-lwk.mp3"
-    },
     {
         "name": "ginagawa mu",
         "audio": "/media/sounds/ginagawa-mo-sound-effect.mp3"
