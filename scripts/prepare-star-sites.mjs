@@ -10,7 +10,7 @@ const distDirectory = path.join(projectRoot, 'dist')
 const clientDirectory = path.join(distDirectory, 'client')
 const stagedDirectory = path.join(projectRoot, '.sites-star-dist')
 const stagedClientDirectory = path.join(stagedDirectory, 'client')
-const staticRoutes = ['star', 'wordle', 'wavegame', 'sro9']
+const staticRoutes = ['star', 'wordle', 'wavegame', 'sro9', 'sro-old']
 
 await rm(stagedDirectory, {recursive: true, force: true})
 await mkdir(path.join(stagedDirectory, 'server'), {recursive: true})
@@ -65,7 +65,7 @@ await cp(
 
 await writeFile(
   path.join(stagedDirectory, 'BUILD.txt'),
-  'Astro James Star Narrator, Wordle, Wave Game, and SRO9 — Cloudflare Workers-compatible Sites build\n'
+  'Astro James Star Narrator, Wordle, Wave Game, SRO9, and SRO Old — Cloudflare Workers-compatible Sites build\n'
 )
 
 await rm(distDirectory, {recursive: true, force: true})
