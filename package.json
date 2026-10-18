@@ -19,6 +19,7 @@
     "test:wordle": "node --test src/core/wordle/game.test.ts",
     "test:sro9": "node --experimental-strip-types --test src/helpers/timeHelpers.test.ts",
     "test:wavegame": "node --experimental-strip-types --test src/core/wavegame/logic.test.ts",
+    "test:checkboxgame": "node --experimental-strip-types --test src/core/checkboxgame/*.test.ts",
     "check:city-temperature": "tsc -p tsconfig.city-temperature.json",
     "test:city-temperature": "node --experimental-strip-types --test src/core/city-temperature/*.test.ts",
     "db:generate": "drizzle-kit generate",

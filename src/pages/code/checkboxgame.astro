@@ -7,19 +7,20 @@ const title = "Checkbox Game";
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title}</title>
-  <style>
+  <style is:global>
     body {
       font-family: sans-serif;
-      padding: 2rem;
+      padding: clamp(1rem, 4vw, 2rem);
       max-width: 800px;
       margin: 0 auto;
     }
 
     #title-display {
-      font-size: 100pt;
+      font-size: clamp(2rem, 12vw, 100pt);
       font-weight: bold;
       min-height: 140px;
       margin-bottom: 2rem;
+      overflow-wrap: anywhere;
     }
 
     .setup-section {
@@ -43,26 +44,142 @@ const title = "Checkbox Game";
     }
 
     .combination-row {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(8rem, auto) minmax(0, 1fr);
       align-items: center;
       gap: 1rem;
       margin-bottom: 1rem;
     }
 
-    .combination-row .state-label {
+    .state-label {
       font-weight: bold;
-      min-width: 40px;
+      display: block;
     }
 
-    .combination-row input[type="text"] {
+    .state-pattern {
+      display: block;
+      font-family: monospace;
+      letter-spacing: 0.12em;
+      margin-top: 0.25rem;
+    }
+
+    .state-key {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.5rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .state-key code {
+      font-size: 1rem;
+      white-space: nowrap;
+    }
+
+    #state-display {
+      font-size: 1.5rem;
+      font-weight: bold;
+      white-space: pre-wrap;
+    }
+
+    #pattern-display {
+      font-family: monospace;
+      font-size: 1.5rem;
+      letter-spacing: 0.12em;
+    }
+
+    .state-fields label {
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+
+    .combination-row input[type="text"],
+    .combination-row textarea {
+      font-size: 1.2rem;
+      font-family: inherit;
+      padding: 0.5rem;
+      width: 100%;
+      box-sizing: border-box;
+      min-width: 0;
+      margin-bottom: 0.75rem;
+    }
+
+    .combination-row textarea {
+      resize: vertical;
+    }
+
+    .preview-narrator {
+      font-size: 1rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .narrator-controls {
+      margin-bottom: 2rem;
+    }
+
+    .game-picker {
+      margin-bottom: 1.5rem;
+    }
+
+    .game-picker label,
+    #city-rank-form label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .game-picker select,
+    #city-rank-input {
+      font: inherit;
       font-size: 1.2rem;
       padding: 0.5rem;
-      flex: 1;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .rank-entry {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    #city-rank-input {
+      width: 15rem;
+    }
+
+    #city-rank-error {
+      color: #a12216;
+      min-height: 1.25rem;
+    }
+
+    #city-result {
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #999;
+      border-radius: 0.5rem;
+    }
+
+    #city-name-display {
+      font-size: clamp(1.75rem, 6vw, 3rem);
+      margin: 0.5rem 0 1rem;
+      overflow-wrap: anywhere;
+    }
+
+    #city-rank-display,
+    #city-population-display {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .city-source {
+      line-height: 1.5;
+      margin-top: 2rem;
     }
 
     .checkboxes {
       display: flex;
-      gap: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
       margin-bottom: 2rem;
     }
 
@@ -70,6 +187,32 @@ const title = "Checkbox Game";
       width: 40px;
       height: 40px;
       cursor: pointer;
+      margin: 0;
+    }
+
+    .switch-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 0;
+      padding: 1rem;
+      border: 1px solid #999;
+      border-radius: 0.5rem;
+      min-width: 0;
+    }
+
+    .switch-label {
+      display: grid;
+      justify-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+      .combination-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
     }
 
     button {
@@ -85,7 +228,22 @@ const title = "Checkbox Game";
   </style>
 </head>
 <body>
-  <div id="setup-phase">
+  <h1 id="game-title">{title}</h1>
+  <div class="game-picker">
+    <label for="game-mode">Choose a game</label>
+    <select id="game-mode">
+      <option value="checkbox">Checkbox Game</option>
+      <option value="city">U.S. City Ranking</option>
+    </select>
+  </div>
+  <div class="narrator-controls">
+    <p>Narrator: <strong>Joey from Talkers1</strong></p>
+    <p id="narrator-status" role="status">Ready</p>
+    <button id="stop-narrator-btn" type="button">Stop narrator</button>
+  </div>
+  <section id="checkbox-game" aria-label="Checkbox Game">
+    <p>O = On (checked) · X = Off (unchecked)</p>
+    <div id="setup-phase">
     <div class="setup-section">
       <label for="checkbox-count">Number of Checkboxes:</label>
       <select id="checkbox-count">
@@ -93,126 +251,398 @@ const title = "Checkbox Game";
         <option value="2" selected>2</option>
         <option value="3">3</option>
         <option value="4">4</option>
+        <option value="6">6</option>
       </select>
     </div>
 
-    <h3>Define Titles for Each Combination</h3>
+    <h2>Define Each State</h2>
+    <p>Enter a title and the words Joey should say when you switch to each state.</p>
+    <p id="state-guide"></p>
+    <ul id="state-key" class="state-key hidden" aria-label="Three-switch states"></ul>
     <div id="combinations" class="combinations"></div>
 
     <button id="submit-btn">Submit</button>
   </div>
 
   <div id="play-phase" class="hidden">
-    <div id="title-display"></div>
+    <p id="state-display" role="status"></p>
+    <p id="pattern-display" aria-hidden="true"></p>
+    <div id="title-display" aria-live="polite"></div>
     <div id="checkboxes" class="checkboxes"></div>
+    <button id="replay-narrator-btn" type="button">Replay narrator</button>
     <button id="reset-btn">Reset</button>
   </div>
+  </section>
+
+  <section id="city-game" class="hidden" aria-label="U.S. City Ranking">
+    <h2>Find a city by population rank</h2>
+    <p id="city-range-description">Loading the U.S. city list…</p>
+    <form id="city-rank-form" novalidate>
+      <label for="city-rank-input">Population rank</label>
+      <div class="rank-entry">
+        <input id="city-rank-input" type="text" inputmode="numeric" autocomplete="off"
+          aria-describedby="city-range-description city-rank-error" disabled />
+        <button id="show-city-btn" type="submit" disabled>Open in Maps</button>
+      </div>
+      <p id="city-rank-error" role="alert"></p>
+    </form>
+    <button id="retry-cities-btn" type="button" class="hidden">Reload city list</button>
+    <div id="city-result" class="hidden" aria-live="polite">
+      <p id="city-rank-display"></p>
+      <h3 id="city-name-display"></h3>
+      <p>Estimated population: <span id="city-population-display"></span></p>
+      <p id="city-position-display"></p>
+      <p><a id="city-map-link">Open city in Maps</a></p>
+    </div>
+    <button id="city-replay-btn" type="button" disabled>Replay city narration</button>
+    <p id="city-source" class="city-source hidden">
+      Source: <a id="city-source-link">2025 Census population estimates</a>.{' '}
+      <span id="city-definition"></span>
+    </p>
+  </section>
 
   <script>
+    import {generateCombinations, getStateLabel, formatState} from '../../core/checkboxgame/states';
+    import {CheckboxNarrator} from '../../core/checkboxgame/narrator';
+    import {rankCities, lookupCityRank, buildCityNarration} from '../../core/checkboxgame/city-ranking';
+    import {buildCityMapUrl, type MappedCity} from '../../core/checkboxgame/city-map';
+
     const setupPhase = document.getElementById('setup-phase')!;
     const playPhase = document.getElementById('play-phase')!;
     const checkboxCountSelect = document.getElementById('checkbox-count') as HTMLSelectElement;
     const combinationsDiv = document.getElementById('combinations')!;
     const checkboxesDiv = document.getElementById('checkboxes')!;
     const titleDisplay = document.getElementById('title-display')!;
+    const stateGuide = document.getElementById('state-guide')!;
+    const stateKey = document.getElementById('state-key')!;
+    const stateDisplay = document.getElementById('state-display')!;
+    const patternDisplay = document.getElementById('pattern-display')!;
     const submitBtn = document.getElementById('submit-btn')!;
     const resetBtn = document.getElementById('reset-btn')!;
+    const narratorStatus = document.getElementById('narrator-status')!;
+    const stopNarratorBtn = document.getElementById('stop-narrator-btn')!;
+    const replayNarratorBtn = document.getElementById('replay-narrator-btn') as HTMLButtonElement;
+    const gameModeSelect = document.getElementById('game-mode') as HTMLSelectElement;
+    const checkboxGame = document.getElementById('checkbox-game')!;
+    const cityGame = document.getElementById('city-game')!;
+    const gameTitle = document.getElementById('game-title')!;
+    const cityRangeDescription = document.getElementById('city-range-description')!;
+    const cityRankForm = document.getElementById('city-rank-form') as HTMLFormElement;
+    const cityRankInput = document.getElementById('city-rank-input') as HTMLInputElement;
+    const cityRankError = document.getElementById('city-rank-error')!;
+    const showCityBtn = document.getElementById('show-city-btn') as HTMLButtonElement;
+    const retryCitiesBtn = document.getElementById('retry-cities-btn')!;
+    const cityResult = document.getElementById('city-result')!;
+    const cityRankDisplay = document.getElementById('city-rank-display')!;
+    const cityNameDisplay = document.getElementById('city-name-display')!;
+    const cityPopulationDisplay = document.getElementById('city-population-display')!;
+    const cityPositionDisplay = document.getElementById('city-position-display')!;
+    const cityReplayBtn = document.getElementById('city-replay-btn') as HTMLButtonElement;
+    const citySource = document.getElementById('city-source')!;
+    const citySourceLink = document.getElementById('city-source-link') as HTMLAnchorElement;
+    const cityDefinition = document.getElementById('city-definition')!;
+    const cityMapLink = document.getElementById('city-map-link') as HTMLAnchorElement;
+
+    type CityDataset = {
+      year: number;
+      description: string;
+      sourceUrl: string;
+      cities: MappedCity[];
+    };
+    let cityDataset: CityDataset | undefined;
+    let cityLoad: Promise<void> | undefined;
+    let cityNarration = '';
 
     let checkboxCount = 2;
     let titleMap: Map<string, string> = new Map();
+    const narrationMap = new Map<string, string>();
+    const narrator = new CheckboxNarrator();
     let checkboxes: HTMLInputElement[] = [];
 
-    function generateCombinations(n: number): string[] {
-      const total = Math.pow(2, n);
-      const combinations: string[] = [];
-
-      for (let i = 0; i < total; i++) {
-        let binary = i.toString(2).padStart(n, '0');
-        combinations.push(binary);
-      }
-
-      return combinations;
+    function reportNarration(message: string) {
+      narratorStatus.textContent = message;
     }
 
-    function getCombinationLabel(combination: string, n: number): string {
-      if (n === 1) {
-        return combination === '1' ? '1 only' : 'none';
-      }
-
-      const bits = combination.split('');
-      const checkedIndices = bits
-        .map((bit, idx) => bit === '1' ? idx + 1 : null)
-        .filter(idx => idx !== null);
-
-      if (checkedIndices.length === 0) return 'none';
-      if (checkedIndices.length === n) return 'all';
-      return checkedIndices.join(' & ') + ' only';
+    function stopNarration() {
+      narrator.stop();
+      reportNarration('Ready');
     }
+
+    async function loadCities() {
+      if (cityDataset) return;
+      if (cityLoad) return cityLoad;
+      cityRangeDescription.textContent = 'Loading the U.S. city list…';
+      retryCitiesBtn.classList.add('hidden');
+      cityLoad = (async () => {
+        try {
+          const response = await fetch('/data/us-city-ranking-2025.json');
+          if (!response.ok) throw new Error('City list unavailable');
+          const data = await response.json() as CityDataset;
+          if (!Array.isArray(data.cities) || !data.cities.length) throw new Error('Empty city list');
+          cityDataset = {...data, cities: rankCities(data.cities)};
+          const total = data.cities.length.toLocaleString('en-US');
+          cityRangeDescription.textContent = `Enter a rank from 1 to ${total}, then press Enter to open that city in Apple Maps. Rank 1 is the most populous; rank ${total} is the least populous in this list.`;
+          cityRankInput.placeholder = `1 to ${total}`;
+          cityRankInput.disabled = false;
+          showCityBtn.disabled = false;
+          citySourceLink.href = data.sourceUrl;
+          cityDefinition.textContent = `${data.description} Ties are ordered alphabetically.`;
+          citySource.classList.remove('hidden');
+        } catch {
+          cityRangeDescription.textContent = 'The city list could not load. Reload the list to try again.';
+          retryCitiesBtn.classList.remove('hidden');
+        }
+      })();
+      try {
+        await cityLoad;
+      } finally {
+        cityLoad = undefined;
+      }
+    }
+
+    function changeGame() {
+      stopNarration();
+      const isCity = gameModeSelect.value === 'city';
+      checkboxGame.classList.toggle('hidden', isCity);
+      cityGame.classList.toggle('hidden', !isCity);
+      gameTitle.textContent = isCity ? 'U.S. City Ranking' : 'Checkbox Game';
+      document.title = gameTitle.textContent;
+      if (isCity) {
+        void loadCities();
+      }
+    }
+
+    function teleportToCity(city: MappedCity) {
+      cityMapLink.href = buildCityMapUrl(city);
+      cityMapLink.textContent = `Open ${city.name} in Maps`;
+      // Activate Maps while the player's Enter key or button click is still
+      // the current user gesture, so the browser can hand off to the app.
+      cityMapLink.click();
+    }
+
+    cityRankForm.addEventListener('submit', event => {
+      event.preventDefault();
+      stopNarration();
+      if (!cityDataset) return;
+      const result = lookupCityRank(cityRankInput.value, cityDataset.cities);
+      if (result.ok === false) {
+        cityRankError.textContent = result.error;
+        cityRankInput.setAttribute('aria-invalid', 'true');
+        cityResult.classList.add('hidden');
+        cityReplayBtn.disabled = true;
+        cityNarration = '';
+        cityRankInput.focus();
+        return;
+      }
+      cityRankError.textContent = '';
+      cityRankInput.removeAttribute('aria-invalid');
+      const {rank, city} = result;
+      const total = cityDataset.cities.length;
+      cityRankDisplay.textContent = `Rank ${rank.toLocaleString('en-US')} of ${total.toLocaleString('en-US')}`;
+      cityNameDisplay.textContent = city.name;
+      cityPopulationDisplay.textContent = city.population.toLocaleString('en-US');
+      cityPositionDisplay.textContent = rank === 1
+        ? 'Most populous in this list'
+        : rank === total ? 'Least populous in this list' : `Population estimate for ${cityDataset.year}`;
+      if (cityDataset.cities[rank - 2]?.population === city.population || cityDataset.cities[rank]?.population === city.population) {
+        cityPositionDisplay.textContent += ' · Tied population';
+      }
+      cityResult.classList.remove('hidden');
+      cityNarration = buildCityNarration(rank, city, total, cityDataset.year);
+      cityReplayBtn.disabled = false;
+      void narrator.speak(cityNarration, reportNarration);
+      teleportToCity(city);
+    });
+    gameModeSelect.addEventListener('change', changeGame);
+    retryCitiesBtn.addEventListener('click', () => void loadCities());
+    cityReplayBtn.addEventListener('click', () => {
+      if (cityNarration) void narrator.speak(cityNarration, reportNarration);
+    });
 
     function renderSetup() {
+      stopNarration();
       checkboxCount = parseInt(checkboxCountSelect.value);
       combinationsDiv.innerHTML = '';
 
       const combinations = generateCombinations(checkboxCount);
+      const guides: Record<number, string> = {
+        1: '2 states: O, then X.',
+        2: '4 states: OX, OO, XO, XX.',
+        3: '8 states. Switch 1 is O for states 1–4 and X for states 5–8.',
+        4: '16 states. Each pair follows OX, OO, XO, XX. The right pair changes fastest.',
+        6: '64 states, with two numbers for each state. The left number uses switches 1–3; the right number uses switches 4–6. Each side follows the eight states below. 2 2 = all O, and 8 8 = all X.',
+      };
+      stateGuide.textContent = guides[checkboxCount];
+      stateKey.classList.toggle('hidden', checkboxCount !== 3 && checkboxCount !== 6);
+      stateKey.replaceChildren();
+      if (checkboxCount === 3 || checkboxCount === 6) {
+        generateCombinations(3).forEach(combo => {
+          const item = document.createElement('li');
+          const code = document.createElement('code');
+          code.textContent = `${getStateLabel(combo)}: ${formatState(combo)}`;
+          item.appendChild(code);
+          stateKey.appendChild(item);
+        });
+      }
 
       combinations.forEach((combo, idx) => {
+        if (checkboxCount === 6 && idx % 8 === 0) {
+          const heading = document.createElement('h3');
+          const left = combo.slice(0, 3);
+          heading.textContent = `Left ${getStateLabel(left)} — ${formatState(left)}`;
+          combinationsDiv.appendChild(heading);
+        }
+
         const row = document.createElement('div');
         row.className = 'combination-row';
 
-        const label = document.createElement('span');
-        label.className = 'state-label';
-        label.textContent = `${idx + 1}:`;
+        const label = document.createElement('div');
+        label.id = `state-${combo}`;
+
+        const number = document.createElement('span');
+        number.className = 'state-label';
+        number.textContent = `State ${getStateLabel(combo)}`;
+
+        const pattern = document.createElement('span');
+        pattern.className = 'state-pattern';
+        pattern.textContent = formatState(combo);
+        label.append(number, pattern);
 
         const input = document.createElement('input');
         input.type = 'text';
         input.id = `combo-${combo}`;
-        input.placeholder = `${getCombinationLabel(combo, checkboxCount)} (${combo})`;
+        input.placeholder = 'Enter a title';
+        input.setAttribute('aria-labelledby', `state-${combo} title-label-${combo}`);
+
+        const fields = document.createElement('div');
+        fields.className = 'state-fields';
+        const titleLabel = document.createElement('label');
+        titleLabel.htmlFor = input.id;
+        titleLabel.id = `title-label-${combo}`;
+        titleLabel.textContent = 'Title';
+
+        const narration = document.createElement('textarea');
+        narration.id = `narration-${combo}`;
+        narration.rows = 2;
+        narration.placeholder = 'What should Joey say?';
+        narration.setAttribute('aria-labelledby', `state-${combo} narration-label-${combo}`);
+        const narrationLabel = document.createElement('label');
+        narrationLabel.htmlFor = narration.id;
+        narrationLabel.id = `narration-label-${combo}`;
+        narrationLabel.textContent = 'Narrator text';
+
+        const preview = document.createElement('button');
+        preview.type = 'button';
+        preview.className = 'preview-narrator';
+        preview.textContent = 'Preview Joey';
+        preview.setAttribute('aria-label', `Preview Joey for state ${getStateLabel(combo)}`);
+        preview.addEventListener('click', () => {
+          if (!narration.value.trim()) {
+            narrator.stop();
+            reportNarration('Enter narrator text for this state first.');
+            narration.focus();
+            return;
+          }
+          void narrator.speak(narration.value, reportNarration);
+        });
+
+        fields.append(titleLabel, input, narrationLabel, narration, preview);
 
         row.appendChild(label);
-        row.appendChild(input);
+        row.appendChild(fields);
         combinationsDiv.appendChild(row);
       });
     }
 
     function startGame() {
       titleMap.clear();
+      narrationMap.clear();
       const combinations = generateCombinations(checkboxCount);
 
       combinations.forEach(combo => {
         const input = document.getElementById(`combo-${combo}`) as HTMLInputElement;
         titleMap.set(combo, input.value || '');
+        const narration = document.getElementById(`narration-${combo}`) as HTMLTextAreaElement;
+        narrationMap.set(combo, narration.value);
       });
 
       checkboxesDiv.innerHTML = '';
       checkboxes = [];
 
+      let group: HTMLFieldSetElement;
       for (let i = 0; i < checkboxCount; i++) {
+        if (i === 0 || (checkboxCount === 6 && i === 3)) {
+          group = document.createElement('fieldset');
+          group.className = 'switch-group';
+          const legend = document.createElement('legend');
+          legend.textContent = checkboxCount === 6
+            ? (i === 0 ? 'Left · switches 1–3' : 'Right · switches 4–6')
+            : 'Switches';
+          group.appendChild(legend);
+          checkboxesDiv.appendChild(group);
+        }
+
         const cb = document.createElement('input');
         cb.type = 'checkbox';
         cb.id = `cb-${i}`;
-        cb.addEventListener('change', updateTitle);
+        cb.addEventListener('change', updateState);
         checkboxes.push(cb);
-        checkboxesDiv.appendChild(cb);
+
+        const label = document.createElement('label');
+        label.className = 'switch-label';
+        const number = document.createElement('span');
+        number.textContent = `${i + 1}`;
+        cb.setAttribute('aria-label', `Switch ${i + 1}`);
+        label.append(number, cb);
+        group!.appendChild(label);
       }
 
       setupPhase.classList.add('hidden');
       playPhase.classList.remove('hidden');
-      updateTitle();
+      updateState();
+      checkboxes[0]?.focus();
     }
 
-    function updateTitle() {
+    function speakCurrentState() {
       const state = checkboxes.map(cb => cb.checked ? '1' : '0').join('');
+      const text = narrationMap.get(state) || '';
+      if (!text.trim()) {
+        narrator.stop();
+        reportNarration('No narration for this state.');
+        return;
+      }
+      void narrator.speak(text, reportNarration);
+    }
+
+    function updateState() {
+      const state = checkboxes.map(cb => cb.checked ? '1' : '0').join('');
+      const label = getStateLabel(state);
+      stateDisplay.textContent = `State ${label}`;
+      if (checkboxCount === 6) {
+        const [left, right] = label.split(' ');
+        stateDisplay.setAttribute('aria-label', `State: left ${left}, right ${right}`);
+      } else {
+        stateDisplay.removeAttribute('aria-label');
+      }
+      patternDisplay.textContent = formatState(state);
       titleDisplay.textContent = titleMap.get(state) || '';
+      replayNarratorBtn.disabled = !narrationMap.get(state)?.trim();
+      speakCurrentState();
     }
 
     function resetGame() {
+      stopNarration();
       playPhase.classList.add('hidden');
       setupPhase.classList.remove('hidden');
+      checkboxCountSelect.focus();
     }
 
     checkboxCountSelect.addEventListener('change', renderSetup);
     submitBtn.addEventListener('click', startGame);
     resetBtn.addEventListener('click', resetGame);
+    stopNarratorBtn.addEventListener('click', stopNarration);
+    replayNarratorBtn.addEventListener('click', speakCurrentState);
+    window.addEventListener('pagehide', () => narrator.stop());
 
     renderSetup();
   </script>
