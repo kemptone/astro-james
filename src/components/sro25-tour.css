@@ -1,0 +1,75 @@
+.sro25-tour {
+  color: #333;
+  line-height: 1.6;
+}
+.sro25-tour h2 {
+  margin: 0 0 1rem;
+}
+.sro25-tour p {
+  margin: 0.75rem 0;
+}
+.sro25-tour a {
+  color: #6b1fb7;
+}
+.sro25-tour details {
+  margin: 1.25rem 0;
+  border-top: 1px solid #ccc;
+  padding-top: 1rem;
+}
+.sro25-tour summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.tour-fields {
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.tour-fields label {
+  display: grid;
+  gap: 0.4rem;
+  font-weight: 600;
+}
+.tour-fields select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  background: white;
+  color: #222;
+  font: inherit;
+}
+.tour-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.sro25-tour button {
+  background: #7e22ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.65rem 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+.sro25-tour button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.sro25-tour :focus-visible {
+  outline: 3px solid #264ec9;
+  outline-offset: 3px;
+}
+.sro25-tour fieldset {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+}
+.sro25-tour legend {
+  padding: 0 0.5rem;
+  font-weight: 600;
+}

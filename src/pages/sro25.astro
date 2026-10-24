@@ -1,5 +1,6 @@
 ---
 import Menu from '@/components/menu.astro'
+import Sro25Tour from '@/components/Sro25Tour'
 
 // sro25 - Interactive Controls Game
 ---
@@ -14,11 +15,11 @@ import Menu from '@/components/menu.astro'
     <Menu />
     <div class="container">
       <h1>SRO25 - Interactive Controls</h1>
-      <p class="subtitle">Control the gas valve, plug, and custom slider</p>
+      <p class="subtitle" id="sro25Subtitle">Control the gas valve, plug, and custom slider</p>
 
       <div class="controls-grid">
         <!-- Gas Valve Control -->
-        <div class="control-section">
+        <div class="control-section" id="gasValveSection">
           <h2>Gas Valve</h2>
           <div class="valve-container">
             <svg class="valve-svg" viewBox="0 0 200 200">
@@ -138,6 +139,10 @@ import Menu from '@/components/menu.astro'
           </div>
         </div>
 
+        <div class="control-section" id="tourSection">
+          <Sro25Tour client:load />
+        </div>
+
         <!-- Custom Range Slider -->
         <div class="control-section full-width">
           <h2>Custom Range Slider with Labels</h2>
@@ -253,6 +258,7 @@ import Menu from '@/components/menu.astro'
     </div>
 
     <script>
+      import {readSettings} from '@/core/sro25/settings'
       // Gas Valve Control
       const valveAngle = document.getElementById('valveAngle')
       const valveSlider = document.getElementById('valveSlider')
@@ -260,6 +266,7 @@ import Menu from '@/components/menu.astro'
       const valveHandle = document.getElementById('valveHandle')
 
       function updateValve(angle) {
+        if (readSettings().enabled) return
         const radians = (angle * Math.PI) / 180
         const x1 = 100
         const y1 = 100
@@ -313,7 +320,7 @@ import Menu from '@/components/menu.astro'
 
       plugSlider.addEventListener('input', e => {
         plugState.value = e.target.value
-        updatePlug(e.target.value)
+        updatePlug(Number(e.target.value))
       })
 
       // Custom Range Slider with Labels
@@ -372,7 +379,7 @@ import Menu from '@/components/menu.astro'
         const min = parseInt(sliderMin.value)
         const max = parseInt(sliderMax.value)
 
-        if (min >= max) {
+        if (!Number.isFinite(min) || !Number.isFinite(max) || min >= max) {
           alert('Maximum must be greater than minimum!')
           return
         }
@@ -401,6 +408,7 @@ import Menu from '@/components/menu.astro'
       })
 
       customSlider.addEventListener('input', updateCustomSlider)
+      rangeInputs.addEventListener('input', updateCustomSlider)
 
       // Initialize
       updateValve(0)
@@ -464,6 +472,16 @@ import Menu from '@/components/menu.astro'
         border-radius: 12px;
         padding: 25px;
         border: 2px solid #e0e0e0;
+      }
+
+      .control-section[hidden] { display: none; }
+
+      .controls-grid:has(#gasValveSection:not([hidden])) #tourSection {
+        grid-column: 1 / -1;
+      }
+
+      .controls-grid:has(#gasValveSection[hidden]) #tourSection {
+        order: -1;
       }
 
       .control-section.full-width {

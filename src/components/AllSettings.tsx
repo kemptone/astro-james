@@ -4,6 +4,7 @@ import NumberGameActions from "./numberGame.actions.jsx";
 
 import _LS from "../helpers/localStorage.js";
 import JamesSettings from "./jamesSettings.jsx";
+import DiscoverySetting from "./DiscoverySetting";
 const LS = _LS("Game");
 
 export const SettingItem = (
@@ -48,6 +49,7 @@ export default () => {
             }
             <div className="allSettings">
               <div style={{ height: "70px" }}></div>
+              <DiscoverySetting />
               <dfl>
                 <NumberGameActions />
                 <dt></dt>

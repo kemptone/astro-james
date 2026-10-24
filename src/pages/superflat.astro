@@ -1,0 +1,50 @@
+---
+import '../core/superflat/style.css'
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A free creative block playground. Design superflat layers, build at your own height, and add free content packs." />
+    <title>Superflat · A little world, endless possibilities</title>
+  </head>
+  <body>
+    <header class="topbar"><a href="/" class="brand"><span>▦</span> SUPERFLAT</a><span class="edition">CREATIVE PLAYGROUND</span><button id="save">Save world <span>↗</span></button></header>
+    <main>
+      <div class="intro"><div><p class="eyebrow">YOUR WORLD. YOUR RULES.</p><h1>Start flat.<br /><em>Build anything.</em></h1><p>A patch of possibility, from the void to the sky.</p></div><div class="intro-note"><span>∞</span><p>No game height cap.<br />No coins. Just create.</p></div></div>
+      <div class="workspace">
+        <aside class="panel setup">
+          <div class="section-title"><span class="number">01</span><h2>Make it yours</h2></div>
+          <label for="world-name">WORLD NAME</label><input id="world-name" value="My little universe" maxlength="80" />
+          <label for="preset">START WITH A WORLD</label><select id="preset"><option>Classic flat</option><option>Snowy kingdom</option><option>Water world</option></select>
+          <div class="label-row"><label for="layers">CUSTOM LAYERS</label><span>Y · Block</span></div>
+          <textarea id="layers" rows="7" spellcheck="false" aria-describedby="layer-help">-60 Grass_block
+-61 Dirt
+-63 Bedrock</textarea>
+          <p id="layer-help" class="hint">Each line fills down to the next layer. Y starts at −64, just above the void. Snow and grass can share a surface.</p>
+          <button id="generate" class="primary">Create fresh world <span>→</span></button>
+          <p class="hint">Creates a new terrain and clears placed blocks. Your saved world stays until you save again.</p>
+          <button id="load" class="text-button">↶ Load saved world</button>
+          <div class="tiny-note">Independent block playground inspired by your idea. These are original free packs, with no connection to the Minecraft Marketplace.</div>
+        </aside>
+        <section class="panel playground" aria-label="Interactive building world">
+          <div class="world-heading"><div><span class="live-dot"></span><strong id="display-name">My little universe</strong></div><span>CREATIVE · 16 × 16</span></div>
+          <div class="scene">
+            <div class="readouts"><span>BUILD LEVEL <b id="height">Y −59</b></span><span>TO THE VOID <b id="void">5 blocks</b></span></div>
+            <canvas id="world" tabindex="0" aria-label="Isometric world. Click a tile to place a block at the build level. Use arrow keys to move the selection, Enter to place, Delete to remove."></canvas>
+            <div class="scene-caption"><span id="position">Selected tile · X 8 / Z 8</span><span>ISOMETRIC VIEW</span></div>
+          </div>
+          <div class="build-tools"><div class="tool-switch" role="group" aria-label="Building tool"><button id="place" class="active" aria-pressed="true">＋ Place</button><button id="remove" aria-pressed="false">− Remove</button></div><div class="level-controls"><button id="down" aria-label="Lower build level">↓</button><label for="level">Y</label><input id="level" type="number" min="-64" value="-59" step="1" /><button id="up" aria-label="Raise build level">↑</button></div></div>
+          <div class="block-tools"><label for="block">BUILD WITH</label><input id="block" value="Oak_planks" list="blocks" aria-describedby="block-help" /><datalist id="blocks"><option value="Grass_block" /><option value="Dirt" /><option value="Stone" /><option value="Water" /><option value="Glass" /><option value="Cake" /><option value="Ice_crystals" /><option value="Oak_planks" /><option value="Bricks" /><option value="Gold_block" /><option value="Cherry_leaves" /><option value="Snow" /></datalist><span id="block-help">Any block name works.</span></div>
+          <div id="swatches" class="swatches" aria-label="Quick block selection"></div>
+          <p class="controls-hint">Click a tile to build at Y. Right-click to remove at Y. ↑↓←→ select a tile; Enter builds; Delete removes. Raise Y to stack. The view shows a slice of seven levels below Y; higher blocks are hidden. Empty outlines are places you can build.</p>
+        </section>
+      </div>
+      <section class="catalog" aria-labelledby="catalog-title"><div class="catalog-heading"><div><p class="eyebrow">A LITTLE SOMETHING EXTRA</p><h2 id="catalog-title">The free marketplace</h2></div><p>Pick a pack. Make it your own.<br />Added around your selected tile at the current Y.</p></div><div id="packs" class="pack-grid"></div></section>
+      <p id="status" role="status" aria-live="polite">Welcome. Your first world is ready to build.</p>
+      <footer>MADE FOR MAKING THINGS <span>−64 → ∞</span><small>Browser number precision applies at extreme heights. Worlds save on this device.</small></footer>
+    </main>
+    <script>import '../core/superflat/game'</script>
+  </body>
+</html>

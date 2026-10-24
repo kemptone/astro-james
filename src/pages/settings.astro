@@ -1,0 +1,24 @@
+---
+import Menu from '@/components/menu.astro'
+import DiscoverySetting from '@/components/DiscoverySetting'
+---
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Settings</title>
+  </head>
+  <body>
+    <Menu />
+    <main>
+      <h1>Settings</h1>
+      <DiscoverySetting client:load />
+      <a href="/sro25">Open SRO25</a>
+    </main>
+  </body>
+</html>
+<style>
+  body { margin: 0; padding: 5rem 1.5rem; background: #edf0f8; color: #24324a; font-family: system-ui, sans-serif; }
+  main { max-width: 650px; margin: auto; padding: 2rem; background: white; border-radius: 16px; line-height: 1.6; }
+  a { color: #6b1fb7; }
+</style>
