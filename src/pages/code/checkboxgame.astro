@@ -645,6 +645,10 @@ const title = "Checkbox Game";
     window.addEventListener('pagehide', () => narrator.stop());
 
     renderSetup();
+    if (new URLSearchParams(window.location.search).get('game') === 'city') {
+      gameModeSelect.value = 'city';
+      changeGame();
+    }
   </script>
 </body>
 </html>
