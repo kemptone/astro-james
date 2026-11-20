@@ -1,4 +1,5 @@
 import type {Provider, TourSettings} from './settings'
+import {openAISpeechVoices, requestOpenAISpeech} from '../openai/speech.ts'
 
 export type TourVoice = {
   id: string
@@ -32,7 +33,7 @@ export async function loadVoices(
   }
   if (provider === 'chatgpt') {
     // Voices supported by the existing tts-1 endpoint.
-    return ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer'].map(id => ({
+    return openAISpeechVoices.map(id => ({
       id,
       name: id,
     }))
@@ -131,26 +132,22 @@ export class TourSpeech {
     this.request = new AbortController()
     const request = this.request
     const timeout = window.setTimeout(() => request.abort(), 30000)
-    const endpoint =
-      settings.provider === 'chatgpt'
-        ? '/api/openai/openai_texttospeech'
-        : settings.provider === 'amazon'
-          ? '/api/polly/say'
-          : '/api/polly/say_m'
     try {
       status('Loading speech…')
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        signal: request.signal,
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          text,
-          voice: voice.id,
-          engine: voice.engine,
-          Locale: voice.locale,
-          Gender: voice.gender,
-        }),
-      })
+      const response = settings.provider === 'chatgpt'
+        ? await requestOpenAISpeech(text, voice.id, request.signal)
+        : await fetch(settings.provider === 'amazon' ? '/api/polly/say' : '/api/polly/say_m', {
+            method: 'POST',
+            signal: request.signal,
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              text,
+              voice: voice.id,
+              engine: voice.engine,
+              Locale: voice.locale,
+              Gender: voice.gender,
+            }),
+          })
       if (
         !response.ok ||
         !response.headers.get('Content-Type')?.startsWith('audio/')
