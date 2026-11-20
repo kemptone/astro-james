@@ -1,0 +1,408 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import {questionLimit} from '@/core/minecraft/chat'
+
+const starterQuestions = [
+  'What should I do on my first night?',
+  'How do I find diamonds?',
+  'How do I build a Nether portal?',
+]
+---
+
+<Layout title="Minecraft Guide for Jordy" description="Ask Jordy’s Minecraft Guide about crafting, building, and surviving.">
+  <main class="minecraft">
+    <div class="world-guide">
+      <header class="intro">
+        <p class="greeting">Hey, Jordy!</p>
+        <h1>Minecraft<br />{' '}<span>Guide</span></h1>
+        <p class="intro-copy">From your first wooden pickaxe to the End. Ask for help with crafting, building, or exploring.</p>
+      </header>
+
+      <section class="chat" aria-labelledby="chat-heading">
+        <header class="chat-header">
+          <div class="guide-icon" aria-hidden="true"><i></i></div>
+          <h2 id="chat-heading">Ask the guide</h2>
+          <button class="reset" type="button" disabled>New chat</button>
+        </header>
+
+        <div class="messages" role="log" aria-label="Conversation" tabindex="0">
+          <article class="message guide-message">
+            <h3>Guide</h3>
+            <p>Hey, Jordy! What are you working on in Minecraft?</p>
+          </article>
+        </div>
+
+        <div class="starters" aria-label="Suggested questions" role="group">
+          <p>Try asking</p>
+          {starterQuestions.map(question => <button type="button">{question}</button>)}
+        </div>
+
+        <form class="composer">
+          <p class="feedback" role="status"></p>
+          <div class="composer-field">
+            <label class="visually-hidden" for="minecraft-question">Your Minecraft question</label>
+            <textarea
+              id="minecraft-question"
+              name="question"
+              rows="2"
+              maxlength={questionLimit}
+              placeholder="Ask about Minecraft…"
+              required
+            ></textarea>
+            <button class="send" type="submit">Send</button>
+          </div>
+          <noscript><p>Enable JavaScript to chat with the guide.</p></noscript>
+        </form>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  import {historyLimit, type ChatTurn} from '@/core/minecraft/chat'
+
+  const chat = document.querySelector('.chat')
+  const log = chat?.querySelector('.messages')
+  const starters = chat?.querySelector<HTMLElement>('.starters')
+  const form = chat?.querySelector('form')
+  const input = chat?.querySelector('textarea')
+  const send = chat?.querySelector<HTMLButtonElement>('.send')
+  const reset = chat?.querySelector<HTMLButtonElement>('.reset')
+  const feedback = chat?.querySelector('.feedback')
+
+  if (log && starters && form && input && send && reset && feedback) {
+    const initialMessage = log.firstElementChild
+    const suggestions = Array.from(starters.querySelectorAll('button'))
+    const history: ChatTurn[] = []
+
+    const appendMessage = (speaker: 'Jordy' | 'Guide', text: string) => {
+      const message = document.createElement('article')
+      message.className = speaker === 'Jordy' ? 'message user-message' : 'message guide-message'
+      const name = document.createElement('h3')
+      name.textContent = speaker
+      const body = document.createElement('p')
+      body.textContent = text
+      message.append(name, body)
+      log.append(message)
+      log.scrollTop = speaker === 'Guide' ? message.offsetTop : log.scrollHeight
+      return message
+    }
+
+    async function ask(question: string) {
+      if (!question || send.disabled) return
+      input.value = ''
+      input.readOnly = true
+      send.disabled = true
+      reset.disabled = true
+      starters.hidden = true
+      feedback.textContent = 'The guide is thinking…'
+      const message = appendMessage('Jordy', question)
+
+      try {
+        const response = await fetch('/api/openai/minecraft', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({question, history}),
+        })
+        const result = await response.json()
+        if (!response.ok || typeof result.reply !== 'string' || !result.reply) {
+          throw new Error('No guide reply')
+        }
+
+        appendMessage('Guide', result.reply)
+        history.push({question, reply: result.reply})
+        if (history.length > historyLimit) history.shift()
+        feedback.textContent = ''
+      } catch {
+        message.remove()
+        input.value = question
+        feedback.textContent = 'The guide couldn’t answer. Try sending your question again.'
+      } finally {
+        input.readOnly = false
+        send.disabled = false
+        reset.disabled = history.length === 0
+        starters.hidden = history.length > 0
+      }
+    }
+
+    form.addEventListener('submit', event => {
+      event.preventDefault()
+      void ask(input.value.trim())
+    })
+
+    input.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' || event.shiftKey || event.isComposing) return
+      event.preventDefault()
+      if (!send.disabled) form.requestSubmit()
+    })
+
+    for (const suggestion of suggestions) {
+      suggestion.addEventListener('click', () => {
+        input.focus()
+        void ask(suggestion.textContent?.trim() ?? '')
+      })
+    }
+
+    reset.addEventListener('click', () => {
+      history.length = 0
+      if (initialMessage) log.replaceChildren(initialMessage)
+      feedback.textContent = ''
+      input.value = ''
+      starters.hidden = false
+      input.focus()
+      reset.disabled = true
+    })
+  }
+</script>
+
+<style>
+  :global(html:has(.minecraft)) {
+    color-scheme: dark;
+    background: #10170f;
+    --menu-icon-color: #f4f3dd;
+    --menu-icon-hover: #c9ec84;
+    --pico-color: #f4f3dd;
+  }
+
+  .minecraft {
+    --ink: #f4f3dd;
+    --muted: #c3ccba;
+    --lime: #d3ee92;
+    --line: #3e4b35;
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: clamp(5.25rem, 10vh, 8rem) clamp(1rem, 6vw, 6rem) 3.5rem;
+    background:
+      linear-gradient(90deg, #12190fe8, #10170f64 54%, #10170f35),
+      linear-gradient(0deg, #10170f 0%, transparent 60%),
+      #283b28 url('/minecraft-world.webp') center / cover no-repeat;
+    color: var(--ink);
+  }
+
+  .world-guide {
+    width: min(100%, 76rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    align-items: center;
+    gap: clamp(1.75rem, 5vw, 5.5rem);
+  }
+
+  .greeting {
+    color: var(--lime);
+    font: 700 clamp(1rem, 2.2vw, 1.45rem) / 1.4 ui-monospace, monospace;
+    margin-block-end: 0.85rem;
+  }
+
+  h1 {
+    font: 1000 clamp(2.85rem, 6.2vw, 6.6rem) / 0.94 system-ui, sans-serif;
+    letter-spacing: -0.07em;
+    text-transform: uppercase;
+    text-shadow: 0.055em 0.065em 0 #14200d;
+  }
+
+  h1 span { color: var(--lime); }
+
+  .intro-copy {
+    color: var(--ink);
+    max-width: 31ch;
+    margin-block-start: 1.35rem;
+    font-size: clamp(1rem, 1.8vw, 1.24rem);
+    text-shadow: 0 2px 4px #10170f;
+  }
+
+  .chat {
+    min-width: 0;
+    background: #171e15;
+    border: 2px solid #58624b;
+    box-shadow: inset 0 3px 0 #768062, 6px 6px 0 #0b100bd9, 0 20px 60px #10170f75;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 1.2rem;
+    background: #222b1d;
+    border-bottom: 2px solid var(--line);
+  }
+
+  .chat-header h2 {
+    flex: 1;
+    font: 700 clamp(1rem, 2.3vw, 1.35rem) / 1.2 ui-monospace, monospace;
+  }
+
+  .guide-icon {
+    width: 2rem;
+    height: 2rem;
+    flex: none;
+    background: #8eb34c;
+    border: 2px solid #24321b;
+    box-shadow: inset -4px -4px #587737, inset 3px 3px #bad96a;
+    display: grid;
+    place-items: center;
+  }
+
+  .guide-icon i {
+    width: 4px;
+    height: 4px;
+    margin: 0 8px 7px 0;
+    background: #d7ed91;
+    box-shadow: 9px 10px #6c913d, 12px 3px #758e3f;
+  }
+
+  button, textarea { font: inherit; }
+  button { cursor: pointer; }
+  button:disabled { cursor: default; opacity: 0.6; }
+
+  .reset {
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 0.36rem 0.65rem;
+    white-space: nowrap;
+    font-size: 0.875rem;
+  }
+
+  .messages {
+    position: relative;
+    height: clamp(13rem, 30vh, 23rem);
+    overflow: auto;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .chat:has(.starters[hidden]) .messages {
+    height: clamp(17rem, 47vh, 31rem);
+  }
+
+  .chat :global(.message) {
+    align-self: flex-start;
+    flex: none;
+    width: fit-content;
+    max-width: 92%;
+    padding: 0.65rem 0.85rem 0.85rem;
+    background: #252e20;
+    border-inline-start: 3px solid #9ab95e;
+    overflow-wrap: anywhere;
+  }
+
+  .chat :global(.user-message) {
+    align-self: flex-end;
+    background: #313a28;
+    border-inline-start-color: #cbb880;
+  }
+
+  .chat :global(.message h3) {
+    color: var(--lime);
+    margin: 0 0 0.25rem;
+    font: 700 0.875rem / 1.25 ui-monospace, monospace;
+  }
+
+  .chat :global(.user-message h3) { color: #e6d6a6; }
+  .chat :global(.message p) { margin: 0; white-space: pre-wrap; }
+
+  .starters {
+    padding: 0 1.2rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .starters[hidden] { display: none; }
+
+  .starters p {
+    width: 100%;
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+
+  .starters button {
+    color: var(--ink);
+    text-align: left;
+    background: #232d1e;
+    border: 1px solid #506142;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.875rem;
+  }
+
+  .starters button:hover, .reset:not(:disabled):hover { background: #35442b; }
+
+  .composer {
+    border-top: 2px solid var(--line);
+    padding: 0.95rem 1.2rem;
+  }
+
+  .composer-field {
+    display: flex;
+    gap: 0.65rem;
+    align-items: stretch;
+  }
+
+  textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    resize: vertical;
+    padding: 0.65rem 0.75rem;
+    color: var(--ink);
+    background: #111711;
+    border: 1px solid #677355;
+    border-radius: 0;
+    line-height: 1.35;
+  }
+
+  textarea::placeholder { color: #aab6a3; }
+
+  .send {
+    padding: 0.65rem 1rem;
+    font: 800 1rem / 1.25 ui-monospace, monospace;
+    color: #18220f;
+    background: var(--lime);
+    border: 2px solid #a8c871;
+    box-shadow: inset 0 -4px #a5c370;
+  }
+
+  .send:not(:disabled):hover { background: #e4f8ac; }
+
+  .feedback { color: var(--muted); margin: 0 0 0.65rem; }
+  .feedback:empty { margin: 0; }
+
+  :is(textarea, button, .messages):focus-visible {
+    outline: 2px solid var(--lime);
+    outline-offset: 2px;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 760px) {
+    .minecraft {
+      place-items: start center;
+      background-position: center, center, 63% top;
+    }
+
+    .world-guide { grid-template-columns: minmax(0, 1fr); }
+
+    h1 { font-size: clamp(2.55rem, 9.2vw, 4.75rem); }
+    h1 br { display: none; }
+    .intro-copy { margin-block-start: 0.75rem; }
+    .messages { height: 9.5rem; }
+    .chat:has(.starters[hidden]) .messages { height: clamp(14rem, 37svh, 23rem); }
+  }
+
+  @media (max-width: 420px) {
+    .chat-header, .messages, .composer { padding-inline: 0.75rem; }
+    .starters { padding-inline: 0.75rem; }
+    .send { padding-inline: 0.65rem; }
+  }
+</style>
