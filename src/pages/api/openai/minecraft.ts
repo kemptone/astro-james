@@ -1,5 +1,5 @@
 import {z} from 'zod'
-import {historyLimit, questionLimit, replyLimit} from '@/core/minecraft/chat'
+import {defaultReasoningEffort, historyLimit, questionLimit, reasoningEfforts, replyLimit} from '@/core/minecraft/chat'
 
 export const prerender = false
 
@@ -16,7 +16,14 @@ const requestSchema = z.object({
   question,
   history: z.array(z.object({question, reply: z.string().min(1).max(replyLimit)}))
     .max(historyLimit).default([]),
+  effort: z.enum(reasoningEfforts).default(defaultReasoningEffort),
 })
+
+const reasoningLimits = {
+  low: {timeout: 20000, tokens: 2400},
+  medium: {timeout: 40000, tokens: 4800},
+  high: {timeout: 60000, tokens: 8000},
+}
 
 const responseSchema = z.object({
   status: z.literal('completed'),
@@ -42,7 +49,8 @@ export async function POST({request}: {request: Request}) {
   const apiKey = import.meta.env.OPENAI_API_KEY
   if (!apiKey) return json({error: 'The Minecraft Guide is unavailable right now.'}, 503)
 
-  const {question, history} = body.data
+  const {question, history, effort} = body.data
+  const {timeout, tokens} = reasoningLimits[effort]
   const input = history.flatMap(turn => [
     {role: 'user', content: turn.question},
     {role: 'assistant', content: turn.reply},
@@ -53,14 +61,14 @@ export async function POST({request}: {request: Request}) {
     const response = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: {Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json'},
-      signal: AbortSignal.timeout(20000),
+      signal: AbortSignal.any([request.signal, AbortSignal.timeout(timeout)]),
       body: JSON.stringify({
-        model: 'gpt-5-mini',
+        model: 'gpt-6.1-terra',
         instructions,
         input,
         store: false,
-        reasoning: {effort: 'low'},
-        max_output_tokens: 1600,
+        reasoning: {effort},
+        max_output_tokens: tokens,
         text: {
           format: {
             type: 'json_schema',

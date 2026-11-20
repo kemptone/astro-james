@@ -1,13 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro'
-import {questionLimit} from '@/core/minecraft/chat'
+import {defaultReasoningEffort, questionLimit, reasoningEfforts} from '@/core/minecraft/chat'
 import {openAISpeechVoices} from '@/core/openai/speech'
-
-const starterQuestions = [
-  'What should I do on my first night?',
-  'How do I find diamonds?',
-  'How do I build a Nether portal?',
-]
 ---
 
 <Layout title="Minecraft Guide for Jordy" description="Ask Jordy’s Minecraft Guide about crafting, building, and surviving.">
@@ -26,7 +20,11 @@ const starterQuestions = [
               <span class="visually-hidden">Chat options</span>
             </summary>
             <div class="options-panel">
-              <div class="voice-options">
+              <label class="option-row">
+                Read replies aloud
+                <input id="minecraft-auto-read" type="checkbox" checked />
+              </label>
+              <div class="option-row">
                 <label for="minecraft-voice">AI voice</label>
                 <select id="minecraft-voice">
                   {openAISpeechVoices.map(voice => (
@@ -34,11 +32,17 @@ const starterQuestions = [
                   ))}
                 </select>
               </div>
-              <button class="reset" type="button" disabled>New chat</button>
-              <div class="starters" role="group" aria-labelledby="minecraft-ideas">
-                <p id="minecraft-ideas">Question ideas</p>
-                {starterQuestions.map(question => <button type="button">{question}</button>)}
+              <div class="option-row">
+                <label for="minecraft-effort">Reasoning effort</label>
+                <select id="minecraft-effort">
+                  {reasoningEfforts.map(effort => (
+                    <option value={effort} selected={effort === defaultReasoningEffort}>
+                      {effort[0].toUpperCase() + effort.slice(1)}
+                    </option>
+                  ))}
+                </select>
               </div>
+              <button class="clear-chat" type="button">Clear chat</button>
             </div>
           </details>
         </header>
@@ -77,19 +81,19 @@ const starterQuestions = [
 
   const chat = document.querySelector('.chat')
   const log = chat?.querySelector('.messages')
-  const starters = chat?.querySelector<HTMLElement>('.starters')
   const form = chat?.querySelector('form')
   const input = chat?.querySelector('textarea')
   const send = chat?.querySelector<HTMLButtonElement>('.send')
-  const reset = chat?.querySelector<HTMLButtonElement>('.reset')
+  const clearChat = chat?.querySelector<HTMLButtonElement>('.clear-chat')
   const feedback = chat?.querySelector('.feedback')
   const voice = chat?.querySelector<HTMLSelectElement>('#minecraft-voice')
+  const autoRead = chat?.querySelector<HTMLInputElement>('#minecraft-auto-read')
+  const effort = chat?.querySelector<HTMLSelectElement>('#minecraft-effort')
   const options = chat?.querySelector('details')
   const optionsButton = options?.querySelector('summary')
 
-  if (log && starters && form && input && send && reset && feedback && voice && options && optionsButton) {
+  if (log && form && input && send && clearChat && feedback && voice && autoRead && effort && options && optionsButton) {
     const initialMessage = log.firstElementChild
-    const suggestions = Array.from(starters.querySelectorAll('button'))
     const history: ChatTurn[] = []
     const usesNativeSizing = CSS.supports('field-sizing', 'content')
 
@@ -106,6 +110,8 @@ const starterQuestions = [
     }
 
     const voiceKey = 'minecraft-guide.voice'
+    const autoReadKey = 'minecraft-guide.auto-read'
+    const effortKey = 'minecraft-guide.effort'
     const audio = document.createElement('audio')
     audio.controls = true
     audio.className = 'reply-audio'
@@ -115,12 +121,19 @@ const starterQuestions = [
     voiceStatus.setAttribute('role', 'status')
 
     let playback: {button: HTMLButtonElement; request: AbortController; url: string} | undefined
+    let latestReply: {button: HTMLButtonElement; text: string} | undefined
+    let pendingQuestion: AbortController | undefined
 
     try {
       const saved = localStorage.getItem(voiceKey)
       if (saved && Array.from(voice.options).some(option => option.value === saved)) voice.value = saved
+      autoRead.checked = localStorage.getItem(autoReadKey) !== 'false'
+      const savedEffort = localStorage.getItem(effortKey)
+      if (savedEffort && Array.from(effort.options).some(option => option.value === savedEffort)) {
+        effort.value = savedEffort
+      }
     } catch {
-      // Voice selection also works with browser storage disabled.
+      // Preferences also work for this session with browser storage disabled.
     }
 
     function stopSpeech() {
@@ -189,6 +202,27 @@ const starterQuestions = [
         // Keep the selection for this session.
       }
     })
+
+    autoRead.addEventListener('change', () => {
+      try {
+        localStorage.setItem(autoReadKey, String(autoRead.checked))
+      } catch {
+        // Keep the preference for this session.
+      }
+      if (!autoRead.checked) {
+        stopSpeech()
+      } else if (latestReply && playback?.button !== latestReply.button) {
+        void readReply(latestReply.button, latestReply.text)
+      }
+    })
+
+    effort.addEventListener('change', () => {
+      try {
+        localStorage.setItem(effortKey, effort.value)
+      } catch {
+        // Keep the preference for this session.
+      }
+    })
     window.addEventListener('pagehide', stopSpeech)
 
     document.addEventListener('click', event => {
@@ -216,21 +250,31 @@ const starterQuestions = [
         read.textContent = 'Read aloud'
         read.addEventListener('click', () => void readReply(read, text))
         message.append(read)
+        latestReply = {button: read, text}
       }
       log.append(message)
       log.scrollTop = speaker === 'Guide' ? message.offsetTop : log.scrollHeight
+      if (speaker === 'Guide' && autoRead.checked && latestReply) {
+        void readReply(latestReply.button, latestReply.text)
+      }
       return message
     }
 
+    function enableComposer() {
+      pendingQuestion = undefined
+      input.readOnly = false
+      send.disabled = false
+    }
+
     async function ask(question: string) {
-      if (!question || send.disabled) return
+      if (!question || pendingQuestion) return
+      const controller = new AbortController()
+      pendingQuestion = controller
       options.open = false
       input.value = ''
       resizeQuestion()
       input.readOnly = true
       send.disabled = true
-      reset.disabled = true
-      starters.hidden = true
       feedback.textContent = 'The guide is thinking…'
       const message = appendMessage('Jordy', question)
 
@@ -238,9 +282,11 @@ const starterQuestions = [
         const response = await fetch('/api/openai/minecraft', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({question, history}),
+          body: JSON.stringify({question, history, effort: effort.value}),
+          signal: controller.signal,
         })
         const result = await response.json()
+        if (pendingQuestion !== controller) return
         if (!response.ok || typeof result.reply !== 'string' || !result.reply) {
           throw new Error('No guide reply')
         }
@@ -250,15 +296,13 @@ const starterQuestions = [
         if (history.length > historyLimit) history.shift()
         feedback.textContent = ''
       } catch {
+        if (pendingQuestion !== controller) return
         message.remove()
         input.value = question
         resizeQuestion()
         feedback.textContent = 'The guide couldn’t answer. Try sending your question again.'
       } finally {
-        input.readOnly = false
-        send.disabled = false
-        reset.disabled = history.length === 0
-        starters.hidden = history.length > 0
+        if (pendingQuestion === controller) enableComposer()
       }
     }
 
@@ -273,24 +317,18 @@ const starterQuestions = [
       if (!send.disabled) form.requestSubmit()
     })
 
-    for (const suggestion of suggestions) {
-      suggestion.addEventListener('click', () => {
-        input.focus()
-        void ask(suggestion.textContent?.trim() ?? '')
-      })
-    }
-
-    reset.addEventListener('click', () => {
+    clearChat.addEventListener('click', () => {
       options.open = false
+      pendingQuestion?.abort()
+      enableComposer()
       stopSpeech()
+      latestReply = undefined
       history.length = 0
       if (initialMessage) log.replaceChildren(initialMessage)
       feedback.textContent = ''
       input.value = ''
       resizeQuestion()
-      starters.hidden = false
       input.focus()
-      reset.disabled = true
     })
   }
 </script>
@@ -388,13 +426,22 @@ const starterQuestions = [
     font-size: 0.875rem;
   }
 
-  .voice-options {
+  .option-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.65rem;
     color: var(--muted);
   }
+
+  .option-row input {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0.4rem;
+    accent-color: var(--lime);
+  }
+
+  label.option-row { cursor: pointer; }
 
   button, select, textarea { font: inherit; }
   button { cursor: pointer; }
@@ -421,7 +468,7 @@ const starterQuestions = [
     gap: 0.85rem;
   }
 
-  .chat:has(.starters[hidden]) .messages {
+  .chat :global(.messages:has(> .user-message)) {
     height: clamp(17rem, 47vh, 31rem);
   }
 
@@ -469,16 +516,6 @@ const starterQuestions = [
   .chat :global(.voice-status) { color: var(--muted); font-size: 0.875rem; }
   .chat :global(.voice-status:empty) { display: none; }
 
-  .starters {
-    display: grid;
-    gap: 0.45rem;
-    border-top: 1px solid var(--line);
-    padding-top: 0.55rem;
-  }
-
-  .starters[hidden] { display: none; }
-  .starters p { color: var(--muted); }
-
   .composer {
     border-top: 2px solid var(--line);
     padding: 0.95rem 1.2rem;
@@ -525,7 +562,7 @@ const starterQuestions = [
   .feedback { color: var(--muted); margin: 0 0 0.65rem; }
   .feedback:empty { margin: 0; }
 
-  :is(textarea, button, select, summary, .messages):focus-visible {
+  :is(textarea, button, input, select, summary, .messages):focus-visible {
     outline: 2px solid var(--lime);
     outline-offset: 2px;
   }
@@ -551,7 +588,7 @@ const starterQuestions = [
     h1 { font-size: clamp(2.55rem, 9.2vw, 4.75rem); }
     h1 br { display: none; }
     .messages { height: 9.5rem; }
-    .chat:has(.starters[hidden]) .messages { height: clamp(14rem, 37svh, 23rem); }
+    .chat :global(.messages:has(> .user-message)) { height: clamp(14rem, 37svh, 23rem); }
   }
 
   @media (max-width: 420px) {
