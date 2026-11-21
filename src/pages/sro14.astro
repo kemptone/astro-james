@@ -1,6 +1,8 @@
 ---
 export const prerender = false
 import Menu3 from '@/components/menu.astro'
+import {DEFAULT_GAME_NAME} from '@/core/sro14/settings'
+import {RUDE_WORDS} from '@/core/sro14/replacements'
 import '../../pico.css'
 ---
 
@@ -10,7 +12,7 @@ import '../../pico.css'
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>SRO14 - Talk to OpenAI (Kevin)</title>
+    <title>{DEFAULT_GAME_NAME}</title>
     <style>
       .chat-container {
         max-width: 800px;
@@ -18,29 +20,38 @@ import '../../pico.css'
         padding: 1rem;
       }
 
-      .message {
+      #chatMessages :global(.message) {
         margin: 1rem 0;
         padding: 1rem;
         border-radius: 8px;
       }
 
-      .message-sender {
+      #chatMessages :global(.message-sender) {
         font-size: 0.8rem;
         font-weight: 700;
         margin-bottom: 0.35rem;
       }
 
-      .message-body {
+      #chatMessages :global(.message-body),
+      #chatMessages :global(.replacement-preview) {
         white-space: pre-wrap;
+        overflow-wrap: anywhere;
       }
 
-      .user-message {
+      #chatMessages :global(.replacement-preview) {
+        display: block;
+        margin-top: 0.5rem;
+      }
+
+      #chatMessages :global(.user-message) {
         background-color: #e3f2fd;
+        color: #172b3a;
         margin-left: 2rem;
       }
 
-      .ai-message {
+      #chatMessages :global(.ai-message) {
         background-color: #f5f5f5;
+        color: #20262a;
         margin-right: 2rem;
       }
 
@@ -52,130 +63,318 @@ import '../../pico.css'
         margin-bottom: 1rem;
         border-radius: 8px;
       }
+
       #chatForm {
         display: flex;
         gap: 0.5rem;
       }
+
       #chatForm textarea {
         flex: 1;
+        min-width: 0;
         min-height: 4rem;
       }
+
       #chatForm button {
         flex: 0;
       }
 
-      .loading {
+      #chatMessages :global(.loading) {
         opacity: 0.6;
+      }
+
+      .settings {
+        margin-top: 2rem;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+
+      .settings summary {
+        font-weight: 700;
+      }
+
+      .settings label {
+        margin-top: 1rem;
+      }
+
+      .settings p, .settings small {
+        margin-bottom: 0.75rem;
+      }
+
+      .word-list {
+        columns: 2;
+      }
+
+      @media (max-width: 480px) {
+        .word-list {
+          columns: 1;
+        }
       }
     </style>
   </head>
   <body>
     <Menu3 />
-    <div class="chat-container">
-      <h1>SRO14 - Talk to OpenAI (Kevin)</h1>
+    <main class="chat-container">
+      <h1 id="gameTitle">{DEFAULT_GAME_NAME}</h1>
 
-      <div id="chatMessages"></div>
+      <div id="chatMessages" role="log" aria-live="polite" aria-label="Conversation with Kevin"></div>
 
+      <p id="chatError" role="alert" hidden></p>
       <form id="chatForm">
         <textarea
           id="messageInput"
+          aria-label="Your message"
           placeholder="Type your message..."
           required
           autocomplete="off"></textarea>
-        <button type="submit">Send</button>
+        <button id="sendButton" type="submit">Send</button>
       </form>
-    </div>
+
+      <details class="settings">
+        <summary>Settings</summary>
+
+        <label for="gameName">Game name and other people's nickname</label>
+        <input id="gameName" type="text" maxlength="40" autocomplete="off" />
+        <small>Clover is a starting name. Choose a name for the game and for other people Kevin talks about. Kevin calls James Guleio Delados.</small>
+        <p id="nameStatus" role="status"></p>
+
+        <label for="replacementMode">What Kevin hears</label>
+        <select id="replacementMode" aria-describedby="replacementHelp">
+          <option value="multiply">Numbers multiplied by 8</option>
+          <option value="none">No text replacement</option>
+          <option value="rude">Rude word ranking (1–40)</option>
+          <option value="states">U.S. state population ranking (1–50)</option>
+          <option value="cities">U.S. city population ranking (1–19,483)</option>
+        </select>
+        <p id="replacementHelp" role="status"></p>
+        <button id="retryCities" type="button" hidden>Reload city list</button>
+
+        <details id="wordList" hidden>
+          <summary>See the 40 words</summary>
+          <ol class="word-list">
+            {RUDE_WORDS.map(word => <li>{word}</li>)}
+          </ol>
+        </details>
+      </details>
+    </main>
 
     <script>
-      let previousResponseId = null
+      import {
+        GAME_NAME_STORAGE_KEY,
+        REPLACEMENT_MODE_STORAGE_KEY,
+        normalizeGameName,
+        readGameName,
+        readReplacementMode,
+        saveSetting,
+        type ReplacementMode,
+      } from '@/core/sro14/settings'
+      import {directReplacementReply, replaceRankedNumbers, type CityForReplacement} from '@/core/sro14/replacements'
+      import {formatKevinReply, type LocalTurn} from '@/core/sro14/conversation'
 
-      // Initialize the page
-      document.addEventListener('DOMContentLoaded', () => {
-        setupEventListeners()
-      })
+      const form = document.getElementById('chatForm') as HTMLFormElement
+      const input = document.getElementById('messageInput') as HTMLTextAreaElement
+      const sendButton = document.getElementById('sendButton') as HTMLButtonElement
+      const chatMessages = document.getElementById('chatMessages')!
+      const chatError = document.getElementById('chatError')!
+      const title = document.getElementById('gameTitle')!
+      const nameInput = document.getElementById('gameName') as HTMLInputElement
+      const nameStatus = document.getElementById('nameStatus')!
+      const modeSelect = document.getElementById('replacementMode') as HTMLSelectElement
+      const replacementHelp = document.getElementById('replacementHelp')!
+      const retryCities = document.getElementById('retryCities') as HTMLButtonElement
+      const wordList = document.getElementById('wordList')!
 
-      function setupEventListeners() {
-        // Chat form submission
-        document
-          .getElementById('chatForm')
-          .addEventListener('submit', handleChatSubmit)
+      let gameName = readGameName()
+      let replacementMode: ReplacementMode = readReplacementMode()
+      let previousResponseId: string | null = null
+      let localTurns: LocalTurn[] = []
+      let cities: CityForReplacement[] | undefined
+      let cityLoad: Promise<CityForReplacement[]> | undefined
 
-        document
-          .getElementById('messageInput')
-          .addEventListener('keydown', handleMessageInputKeyDown)
+      function updateName() {
+        title.textContent = gameName
+        document.title = gameName
+        nameInput.value = gameName
+        const menuLink = document.querySelector<HTMLAnchorElement>('.menu-link[href="/sro14"]')
+        if (menuLink) menuLink.textContent = gameName
       }
 
-      function handleMessageInputKeyDown(e) {
-        if (e.key !== 'Enter' || e.shiftKey || e.isComposing) return
-
-        e.preventDefault()
-        document.getElementById('chatForm').requestSubmit()
-      }
-
-      async function handleChatSubmit(e) {
-        e.preventDefault()
-        const input = document.getElementById('messageInput')
-        const message = input.value.trim()
-
-        if (!message) return
-
-        addUserMessage(message)
-        input.value = ''
-
-        // Show loading state
-        const loadingDiv = addAiMessage('Kevin is thinking...')
-        loadingDiv.classList.add('loading')
-
-        try {
-          const response = await fetch('/api/openai/sro14', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              prompt: message,
-              previousResponseId,
-            }),
-          })
-
-          const data = await response.json()
-
-          if (data.id && data.message) {
-            previousResponseId = data.id
-            const aiResponse = data.message
-            loadingDiv.remove()
-            addAiMessage(aiResponse)
-
-            // Speak the response with Kevin's voice
-            speakWithKevin(aiResponse)
-          } else {
-            setMessageBody(
-              loadingDiv,
-              'Sorry, I had trouble understanding that.'
-            )
-            loadingDiv.classList.remove('loading')
-          }
-        } catch (error) {
-          console.error('Chat error:', error)
-          setMessageBody(
-            loadingDiv,
-            'Sorry, I had trouble connecting. Please try again.'
-          )
-          loadingDiv.classList.remove('loading')
+      function showModeHelp() {
+        wordList.hidden = replacementMode !== 'rude'
+        retryCities.hidden = true
+        if (replacementMode === 'multiply') {
+          replacementHelp.textContent = 'Numbers are multiplied by 8. For example, 0.125 becomes 1. Your original message stays in the chat.'
+        } else if (replacementMode === 'rude') {
+          replacementHelp.textContent = 'The numbers you type stay in your chat. Kevin hears the matching word instead: 40 becomes cow. Other numbers stay the same.'
+        } else if (replacementMode === 'states') {
+          replacementHelp.textContent = 'Using the 2025 U.S. Census estimates, 1 becomes California (most populous) and 50 becomes Wyoming (least populous). Other numbers stay the same.'
+        } else if (replacementMode === 'cities') {
+          replacementHelp.textContent = cities
+            ? `Using the 2025 U.S. Census estimates, 1 becomes New York City (most populous) and ${cities.length.toLocaleString('en-US')} becomes ${cities.at(-1)?.name} (tied for least populous). Other numbers stay the same.`
+            : 'Loading the U.S. city ranking…'
+        } else {
+          replacementHelp.textContent = 'Kevin hears your message exactly as you typed it.'
         }
       }
 
-      function addUserMessage(message) {
-        const chatMessages = document.getElementById('chatMessages')
+      async function loadCities(): Promise<CityForReplacement[]> {
+        if (cities) return cities
+        if (cityLoad) return cityLoad
+
+        cityLoad = (async () => {
+          try {
+            const response = await fetch('/data/us-city-ranking-2025.json')
+            if (!response.ok) throw new Error('City list unavailable')
+            const data = await response.json()
+            if (!Array.isArray(data.cities) || !data.cities.length ||
+              !data.cities.every((city: CityForReplacement) => typeof city?.name === 'string')) {
+              throw new Error('Invalid city list')
+            }
+            cities = data.cities
+            if (replacementMode === 'cities') showModeHelp()
+            return cities!
+          } catch (error) {
+            if (replacementMode === 'cities') {
+              replacementHelp.textContent = 'The city list could not load. Reload it to try again.'
+              retryCities.hidden = false
+            }
+            throw error
+          } finally {
+            cityLoad = undefined
+          }
+        })()
+        return cityLoad
+      }
+
+      updateName()
+      modeSelect.value = replacementMode
+      showModeHelp()
+      if (replacementMode === 'cities') void loadCities().catch(() => {})
+
+      nameInput.addEventListener('change', () => {
+        const newName = normalizeGameName(nameInput.value)
+        if (!newName) {
+          nameStatus.textContent = 'Use a name of up to 40 letters, numbers, spaces, apostrophes, periods, or hyphens.'
+          nameInput.value = gameName
+          return
+        }
+        gameName = newName
+        saveSetting(GAME_NAME_STORAGE_KEY, gameName)
+        nameStatus.textContent = `The game and other people are called ${gameName}. Kevin calls James Guleio Delados.`
+        updateName()
+      })
+
+      modeSelect.addEventListener('change', () => {
+        replacementMode = modeSelect.value as ReplacementMode
+        saveSetting(REPLACEMENT_MODE_STORAGE_KEY, replacementMode)
+        chatError.hidden = true
+        showModeHelp()
+        if (replacementMode === 'cities') void loadCities().catch(() => {})
+      })
+
+      retryCities.addEventListener('click', () => {
+        showModeHelp()
+        void loadCities().catch(() => {})
+      })
+
+      input.addEventListener('keydown', event => {
+        if (event.key !== 'Enter' || event.shiftKey || event.isComposing) return
+        event.preventDefault()
+        form.requestSubmit()
+      })
+
+      form.addEventListener('submit', async event => {
+        event.preventDefault()
+        const message = input.value.trim()
+        if (!message || sendButton.disabled) return
+
+        const selectedMode = replacementMode
+        const selectedName = gameName
+        sendButton.disabled = true
+        chatError.hidden = true
+
+        try {
+          let availableCities: CityForReplacement[] = []
+          if (selectedMode === 'cities') {
+            try {
+              availableCities = await loadCities()
+            } catch {
+              chatError.textContent = 'The city list could not load. Please try again, or choose another replacement setting.'
+              chatError.hidden = false
+              return
+            }
+          }
+
+          const heardMessage = replaceRankedNumbers(message, selectedMode, availableCities)
+          addUserMessage(message, heardMessage)
+          input.value = ''
+
+          const directReply = directReplacementReply(message, selectedMode, heardMessage)
+          if (directReply) {
+            const reply = selectedMode === 'multiply' ? directReply : formatKevinReply(directReply)
+            addAiMessage(reply)
+            void speakWithKevin(reply)
+            const context = selectedMode === 'multiply'
+              ? `What is ${message} times 8?`
+              : `In the U.S. ${selectedMode === 'states' ? 'state' : 'city'} population ranking, what is rank ${message}?`
+            localTurns.push({role: 'user', content: context}, {role: 'assistant', content: reply})
+            localTurns = localTurns.slice(-20)
+            return
+          }
+
+          const loadingDiv = addAiMessage('Kevin is thinking...')
+          loadingDiv.classList.add('loading')
+
+          try {
+            const response = await fetch('/api/openai/sro14', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                prompt: heardMessage,
+                gameName: selectedName,
+                previousResponseId,
+                localTurns,
+              }),
+            })
+            const data = await response.json()
+
+            if (response.ok && data.id && data.message) {
+              previousResponseId = data.id
+              localTurns = []
+              loadingDiv.remove()
+              addAiMessage(data.message)
+              void speakWithKevin(data.message)
+            } else {
+              setMessageBody(loadingDiv, 'Sorry, I had trouble understanding that.')
+              loadingDiv.classList.remove('loading')
+            }
+          } catch (error) {
+            console.error('Chat error:', error)
+            setMessageBody(loadingDiv, 'Sorry, I had trouble connecting. Please try again.')
+            loadingDiv.classList.remove('loading')
+          }
+        } finally {
+          sendButton.disabled = false
+          input.focus()
+        }
+      })
+
+      function addUserMessage(message: string, heardMessage: string) {
         const messageDiv = document.createElement('div')
         messageDiv.className = 'message user-message'
         appendMessageContent(messageDiv, 'You', message)
+        if (heardMessage !== message) {
+          const preview = document.createElement('small')
+          preview.className = 'replacement-preview'
+          preview.textContent = `Kevin hears: ${heardMessage}`
+          messageDiv.appendChild(preview)
+        }
         chatMessages.appendChild(messageDiv)
         chatMessages.scrollTop = chatMessages.scrollHeight
       }
 
-      function addAiMessage(message) {
-        const chatMessages = document.getElementById('chatMessages')
+      function addAiMessage(message: string) {
         const messageDiv = document.createElement('div')
         messageDiv.className = 'message ai-message'
         appendMessageContent(messageDiv, 'Kevin', message)
@@ -184,7 +383,7 @@ import '../../pico.css'
         return messageDiv
       }
 
-      function appendMessageContent(messageDiv, sender, message) {
+      function appendMessageContent(messageDiv: HTMLElement, sender: string, message: string) {
         const senderDiv = document.createElement('div')
         senderDiv.className = 'message-sender'
         senderDiv.textContent = sender
@@ -196,46 +395,34 @@ import '../../pico.css'
         messageDiv.append(senderDiv, bodyDiv)
       }
 
-      function setMessageBody(messageDiv, message) {
-        messageDiv.querySelector('.message-body').textContent = message
+      function setMessageBody(messageDiv: HTMLElement, message: string) {
+        messageDiv.querySelector('.message-body')!.textContent = message
       }
 
-      async function speakWithKevin(text) {
+      async function speakWithKevin(text: string) {
+        let audioUrl: string | undefined
         try {
           const response = await fetch('/api/polly/say', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              text: text,
-              voiceId: 'Kevin',
-              engine: 'neural',
-            }),
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({text, voiceId: 'Kevin', engine: 'neural'}),
           })
+          if (!response.ok) throw new Error('Failed to fetch audio')
 
-          if (!response.ok) {
-            throw new Error('Failed to fetch audio')
-          }
-
-          const reader = response.body?.getReader()
-          const chunks = []
-
-          while (true) {
-            const {done, value} = await reader?.read()
-            if (done) break
-            chunks.push(value)
-          }
-
-          const audioBlob = new Blob(chunks, {type: 'audio/mpeg'})
-          const audioUrl = URL.createObjectURL(audioBlob)
+          audioUrl = URL.createObjectURL(await response.blob())
           const audio = new Audio(audioUrl)
-          audio.play()
+          const releaseAudio = () => {
+            if (audioUrl) URL.revokeObjectURL(audioUrl)
+            audioUrl = undefined
+          }
+          audio.onended = releaseAudio
+          audio.onerror = releaseAudio
+          await audio.play()
         } catch (error) {
+          if (audioUrl) URL.revokeObjectURL(audioUrl)
           console.error('Speech error:', error)
         }
       }
-
     </script>
   </body>
 </html>

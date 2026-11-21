@@ -1,5 +1,6 @@
 ---
 export const prerender = false
+import {DEFAULT_GAME_NAME} from '@/core/sro14/settings'
 
 // Menu links configuration with parental control codes
 interface MenuLink {
@@ -83,7 +84,7 @@ const menuLinks: MenuLink[] = [
   {href: '/sro10', label: 'sro10', code: ''},
   {href: '/sro12', label: 'sro12', code: ''},
   {href: '/sro13', label: 'sro13', code: ''},
-  {href: '/sro14', label: 'sro14', code: ''},
+  {href: '/sro14', label: DEFAULT_GAME_NAME, code: ''},
   {href: '/sro15', label: 'sro15', code: ''},
   {href: '/sro15new', label: 'sro15new', code: ''},
   {href: '/sro16', label: 'sro16', code: ''},
@@ -141,6 +142,7 @@ const menuLinks: MenuLink[] = [
 
 <script>
   import {isPageUnlocked} from '@/core/parental-control'
+  import {readGameName} from '@/core/sro14/settings'
   import '@/components/wc-parental-gate'
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -149,6 +151,8 @@ const menuLinks: MenuLink[] = [
     const menuOverlay = document.querySelector('.menu-overlay')
     const menuLinks = document.querySelectorAll('.menu-link')
     const menuReinstall = document.querySelector('.reinstall')
+    const gameLink = document.querySelector<HTMLAnchorElement>('.menu-link[href="/sro14"]')
+    if (gameLink) gameLink.textContent = readGameName()
 
     // Create parental gate component
     const parentalGate = document.createElement('wc-parental-gate') as any

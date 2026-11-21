@@ -1,7 +1,10 @@
 ---
+import {DEFAULT_GAME_NAME} from '@/core/sro14/settings'
+
 interface PasscodeItem {
   label: string;
   code: string;
+  gameId?: string;
 }
 
 const passcodes: PasscodeItem[] = [
@@ -52,7 +55,7 @@ const passcodes: PasscodeItem[] = [
   {label: 'sro10', code: '915263'},
   {label: 'sro12', code: '473589'},
   {label: 'sro13', code: '821467'},
-  {label: 'sro14', code: '264718'},
+  {label: DEFAULT_GAME_NAME, code: '264718', gameId: 'sro14'},
   {label: 'sro15', code: '739124'},
   {label: 'sro15new', code: '156842'},
   {label: 'sro16', code: '594326'},
@@ -142,10 +145,16 @@ const passcodes: PasscodeItem[] = [
   <div class="grid">
     {passcodes.map(item => (
       <div class="card">
-        <div class="label">{item.label}</div>
+        <div class="label" data-game-id={item.gameId}>{item.label}</div>
         <div class="code">{item.code}</div>
       </div>
     ))}
   </div>
+  <script>
+    import {readGameName} from '@/core/sro14/settings'
+
+    const gameLabel = document.querySelector<HTMLElement>('[data-game-id="sro14"]')
+    if (gameLabel) gameLabel.textContent = readGameName()
+  </script>
 </body>
 </html>

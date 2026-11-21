@@ -1,9 +1,9 @@
+import {DEFAULT_GAME_NAME, normalizeGameName} from '@/core/sro14/settings'
+import {buildInstructions, formatKevinReply, validatedLocalTurns} from '@/core/sro14/conversation'
+
 const OPENAI_API_KEY = import.meta.env.OPENAI_API_KEY
 
 export const prerender = false
-
-const instructions =
-  "You are an OpenAI helper speaking with Kevin's voice from talkers1 in the astro.james games. You are helpful, casual, kid-friendly, and concise."
 
 function getResponseText(data: any) {
   if (typeof data.output_text === 'string') {
@@ -37,6 +37,8 @@ export async function POST({request}: {request: Request}) {
   }
 
   const prompt = typeof body?.prompt === 'string' ? body.prompt.trim() : ''
+  const gameName = normalizeGameName(body?.gameName) ?? DEFAULT_GAME_NAME
+  const localTurns = validatedLocalTurns(body?.localTurns)
   const previousResponseId =
     typeof body?.previousResponseId === 'string'
       ? body.previousResponseId.trim()
@@ -63,8 +65,8 @@ export async function POST({request}: {request: Request}) {
   try {
     const requestBody: Record<string, unknown> = {
       model: 'gpt-4.1-mini',
-      instructions,
-      input: prompt,
+      instructions: buildInstructions(gameName),
+      input: localTurns.length ? [...localTurns, {role: 'user', content: prompt}] : prompt,
       temperature: 0.3,
     }
 
@@ -98,9 +100,9 @@ export async function POST({request}: {request: Request}) {
     }
 
     const data = await openaiResponse.json()
-    const message = getResponseText(data)
+    const responseText = getResponseText(data)
 
-    if (!message) {
+    if (!responseText) {
       return new Response(
         JSON.stringify({
           error: 'OpenAI response did not include text',
@@ -113,6 +115,8 @@ export async function POST({request}: {request: Request}) {
         }
       )
     }
+
+    const message = formatKevinReply(responseText)
 
     return new Response(
       JSON.stringify({

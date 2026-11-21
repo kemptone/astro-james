@@ -18,6 +18,7 @@
     "test:memes": "node --experimental-strip-types --test scripts/meme-moderation/*.test.mjs",
     "test:wordle": "node --test src/core/wordle/game.test.ts",
     "test:sro9": "node --experimental-strip-types --test src/helpers/timeHelpers.test.ts",
+    "test:sro14": "node --experimental-strip-types --test src/core/sro14/*.test.ts",
     "test:wavegame": "node --experimental-strip-types --test src/core/wavegame/logic.test.ts",
     "test:checkboxgame": "node --experimental-strip-types --test src/core/checkboxgame/*.test.ts",
     "check:city-temperature": "tsc -p tsconfig.city-temperature.json",

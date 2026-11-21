@@ -1,2 +1,3 @@
-this game is sro14. in this game, you talk to an openai helper who speaks out loud in a voice that is named kevin. it is kevin from talkers1 in one of the astro.james games
-the helper should be friendly, kid-safe, casual, and useful. try to answer questions clearly without being too long.
+The game uses Clover as a starting name until the player chooses a name in settings. In it, you talk to an OpenAI helper who speaks out loud in the Kevin voice from Talkers1. Kevin calls James Guleio Delados and uses the game name as a nickname for other people. The helper should be friendly, kid-safe, casual, and useful, and answer questions clearly without being too long.
+
+Settings let players change the game name and choose what Kevin hears: numbers multiplied by 8 (the default), the message as typed, numbers replaced with words from a 1–40 list, or numbers replaced with U.S. states (1–50) or cities (1–19,483) ranked by their 2025 Census population estimates. The original message stays visible in the chat. A number entered by itself receives an immediate spoken answer in the multiplication, state, and city modes. In multiplication mode, Kevin says only the result.
