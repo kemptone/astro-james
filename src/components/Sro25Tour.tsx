@@ -223,7 +223,7 @@ export default function Sro25Tour() {
         </>
       ) : (
         <p>
-          Turn on <a href="/settings">Discovery Tour in Settings</a> to explore
+          Turn on <a href="/settings#discovery-tour">Discovery Tour in Settings</a> to explore
           with a talking guide.
         </p>
       )}
