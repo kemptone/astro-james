@@ -15,11 +15,17 @@ const initialCode = formatJavaLayers(parseLayers(example))
     <main>
       <div class="field">
         <label for="layers">Custom layers</label>
-        <textarea id="layers" rows="6" spellcheck="false" aria-describedby="layer-error">{example}</textarea>
+        <div class="editor">
+          <textarea id="layers" rows="6" spellcheck="false" aria-describedby="layer-error">{example}</textarea>
+          <button class="clear" type="button" aria-controls="layers" aria-label="Clear custom layers">×</button>
+        </div>
       </div>
       <div class="field">
         <label for="java-layers">Java Edition layer code</label>
-        <textarea id="java-layers" rows="6" spellcheck="false" aria-describedby="layer-error">{initialCode}</textarea>
+        <div class="editor">
+          <textarea id="java-layers" rows="6" spellcheck="false" aria-describedby="layer-error">{initialCode}</textarea>
+          <button class="clear" type="button" aria-controls="java-layers" aria-label="Clear Java Edition layer code">×</button>
+        </div>
       </div>
       <p id="layer-error" role="status"></p>
     </main>
@@ -48,6 +54,14 @@ const initialCode = formatJavaLayers(parseLayers(example))
 
   layers.addEventListener('input', () => convert(layers, code, source => formatJavaLayers(parseLayers(source))))
   code.addEventListener('input', () => convert(code, layers, source => formatLayers(parseJavaLayers(source))))
+
+  for (const field of [layers, code]) {
+    document.querySelector(`button[aria-controls="${field.id}"]`)!.addEventListener('click', () => {
+      field.value = ''
+      field.dispatchEvent(new Event('input', {bubbles: true}))
+      field.focus()
+    })
+  }
 </script>
 
 <style>
@@ -70,19 +84,42 @@ const initialCode = formatJavaLayers(parseLayers(example))
     margin-bottom: .5rem;
     font-weight: 650;
   }
+  .editor {
+    position: relative;
+  }
   textarea {
     box-sizing: border-box;
     display: block;
     width: 100%;
     resize: vertical;
     padding: .875rem;
+    padding-inline-end: 3.5rem;
     border: 1px solid #a4ae99;
     border-radius: .5rem;
     background: #fffef9;
     color: inherit;
     font: 1rem/1.5 ui-monospace, monospace;
   }
-  textarea:focus-visible {
+  .clear {
+    position: absolute;
+    inset-block-start: .375rem;
+    inset-inline-end: .75rem;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 0;
+    border-radius: .375rem;
+    background: transparent;
+    color: inherit;
+    font: 1.5rem/1 system-ui, sans-serif;
+    cursor: pointer;
+  }
+  .clear:hover {
+    background: #e7ebdf;
+  }
+  textarea:focus-visible, .clear:focus-visible {
     outline: 2px solid #416143;
     outline-offset: 2px;
   }
