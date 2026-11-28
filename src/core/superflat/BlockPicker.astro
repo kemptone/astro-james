@@ -1,0 +1,20 @@
+---
+interface Props {
+  id: string
+  label: string
+  action: string
+  help?: string
+}
+
+const {id, label, action, help} = Astro.props
+---
+<details id={id} class="block-picker">
+  <summary>{label}</summary>
+  {help && <p class="hint" id={`${id}-help`}>{help}</p>}
+  <label for={`${id}-search`}>BLOCK NAME OR ID</label>
+  <input id={`${id}-search`} type="search" placeholder="Try cherry planks" autocomplete="off" spellcheck="false" aria-describedby={help ? `${id}-help` : undefined} />
+  <label for={`${id}-results`}>MATCHING BLOCKS</label>
+  <select id={`${id}-results`} size="5"></select>
+  <p id={`${id}-count`} class="hint" role="status"></p>
+  <button id={`${id}-use`} type="button" class="text-button" disabled>{action}</button>
+</details>

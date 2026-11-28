@@ -1,11 +1,18 @@
-import {presets, parseLayers, blockAt, put, palette, color, packs, addPack, normalize, type World} from './world'
+import {biomeName, biomeTemperature, biomesByTemperature, type Temperature} from './biomes'
+import {javaBlockIds} from './java-blocks'
+import {presets, parseLayers, formatLayers, formatJavaPreset, layerBlockEdit, blockAt, put, palette, color, packs, addPack, normalize, type World} from './world'
 
 const get = <T extends HTMLElement>(id: string) => document.getElementById(id) as T
 const canvas = get<HTMLCanvasElement>('world'), ctx = canvas.getContext('2d')!
 const layers = get<HTMLTextAreaElement>('layers'), level = get<HTMLInputElement>('level')
 const block = get<HTMLInputElement>('block'), name = get<HTMLInputElement>('world-name')
 const status = get('status'), preset = get<HTMLSelectElement>('preset')
-let world: World = {layers: parseLayers(presets['Classic flat']), edits: {}, level: -59, name: name.value}
+const temperature = get<HTMLSelectElement>('temperature'), biome = get<HTMLSelectElement>('biome')
+const javaPreset = get<HTMLTextAreaElement>('java-preset'), copyPreset = get<HTMLButtonElement>('copy-preset')
+const presetStatus = get('java-preset-status')
+const initialPreset = presets['Classic flat']
+const initialLayers = parseLayers(initialPreset.layers)
+let world: World = {layers: initialLayers, edits: {}, level: initialLayers[0].y + 1, name: name.value, biome: initialPreset.biome}
 let selected = {x: 8, z: 8}, tool = 'place'
 let hits: {x: number; z: number; points: number[][]}[] = []
 let width = 0, height = 0
@@ -62,6 +69,7 @@ function draw() {
   get('void').textContent = `${(world.level + 64).toLocaleString()} blocks`
   get('position').textContent = `Selected tile · X ${selected.x} / Z ${selected.z}`
   get('display-name').textContent = world.name
+  get('world-biome').textContent = biomeName(world.biome)
   level.value = String(world.level)
 }
 function act(remove = tool === 'remove') {
@@ -114,11 +122,85 @@ for (const id of ['place', 'remove']) get(id).addEventListener('click', () => {
   tool = id
   for (const candidate of ['place', 'remove']) {get(candidate).classList.toggle('active', id === candidate); get(candidate).setAttribute('aria-pressed', String(id === candidate))}
 })
-preset.addEventListener('change', () => {layers.value = presets[preset.value as keyof typeof presets]; message('Preset loaded into the editor. Create a fresh world to apply it.')})
+function populateBiomes(selected?: string) {
+  const options = biomesByTemperature[temperature.value as Temperature]
+  biome.replaceChildren(...options.map(id => new Option(biomeName(id), id)))
+  if (selected) biome.value = selected
+}
+function selectBiome(id: string = initialPreset.biome) {
+  const group = biomeTemperature(id)
+  temperature.value = group ?? 'Medium'
+  populateBiomes(group ? id : initialPreset.biome)
+}
+function updateJavaPreset() {
+  try {
+    javaPreset.value = formatJavaPreset(parseLayers(layers.value), biome.value)
+    presetStatus.textContent = ''
+  } catch (error) {
+    javaPreset.value = ''
+    presetStatus.textContent = (error as Error).message
+  }
+  copyPreset.disabled = !javaPreset.value
+}
+layers.addEventListener('input', updateJavaPreset)
+
+function bindBlockPicker(id: string, useBlock: (material: string) => void) {
+  const picker = get<HTMLDetailsElement>(id)
+  const search = get<HTMLInputElement>(`${id}-search`)
+  const results = get<HTMLSelectElement>(`${id}-results`)
+  const count = get(`${id}-count`)
+  const use = get<HTMLButtonElement>(`${id}-use`)
+
+  function updateResults() {
+    const query = normalize(search.value)
+    const matches = javaBlockIds.filter(blockId => blockId.includes(query))
+    results.replaceChildren(...matches.map(blockId => new Option(blockId.replaceAll('_', ' '), blockId)))
+    if (matches.length) results.value = matches.includes(query) ? query : matches[0]
+    count.textContent = matches.length === 1 ? '1 block' : `${matches.length.toLocaleString()} blocks`
+    use.disabled = matches.length === 0
+  }
+  picker.addEventListener('toggle', () => {
+    if (picker.open) updateResults()
+  })
+  search.addEventListener('input', updateResults)
+  use.addEventListener('click', () => useBlock(results.value))
+}
+bindBlockPicker('layer-block-picker', material => {
+  const edit = layerBlockEdit(layers.value, layers.selectionStart, material)
+  layers.setRangeText(edit.text, edit.start, edit.end)
+  layers.focus()
+  layers.setSelectionRange(edit.caret, edit.caret)
+  updateJavaPreset()
+})
+
+temperature.addEventListener('change', () => {
+  populateBiomes()
+  updateJavaPreset()
+})
+biome.addEventListener('change', updateJavaPreset)
+copyPreset.addEventListener('click', async () => {
+  const value = javaPreset.value
+  try {
+    await navigator.clipboard.writeText(value)
+    if (javaPreset.value === value) presetStatus.textContent = 'Preset copied.'
+  } catch {
+    if (javaPreset.value !== value) return
+    javaPreset.focus()
+    javaPreset.select()
+    presetStatus.textContent = 'Preset selected. Use your device’s copy shortcut.'
+  }
+})
+preset.addEventListener('change', () => {
+  const template = presets[preset.value as keyof typeof presets]
+  layers.value = template.layers
+  selectBiome(template.biome)
+  updateJavaPreset()
+  message('Preset loaded into the editor. Create a fresh world to apply it.')
+})
 get('generate').addEventListener('click', () => {
   try {
     const parsed = parseLayers(layers.value)
-    world = {layers: parsed, edits: {}, level: parsed[0].y + 1, name: name.value.trim() || 'Untitled world'}
+    world = {layers: parsed, edits: {}, level: parsed[0].y + 1, name: name.value.trim() || 'Untitled world', biome: biome.value}
     draw(); message('Fresh world created. Choose a block and click a tile to start building.')
   } catch (error) {message((error as Error).message)}
 })
@@ -131,14 +213,20 @@ get('load').addEventListener('click', () => {
   try {
     const stored = localStorage.getItem('superflat-world-v1')
     if (!stored) {message('No saved world yet. Use Save world to keep your creation.'); return}
-    const loaded: World = JSON.parse(stored)
+    const loaded: Omit<World, 'biome'> & {biome?: string} = JSON.parse(stored)
     if (!Array.isArray(loaded.layers) || !loaded.layers.length || !loaded.edits || typeof loaded.edits !== 'object' || Array.isArray(loaded.edits) || typeof loaded.name !== 'string' || !Number.isSafeInteger(loaded.level) || loaded.level < -64 || loaded.level >= Number.MAX_SAFE_INTEGER - 1024) throw new Error()
-    const validated = parseLayers(loaded.layers.map(layer => `${layer.y} ${layer.block}`).join('\n'))
+    if (loaded.layers.some(layer => !Number.isSafeInteger(layer?.y) || typeof layer.block !== 'string')) throw new Error()
+    const validated = parseLayers(formatLayers(loaded.layers))
     for (const [key, value] of Object.entries(loaded.edits)) {
       const [x,y,z] = key.split(',').map(Number)
       if (key.split(',').length !== 3 || !Number.isInteger(x) || x < 0 || x >= 16 || !Number.isInteger(z) || z < 0 || z >= 16 || !Number.isSafeInteger(y) || y < -64 || y >= Number.MAX_SAFE_INTEGER - 1024 || typeof value !== 'string' || !/^[\w.-]+$/.test(value)) throw new Error()
     }
-    world = {...loaded, layers: validated}; name.value = world.name; layers.value = validated.map(layer => `${layer.y} ${layer.block}`).join('\n'); draw(); message('Saved world loaded. Keep creating!')
+    selectBiome(loaded.biome)
+    world = {...loaded, layers: validated, biome: biome.value}
+    name.value = world.name
+    layers.value = formatLayers(validated)
+    updateJavaPreset()
+    draw(); message('Saved world loaded. Keep creating!')
   } catch {message('Could not load the saved world. Your current creation has been kept.')}
 })
 function updateSwatches() {
@@ -151,6 +239,12 @@ for (const [material, fill] of Object.entries(palette)) {
   get('swatches').append(button)
 }
 block.addEventListener('input', updateSwatches); updateSwatches()
+bindBlockPicker('build-block-picker', material => {
+  block.value = material
+  updateSwatches()
+  get<HTMLDetailsElement>('build-block-picker').open = false
+  block.focus()
+})
 packs.forEach((pack, index) => {
   const card = document.createElement('article'); card.className = 'pack'
   const art = document.createElement('div'); art.className = 'pack-art'; art.textContent = pack.icon; art.setAttribute('aria-hidden', 'true')
@@ -167,4 +261,6 @@ packs.forEach((pack, index) => {
   body.append(title, description, button); card.append(art, body); get('packs').append(card)
 })
 new ResizeObserver(draw).observe(canvas)
+selectBiome(world.biome)
+updateJavaPreset()
 draw()
